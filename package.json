@@ -1,0 +1,181 @@
+{
+  "name": "bsv-architecture-explorer",
+  "displayName": "BSV Architecture Explorer",
+  "description": "Interactive architecture-level visualization for Bluespec SystemVerilog projects directly inside VS Code.",
+  "version": "0.2.0",
+  "publisher": "code0-god",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "categories": [
+    "Visualization",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "Bluespec",
+    "BSV",
+    "SystemVerilog",
+    "HDL",
+    "architecture",
+    "hardware",
+    "schematic",
+    "FPGA",
+    "accelerator"
+  ],
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "extensionKind": [
+    "workspace"
+  ],
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onCommand:bsvArchitecture.openWorkspace",
+    "onCommand:bsvArchitecture.openCurrentFile",
+    "onCommand:bsvArchitecture.openSymbol",
+    "onCommand:bsvArchitecture.refresh",
+    "onCommand:bsvArchitecture.createConfig",
+    "onCommand:bsvArchitecture.exportJson",
+    "onWebviewPanel:bsvArchitecture.explorer",
+    "workspaceContains:**/*.bsv"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": {
+      "supported": false
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "bsvArchitecture.openWorkspace",
+        "title": "BSV Architecture: Open Workspace",
+        "category": "BSV Architecture"
+      },
+      {
+        "command": "bsvArchitecture.openCurrentFile",
+        "title": "BSV Architecture: Open Current File",
+        "category": "BSV Architecture"
+      },
+      {
+        "command": "bsvArchitecture.refresh",
+        "title": "BSV Architecture: Refresh",
+        "category": "BSV Architecture",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "bsvArchitecture.createConfig",
+        "title": "BSV Architecture: Create .bsv-arch.json",
+        "category": "BSV Architecture"
+      },
+      {
+        "command": "bsvArchitecture.exportJson",
+        "title": "BSV Architecture: Export Architecture JSON",
+        "category": "BSV Architecture"
+      },
+      {
+        "command": "bsvArchitecture.openSymbol",
+        "title": "BSV Architecture: Open Symbol",
+        "category": "BSV Architecture"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "bsvArchitecture.openCurrentFile",
+          "when": "resourceExtname == .bsv",
+          "group": "navigation@20"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "bsvArchitecture.openCurrentFile",
+          "when": "resourceExtname == .bsv",
+          "group": "navigation@20"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "bsvArchitecture.openCurrentFile",
+          "when": "resourceExtname == .bsv",
+          "group": "navigation@20"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "bsvArchitecture.openCurrentFile",
+        "key": "ctrl+alt+a",
+        "mac": "cmd+alt+a",
+        "when": "resourceExtname == .bsv"
+      }
+    ],
+    "configuration": {
+      "title": "BSV Architecture Explorer",
+      "properties": {
+        "bsvArchitecture.autoRefresh": {
+          "type": "boolean",
+          "default": true,
+          "description": "Refresh an open architecture panel when BSV source or .bsv-arch.json changes."
+        },
+        "bsvArchitecture.enableCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show architecture navigation links above BSV packages, modules, and functions."
+        },
+        "bsvArchitecture.defaultView": {
+          "type": "string",
+          "enum": [
+            "system",
+            "file"
+          ],
+          "default": "system",
+          "description": "Initial diagram view when the explorer opens."
+        },
+        "bsvArchitecture.showPrimitives": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show registers, FIFOs, wires, and other primitive instances by default."
+        },
+        "bsvArchitecture.maxFiles": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5000,
+          "default": 750,
+          "description": "Maximum number of BSV files analyzed per workspace."
+        },
+        "bsvArchitecture.exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/.git/**",
+            "**/node_modules/**",
+            "**/build/**",
+            "**/out/**",
+            "**/generated/**",
+            "**/target/**"
+          ],
+          "description": "Additional glob patterns excluded from source analysis."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "check": "node scripts/check.js",
+    "test": "node --test test/*.test.js",
+    "package:vsix": "node scripts/package-vsix.js",
+    "package:repo": "node scripts/package-repo.js",
+    "package": "npm run check && npm test && npm run package:vsix && npm run package:repo && npm run checksums",
+    "checksums": "node scripts/checksums.js"
+  },
+  "files": [
+    "src/**",
+    "media/**",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ]
+}

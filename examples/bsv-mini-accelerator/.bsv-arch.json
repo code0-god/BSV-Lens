@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "title": "Mini BSV Accelerator Architecture",
+  "sourceRoots": [
+    "hw/bsv/src"
+  ],
+  "entrypoints": [
+    "mkAcceleratorTop"
+  ],
+  "groups": [
+    {
+      "id": "common",
+      "label": "Common Contracts",
+      "match": "hw/bsv/src/common/**",
+      "order": 10
+    },
+    {
+      "id": "control",
+      "label": "Control Plane",
+      "match": "hw/bsv/src/control/**",
+      "order": 20
+    },
+    {
+      "id": "memory",
+      "label": "Local Memory",
+      "match": "hw/bsv/src/memory/**",
+      "order": 30
+    },
+    {
+      "id": "compute",
+      "label": "Compute Pipeline",
+      "match": "hw/bsv/src/compute/**",
+      "order": 40
+    }
+  ],
+  "nodes": {
+    "mkAcceleratorTop": {
+      "label": "Mini Accelerator Top",
+      "entry": true
+    },
+    "mkVectorQuantizer": {
+      "label": "Vector Quantizer"
+    },
+    "mkSystolicArray": {
+      "label": "Systolic Array"
+    }
+  },
+  "virtualNodes": [
+    {
+      "id": "host-runtime",
+      "label": "Host Runtime",
+      "kind": "host",
+      "group": "control",
+      "description": "Command and tensor provider",
+      "entry": true
+    }
+  ],
+  "edges": [
+    {
+      "from": "host-runtime",
+      "to": "mkAcceleratorTop",
+      "kind": "control",
+      "label": "commands"
+    },
+    {
+      "from": "mkVectorQuantizer",
+      "to": "mkSystolicArray",
+      "kind": "data",
+      "label": "quantized activations"
+    }
+  ],
+  "view": {
+    "direction": "LR",
+    "showPackages": false,
+    "showImports": false,
+    "showPrimitives": false
+  }
+}
