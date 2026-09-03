@@ -6,9 +6,14 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const dist = path.join(root, 'dist');
-const files = fs.readdirSync(dist)
-    .filter((name) => /\.(?:vsix|zip)$/.test(name))
-    .sort();
+const manifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const files = [
+    `${manifest.name}-${manifest.version}.vsix`,
+    `${manifest.name}-repository-${manifest.version}.zip`
+];
+for (const name of files) {
+    if (!fs.existsSync(path.join(dist, name))) throw new Error(`Missing release artifact: ${name}`);
+}
 const lines = files.map((name) => {
     const hash = crypto.createHash('sha256').update(fs.readFileSync(path.join(dist, name))).digest('hex');
     return `${hash}  ${name}`;

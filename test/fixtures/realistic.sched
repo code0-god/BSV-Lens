@@ -1,0 +1,12 @@
+Schedule dump for module mkPipeline
+===================================
+
+Rule relationships:
+Rule "RL_load" and rule "RL_drain" are conflict free.
+Rule "RL_load" conflicts with rule "RL_reset".
+Rule "RL_stage" must execute before rule "RL_commit".
+"RL_commit" SBR "RL_reset"
+
+Execution order:
+----------------
+RL_load -> RL_stage

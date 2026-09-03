@@ -9,15 +9,18 @@ const {
     parseJsonc
 } = require('./config');
 const { parseBsvFile } = require('./parser');
+const { BscScheduleProvider } = require('../compiler/bsc-schedule-provider');
 
 const CONFIG_FILE = '.bsv-arch.json';
 const MAX_SOURCE_BYTES = 4 * 1024 * 1024;
 
 class WorkspaceAnalyzer {
-    constructor(vscode) {
+    constructor(vscode, options = {}) {
         this.vscode = vscode;
         this.decoder = new TextDecoder('utf-8');
         this.encoder = new TextEncoder();
+        this.output = options.output || null;
+        this.bscScheduleProvider = options.bscScheduleProvider || new BscScheduleProvider();
     }
 
     async analyze(request = {}) {
@@ -25,8 +28,13 @@ class WorkspaceAnalyzer {
         const settings = this.vscode.workspace.getConfiguration('bsvArchitecture', folder?.uri);
         const settingsExclude = settings.get('exclude', []);
         const settingsShowPrimitives = settings.get('showPrimitives', false);
+        const settingsIncludePotentialScheduleDependencies = settings.get('includePotentialScheduleDependencies', true);
         const maxFiles = settings.get('maxFiles', 750);
-        const configResult = await this.loadConfig(folder, { settingsExclude, settingsShowPrimitives });
+        const configResult = await this.loadConfig(folder, {
+            settingsExclude,
+            settingsShowPrimitives,
+            settingsIncludePotentialScheduleDependencies
+        });
         const config = configResult.config;
         const analysisDiagnostics = [...configResult.diagnostics];
         const uris = request.fileOnly && request.activeUri
@@ -41,7 +49,7 @@ class WorkspaceAnalyzer {
             });
         }
 
-        const parsedFiles = (await mapLimit(uris, 16, async (uri) => {
+        const sourceResults = (await mapLimit(uris, 16, async (uri) => {
             try {
                 const bytes = await this.vscode.workspace.fs.readFile(uri);
                 if (bytes.byteLength > MAX_SOURCE_BYTES) {
@@ -53,10 +61,15 @@ class WorkspaceAnalyzer {
                     return null;
                 }
                 const text = this.decoder.decode(bytes);
-                return parseBsvFile(text, {
-                    uri: uri.toString(),
-                    relativePath: this.relativePath(folder, uri)
-                });
+                const relativePath = this.relativePath(folder, uri);
+                return {
+                    uri,
+                    text,
+                    parsed: parseBsvFile(text, {
+                        uri: uri.toString(),
+                        relativePath
+                    })
+                };
             } catch (error) {
                 analysisDiagnostics.push({
                     severity: 'error',
@@ -66,6 +79,20 @@ class WorkspaceAnalyzer {
                 return null;
             }
         })).filter(Boolean);
+        const parsedFiles = sourceResults.map((item) => item.parsed);
+        const scheduleResult = await this.analyzeScheduling({
+            folder,
+            config,
+            parsedFiles,
+            uris: sourceResults.map((item) => item.uri),
+            sourceFiles: sourceResults.map((item) => ({
+                uri: item.uri.toString(),
+                relativePath: item.parsed.relativePath,
+                text: item.text
+            })),
+            token: request.token
+        });
+        analysisDiagnostics.push(...scheduleResult.diagnostics);
 
         const activeFile = request.activeUri
             ? this.relativePath(folder, request.activeUri)
@@ -73,12 +100,70 @@ class WorkspaceAnalyzer {
         const model = buildArchitectureModel(parsedFiles, config, {
             workspaceName: folder?.name || (request.activeUri ? path.basename(request.activeUri.fsPath || request.activeUri.path) : 'BSV'),
             workspaceUri: folder?.uri?.toString() || null,
-            activeFile
+            activeFile,
+            scheduleRelations: scheduleResult.relations,
+            scheduleProvider: scheduleResult.provider
         });
         model.diagnostics.unshift(...analysisDiagnostics);
         model.stats.files = parsedFiles.length;
         model.analysisMode = request.fileOnly ? 'file' : 'workspace';
+        model.scheduling.source = scheduleResult.source;
+        model.scheduling.reason = scheduleResult.reason || '';
+        model.viewDefaults = viewDefaults(settings);
         return model;
+    }
+
+    async analyzeScheduling(context) {
+        const scheduling = context.config.scheduling || {};
+        if (scheduling.provider === 'off' || scheduling.provider === 'source') {
+            return { provider: scheduling.provider, source: 'source', relations: [], diagnostics: [] };
+        }
+        const hasReport = scheduling.reportFiles.length > 0;
+        const hasBuild = Boolean(scheduling.topModule) && context.uris.length > 0;
+        if (scheduling.provider === 'auto' && !hasReport && !hasBuild) {
+            return { provider: 'source', source: 'source', relations: [], diagnostics: [] };
+        }
+
+        const inputFiles = selectBscInputFiles(context.parsedFiles, context.uris, scheduling.topModule);
+        const result = await this.bscScheduleProvider.analyze({
+            folder: context.folder,
+            workspacePath: context.folder?.uri?.fsPath,
+            workspaceTrusted: this.vscode.workspace?.isTrusted !== false,
+            inputFiles,
+            sourceFiles: context.sourceFiles,
+            scheduling,
+            onOutput: (text) => this.appendCompilerOutput(text)
+        }, context.token);
+        if (result.available) {
+            return {
+                provider: 'bsc',
+                source: result.source || 'compiler-output',
+                relations: result.relations || [],
+                diagnostics: result.diagnostics || [],
+                reason: ''
+            };
+        }
+        const severity = scheduling.provider === 'bsc' ? 'warning' : 'info';
+        return {
+            provider: 'source',
+            source: 'source-fallback',
+            relations: [],
+            diagnostics: [
+                ...(result.diagnostics || []),
+                {
+                    severity,
+                    message: `Using source-derived scheduling: ${result.reason || 'BSC scheduling is unavailable.'}`,
+                    location: null
+                }
+            ],
+            reason: result.reason || 'BSC scheduling is unavailable.'
+        };
+    }
+
+    appendCompilerOutput(text) {
+        if (!text) return;
+        if (typeof this.output?.append === 'function') this.output.append(String(text));
+        else if (typeof this.output?.appendLine === 'function') this.output.appendLine(String(text).replace(/\n$/, ''));
     }
 
     resolveWorkspaceFolder(uri) {
@@ -115,6 +200,7 @@ class WorkspaceAnalyzer {
             workspaceName: folder?.name || 'BSV',
             settingsExclude: settings.settingsExclude,
             settingsShowPrimitives: settings.settingsShowPrimitives,
+            settingsIncludePotentialScheduleDependencies: settings.settingsIncludePotentialScheduleDependencies,
             configPath
         });
         if (config.sourceRoots.length === 0) config.sourceRoots = await this.detectSourceRoots(folder);
@@ -189,6 +275,49 @@ class WorkspaceAnalyzer {
     }
 }
 
+function selectBscInputFiles(parsedFiles, uris, topModule) {
+    if (topModule) {
+        const index = parsedFiles.findIndex((file) =>
+            (file.modules || []).some((module) => module.name === topModule)
+        );
+        if (index >= 0) return [uriPath(uris[index])].filter(Boolean);
+    }
+    return uris.map(uriPath).filter(Boolean);
+}
+
+function uriPath(uri) {
+    return uri?.fsPath || uri?.path || (typeof uri === 'string' ? uri : null);
+}
+
+function viewDefaults(settings) {
+    return {
+        sourceScope: resolveDefaultSourceScope(settings),
+        level: settings.get('defaultLevel', 'system'),
+        analysisMode: settings.get('defaultMode', 'structure'),
+        hopScope: settings.get('defaultHopScope', 'all'),
+        showMethodPorts: settings.get('showMethodPorts', true),
+        collapseModuleMembers: settings.get('collapseModuleMembers', true),
+        includePotentialScheduleDependencies: settings.get('includePotentialScheduleDependencies', true)
+    };
+}
+
+function resolveDefaultSourceScope(settings) {
+    const inspected = typeof settings.inspect === 'function'
+        ? settings.inspect('defaultSourceScope')
+        : null;
+    const explicit = inspected && [
+        inspected.workspaceFolderLanguageValue,
+        inspected.workspaceFolderValue,
+        inspected.workspaceLanguageValue,
+        inspected.workspaceValue,
+        inspected.globalLanguageValue,
+        inspected.globalValue
+    ].find((value) => value !== undefined);
+    if (explicit !== undefined && explicit !== null) return explicit;
+    if (inspected) return settings.get('defaultView', 'system') === 'file' ? 'current-file' : 'workspace';
+    return settings.get('defaultSourceScope', settings.get('defaultView', 'system') === 'file' ? 'current-file' : 'workspace');
+}
+
 function normalizeRoot(root) {
     const normalized = String(root || '.').replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/$/, '');
     return normalized || '.';
@@ -228,5 +357,7 @@ module.exports = {
     isFileNotFound,
     mapLimit,
     normalizeRoot,
+    resolveDefaultSourceScope,
+    selectBscInputFiles,
     toBraceGlob
 };

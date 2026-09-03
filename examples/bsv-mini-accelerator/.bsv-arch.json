@@ -7,6 +7,17 @@
   "entrypoints": [
     "mkAcceleratorTop"
   ],
+  "scheduling": {
+    "provider": "source",
+    "bscExecutable": "bsc",
+    "topModule": "",
+    "workingDirectory": ".",
+    "sourcePaths": [],
+    "arguments": [],
+    "reportFiles": [],
+    "timeoutMs": 30000,
+    "includePotentialDependencies": true
+  },
   "groups": [
     {
       "id": "common",

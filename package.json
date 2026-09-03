@@ -2,7 +2,7 @@
   "name": "bsv-architecture-explorer",
   "displayName": "BSV Architecture Explorer",
   "description": "Interactive architecture-level visualization for Bluespec SystemVerilog projects directly inside VS Code.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "code0-god",
   "license": "MIT",
   "icon": "media/icon.png",
@@ -131,7 +131,72 @@
             "file"
           ],
           "default": "system",
-          "description": "Initial diagram view when the explorer opens."
+          "description": "Legacy initial source scope. Kept for existing installations.",
+          "deprecationMessage": "Use bsvArchitecture.defaultSourceScope instead."
+        },
+        "bsvArchitecture.defaultSourceScope": {
+          "type": "string",
+          "enum": [
+            "workspace",
+            "current-file"
+          ],
+          "enumDescriptions": [
+            "Analyze BSV files across the selected workspace.",
+            "Display architecture elements from the active BSV file."
+          ],
+          "default": "workspace",
+          "description": "Initial BSV source scope."
+        },
+        "bsvArchitecture.defaultLevel": {
+          "type": "string",
+          "enum": [
+            "system",
+            "module",
+            "behavior"
+          ],
+          "default": "system",
+          "description": "Initial architecture abstraction level."
+        },
+        "bsvArchitecture.defaultMode": {
+          "type": "string",
+          "enum": [
+            "structure",
+            "data-flow",
+            "scheduling"
+          ],
+          "default": "structure",
+          "description": "Initial analysis relation mode."
+        },
+        "bsvArchitecture.defaultHopScope": {
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "all"
+          ],
+          "default": "all",
+          "description": "Initial focus neighborhood depth."
+        },
+        "bsvArchitecture.syncWithEditor": {
+          "type": "boolean",
+          "default": true,
+          "description": "Highlight the smallest matching diagram node as the BSV editor selection changes."
+        },
+        "bsvArchitecture.showMethodPorts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show logical BSV interface Method Ports on module nodes."
+        },
+        "bsvArchitecture.collapseModuleMembers": {
+          "type": "boolean",
+          "default": true,
+          "description": "Collapse Methods, Rules, Local Functions, and State groups when opening Module level."
+        },
+        "bsvArchitecture.includePotentialScheduleDependencies": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include dashed source-heuristic potential state dependencies in Scheduling mode."
         },
         "bsvArchitecture.showPrimitives": {
           "type": "boolean",
@@ -168,8 +233,9 @@
     "test": "node --test test/*.test.js",
     "package:vsix": "node scripts/package-vsix.js",
     "package:repo": "node scripts/package-repo.js",
-    "package": "npm run check && npm test && npm run package:vsix && npm run package:repo && npm run checksums",
-    "checksums": "node scripts/checksums.js"
+    "package": "npm run check && npm test && npm run package:vsix && npm run package:repo && npm run checksums && npm run verify:package",
+    "checksums": "node scripts/checksums.js",
+    "verify:package": "node scripts/verify-package.js"
   },
   "files": [
     "src/**",

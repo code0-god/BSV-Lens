@@ -53,11 +53,13 @@ test('module members, implementation instances, rules, and annotations are extra
         'mkAcceleratorController',
         'mkMemorySubsystem',
         'mkVectorQuantizer',
+        'mkSystolicArray',
         'mkSystolicArray'
     ]);
     assert.deepEqual(module.rules.map((item) => item.name), ['dispatch']);
     assert.ok(module.rules[0].references.includes('controller'));
-    assert.ok(module.rules[0].references.includes('array'));
+    assert.ok(module.rules[0].references.includes('arrayLane0'));
+    assert.ok(module.rules[0].references.includes('arrayLane1'));
     assert.deepEqual(module.providedInterfaces.map((item) => item.name), ['control']);
 });
 
@@ -67,13 +69,15 @@ test('primitive storage instances are classified for behavior-level filtering', 
     const byName = new Map(module.instances.map((item) => [item.name, item]));
 
     assert.equal(byName.get('commandQueue').primitiveKind, 'fifo');
+    assert.equal(byName.get('statusQueue').primitiveKind, 'fifo');
     assert.equal(byName.get('acceptedCommands').primitiveKind, 'register');
     assert.deepEqual(module.methods.map((item) => item.name), [
         'ready',
         'put',
         'issueValid',
         'issue',
-        'consume'
+        'consume',
+        'take'
     ]);
 });
 

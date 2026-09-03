@@ -12,6 +12,16 @@ const DEFAULT_EXCLUDE = [
     '**/target/**'
 ];
 
+const SCHEDULING_PROVIDERS = new Set(['auto', 'source', 'bsc', 'off']);
+const DATA_FLOW_EDGE_KINDS = new Set([
+    'data', 'read', 'write', 'invoke', 'return', 'value', 'producer', 'consumer'
+]);
+const SCHEDULING_EDGE_KINDS = new Set([
+    'conflict', 'conflict-free', 'sequential-before', 'sequential-before-reverse',
+    'mutually-exclusive', 'descending-urgency', 'execution-order', 'preempts',
+    'potential-state-dependency'
+]);
+
 function parseJsonc(text, source = '.bsv-arch.json') {
     try {
         return JSON.parse(stripJsonComments(text));
@@ -101,6 +111,7 @@ function normalizeConfig(raw = {}, context = {}) {
 
     return {
         version: Number.isInteger(raw.version) ? raw.version : 1,
+        schemaVersion: 2,
         title: typeof raw.title === 'string' && raw.title.trim()
             ? raw.title.trim()
             : (context.workspaceName ? `${context.workspaceName} BSV Architecture` : 'BSV Architecture'),
@@ -111,6 +122,7 @@ function normalizeConfig(raw = {}, context = {}) {
         nodes: raw.nodes && typeof raw.nodes === 'object' && !Array.isArray(raw.nodes) ? raw.nodes : {},
         virtualNodes,
         edges,
+        scheduling: normalizeScheduling(raw.scheduling, context),
         view: {
             direction: raw.view?.direction === 'TB' ? 'TB' : 'LR',
             showImports: raw.view?.showImports === true,
@@ -164,14 +176,46 @@ function normalizeVirtualNode(node, index) {
 
 function normalizeEdge(edge, index) {
     if (!edge || typeof edge !== 'object' || !edge.from || !edge.to) return null;
+    const kind = String(edge.kind || 'data');
     return {
         id: `manual:${index}:${edge.from}->${edge.to}`,
         from: String(edge.from),
         to: String(edge.to),
-        kind: String(edge.kind || 'data'),
+        kind,
+        mode: normalizeEdgeMode(edge.mode, kind),
         label: typeof edge.label === 'string' ? edge.label : '',
         description: typeof edge.description === 'string' ? edge.description : '',
+        origin: 'config',
+        confidence: 'explicit',
+        evidence: typeof edge.evidence === 'string' ? edge.evidence : '',
+        bidirectional: edge.bidirectional === true,
         manual: true
+    };
+}
+
+function normalizeEdgeMode(mode, kind) {
+    if (['structure', 'data-flow', 'scheduling'].includes(mode)) return mode;
+    if (DATA_FLOW_EDGE_KINDS.has(kind)) return 'data-flow';
+    if (SCHEDULING_EDGE_KINDS.has(kind)) return 'scheduling';
+    return 'structure';
+}
+
+function normalizeScheduling(value = {}, context = {}) {
+    const raw = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    const provider = SCHEDULING_PROVIDERS.has(raw.provider) ? raw.provider : 'auto';
+    const configuredTimeout = Number.isFinite(raw.timeoutMs) ? Math.round(raw.timeoutMs) : 30000;
+    return {
+        provider,
+        bscExecutable: normalizeString(raw.bscExecutable, 'bsc'),
+        topModule: normalizeString(raw.topModule),
+        workingDirectory: normalizeString(raw.workingDirectory, '.'),
+        sourcePaths: normalizeStringArray(raw.sourcePaths),
+        arguments: normalizeStringArray(raw.arguments),
+        reportFiles: normalizeStringArray(raw.reportFiles),
+        timeoutMs: Math.min(120000, Math.max(1000, configuredTimeout)),
+        includePotentialDependencies: raw.includePotentialDependencies === undefined
+            ? context.settingsIncludePotentialScheduleDependencies !== false
+            : raw.includePotentialDependencies === true
     };
 }
 
@@ -225,7 +269,7 @@ function matchesAnyGlob(relativePath, patterns) {
 
 function makeStarterConfig(workspaceName = 'BSV Project') {
     return {
-        version: 1,
+        version: 2,
         title: `${workspaceName} BSV Architecture`,
         sourceRoots: [],
         exclude: [
@@ -240,6 +284,7 @@ function makeStarterConfig(workspaceName = 'BSV Project') {
         nodes: {},
         virtualNodes: [],
         edges: [],
+        scheduling: normalizeScheduling(),
         view: {
             direction: 'LR',
             showPackages: false,
@@ -254,6 +299,10 @@ function normalizeStringArray(value) {
     return value.map((item) => String(item).trim()).filter(Boolean);
 }
 
+function normalizeString(value, fallback = '') {
+    return typeof value === 'string' && value.trim() ? value.trim() : fallback;
+}
+
 function uniqueStrings(values) {
     return [...new Set(values)];
 }
@@ -265,6 +314,8 @@ module.exports = {
     makeStarterConfig,
     matchesAnyGlob,
     normalizeConfig,
+    normalizeEdgeMode,
+    normalizeScheduling,
     parseJsonc,
     resolveNodeOverride,
     stripJsonComments

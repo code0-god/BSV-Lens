@@ -1,0 +1,2 @@
+94fe770112d4451829967f5438aad0c3c30a1eb92ab0de0baaee2b452080b4bd  bsv-architecture-explorer-0.3.0.vsix
+32c6e1dafdea6ac636ee6e9585de773530cd4dac2f021cb14cbccec1f00b8d36  bsv-architecture-explorer-repository-0.3.0.zip

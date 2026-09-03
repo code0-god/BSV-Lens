@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.3.0 — 2026-09-02
+
+- Split source scope, abstraction level, analysis mode, and hop scope into independent controls.
+- Added System summaries, Module member-group collapse/expand, repeated-instance aggregation, and Behavior detail.
+- Added source-derived directional Reg/FIFO/Wire/Memory data flow with statement evidence.
+- Added logical interface Method Ports with Action/value/ActionValue direction and conservative type widths.
+- Added source scheduling attributes, clearly labeled heuristic state dependencies, and Scheduling legend/empty states.
+- Added optional trusted BSC schedule reports and invocation with timeout, cancellation, capability probing, and authoritative provenance.
+- Added focus breadcrumbs, 1/2/3-hop BFS, mode-aware shortest-path tracing, and editor-to-diagram synchronization.
+- Reworked relationship inspector grouping, Webview state migration, graph indexes, responsive layout, accessibility, and SVG rendering.
+- Upgraded exported Architecture IR to schema version 2 while retaining `.bsv-arch.json` version 1 compatibility.
+- Expanded parser, type, scheduling, graph, panel, manifest, and Webview tests plus the example workspace.
+
 ## 0.2.0 — 2026-09-02
 
 - Renamed the extension and package to BSV Architecture Explorer.

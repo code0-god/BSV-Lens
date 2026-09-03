@@ -1,8 +1,18 @@
 :root {
     color-scheme: light dark;
-    --toolbar-height: 58px;
-    --filter-height: 38px;
     --inspector-width: 320px;
+    --space-1: 4px;
+    --space-2: 6px;
+    --space-3: 8px;
+    --space-4: 12px;
+    --space-5: 16px;
+    --space-6: 24px;
+    --radius-control: 4px;
+    --radius-panel: 7px;
+    --radius-group: 10px;
+    --radius-pill: 999px;
+    --motion-fast: 120ms;
+    --motion-standard: 180ms;
     --panel-border: var(--vscode-panel-border, rgba(127, 127, 127, 0.35));
     --muted: var(--vscode-descriptionForeground, #8b949e);
     --surface: var(--vscode-editor-background, #1e1e1e);
@@ -26,6 +36,23 @@ body {
     background: var(--surface);
     font-family: var(--vscode-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
     font-size: var(--vscode-font-size, 13px);
+}
+
+body {
+    display: grid;
+    grid-template-rows: auto auto auto auto minmax(0, 1fr);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 button,
@@ -57,6 +84,13 @@ button:hover {
     background: var(--vscode-button-secondaryHoverBackground, var(--surface-hover));
 }
 
+button:disabled,
+select:disabled,
+input:disabled {
+    cursor: default;
+    opacity: 0.48;
+}
+
 button:focus-visible,
 select:focus-visible,
 input:focus-visible {
@@ -65,18 +99,21 @@ input:focus-visible {
 }
 
 .toolbar {
-    height: var(--toolbar-height);
+    grid-row: 1;
+    min-height: 58px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 16px;
-    padding: 8px 12px;
+    gap: var(--space-3) var(--space-5);
+    padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--panel-border);
     background: var(--vscode-editorGroupHeader-tabsBackground, var(--surface-raised));
     user-select: none;
 }
 
 .brand {
-    min-width: 230px;
+    flex: 0 1 230px;
+    min-width: 180px;
     display: flex;
     align-items: center;
     gap: 9px;
@@ -121,20 +158,112 @@ input:focus-visible {
     gap: 6px;
 }
 
-.toolbar-group label {
+.toolbar-group label,
+.control-field > label,
+.control-field > legend {
     color: var(--muted);
-    font-size: 11px;
+    font-size: 9px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
 
 .view-controls {
-    min-width: 260px;
+    flex: 1 1 640px;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-3);
 }
 
-#view-mode {
-    min-width: 116px;
+.control-field {
+    min-width: 0;
+    display: grid;
+    gap: 3px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.control-field > legend {
+    padding: 0;
+}
+
+#source-scope {
+    min-width: 112px;
     padding: 2px 24px 2px 7px;
+}
+
+.segmented {
+    display: inline-flex;
+    min-width: 0;
+    border: 1px solid var(--vscode-input-border, var(--panel-border));
+    border-radius: var(--radius-control);
+    overflow: hidden;
+}
+
+.segmented button {
+    min-height: 27px;
+    margin: 0;
+    padding: 3px 8px;
+    border: 0;
+    border-right: 1px solid var(--panel-border);
+    border-radius: 0;
+    background: var(--vscode-input-background, #3c3c3c);
+}
+
+.segmented button:last-child {
+    border-right: 0;
+}
+
+.segmented button[aria-pressed="true"] {
+    color: var(--vscode-button-foreground, #ffffff);
+    background: var(--vscode-button-background, #0e639c);
+}
+
+.segmented button:focus-visible {
+    position: relative;
+    z-index: 1;
+    box-shadow: inset 0 0 0 1px var(--focus);
+}
+
+.focus-row {
+    flex: 1 1 420px;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.focus-context {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+}
+
+#focus-summary {
+    overflow: hidden;
+    color: var(--vscode-foreground);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.icon-button {
+    width: 28px;
+    padding: 4px;
+}
+
+button svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vertical-align: -2px;
 }
 
 #breadcrumbs {
@@ -168,10 +297,9 @@ input:focus-visible {
 }
 
 .search-controls {
-    flex: 1 1 160px;
+    flex: 1 1 180px;
     min-width: 120px;
     max-width: 360px;
-    margin-left: auto;
 }
 
 #search {
@@ -188,7 +316,8 @@ input:focus-visible {
 }
 
 .filterbar {
-    height: var(--filter-height);
+    grid-row: 2;
+    min-height: 38px;
     display: flex;
     align-items: center;
     gap: 14px;
@@ -197,6 +326,10 @@ input:focus-visible {
     background: var(--vscode-editor-background);
     color: var(--muted);
     user-select: none;
+}
+
+.filterbar label.is-disabled {
+    display: none;
 }
 
 .filterbar label {
@@ -219,14 +352,116 @@ input:focus-visible {
     min-width: 0;
     max-width: 320px;
     overflow: hidden;
-    color: var(--vscode-editorWarning-foreground, #cca700);
+    color: var(--muted);
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+.diagnostic-summary.has-issues {
+    color: var(--vscode-editorWarning-foreground, #cca700);
+}
+
+.tracebar,
+.schedule-legend {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-1) var(--space-4);
+    border-bottom: 1px solid var(--panel-border);
+    background: color-mix(in srgb, var(--surface-raised) 72%, var(--surface));
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.tracebar {
+    grid-row: 3;
+}
+
+.schedule-legend {
+    grid-row: 4;
+}
+
+.tracebar[hidden],
+.schedule-legend[hidden] {
+    display: none;
+}
+
+.tracebar #trace-summary {
+    margin-right: auto;
+    color: var(--vscode-foreground);
+}
+
+.schedule-legend ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.schedule-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    white-space: nowrap;
+}
+
+.schedule-legend li::before {
+    width: 18px;
+    height: 0;
+    content: "";
+    border-top: 2px solid var(--accent);
+}
+
+.schedule-legend li[data-kind="conflict"]::before {
+    border-color: var(--vscode-editorError-foreground, #f14c4c);
+}
+
+.schedule-legend li[data-kind="conflict-free"]::before {
+    border-color: var(--vscode-charts-green, #89d185);
+    border-top-style: double;
+}
+
+.schedule-legend li[data-kind="potential-state-dependency"]::before {
+    border-top-style: dashed;
+}
+
+.schedule-legend li[data-kind="mutually-exclusive"]::before {
+    border-color: var(--vscode-charts-purple, #b180d7);
+    border-top-style: dashed;
+}
+
+.schedule-legend li[data-kind="descending-urgency"]::before {
+    border-color: var(--vscode-charts-orange, #ee9d28);
+}
+
+.schedule-legend li[data-kind="preempts"]::before {
+    border-color: var(--vscode-editorError-foreground, #f14c4c);
+    border-top-width: 3px;
+}
+
+.schedule-legend li[data-kind="execution-order"]::before {
+    border-color: var(--vscode-charts-blue, #75beff);
+    border-top-style: dotted;
+}
+
+.origin-badge {
+    flex: 0 0 auto;
+    padding: 2px 6px;
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-pill);
+    color: var(--vscode-foreground);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
 .workspace {
+    grid-row: 5;
     width: 100%;
-    height: calc(100% - var(--toolbar-height) - var(--filter-height));
+    min-height: 0;
     display: grid;
     grid-template-columns: minmax(0, 1fr) var(--inspector-width);
 }
@@ -269,6 +504,27 @@ input:focus-visible {
     background: color-mix(in srgb, var(--surface) 90%, transparent);
     font-size: 11px;
     pointer-events: none;
+}
+
+.reveal-notice {
+    position: absolute;
+    top: var(--space-4);
+    left: 50%;
+    z-index: 4;
+    max-width: min(560px, calc(100% - 32px));
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--focus);
+    border-radius: var(--radius-panel);
+    background: var(--vscode-editorWidget-background, var(--surface-raised));
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22);
+    transform: translateX(-50%);
+}
+
+.reveal-notice[hidden] {
+    display: none;
 }
 
 .empty-state {
@@ -343,6 +599,13 @@ input:focus-visible {
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+}
+
+.inspector-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-bottom: var(--space-3);
 }
 
 .inspector-description {
@@ -427,6 +690,54 @@ input:focus-visible {
     gap: 5px;
 }
 
+.relation-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-2) var(--space-4);
+    margin: 0 0 var(--space-3);
+    font-variant-numeric: tabular-nums;
+}
+
+.relation-summary dt,
+.relation-summary dd {
+    margin: 0;
+}
+
+.relation-summary dt {
+    color: var(--muted);
+}
+
+.relation-summary dd {
+    color: var(--vscode-foreground);
+    font-weight: 700;
+}
+
+.relation-details {
+    margin-top: var(--space-2);
+}
+
+.relation-details summary {
+    cursor: pointer;
+    color: var(--vscode-textLink-foreground, var(--accent));
+}
+
+.relation-group {
+    margin-top: var(--space-3);
+}
+
+.relation-group > summary {
+    color: var(--vscode-foreground);
+    font-weight: 600;
+}
+
+.relation-evidence {
+    grid-column: 1 / -1;
+    overflow-wrap: anywhere;
+    color: var(--muted);
+    font-family: var(--vscode-editor-font-family, monospace);
+    font-size: 10px;
+}
+
 .relation-button {
     width: 100%;
     min-height: 36px;
@@ -481,7 +792,7 @@ input:focus-visible {
 body.busy::after {
     content: "";
     position: fixed;
-    top: calc(var(--toolbar-height) - 2px);
+    top: 0;
     left: 0;
     z-index: 30;
     width: 28%;
@@ -504,6 +815,12 @@ body.busy::after {
     stroke-dasharray: 5 4;
 }
 
+.kind-member-panel .group-box {
+    fill: color-mix(in srgb, var(--surface-raised) 42%, transparent);
+    stroke: color-mix(in srgb, var(--vscode-foreground, #cccccc) 26%, transparent);
+    stroke-dasharray: none;
+}
+
 .group-title {
     fill: var(--vscode-foreground, #cccccc);
     font-size: 14px;
@@ -520,12 +837,48 @@ body.busy::after {
     stroke: color-mix(in srgb, var(--vscode-foreground, #cccccc) 42%, transparent);
     stroke-width: 1.35;
     vector-effect: non-scaling-stroke;
-    transition: opacity 90ms ease, stroke-width 90ms ease;
+    transition: opacity var(--motion-fast) ease-out;
+}
+
+.edge-group {
+    transition: opacity var(--motion-fast) ease-out;
+}
+
+.edge-group.dimmed {
+    opacity: 0.24;
+}
+
+.edge-group.connected .edge {
+    opacity: 1;
+    stroke-width: 2.2;
+}
+
+.edge-group[role="presentation"] .edge {
+    opacity: 0.76;
 }
 
 .edge.contains {
     stroke: color-mix(in srgb, var(--vscode-foreground, #cccccc) 25%, transparent);
     stroke-dasharray: 4 4;
+}
+
+.hierarchy-bus,
+.edge.hierarchy-branch {
+    fill: none;
+    stroke: color-mix(in srgb, var(--vscode-foreground, #cccccc) 48%, transparent);
+    stroke-width: 1.25;
+    stroke-dasharray: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.hierarchy-arrow-head {
+    fill: none;
+    stroke: color-mix(in srgb, var(--vscode-foreground, #cccccc) 58%, transparent);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .edge.import {
@@ -539,8 +892,57 @@ body.busy::after {
 }
 
 .edge.call,
-.edge.access {
+.edge.access,
+.edge.invoke,
+.edge.return,
+.edge.value {
     stroke: var(--vscode-symbolIcon-functionForeground, #b180d7);
+}
+
+.edge.read {
+    stroke: var(--vscode-charts-blue, #75beff);
+}
+
+.edge.write {
+    stroke: var(--vscode-charts-orange, #ee9d28);
+    stroke-width: 1.8;
+}
+
+.edge.conflict {
+    stroke: var(--vscode-editorError-foreground, #f14c4c);
+    stroke-width: 2;
+}
+
+.edge.conflict-free {
+    stroke: var(--vscode-charts-green, #89d185);
+    stroke-dasharray: 2 3;
+}
+
+.edge.sequential-before,
+.edge.sequential-before-reverse,
+.edge.execution-order {
+    stroke: var(--vscode-charts-blue, #75beff);
+}
+
+.edge.mutually-exclusive {
+    stroke: var(--vscode-charts-purple, #b180d7);
+    stroke-dasharray: 7 4;
+}
+
+.edge.descending-urgency,
+.edge.preempts {
+    stroke: var(--vscode-charts-orange, #ee9d28);
+    stroke-width: 2;
+}
+
+.edge.potential-state-dependency {
+    stroke: var(--muted);
+    stroke-dasharray: 5 5;
+}
+
+.edge.trace-path {
+    opacity: 1;
+    stroke-width: 3;
 }
 
 .edge.data,
@@ -606,7 +1008,7 @@ body.busy::after {
 }
 
 .arch-node.dimmed {
-    opacity: 0.18;
+    opacity: 0.36;
 }
 
 .arch-node.connected:not(.dimmed) .node-body {
@@ -632,13 +1034,19 @@ body.busy::after {
 .kind-enum .node-accent,
 .kind-type .node-accent { fill: var(--vscode-symbolIcon-structForeground, #86c691); }
 .kind-external .node-accent,
-.kind-host .node-accent { fill: var(--vscode-charts-purple, #b180d7); }
+.kind-host .node-accent,
+.kind-member-group .node-accent,
+.kind-instance-group .node-accent { fill: var(--vscode-charts-purple, #b180d7); }
 
 .node-title {
     fill: var(--vscode-foreground, #cccccc);
     font-size: 13px;
     font-weight: 700;
     pointer-events: none;
+}
+
+.dense-method .node-title {
+    font-size: 14px;
 }
 
 .node-kind {
@@ -669,6 +1077,26 @@ body.busy::after {
     vector-effect: non-scaling-stroke;
 }
 
+.bucket-count {
+    fill: var(--muted);
+    font-size: 8px;
+    pointer-events: none;
+}
+
+.group-chevron {
+    fill: none;
+    stroke: var(--vscode-foreground);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.arch-node.editor-reveal .node-body {
+    stroke: var(--vscode-editorInfo-foreground, var(--focus));
+    stroke-width: 2.6;
+}
+
 @media (max-width: 900px) {
     :root {
         --inspector-width: 270px;
@@ -684,19 +1112,17 @@ body.busy::after {
         display: none;
     }
 
-    .view-controls {
-        min-width: 150px;
+    .toolbar {
+        align-items: flex-end;
     }
 
-    #breadcrumbs {
-        display: none;
+    .view-controls {
+        flex-basis: 100%;
     }
 }
 
 @media (max-width: 680px) {
     :root {
-        --toolbar-height: 96px;
-        --filter-height: 64px;
         --inspector-width: 100%;
     }
 
@@ -707,22 +1133,128 @@ body.busy::after {
     }
 
     .brand {
-        flex: 1 1 210px;
+        display: none;
+    }
+
+    .focus-row {
+        flex-basis: 100%;
     }
 
     .search-controls {
-        order: 3;
         flex: 1 1 100%;
         max-width: none;
     }
 
+    .icon-controls {
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+    }
+
+    .control-field {
+        flex: 1 1 auto;
+    }
+
+    .segmented {
+        width: 100%;
+    }
+
+    .segmented button {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        line-height: 1.15;
+    }
+
     .workspace {
         grid-template-columns: 1fr;
-        grid-template-rows: minmax(0, 1fr) 220px;
+        grid-template-rows: minmax(150px, 1fr) 160px;
     }
 
     .inspector {
         border-top: 1px solid var(--panel-border);
         border-left: 0;
+    }
+
+    .schedule-legend {
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .tracebar {
+        flex-wrap: wrap;
+    }
+
+    .tracebar #trace-summary {
+        flex: 1 1 100%;
+    }
+}
+
+@media (forced-colors: active) {
+    button,
+    select,
+    input,
+    .segmented,
+    .node-body {
+        forced-color-adjust: auto;
+    }
+
+    #architecture-canvas * {
+        forced-color-adjust: none;
+    }
+
+    #architecture-canvas .node-body,
+    #architecture-canvas .group-box,
+    #architecture-canvas .edge-label-bg {
+        fill: Canvas;
+        stroke: CanvasText;
+    }
+
+    #architecture-canvas .node-accent,
+    #architecture-canvas .arch-node.selected .node-accent {
+        fill: Highlight;
+    }
+
+    #architecture-canvas .edge,
+    #architecture-canvas .hierarchy-bus,
+    #architecture-canvas .hierarchy-arrow-head,
+    #architecture-canvas .group-chevron,
+    #architecture-canvas .node-port {
+        stroke: CanvasText;
+    }
+
+    #architecture-canvas .edge.potential-state-dependency,
+    #architecture-canvas .edge.contains,
+    #architecture-canvas .edge.import {
+        stroke: GrayText;
+    }
+
+    #architecture-canvas .arch-node.selected .node-body,
+    #architecture-canvas .arch-node:focus-visible .node-body {
+        stroke: Highlight;
+        stroke-width: 3;
+    }
+
+    .node-title,
+    .node-kind,
+    .node-subtitle,
+    .node-detail,
+    .bucket-count,
+    .edge-label,
+    .group-title,
+    .group-description {
+        fill: CanvasText;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }

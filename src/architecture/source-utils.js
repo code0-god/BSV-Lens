@@ -250,6 +250,143 @@ function getLeadingAnnotations(text, lineStarts, offset) {
     return annotations;
 }
 
+function getLeadingBsvAttributes(text, offset) {
+    const attributes = scanBsvAttributes(text);
+    const leading = [];
+    let cursor = offset;
+    for (let index = attributes.length - 1; index >= 0; index -= 1) {
+        const attribute = attributes[index];
+        if (attribute.end > cursor) continue;
+        if (text.slice(attribute.end, cursor).trim()) break;
+        leading.unshift(...attribute.assignments);
+        cursor = attribute.start;
+    }
+    return leading;
+}
+
+function scanBsvAttributes(text) {
+    const result = [];
+    let index = 0;
+    let state = 'normal';
+    let escaped = false;
+    while (index < text.length) {
+        const current = text[index];
+        const next = text[index + 1];
+        if (state === 'line-comment') {
+            if (current === '\n') state = 'normal';
+            index += 1;
+            continue;
+        }
+        if (state === 'block-comment') {
+            if (current === '*' && next === '/') {
+                state = 'normal';
+                index += 2;
+            } else {
+                index += 1;
+            }
+            continue;
+        }
+        if (state === 'string') {
+            if (!escaped && current === '"') state = 'normal';
+            escaped = current === '\\' && !escaped;
+            if (current !== '\\') escaped = false;
+            index += 1;
+            continue;
+        }
+        if (current === '/' && next === '/') {
+            state = 'line-comment';
+            index += 2;
+            continue;
+        }
+        if (current === '/' && next === '*') {
+            state = 'block-comment';
+            index += 2;
+            continue;
+        }
+        if (current === '"') {
+            state = 'string';
+            escaped = false;
+            index += 1;
+            continue;
+        }
+        if (current === '(' && next === '*') {
+            const end = findAttributeEnd(text, index + 2);
+            if (end < 0) break;
+            const raw = text.slice(index + 2, end);
+            result.push({
+                start: index,
+                end: end + 2,
+                raw,
+                assignments: parseBsvAttributeAssignments(raw, index, end + 2)
+            });
+            index = end + 2;
+            continue;
+        }
+        index += 1;
+    }
+    return result;
+}
+
+function findAttributeEnd(text, start) {
+    let quoted = false;
+    let escaped = false;
+    for (let index = start; index < text.length - 1; index += 1) {
+        const current = text[index];
+        if (quoted) {
+            if (!escaped && current === '"') quoted = false;
+            escaped = current === '\\' && !escaped;
+            if (current !== '\\') escaped = false;
+            continue;
+        }
+        if (current === '"') {
+            quoted = true;
+            escaped = false;
+        } else if (current === '*' && text[index + 1] === ')') {
+            return index;
+        }
+    }
+    return -1;
+}
+
+function parseBsvAttributeAssignments(raw, start, end) {
+    return splitOutsideQuotes(raw, ',').map((part) => {
+        const match = /^\s*([A-Za-z_$][\w$]*)\s*(?:=\s*(.*))?$/.exec(part);
+        if (!match) return null;
+        const rawValue = normalizeWhitespace(match[2] || '');
+        const value = rawValue.replace(/^"([\s\S]*)"$/, '$1').replace(/\\"/g, '"');
+        return {
+            name: match[1],
+            rawValue,
+            value,
+            names: value ? splitOutsideQuotes(value, ',').map(normalizeWhitespace).filter(Boolean) : [],
+            range: { start, end }
+        };
+    }).filter(Boolean);
+}
+
+function splitOutsideQuotes(text, delimiter) {
+    const parts = [];
+    let start = 0;
+    let quoted = false;
+    let escaped = false;
+    for (let index = 0; index < text.length; index += 1) {
+        const current = text[index];
+        if (quoted) {
+            if (!escaped && current === '"') quoted = false;
+            escaped = current === '\\' && !escaped;
+            if (current !== '\\') escaped = false;
+            continue;
+        }
+        if (current === '"') quoted = true;
+        else if (current === delimiter) {
+            parts.push(text.slice(start, index));
+            start = index + 1;
+        }
+    }
+    parts.push(text.slice(start));
+    return parts;
+}
+
 function simpleGlobToRegExp(glob) {
     let expression = '^';
     for (let index = 0; index < glob.length; index += 1) {
@@ -278,6 +415,7 @@ module.exports = {
     findKeywordEnd,
     findMatchingDelimiter,
     findStatementEnd,
+    getLeadingBsvAttributes,
     getLeadingAnnotations,
     identifierBefore,
     isInsideSpan,
@@ -287,6 +425,7 @@ module.exports = {
     readIdentifier,
     simpleGlobToRegExp,
     splitStatements,
+    scanBsvAttributes,
     splitTopLevel,
     truncate
 };

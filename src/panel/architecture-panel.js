@@ -2,6 +2,8 @@
 
 const { TextEncoder } = require('util');
 const { getWebviewHtml } = require('./html');
+const { findSmallestNodeAtPosition } = require('../architecture/symbol-index');
+const { resolveDefaultSourceScope } = require('../architecture/analyzer');
 
 const VIEW_TYPE = 'bsvArchitecture.explorer';
 
@@ -36,12 +38,20 @@ class ArchitecturePanel {
         const folder = state.workspaceUri
             ? context.vscode.workspace.workspaceFolders?.find((item) => item.uri.toString() === state.workspaceUri)
             : context.vscode.workspace.workspaceFolders?.[0];
-        const activeUri = state.activeUri ? context.vscode.Uri.parse(state.activeUri) : undefined;
+        const activeUri = state.activeUri
+            ? context.vscode.Uri.parse(state.activeUri)
+            : state.activeFile && folder
+                ? context.vscode.Uri.joinPath(folder.uri, ...state.activeFile.split('/'))
+                : undefined;
         const instance = new ArchitecturePanel(panel, context, analyzer, {
             folder,
             activeUri,
-            initialMode: state.mode || 'system',
-            focusId: state.focusId || null
+            initialMode: state.mode || null,
+            initialSourceScope: state.sourceScope || (state.mode === 'file' ? 'current-file' : 'workspace'),
+            initialLevel: state.level || 'system',
+            initialAnalysisMode: state.analysisMode || 'structure',
+            initialHopScope: state.hopScope || 'all',
+            focusId: state.focusId || state.focusStack?.at(-1) || null
         }, output);
         ArchitecturePanel.currentPanel = instance;
         await instance.refresh();
@@ -58,7 +68,10 @@ class ArchitecturePanel {
         this.watcherDisposables = [];
         this.model = null;
         this.refreshToken = 0;
+        this.analysisCancellation = null;
         this.refreshTimer = null;
+        this.selectionTimer = null;
+        this.lastRevealedNodeId = null;
         this.request = {};
         this.updateRequest(request, false);
 
@@ -71,12 +84,20 @@ class ArchitecturePanel {
         this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
         this.panel.webview.onDidReceiveMessage((message) => this.handleMessage(message), null, this.disposables);
         this.disposables.push(this.vscode.window.onDidChangeActiveTextEditor((editor) => this.handleActiveEditor(editor)));
+        if (typeof this.vscode.window.onDidChangeTextEditorSelection === 'function') {
+            this.disposables.push(
+                this.vscode.window.onDidChangeTextEditorSelection((event) => this.handleSelectionChange(event))
+            );
+        }
         this.installWatchers();
     }
 
     updateRequest(request = {}, reinstallWatchers = true) {
         const previousFolder = this.watchFolderKey();
-        for (const key of ['folder', 'activeUri', 'initialMode', 'focusId', 'focusName', 'focusKind']) {
+        for (const key of [
+            'folder', 'activeUri', 'initialMode', 'initialSourceScope', 'initialLevel',
+            'initialAnalysisMode', 'initialHopScope', 'focusId', 'focusName', 'focusKind'
+        ]) {
             if (Object.prototype.hasOwnProperty.call(request, key)) this.request[key] = request[key] ?? null;
         }
         if (Object.prototype.hasOwnProperty.call(request, 'fileOnly')) {
@@ -134,12 +155,18 @@ class ArchitecturePanel {
 
     async refresh() {
         const token = ++this.refreshToken;
+        this.analysisCancellation?.cancel?.();
+        this.analysisCancellation?.dispose?.();
+        this.analysisCancellation = typeof this.vscode.CancellationTokenSource === 'function'
+            ? new this.vscode.CancellationTokenSource()
+            : null;
         this.panel.webview.postMessage({ type: 'busy', value: true, message: 'Analyzing BSV sources…' });
         try {
             const model = await this.analyzer.analyze({
                 folder: this.request.folder,
                 activeUri: this.request.activeUri,
-                fileOnly: this.request.fileOnly
+                fileOnly: this.request.fileOnly,
+                token: this.analysisCancellation?.token
             });
             if (token !== this.refreshToken) return;
             this.model = model;
@@ -150,6 +177,7 @@ class ArchitecturePanel {
                 model,
                 initial: {
                     mode: this.request.initialMode || this.defaultView(),
+                    ...this.defaultViewState(),
                     focusId: initialFocus,
                     activeFile: model.activeFile
                 }
@@ -161,6 +189,10 @@ class ArchitecturePanel {
             this.panel.webview.postMessage({ type: 'error', message: error.message });
         } finally {
             if (token === this.refreshToken) this.panel.webview.postMessage({ type: 'busy', value: false });
+            if (token === this.refreshToken) {
+                this.analysisCancellation?.dispose?.();
+                this.analysisCancellation = null;
+            }
         }
     }
 
@@ -183,6 +215,17 @@ class ArchitecturePanel {
         return this.vscode.workspace.getConfiguration('bsvArchitecture', this.request.folder?.uri).get('defaultView', 'system');
     }
 
+    defaultViewState() {
+        const settings = this.vscode.workspace.getConfiguration('bsvArchitecture', this.request.folder?.uri);
+        return {
+            sourceScope: this.request.initialSourceScope
+                || resolveDefaultSourceScope(settings),
+            level: this.request.initialLevel || settings.get('defaultLevel', 'system'),
+            analysisMode: this.request.initialAnalysisMode || settings.get('defaultMode', 'structure'),
+            hopScope: this.request.initialHopScope || settings.get('defaultHopScope', 'all')
+        };
+    }
+
     async handleMessage(message) {
         try {
             switch (message?.type) {
@@ -193,6 +236,7 @@ class ArchitecturePanel {
                             model: this.model,
                             initial: {
                                 mode: this.request.initialMode || this.defaultView(),
+                                ...this.defaultViewState(),
                                 focusId: this.resolveInitialFocus(this.model),
                                 activeFile: this.model.activeFile
                             }
@@ -216,8 +260,11 @@ class ArchitecturePanel {
                     this.panel.webview.postMessage({ type: 'toast', message: 'SVG copied to the clipboard.' });
                     break;
                 case 'state':
-                    this.request.initialMode = message.state?.mode || this.request.initialMode;
-                    this.request.focusId = message.state?.focusId || null;
+                    this.request.initialSourceScope = message.state?.sourceScope || this.request.initialSourceScope;
+                    this.request.initialLevel = message.state?.level || this.request.initialLevel;
+                    this.request.initialAnalysisMode = message.state?.analysisMode || this.request.initialAnalysisMode;
+                    this.request.initialHopScope = message.state?.hopScope || this.request.initialHopScope;
+                    this.request.focusId = message.state?.focusStack?.at(-1) || message.state?.focusId || null;
                     break;
                 default:
                     break;
@@ -283,6 +330,37 @@ class ArchitecturePanel {
             this.model.activeFile = activeFile;
             this.panel.webview.postMessage({ type: 'activeFile', activeFile });
         }
+        if (editor?.selection) {
+            this.handleSelectionChange({ textEditor: editor, selections: [editor.selection] });
+        }
+    }
+
+    handleSelectionChange(event) {
+        if (this.selectionTimer) clearTimeout(this.selectionTimer);
+        this.selectionTimer = setTimeout(() => {
+            this.selectionTimer = null;
+            this.revealEditorSelection(event);
+        }, 140);
+    }
+
+    revealEditorSelection(event) {
+        const editor = event?.textEditor;
+        const uri = editor?.document?.uri;
+        const position = event?.selections?.[0]?.active;
+        if (!uri || !uri.path.toLowerCase().endsWith('.bsv') || !position || !this.model) return;
+        const enabled = this.vscode.workspace
+            .getConfiguration('bsvArchitecture', uri)
+            .get('syncWithEditor', true);
+        if (!enabled) return;
+        const node = findSmallestNodeAtPosition(
+            this.model.nodes,
+            uri.toString(),
+            position.line,
+            position.character
+        );
+        if (!node || node.id === this.lastRevealedNodeId) return;
+        this.lastRevealedNodeId = node.id;
+        this.panel.webview.postMessage({ type: 'revealNode', nodeId: node.id });
     }
 
     reportError(error) {
@@ -294,6 +372,9 @@ class ArchitecturePanel {
     dispose() {
         if (ArchitecturePanel.currentPanel === this) ArchitecturePanel.currentPanel = null;
         if (this.refreshTimer) clearTimeout(this.refreshTimer);
+        if (this.selectionTimer) clearTimeout(this.selectionTimer);
+        this.analysisCancellation?.cancel?.();
+        this.analysisCancellation?.dispose?.();
         while (this.watcherDisposables.length > 0) {
             try {
                 this.watcherDisposables.pop().dispose();

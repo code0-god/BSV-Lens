@@ -13,8 +13,7 @@ const entries = collectFiles(root, {
     prefix: manifest.name,
     exclude(relativePath, entry) {
         const segments = relativePath.split('/');
-        if (segments.some((segment) => ['.git', 'node_modules', '.build'].includes(segment))) return true;
-        if (relativePath === `dist/${archiveName}` || relativePath === 'dist/SHA256SUMS.txt') return true;
+        if (segments.some((segment) => ['.git', '.omo', 'node_modules', '.build', 'dist'].includes(segment))) return true;
         return entry.isFile() && /(?:\.log|\.DS_Store)$/.test(relativePath);
     }
 });

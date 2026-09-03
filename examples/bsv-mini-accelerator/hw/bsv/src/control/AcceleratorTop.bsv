@@ -16,10 +16,12 @@ module mkAcceleratorTop(AcceleratorTopIfc);
     AcceleratorControllerIfc controller <- mkAcceleratorController;
     MemorySubsystemIfc memory <- mkMemorySubsystem;
     VectorQuantizerIfc quantizer <- mkVectorQuantizer;
-    SystolicArrayIfc array <- mkSystolicArray;
+    SystolicArrayIfc arrayLane0 <- mkSystolicArray;
+    SystolicArrayIfc arrayLane1 <- mkSystolicArray;
 
     rule dispatch(controller.issueValid && quantizer.valid);
-        array.start;
+        arrayLane0.start;
+        arrayLane1.start;
         controller.consume;
     endrule
 

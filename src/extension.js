@@ -6,8 +6,8 @@ const { parseBsvFile } = require('./architecture/parser');
 const { ArchitecturePanel, VIEW_TYPE } = require('./panel/architecture-panel');
 
 function activate(context) {
-    const analyzer = new WorkspaceAnalyzer(vscode);
     const output = vscode.window.createOutputChannel('BSV Architecture Explorer');
+    const analyzer = new WorkspaceAnalyzer(vscode, { output });
     const runtime = { vscode, extensionUri: context.extensionUri };
     const codeLensProvider = new BsvArchitectureCodeLensProvider(vscode);
 
@@ -19,6 +19,7 @@ function activate(context) {
             folder,
             activeUri,
             initialMode: 'system',
+            initialSourceScope: 'workspace',
             focusId: null,
             focusName: null,
             focusKind: null,
@@ -37,6 +38,7 @@ function activate(context) {
             folder,
             activeUri: uri,
             initialMode: 'file',
+            initialSourceScope: 'current-file',
             focusId: null,
             focusName: null,
             focusKind: null,
@@ -53,6 +55,8 @@ function activate(context) {
             folder,
             activeUri: uri,
             initialMode: mode,
+            initialSourceScope: kind === 'package' ? 'workspace' : 'current-file',
+            initialLevel: kind === 'module' ? 'module' : kind === 'function' ? 'behavior' : 'system',
             focusId: argument.id || null,
             focusName: argument.name || null,
             focusKind: kind,
@@ -74,6 +78,7 @@ function activate(context) {
                 folder,
                 activeUri,
                 initialMode: 'system',
+                initialSourceScope: 'workspace',
                 focusId: null,
                 focusName: null,
                 focusKind: null,

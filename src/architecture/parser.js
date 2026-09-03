@@ -6,6 +6,7 @@ const {
     findKeywordEnd,
     findMatchingDelimiter,
     findStatementEnd,
+    getLeadingBsvAttributes,
     getLeadingAnnotations,
     identifierBefore,
     isInsideSpan,
@@ -16,6 +17,7 @@ const {
     splitTopLevel,
     truncate
 } = require('./source-utils');
+const { analyzeBehavior } = require('./behavior-analysis');
 
 const CONTROL_WORDS = new Set([
     'action', 'actionvalue', 'begin', 'case', 'default', 'else', 'end', 'endaction',
@@ -157,18 +159,26 @@ function parseModules(text, masked, uri, lineStarts, diagnostics) {
         const header = masked.slice(match.index, headerEnd + 1);
         const returnInterface = extractModuleReturnInterface(masked, nameToken.end, headerEnd);
         const annotations = getLeadingAnnotations(text, lineStarts, match.index);
+        const bsvAttributes = decorateBsvAttributes(
+            getLeadingBsvAttributes(text, match.index),
+            uri,
+            lineStarts
+        );
         modules.push({
             name: nameToken.value,
             returnInterface,
             signature: truncate(text.slice(match.index, headerEnd + 1), 260),
             annotations,
+            bsvAttributes,
             location: makeLocation(uri, lineStarts, nameToken.start, nameToken.end),
+            sourceRange: makeLocation(uri, lineStarts, match.index, end),
             range: { start: match.index, end, bodyStart: headerEnd + 1, bodyEnd: endKeyword >= 0 ? endKeyword : end },
             instances: [],
             rules: [],
             methods: [],
             localFunctions: [],
             providedInterfaces: [],
+            scheduleRelations: scheduleRelationsFromAttributes(bsvAttributes),
             summary: summarizeAnnotations(annotations)
         });
 
@@ -227,9 +237,10 @@ function parseInterfaces(text, masked, uri, lineStarts, moduleSpans, diagnostics
             name: nameToken.value,
             annotations: getLeadingAnnotations(text, lineStarts, match.index),
             signature: truncate(text.slice(match.index, headerEnd + 1), 260),
-            methods: parseInterfaceMethodDeclarations(body, bodyStart, uri, lineStarts),
+            methods: parseInterfaceMethodDeclarations(body, bodyStart, uri, lineStarts, nameToken.value),
             subinterfaces: parseSubinterfaceDeclarations(body, bodyStart, uri, lineStarts),
             location: makeLocation(uri, lineStarts, nameToken.start, nameToken.end),
+            sourceRange: makeLocation(uri, lineStarts, match.index, endKeyword + 'endinterface'.length),
             range: { start: match.index, end: endKeyword + 'endinterface'.length, bodyStart, bodyEnd: endKeyword }
         });
         expression.lastIndex = endKeyword + 'endinterface'.length;
@@ -238,7 +249,7 @@ function parseInterfaces(text, masked, uri, lineStarts, moduleSpans, diagnostics
     return interfaces;
 }
 
-function parseInterfaceMethodDeclarations(body, baseOffset, uri, lineStarts) {
+function parseInterfaceMethodDeclarations(body, baseOffset, uri, lineStarts, interfaceName = null) {
     const methods = [];
     const expression = /\bmethod\b/g;
     let match;
@@ -249,10 +260,14 @@ function parseInterfaceMethodDeclarations(body, baseOffset, uri, lineStarts) {
         const callable = parseCallableSignature(header);
         if (!callable.name) continue;
         const absolute = baseOffset + match.index;
+        const classification = classifyMethod(callable.returnType);
         methods.push({
             name: callable.name,
             returnType: callable.returnType,
             parameters: callable.parameters,
+            guard: callable.guard,
+            ...classification,
+            port: createMethodPort(callable, classification, interfaceName),
             signature: truncate(body.slice(match.index, headerEnd + 1), 220),
             location: makeLocation(uri, lineStarts, absolute, baseOffset + headerEnd + 1)
         });
@@ -315,6 +330,7 @@ function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics)
             returns: analysis.returns,
             operations: analysis.operations,
             location: makeLocation(uri, lineStarts, match.index + match[0].length + callable.nameOffset, match.index + match[0].length + callable.nameOffset + callable.name.length),
+            sourceRange: makeLocation(uri, lineStarts, match.index, end),
             range: { start: match.index, end, bodyStart, bodyEnd }
         });
 
@@ -327,6 +343,9 @@ function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics)
 function parseCallableSignature(header) {
     const guardOffset = findTopLevelKeyword(header, 'if');
     const declaration = guardOffset >= 0 ? header.slice(0, guardOffset) : header;
+    const guard = guardOffset >= 0
+        ? stripOuterParentheses(normalizeWhitespace(header.slice(guardOffset + 2)))
+        : '';
     const open = findCallableParameterOpen(declaration);
     if (open >= 0) {
         const nameToken = identifierBefore(declaration, open);
@@ -337,7 +356,8 @@ function parseCallableSignature(header) {
             name: nameToken.value,
             nameOffset: nameToken.start,
             returnType: normalizeWhitespace(declaration.slice(0, nameToken.start)),
-            parameters: parseParameters(paramsText)
+            parameters: parseParameters(paramsText),
+            guard
         };
     }
 
@@ -348,8 +368,50 @@ function parseCallableSignature(header) {
         name: nameToken ? nameToken.value : null,
         nameOffset: nameToken ? nameToken.start : 0,
         returnType: nameToken ? normalizeWhitespace(before.slice(0, nameToken.start)) : '',
-        parameters: []
+        parameters: [],
+        guard
     };
+}
+
+function classifyMethod(returnType) {
+    const normalized = normalizeWhitespace(returnType);
+    if (/^ActionValue\s*#/i.test(normalized)) {
+        return {
+            category: 'action-value',
+            direction: 'request-response',
+            resultType: typeApplicationArguments(normalized)[0] || null
+        };
+    }
+    if (/^Action$/i.test(normalized)) {
+        return { category: 'action', direction: 'input', resultType: null };
+    }
+    if (normalized) {
+        return { category: 'value', direction: 'output', resultType: normalized };
+    }
+    return { category: 'unknown', direction: 'unknown', resultType: null };
+}
+
+function createMethodPort(callable, classification, interfaceName = null) {
+    return {
+        name: callable.name,
+        interface: interfaceName,
+        category: classification.category,
+        direction: classification.direction,
+        parameters: callable.parameters.map((parameter) => ({ ...parameter })),
+        returnType: callable.returnType,
+        resultType: classification.resultType,
+        guarded: Boolean(callable.guard),
+        guard: callable.guard || null
+    };
+}
+
+function typeApplicationArguments(type) {
+    const hash = type.indexOf('#');
+    if (hash < 0) return [];
+    const open = type.indexOf('(', hash);
+    if (open < 0) return [];
+    const close = findMatchingDelimiter(type, open, '(', ')');
+    return close < 0 ? [] : splitTopLevel(type.slice(open + 1, close), ',').map(normalizeWhitespace);
 }
 
 function findTopLevelKeyword(text, keyword) {
@@ -532,6 +594,7 @@ function parseTypedefs(text, masked, uri, lineStarts, moduleSpans, diagnostics) 
             annotations: getLeadingAnnotations(text, lineStarts, match.index),
             signature: truncate(statementText, 260),
             location: makeLocation(uri, lineStarts, match.index + parsed.nameOffset, match.index + parsed.nameOffset + parsed.name.length),
+            sourceRange: makeLocation(uri, lineStarts, match.index, end + 1),
             range: { start: match.index, end: end + 1 }
         });
         expression.lastIndex = end + 1;
@@ -612,6 +675,10 @@ function populateModuleMembers(module, text, masked, uri, lineStarts, allFunctio
     module.methods = parseMethods(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances);
     module.localFunctions = allFunctions.filter((fn) => fn.parentModuleName === module.name).map((fn) => fn.name);
     module.providedInterfaces = parseProvidedInterfaces(bodyMasked, bodyStart, uri, lineStarts);
+    module.scheduleRelations.push(
+        ...module.rules.flatMap((rule) => rule.scheduleRelations || []),
+        ...module.methods.flatMap((method) => method.scheduleRelations || [])
+    );
 }
 
 function parseInstances(bodyMasked, bodyText, baseOffset, uri, lineStarts) {
@@ -637,6 +704,7 @@ function parseInstances(bodyMasked, bodyText, baseOffset, uri, lineStarts) {
             primitiveKind: classifyPrimitive(typeText, match[1]),
             signature: truncate(bodyText.slice(declarationStart, end), 260),
             location: makeLocation(uri, lineStarts, absoluteName, absoluteName + nameToken.value.length),
+            sourceRange: makeLocation(uri, lineStarts, baseOffset + declarationStart, baseOffset + end),
             range: { start: baseOffset + declarationStart, end: baseOffset + end }
         });
         expression.lastIndex = end;
@@ -679,14 +747,42 @@ function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances
         const contentStart = headerEnd + 1;
         const contentEnd = endKeyword >= 0 ? endKeyword : headerEnd;
         const content = bodyMasked.slice(contentStart, contentEnd);
+        const contentText = bodyText.slice(contentStart, contentEnd);
         const absoluteName = baseOffset + match.index + match[0].lastIndexOf(match[1]);
+        const bsvAttributes = decorateBsvAttributes(
+            getLeadingBsvAttributes(bodyText, match.index),
+            uri,
+            lineStarts,
+            baseOffset
+        );
+        const behavior = analyzeBehavior({
+            text: contentText,
+            masked: content,
+            baseOffset: baseOffset + contentStart,
+            instances,
+            callable: match[1],
+            makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
+        });
+        const guardBehavior = analyzeBehavior({
+            text: bodyText.slice(expression.lastIndex, headerEnd),
+            masked: bodyMasked.slice(expression.lastIndex, headerEnd),
+            baseOffset: baseOffset + expression.lastIndex,
+            instances,
+            callable: match[1],
+            makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
+        });
+        const combined = mergeBehavior(guardBehavior, behavior);
         rules.push({
             name: match[1],
             guard: truncate(stripOuterParentheses(guardText), 220),
+            bsvAttributes,
+            scheduleRelations: scheduleRelationsFromAttributes(bsvAttributes),
             calls: extractCalls(content),
-            references: extractInstanceReferences(content, instances),
+            references: unique([...extractInstanceReferences(content, instances), ...combined.accesses.map((item) => item.instance)]),
+            ...combined,
             signature: truncate(bodyText.slice(match.index, headerEnd + 1), 240),
             location: makeLocation(uri, lineStarts, absoluteName, absoluteName + match[1].length),
+            sourceRange: makeLocation(uri, lineStarts, baseOffset + match.index, baseOffset + end),
             range: { start: baseOffset + match.index, end: baseOffset + end }
         });
         expression.lastIndex = Math.max(expression.lastIndex, end);
@@ -704,6 +800,7 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
         const headerEnd = findStatementEnd(bodyMasked, match.index + match[0].length);
         if (headerEnd < 0) continue;
         const header = bodyMasked.slice(match.index + match[0].length, headerEnd);
+        const rawHeader = bodyText.slice(match.index + match[0].length, headerEnd);
         const callable = parseCallableSignature(header);
         if (!callable.name) continue;
         const inline = findTopLevelCharacter(header, '=') >= 0;
@@ -714,16 +811,51 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
             : headerEnd + 1;
         const contentEnd = inline ? headerEnd : (endKeyword >= 0 ? endKeyword : headerEnd);
         const content = bodyMasked.slice(contentStart, contentEnd);
+        const contentText = bodyText.slice(contentStart, contentEnd);
         const absoluteName = baseOffset + match.index + match[0].length + callable.nameOffset;
+        const bsvAttributes = decorateBsvAttributes(
+            getLeadingBsvAttributes(bodyText, match.index),
+            uri,
+            lineStarts,
+            baseOffset
+        );
+        const behavior = analyzeBehavior({
+            text: contentText,
+            masked: content,
+            baseOffset: baseOffset + contentStart,
+            instances,
+            callable: callable.name,
+            makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
+        });
+        const guardOffset = findTopLevelKeyword(header, 'if');
+        const guardBehavior = guardOffset >= 0
+            ? analyzeBehavior({
+                text: rawHeader.slice(guardOffset + 2),
+                masked: header.slice(guardOffset + 2),
+                baseOffset: baseOffset + match.index + match[0].length + guardOffset + 2,
+                instances,
+                callable: callable.name,
+                makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
+            })
+            : emptyBehavior();
+        const combined = mergeBehavior(guardBehavior, behavior);
+        const classification = classifyMethod(callable.returnType);
         methods.push({
             name: callable.name,
             returnType: callable.returnType,
             parameters: callable.parameters,
+            guard: callable.guard,
+            ...classification,
+            port: createMethodPort(callable, classification),
+            bsvAttributes,
+            scheduleRelations: scheduleRelationsFromAttributes(bsvAttributes),
             inline,
             calls: extractCalls(content),
-            references: extractInstanceReferences(content, instances),
+            references: unique([...extractInstanceReferences(content, instances), ...combined.accesses.map((item) => item.instance)]),
+            ...combined,
             signature: truncate(bodyText.slice(match.index, headerEnd + 1), 240),
             location: makeLocation(uri, lineStarts, absoluteName, absoluteName + callable.name.length),
+            sourceRange: makeLocation(uri, lineStarts, baseOffset + match.index, baseOffset + end),
             range: { start: baseOffset + match.index, end: baseOffset + end }
         });
         expression.lastIndex = Math.max(expression.lastIndex, end);
@@ -741,6 +873,95 @@ function extractInstanceReferences(content, instances) {
         if (member.test(content) || assignment.test(content)) references.push(instance.name);
     }
     return references;
+}
+
+function emptyBehavior() {
+    return { accesses: [], reads: [], writes: [], invocations: [] };
+}
+
+function mergeBehavior(...items) {
+    const accesses = [];
+    const seen = new Set();
+    for (const item of items) {
+        for (const access of item.accesses || []) {
+            const key = [
+                access.instance,
+                access.memberPath || '',
+                access.kind,
+                access.operation,
+                access.location?.line,
+                access.location?.column
+            ].join('|');
+            if (seen.has(key)) continue;
+            seen.add(key);
+            accesses.push(access);
+        }
+    }
+    return {
+        accesses,
+        reads: unique(accesses.filter((item) => item.kind === 'read').map((item) => item.instance)),
+        writes: unique(accesses.filter((item) => item.kind === 'write').map((item) => item.instance)),
+        invocations: unique(accesses
+            .filter((item) => ['invoke', 'return', 'access'].includes(item.kind))
+            .map((item) => `${item.instance}.${item.member || ''}`.replace(/\.$/, '')))
+    };
+}
+
+function unique(values) {
+    return [...new Set(values)];
+}
+
+function decorateBsvAttributes(attributes, uri, lineStarts, baseOffset = 0) {
+    return attributes.map((attribute) => ({
+        ...attribute,
+        location: makeLocation(
+            uri,
+            lineStarts,
+            baseOffset + attribute.range.start,
+            baseOffset + attribute.range.end
+        )
+    }));
+}
+
+function scheduleRelationsFromAttributes(attributes) {
+    const relationKinds = {
+        descending_urgency: { kind: 'descending-urgency', ordered: true },
+        execution_order: { kind: 'execution-order', ordered: true },
+        preempts: { kind: 'preempts', ordered: true },
+        mutually_exclusive: { kind: 'mutually-exclusive', bidirectional: true },
+        conflict_free: { kind: 'conflict-free', bidirectional: true }
+    };
+    const relations = [];
+    for (const attribute of attributes) {
+        const descriptor = relationKinds[attribute.name.toLowerCase()];
+        if (!descriptor || attribute.names.length < 2) continue;
+        const pairs = descriptor.ordered
+            ? attribute.names.slice(0, -1).map((name, index) => [name, attribute.names[index + 1]])
+            : unorderedPairs(attribute.names);
+        for (const [source, target] of pairs) {
+            relations.push({
+                source,
+                target,
+                kind: descriptor.kind,
+                bidirectional: descriptor.bidirectional === true,
+                origin: 'source-attribute',
+                confidence: 'explicit',
+                evidence: `(* ${attribute.name} = ${attribute.rawValue} *)`,
+                sourceLocation: attribute.location
+            });
+        }
+    }
+    return relations;
+}
+
+function unorderedPairs(values) {
+    const pairs = [];
+    for (let left = 0; left < values.length; left += 1) {
+        for (let right = left + 1; right < values.length; right += 1) {
+            pairs.push([values[left], values[right]]);
+        }
+    }
+    return pairs;
 }
 
 function parseProvidedInterfaces(bodyMasked, baseOffset, uri, lineStarts) {
@@ -804,5 +1025,7 @@ module.exports = {
     extractCalls,
     parseBsvFile,
     parseCallableSignature,
-    parseParameters
+    parseParameters,
+    classifyMethod,
+    scheduleRelationsFromAttributes
 };

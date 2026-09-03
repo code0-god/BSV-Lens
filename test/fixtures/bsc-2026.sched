@@ -1,0 +1,23 @@
+=== Generated schedule for mkSystolicArray ===
+
+Method schedule
+---------------
+Method: start
+Ready signal: ! running
+Sequenced after: done
+Conflicts: start
+
+Method: done
+Ready signal: True
+Conflict-free: done
+Sequenced before: start
+
+Rule schedule
+-------------
+Rule: step
+Predicate: running
+Blocking rules: (none)
+
+Logical execution order: done, start, step
+
+===============================================

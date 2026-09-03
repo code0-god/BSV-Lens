@@ -1,0 +1,7 @@
+# Compact scheduling fixture
+first C second
+first CF observer
+first SB commit
+commit SBR reset
+first EO last
+worker: CF [reader, writer]; SB finisher

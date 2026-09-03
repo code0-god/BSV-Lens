@@ -7,12 +7,15 @@ const path = require('node:path');
 const { normalizeConfig, parseJsonc } = require('../src/architecture/config');
 const { buildArchitectureModel } = require('../src/architecture/graph-builder');
 const { parseBsvFile } = require('../src/architecture/parser');
+const Graph = require('../media/graph-view');
 
 const root = path.resolve(__dirname, '..');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 
 assert.equal(manifest.name, 'bsv-architecture-explorer');
 assert.equal(manifest.displayName, 'BSV Architecture Explorer');
+assert.equal(manifest.version, '0.3.0');
+assert.equal(manifest.publisher, 'code0-god');
 assert.equal(manifest.main, './src/extension.js');
 assert.equal(manifest.engines.vscode.startsWith('^'), true);
 assert.deepEqual(manifest.dependencies || {}, {});
@@ -24,6 +27,12 @@ const required = [
     'src/extension.js',
     'src/panel/architecture-panel.js',
     'src/panel/html.js',
+    'src/architecture/behavior-analysis.js',
+    'src/architecture/scheduling.js',
+    'src/architecture/symbol-index.js',
+    'src/architecture/type-analysis.js',
+    'src/compiler/bsc-schedule-provider.js',
+    'media/graph-view.js',
     'media/webview.js',
     'media/webview.css',
     'media/icon.png'
@@ -43,6 +52,16 @@ for (const command of [
 for (const key of Object.keys(manifest.contributes.configuration.properties)) {
     assert.match(key, /^bsvArchitecture\./);
 }
+for (const key of [
+    'defaultSourceScope',
+    'defaultLevel',
+    'defaultMode',
+    'defaultHopScope',
+    'syncWithEditor',
+    'showMethodPorts',
+    'collapseModuleMembers',
+    'includePotentialScheduleDependencies'
+]) assert.ok(manifest.contributes.configuration.properties[`bsvArchitecture.${key}`]);
 
 for (const filePath of walk(root).filter((item) => item.endsWith('.js') && !item.includes(`${path.sep}dist${path.sep}`))) {
     childProcess.execFileSync(process.execPath, ['--check', filePath], { stdio: 'pipe' });
@@ -64,10 +83,21 @@ const model = buildArchitectureModel(parsedFiles, config, {
 });
 
 assert.equal(model.diagnostics.length, 0);
+assert.equal(model.schemaVersion, 2);
 assert.ok(model.nodes.some((node) => node.name === 'mapGlobalRow' && node.kind === 'function'));
 assert.ok(model.nodes.some((node) => node.name === 'mkAcceleratorTop' && node.entry));
 assert.ok(model.edges.some((edge) => edge.kind === 'instantiate' && edge.label === 'quantizer'));
 assert.ok(model.edges.some((edge) => edge.kind === 'data' && edge.label === 'quantized activations'));
+for (const mode of ['structure', 'data-flow', 'scheduling']) {
+    assert.ok(model.edges.some((edge) => edge.mode === mode), `Example lacks ${mode} relations`);
+}
+const system = Graph.createViewModel(model, {
+    sourceScope: 'workspace',
+    level: 'system',
+    analysisMode: 'structure',
+    hopScope: 'all'
+}).visible();
+assert.equal(system.nodes.some((node) => ['rule', 'method'].includes(node.kind)), false);
 
 const html = fs.readFileSync(path.join(root, 'src', 'panel', 'html.js'), 'utf8');
 assert.match(html, /default-src 'none'/);
@@ -97,7 +127,7 @@ console.log('check: generic manifest, JavaScript syntax, CSP, parser, graph mode
 
 function walk(directory) {
     return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-        if (['.git', 'node_modules', '.build'].includes(entry.name)) return [];
+        if (['.git', '.omo', 'node_modules', '.build', 'dist'].includes(entry.name)) return [];
         const fullPath = path.join(directory, entry.name);
         return entry.isDirectory() ? walk(fullPath) : [fullPath];
     });

@@ -51,6 +51,7 @@ test('architecture model resolves module hierarchy and entrypoint', () => {
         'mkAcceleratorController',
         'mkMemorySubsystem',
         'mkVectorQuantizer',
+        'mkSystolicArray',
         'mkSystolicArray'
     ].sort());
 });
@@ -84,4 +85,29 @@ test('unresolvable manual relationships produce a non-fatal diagnostic', () => {
         edges: [...raw.edges, { from: 'missing-source', to: 'mkAcceleratorTop', kind: 'data' }]
     }));
     assert.ok(model.diagnostics.some((item) => item.message.includes('missing-source')));
+});
+
+test('example project produces meaningful structure data-flow and scheduling views', () => {
+    const model = exampleModel();
+    const byMode = new Map(['structure', 'data-flow', 'scheduling'].map((mode) => [
+        mode,
+        model.edges.filter((edge) => edge.mode === mode)
+    ]));
+
+    assert.ok(byMode.get('structure').some((edge) => edge.kind === 'instantiate'));
+    assert.ok(byMode.get('data-flow').some((edge) => edge.kind === 'write' && edge.label === 'enqueue'));
+    assert.ok(byMode.get('data-flow').some((edge) => edge.kind === 'read' && edge.label === 'dequeue'));
+    assert.ok(byMode.get('scheduling').some((edge) => edge.kind === 'descending-urgency'));
+    assert.ok(byMode.get('scheduling').some((edge) => edge.kind === 'potential-state-dependency'));
+
+    const controller = model.nodes.find((node) => node.name === 'mkAcceleratorController');
+    assert.ok(controller.ports.some((port) => port.category === 'action-value'));
+    assert.equal(
+        model.edges.filter((edge) => edge.source === model.nodes.find((node) => node.name === 'mkAcceleratorTop').id
+            && edge.kind === 'instantiate'
+            && model.nodes.find((node) => node.id === edge.target)?.name === 'mkSystolicArray').length,
+        2
+    );
+    const unresolved = model.nodes.find((node) => node.name === 'BankedRow');
+    assert.equal(unresolved.details.width.status, 'unresolved');
 });
