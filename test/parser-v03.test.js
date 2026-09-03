@@ -120,7 +120,7 @@ endpackage
     assert.equal(access.operation, 'action-value-result');
 });
 
-test('source scheduling attributes attach to module relations', () => {
+test('parser preserves raw scheduling attributes with owners', () => {
     const parsed = parse(`
 package Schedule;
 (* descending_urgency = "issueCompute, drainResult" *)
@@ -133,30 +133,55 @@ endmodule
 endpackage
 `);
 
-    assert.deepEqual(parsed.modules[0].scheduleRelations.map((relation) => ({
-        source: relation.source,
-        target: relation.target,
-        kind: relation.kind,
-        bidirectional: relation.bidirectional,
-        origin: relation.origin,
-        confidence: relation.confidence
+    assert.deepEqual(parsed.modules[0].bsvAttributes.map((attribute) => ({
+        ownerKind: attribute.ownerKind,
+        ownerName: attribute.ownerName,
+        name: attribute.name,
+        names: attribute.names,
+        rawValue: attribute.rawValue
     })), [
         {
-            source: 'issueCompute',
-            target: 'drainResult',
-            kind: 'descending-urgency',
-            bidirectional: false,
-            origin: 'source-attribute',
-            confidence: 'explicit'
+            ownerKind: 'module',
+            ownerName: 'mkController',
+            name: 'descending_urgency',
+            names: ['issueCompute', 'drainResult'],
+            rawValue: '"issueCompute, drainResult"'
         },
         {
-            source: 'loadWeight',
-            target: 'issueCompute',
-            kind: 'mutually-exclusive',
-            bidirectional: true,
-            origin: 'source-attribute',
-            confidence: 'explicit'
+            ownerKind: 'module',
+            ownerName: 'mkController',
+            name: 'mutually_exclusive',
+            names: ['loadWeight', 'issueCompute'],
+            rawValue: '"loadWeight, issueCompute"'
         }
+    ]);
+    assert.equal(parsed.modules[0].scheduleRelations, undefined);
+    assert.ok(parsed.modules[0].bsvAttributes.every((attribute) => attribute.location.uri === 'file:///Feature.bsv'));
+});
+
+test('parser preserves rule and method scheduling attribute owners', () => {
+    const parsed = parse(`
+package ScheduleOwners;
+module mkController(Empty);
+    (* preempts = "issue, drain" *)
+    rule issue; noAction; endrule
+    (* conflict_free = "loadWeight, step" *)
+    method Action loadWeight; noAction; endmethod
+endmodule
+endpackage
+`);
+    const module = parsed.modules[0];
+
+    assert.deepEqual([
+        ...module.rules.flatMap((rule) => rule.bsvAttributes),
+        ...module.methods.flatMap((method) => method.bsvAttributes)
+    ].map(({ ownerKind, ownerName, moduleName }) => ({
+        ownerKind,
+        ownerName,
+        moduleName
+    })), [
+        { ownerKind: 'rule', ownerName: 'issue', moduleName: 'mkController' },
+        { ownerKind: 'method', ownerName: 'loadWeight', moduleName: 'mkController' }
     ]);
 });
 
@@ -192,5 +217,5 @@ endpackage
 `);
 
     assert.deepEqual(parsed.interfaces[0].methods.map((method) => method.name), ['real']);
-    assert.deepEqual(parsed.modules[0].scheduleRelations, []);
+    assert.deepEqual(parsed.modules[0].bsvAttributes, []);
 });

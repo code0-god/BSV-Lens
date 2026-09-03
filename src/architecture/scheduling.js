@@ -1,138 +1,127 @@
 'use strict';
 
-const {
-    createLineStarts,
-    maskCommentsAndStrings,
-    offsetToPosition
-} = require('./source-utils');
+const { parseBsvFile } = require('./parser');
 
 const SOURCE_ATTRIBUTE_KINDS = new Map([
-    ['descending_urgency', 'descending-urgency'],
-    ['execution_order', 'execution-order'],
-    ['mutually_exclusive', 'mutually-exclusive'],
-    ['conflict_free', 'conflict-free'],
-    ['preempts', 'preempts']
+    ['descending_urgency', { kind: 'descending-urgency', relation: 'ordered' }],
+    ['execution_order', { kind: 'execution-order', relation: 'ordered' }],
+    ['mutually_exclusive', { kind: 'mutually-exclusive', relation: 'unordered' }],
+    ['conflict_free', { kind: 'conflict-free', relation: 'unordered' }],
+    ['preempts', { kind: 'preempts', relation: 'preempts' }]
 ]);
 
-function parseSourceScheduling(text, options = {}) {
-    const source = String(text || '');
-    const uri = options.uri || options.relativePath || 'untitled.bsv';
-    const masked = maskCommentsAndStrings(source);
-    const lineStarts = createLineStarts(source);
+function normalizeScheduleAttributes(parsedFiles = []) {
     const relations = [];
-    const annotationPattern = /\(\*/g;
-    let annotation;
-
-    while ((annotation = annotationPattern.exec(masked)) !== null) {
-        const attributeEnd = masked.indexOf('*)', annotationPattern.lastIndex);
-        if (attributeEnd < 0) break;
-        const annotationMask = masked.slice(annotationPattern.lastIndex, attributeEnd);
-        const attributePattern = /(descending_urgency|execution_order|mutually_exclusive|conflict_free|preempts)\s*=/g;
-        let match;
-
-        while ((match = attributePattern.exec(annotationMask)) !== null) {
-            const valueStart = annotationPattern.lastIndex + attributePattern.lastIndex;
-            const quote = source.indexOf('"', valueStart);
-            if (quote < 0 || quote >= attributeEnd || masked.slice(valueStart, quote).trim()) continue;
-            const valueEnd = findStringEnd(source, quote);
-            if (valueEnd < 0 || valueEnd >= attributeEnd) continue;
-
-            const names = source.slice(quote + 1, valueEnd)
-                .split(',')
-                .map(normalizeRuleName)
-                .filter(Boolean);
-            const kind = SOURCE_ATTRIBUTE_KINDS.get(match[1]);
-            const evidence = source.slice(annotation.index, attributeEnd + 2);
-            const location = makeLocation(uri, lineStarts, annotation.index, attributeEnd + 2);
-
-            if (kind === 'mutually-exclusive' || kind === 'conflict-free') {
-                addAllPairs(relations, names, kind, true, evidence, location);
-            } else if (kind === 'preempts') {
-                for (let index = 1; index < names.length; index += 1) {
-                    relations.push(makeSourceRelation(names[0], names[index], kind, false, evidence, location));
+    const seen = new Set();
+    for (const file of parsedFiles) {
+        const scopes = [
+            { moduleName: null, attributes: file.bsvAttributes || [] },
+            ...(file.modules || []).map((module) => ({
+                moduleName: module.name,
+                attributes: moduleAttributes(module)
+            }))
+        ];
+        for (const scope of scopes) {
+            const attributes = scope.attributes;
+            for (const attribute of attributes) {
+                const descriptor = SOURCE_ATTRIBUTE_KINDS.get(String(attribute.name || '').toLowerCase());
+                if (!descriptor || attribute.names.length < 2) continue;
+                for (const [from, to] of relationPairs(attribute.names, descriptor.relation)) {
+                    const relation = {
+                        from,
+                        to,
+                        source: from,
+                        target: to,
+                        kind: descriptor.kind,
+                        bidirectional: descriptor.relation === 'unordered',
+                        origin: 'source-attribute',
+                        confidence: 'explicit',
+                        evidence: `(* ${attribute.name} = ${attribute.rawValue} *)`,
+                        location: attribute.location,
+                        sourceLocation: attribute.location,
+                        packageName: file.packageName,
+                        moduleName: attribute.moduleName
+                            || (attribute.ownerKind === 'module' ? attribute.ownerName : scope.moduleName),
+                        ownerKind: attribute.ownerKind || (scope.moduleName ? 'module' : 'file'),
+                        ownerName: attribute.ownerName || scope.moduleName || file.packageName
+                    };
+                    const key = [
+                        relation.packageName,
+                        relation.moduleName,
+                        relation.from,
+                        relation.to,
+                        relation.kind,
+                        relation.location?.line,
+                        relation.location?.column
+                    ].join('|');
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        relations.push(relation);
+                    }
                 }
-            } else {
-                addAllPairs(relations, names, kind, false, evidence, location);
             }
         }
-        annotationPattern.lastIndex = attributeEnd + 2;
     }
-
     return relations;
 }
 
-function addAllPairs(relations, names, kind, bidirectional, evidence, location) {
+function parseSourceScheduling(text, options = {}) {
+    const uri = options.uri || options.relativePath || 'untitled.bsv';
+    return normalizeScheduleAttributes([parseBsvFile(String(text || ''), {
+        uri,
+        relativePath: options.relativePath || uri
+    })]);
+}
+
+function relationPairs(names, relation) {
+    if (relation === 'preempts') {
+        return names.slice(1).map((name) => [names[0], name]);
+    }
+    const pairs = [];
     for (let left = 0; left < names.length; left += 1) {
-        for (let right = left + 1; right < names.length; right += 1) {
-            relations.push(makeSourceRelation(
-                names[left], names[right], kind, bidirectional, evidence, location
-            ));
+        const firstRight = relation === 'ordered' ? left + 1 : left + 1;
+        for (let right = firstRight; right < names.length; right += 1) {
+            pairs.push([names[left], names[right]]);
         }
     }
-}
-
-function makeSourceRelation(from, to, kind, bidirectional, evidence, location) {
-    return {
-        from,
-        to,
-        kind,
-        origin: 'source-attribute',
-        confidence: 'explicit',
-        bidirectional,
-        evidence,
-        location
-    };
-}
-
-function findStringEnd(text, quote) {
-    let escaped = false;
-    for (let index = quote + 1; index < text.length; index += 1) {
-        if (text[index] === '"' && !escaped) return index;
-        if (text[index] === '\\' && !escaped) escaped = true;
-        else escaped = false;
-    }
-    return -1;
-}
-
-function normalizeRuleName(value) {
-    return String(value || '')
-        .trim()
-        .replace(/^['"]|['"]$/g, '')
-        .trim();
-}
-
-function makeLocation(uri, lineStarts, startOffset, endOffset) {
-    const start = offsetToPosition(lineStarts, startOffset);
-    const end = offsetToPosition(lineStarts, endOffset);
-    return {
-        uri,
-        line: start.line,
-        column: start.column,
-        endLine: end.line,
-        endColumn: end.column
-    };
+    return pairs;
 }
 
 class SourceScheduleProvider {
     isAvailable(context = {}) {
+        if (Array.isArray(context.parsedFiles)) {
+            return context.parsedFiles.some((file) =>
+                (file.bsvAttributes || []).length > 0
+                || (file.modules || []).some((module) => moduleAttributes(module).length > 0)
+            );
+        }
         return sourceEntries(context).length > 0;
     }
 
     async analyze(context = {}, token) {
         if (isCancelled(token)) return unavailableResult('source', 'Scheduling analysis was cancelled.');
-        const entries = sourceEntries(context);
-        if (entries.length === 0) return unavailableResult('source', 'No BSV source text is available.');
-
-        const relations = [];
-        for (const entry of entries) {
-            if (isCancelled(token)) return unavailableResult('source', 'Scheduling analysis was cancelled.');
-            relations.push(...parseSourceScheduling(entry.text, {
+        const parsedFiles = Array.isArray(context.parsedFiles)
+            ? context.parsedFiles
+            : sourceEntries(context).map((entry) => parseBsvFile(entry.text, {
                 uri: entry.uri,
                 relativePath: entry.relativePath
             }));
-        }
-        return { provider: 'source', available: true, relations, diagnostics: [] };
+        if (parsedFiles.length === 0) return unavailableResult('source', 'No BSV source text is available.');
+        return {
+            provider: 'source',
+            available: true,
+            relations: normalizeScheduleAttributes(parsedFiles),
+            diagnostics: []
+        };
     }
+}
+
+function moduleAttributes(module) {
+    return [
+        ...(module.bsvAttributes || []),
+        ...(module.rules || []).flatMap((rule) => rule.bsvAttributes || []),
+        ...(module.methods || []).flatMap((method) => method.bsvAttributes || [])
+    ];
 }
 
 function sourceEntries(context) {
@@ -168,6 +157,7 @@ function unavailableResult(provider, reason) {
 
 module.exports = {
     SourceScheduleProvider,
+    normalizeScheduleAttributes,
     parseScheduleAttributes: parseSourceScheduling,
     parseSchedulingAttributes: parseSourceScheduling,
     parseSourceScheduleAttributes: parseSourceScheduling,

@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const { WorkspaceAnalyzer, resolveDefaultSourceScope } = require('../src/architecture/analyzer');
 const { normalizeConfig } = require('../src/architecture/config');
+const { parseBsvFile } = require('../src/architecture/parser');
 
 function context(config, overrides = {}) {
     return {
@@ -78,6 +79,46 @@ test('configured BSC provider passes trusted context and authoritative relations
     assert.deepEqual(received.value.inputFiles, ['/workspace/Top.bsv']);
     assert.equal(received.token, token);
     assert.equal(output.join(''), 'compiler output');
+});
+
+test('configured BSC scheduling retains normalized source attributes', async () => {
+    const parsed = parseBsvFile(`
+package Top;
+(* descending_urgency = "first, second" *)
+module mkTop(Empty);
+    rule first; noAction; endrule
+    rule second; noAction; endrule
+endmodule
+endpackage
+`, { uri: 'file:///workspace/Top.bsv', relativePath: 'Top.bsv' });
+    const analyzer = new WorkspaceAnalyzer({ workspace: { isTrusted: true } }, {
+        bscScheduleProvider: {
+            async analyze() {
+                return {
+                    available: true,
+                    source: 'compiler-report',
+                    diagnostics: [],
+                    relations: [{
+                        from: 'first',
+                        to: 'second',
+                        moduleName: 'mkTop',
+                        kind: 'conflict',
+                        origin: 'bsc',
+                        confidence: 'authoritative'
+                    }]
+                };
+            }
+        }
+    });
+
+    const result = await analyzer.analyzeScheduling(context({
+        scheduling: { provider: 'bsc', topModule: 'mkTop' }
+    }, { parsedFiles: [parsed] }));
+
+    assert.deepEqual(new Set(result.relations.map((item) => item.origin)), new Set([
+        'source-attribute',
+        'bsc'
+    ]));
 });
 
 test('unavailable BSC falls back to source relations without throwing', async () => {

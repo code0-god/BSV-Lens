@@ -180,3 +180,36 @@ endpackage
     assert.equal(model.scheduling.badge, 'BSC AUTHORITATIVE');
     assert.equal(model.scheduling.authoritative, true);
 });
+
+test('BSC relations retain matching heuristic support as evidence', () => {
+    const parsed = parseBsvFile(`
+package CompilerSupport;
+module mkCompilerSupport(Empty);
+    Reg#(Bool) active <- mkReg(False);
+    rule first; active <= True; endrule
+    rule second; let value = active; endrule
+endmodule
+endpackage
+`, {
+        uri: 'file:///CompilerSupport.bsv',
+        relativePath: 'CompilerSupport.bsv'
+    });
+    const model = buildArchitectureModel([parsed], normalizeConfig({
+        scheduling: { provider: 'bsc', includePotentialDependencies: true }
+    }), {
+        scheduleProvider: 'bsc',
+        scheduleRelations: [{
+            from: 'first',
+            to: 'second',
+            moduleName: 'mkCompilerSupport',
+            kind: 'conflict',
+            origin: 'bsc',
+            confidence: 'authoritative',
+            evidence: 'compiler relation fixture'
+        }]
+    });
+    const edge = model.edges.find((item) => item.origin === 'bsc');
+
+    assert.deepEqual(edge.supportingEvidence.map((item) => item.origin), ['source-heuristic']);
+    assert.equal(model.edges.some((item) => item.kind === 'potential-state-dependency'), false);
+});

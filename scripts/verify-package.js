@@ -20,6 +20,7 @@ for (const entry of [
     'extension/src/extension.js',
     'extension/src/architecture/behavior-analysis.js',
     'extension/src/architecture/scheduling.js',
+    'extension/src/architecture/symbol-resolver.js',
     'extension/src/architecture/symbol-index.js',
     'extension/src/architecture/type-analysis.js',
     'extension/src/compiler/bsc-schedule-provider.js',

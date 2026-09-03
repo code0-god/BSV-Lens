@@ -7,8 +7,10 @@ const test = require('node:test');
 
 const {
     SourceScheduleProvider,
+    normalizeScheduleAttributes,
     parseSourceScheduling
 } = require('../src/architecture/scheduling');
+const { parseBsvFile } = require('../src/architecture/parser');
 const {
     BscScheduleProvider,
     parseBscScheduleReport
@@ -66,6 +68,37 @@ test('SourceScheduleProvider reports availability and combines source files', as
     ]);
 });
 
+test('SourceScheduleProvider is sole normalizer for parser attributes', async () => {
+    const parsed = parseBsvFile(`
+package Schedule;
+(* descending_urgency = "issue, drain" *)
+module mkController(Empty);
+    rule issue; noAction; endrule
+    rule drain; noAction; endrule
+endmodule
+endpackage
+`, { uri: 'file:///Schedule.bsv', relativePath: 'Schedule.bsv' });
+    const relations = normalizeScheduleAttributes([parsed]);
+    const result = await new SourceScheduleProvider().analyze({ parsedFiles: [parsed] });
+
+    assert.deepEqual(result.relations, relations);
+    assert.deepEqual(relations.map((item) => ({
+        from: item.from,
+        to: item.to,
+        moduleName: item.moduleName,
+        packageName: item.packageName,
+        origin: item.origin,
+        confidence: item.confidence
+    })), [{
+        from: 'issue',
+        to: 'drain',
+        moduleName: 'mkController',
+        packageName: 'Schedule',
+        origin: 'source-attribute',
+        confidence: 'explicit'
+    }]);
+});
+
 test('BSC report parser accepts realistic and compact relation forms', async () => {
     const realistic = parseBscScheduleReport(await fixture('realistic.sched'), { uri: 'mkPipeline.sched' });
     assert.deepEqual(realistic.map(({ from, to, kind, bidirectional }) => ({ from, to, kind, bidirectional })), [
@@ -77,6 +110,7 @@ test('BSC report parser accepts realistic and compact relation forms', async () 
     ]);
     assert.ok(realistic.every((item) => item.origin === 'bsc' && item.confidence === 'authoritative'));
     assert.ok(realistic.every((item) => item.location.uri === 'mkPipeline.sched'));
+    assert.ok(realistic.every((item) => item.moduleName === 'mkPipeline'));
 
     const compact = parseBscScheduleReport(await fixture('compact.sched'));
     assert.deepEqual(new Set(compact.map((item) => item.kind)), new Set([
@@ -92,6 +126,18 @@ test('BSC report parser accepts realistic and compact relation forms', async () 
         { from: 'start', to: 'step', kind: 'execution-order' }
     ]);
     assert.ok(current.every((item) => item.origin === 'bsc' && item.confidence === 'authoritative'));
+    assert.ok(current.every((item) => item.moduleName === 'mkSystolicArray'));
+});
+
+test('BSC report parser keeps identical relations from separate modules', () => {
+    const relations = parseBscScheduleReport(`
+Schedule dump for module mkFirst
+step EO drain
+Schedule dump for module mkSecond
+step EO drain
+`);
+
+    assert.deepEqual(relations.map((item) => item.moduleName), ['mkFirst', 'mkSecond']);
 });
 
 test('BscScheduleProvider reads workspace-contained reports without process execution', async () => {

@@ -3,6 +3,8 @@
 const { applyNodeConfiguration, groupForPath } = require('./config');
 const { analyzeTypeWidth } = require('./type-analysis');
 const { findMatchingDelimiter, normalizeWhitespace, splitTopLevel } = require('./source-utils');
+const { normalizeScheduleAttributes } = require('./scheduling');
+const { resolveArchitectureSymbol } = require('./symbol-resolver');
 
 function buildArchitectureModel(parsedFiles, config, context = {}) {
     const nodes = [];
@@ -284,7 +286,7 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
                     interfaceDefinitionsByName,
                     addEdge
                 );
-                addCallEdges(node, rule.calls, file, functionNodesByName, addEdge);
+                addCallEdges(node, rule.calls, file, functionNodesByName, nodes, nodeById, addEdge, diagnostics);
             }
 
             for (const method of module.methods) {
@@ -333,17 +335,10 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
                     interfaceDefinitionsByName,
                     addEdge
                 );
-                addCallEdges(node, method.calls, file, functionNodesByName, addEdge);
+                addCallEdges(node, method.calls, file, functionNodesByName, nodes, nodeById, addEdge, diagnostics);
             }
 
             if (config.scheduling?.provider !== 'off') {
-                addSourceScheduleEdges(
-                    module,
-                    ownerId,
-                    childNodeByOwnerAndName,
-                    addEdge,
-                    diagnostics
-                );
                 if (config.scheduling?.includePotentialDependencies !== false) {
                     addPotentialStateDependencies(ownerId, nodes, addEdge);
                 }
@@ -362,27 +357,53 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         for (const module of file.modules) {
             const sourceId = moduleNodeId(file.packageName, module.name);
             if (module.returnInterface) {
-                const interfaceTarget = resolveNamedTarget(
+                const interfaceResolution = resolveNamedTarget(
                     module.returnInterface,
                     file,
                     interfaceNodesByName,
-                    packageNodes
+                    nodes,
+                    nodeById,
+                    ['interface']
                 );
-                if (interfaceTarget) addEdge(sourceId, interfaceTarget.id, 'implements', '', true);
+                if (interfaceResolution.status === 'exact') {
+                    addEdge(sourceId, interfaceResolution.node.id, 'implements', '', true);
+                } else if (interfaceResolution.status === 'ambiguous') {
+                    addResolutionDiagnostic(
+                        diagnostics,
+                        module.returnInterface,
+                        interfaceResolution,
+                        module.location
+                    );
+                }
             }
 
             for (const instance of module.instances) {
                 if (instance.primitiveKind) continue;
                 const instanceId = instanceNodeId(sourceId, instance.name, instance.location.line);
                 const instanceNode = nodeById.get(instanceId);
-                const target = resolveNamedTarget(instance.constructor, file, moduleNodesByName, packageNodes);
-                if (target) {
-                    instanceNode.details.targetId = target.id;
-                    instanceNode.details.targetName = target.name;
-                    addEdge(sourceId, target.id, 'instantiate', instance.name, true);
+                const targetResolution = resolveNamedTarget(
+                    instance.constructor,
+                    file,
+                    moduleNodesByName,
+                    nodes,
+                    nodeById,
+                    ['module']
+                );
+                if (targetResolution.status === 'exact') {
+                    instanceNode.details.targetId = targetResolution.node.id;
+                    instanceNode.details.targetName = targetResolution.node.name;
+                    addEdge(sourceId, targetResolution.node.id, 'instantiate', instance.name, true);
                 } else {
                     instanceNode.details.targetName = instance.constructor;
                     instanceNode.details.unresolved = true;
+                    if (targetResolution.status === 'ambiguous') {
+                        addResolutionDiagnostic(
+                            diagnostics,
+                            instance.constructor,
+                            targetResolution,
+                            instance.location
+                        );
+                    }
                 }
             }
         }
@@ -390,7 +411,9 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         for (const fn of file.functions) {
             const sourceId = functionNodeId(file.packageName, fn.name, fn.parentModuleName, fn.location.line);
             const sourceNode = nodeById.get(sourceId);
-            if (sourceNode) addCallEdges(sourceNode, fn.calls, file, functionNodesByName, addEdge);
+            if (sourceNode) {
+                addCallEdges(sourceNode, fn.calls, file, functionNodesByName, nodes, nodeById, addEdge, diagnostics);
+            }
         }
     }
 
@@ -398,8 +421,8 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
     for (const manualEdge of config.edges) {
         const source = resolveNodeReference(manualEdge.from, nodes, nodeById);
         const target = resolveNodeReference(manualEdge.to, nodes, nodeById);
-        if (source && target) {
-            addEdge(source.id, target.id, manualEdge.kind, manualEdge.label, false, {
+        if (source.status === 'exact' && target.status === 'exact') {
+            addEdge(source.node.id, target.node.id, manualEdge.kind, manualEdge.label, false, {
                 description: manualEdge.description,
                 mode: manualEdge.mode,
                 origin: manualEdge.origin,
@@ -409,18 +432,17 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
                 manual: true
             });
         } else {
-            diagnostics.push({
-                severity: 'warning',
-                message: `Manual edge cannot be resolved: ${manualEdge.from} -> ${manualEdge.to}`,
-                location: null
-            });
+            addResolutionDiagnostic(diagnostics, manualEdge.from, source, null, 'Manual');
+            addResolutionDiagnostic(diagnostics, manualEdge.to, target, null, 'Manual');
         }
     }
 
-    addExternalScheduleEdges(context.scheduleRelations || [], nodes, addEdge, diagnostics);
+    const scheduleRelations = context.scheduleRelations
+        || normalizeScheduleAttributes(parsedFiles);
+    addExternalScheduleEdges(scheduleRelations, nodes, addEdge, diagnostics, context);
     attachMemberBuckets(nodes, edges);
-    attachScheduleRelations(nodes, edges);
     attachCompilerSupportingEvidence(edges);
+    attachScheduleRelations(nodes, edges);
 
     for (const node of nodes) {
         if (node.hidden) continue;
@@ -461,29 +483,20 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
     };
 }
 
-function addExternalScheduleEdges(relations, nodes, addEdge, diagnostics) {
+function addExternalScheduleEdges(relations, nodes, addEdge, diagnostics, context = {}) {
     const behavior = nodes.filter((node) => ['rule', 'method'].includes(node.kind));
+    const nodeById = new Map(nodes.map((node) => [node.id, node]));
     for (const relation of relations) {
         const sourceName = relation.from || relation.source;
         const targetName = relation.to || relation.target;
-        const moduleName = relation.moduleName || relation.module || null;
-        const candidates = moduleName
-            ? behavior.filter((node) => {
-                const owner = nodes.find((item) => item.id === node.parentId);
-                return owner?.name === moduleName || owner?.sourceId === moduleName;
-            })
-            : behavior;
-        const source = candidates.find((node) => node.name === sourceName || normalizeCompilerName(node.name) === normalizeCompilerName(sourceName));
-        const target = candidates.find((node) => node.name === targetName || normalizeCompilerName(node.name) === normalizeCompilerName(targetName));
-        if (!source || !target) {
-            diagnostics.push({
-                severity: 'warning',
-                message: `Compiler schedule relation cannot be resolved: ${sourceName} -> ${targetName}`,
-                location: relation.location || null
-            });
+        const source = resolveScheduleEndpoint(sourceName, relation, behavior, nodeById, context);
+        const target = resolveScheduleEndpoint(targetName, relation, behavior, nodeById, context);
+        if (source.status !== 'exact' || target.status !== 'exact') {
+            addScheduleResolutionDiagnostic(diagnostics, sourceName, source, relation);
+            addScheduleResolutionDiagnostic(diagnostics, targetName, target, relation);
             continue;
         }
-        addEdge(source.id, target.id, relation.kind, relation.kind.replace(/-/g, ' '), true, {
+        addEdge(source.node.id, target.node.id, relation.kind, relation.kind.replace(/-/g, ' '), true, {
             mode: 'scheduling',
             origin: relation.origin || 'bsc',
             confidence: relation.confidence || 'authoritative',
@@ -492,6 +505,54 @@ function addExternalScheduleEdges(relations, nodes, addEdge, diagnostics) {
             bidirectional: relation.bidirectional === true
         });
     }
+}
+
+function resolveScheduleEndpoint(reference, relation, behavior, nodeById, context) {
+    const moduleName = relation.moduleName || relation.module || context.scheduleTopModule || null;
+    if (moduleName) {
+        const candidates = behavior.filter((node) => {
+            const owner = nodeById.get(node.parentId);
+            return (owner?.name === moduleName || owner?.sourceId === moduleName)
+                && (!relation.packageName || node.packageName === relation.packageName)
+                && normalizeCompilerName(node.name) === normalizeCompilerName(reference);
+        });
+        return resolutionFromCandidates(
+            candidates,
+            `No behavior named ${reference} exists in module ${moduleName}.`
+        );
+    }
+    return resolveArchitectureSymbol(reference, {
+        nodes: behavior,
+        nodeById,
+        packageName: relation.packageName || null,
+        topModule: context.scheduleTopModule || null,
+        kinds: ['rule', 'method'],
+        normalizeName: normalizeCompilerName
+    });
+}
+
+function resolutionFromCandidates(candidates, reason) {
+    if (candidates.length === 1) return { status: 'exact', node: candidates[0], scope: 'module' };
+    if (candidates.length > 1) {
+        return {
+            status: 'ambiguous',
+            candidates: [...candidates].sort((left, right) => left.id.localeCompare(right.id))
+        };
+    }
+    return { status: 'unresolved', reason };
+}
+
+function addScheduleResolutionDiagnostic(diagnostics, reference, resolution, relation) {
+    if (resolution.status === 'exact') return;
+    const compiler = relation.origin === 'bsc';
+    diagnostics.push({
+        severity: 'warning',
+        code: compiler ? 'resolution.compiler' : 'resolution.scheduling',
+        message: resolution.status === 'ambiguous'
+            ? `${compiler ? 'Ambiguous compiler' : 'Ambiguous scheduling'} reference: ${reference}\nCandidates:\n${resolution.candidates.map((node) => `- ${node.id}`).join('\n')}`
+            : `${compiler ? 'Compiler schedule' : 'Scheduling'} reference cannot be resolved: ${reference}. ${resolution.reason}`,
+        location: relation.location || relation.sourceLocation || null
+    });
 }
 
 function normalizeCompilerName(value) {
@@ -553,12 +614,14 @@ function attachScheduleRelations(nodes, edges) {
 
 function attachCompilerSupportingEvidence(edges) {
     const heuristics = edges.filter((edge) => edge.kind === 'potential-state-dependency');
+    const supportingEdgeIds = new Set();
     for (const edge of edges.filter((item) => item.origin === 'bsc')) {
         const support = heuristics.filter((item) =>
             item.source === edge.source && item.target === edge.target
             || item.source === edge.target && item.target === edge.source
         );
         if (support.length > 0) {
+            for (const item of support) supportingEdgeIds.add(item.id);
             edge.supportingEvidence = support.map((item) => ({
                 kind: item.kind,
                 origin: item.origin,
@@ -566,6 +629,9 @@ function attachCompilerSupportingEvidence(edges) {
                 evidence: item.evidence
             }));
         }
+    }
+    for (let index = edges.length - 1; index >= 0; index -= 1) {
+        if (supportingEdgeIds.has(edges[index].id)) edges.splice(index, 1);
     }
 }
 
@@ -589,18 +655,27 @@ function summarizeScheduling(edges, provider = null) {
     };
 }
 
-function addCallEdges(sourceNode, calls, file, functionNodesByName, addEdge) {
+function addCallEdges(sourceNode, calls, file, functionNodesByName, nodes, nodeById, addEdge, diagnostics) {
     for (const call of calls || []) {
         if (call.builtin) continue;
-        const target = resolveNamedTarget(call.name, file, functionNodesByName);
-        if (target && target.id !== sourceNode.id) {
-            addEdge(sourceNode.id, target.id, 'call', call.name, true, {
+        const target = resolveNamedTarget(
+            call.name,
+            file,
+            functionNodesByName,
+            nodes,
+            nodeById,
+            ['function']
+        );
+        if (target.status === 'exact' && target.node.id !== sourceNode.id) {
+            addEdge(sourceNode.id, target.node.id, 'call', call.name, true, {
                 mode: 'data-flow',
                 origin: 'source-derived',
                 confidence: 'explicit',
                 evidence: `${sourceNode.name} calls ${call.name}`,
                 sourceLocation: sourceNode.location
             });
+        } else if (target.status === 'ambiguous') {
+            addResolutionDiagnostic(diagnostics, call.name, target, sourceNode.location);
         }
     }
 }
@@ -647,29 +722,6 @@ function addBehaviorAccessEdges(sourceNode, accesses, ownerId, file, childNodes,
                 confidence: 'unknown'
             });
         }
-    }
-}
-
-function addSourceScheduleEdges(module, ownerId, childNodes, addEdge, diagnostics) {
-    for (const relation of module.scheduleRelations || []) {
-        const source = childNodes.get(`${ownerId}:${relation.source}`);
-        const target = childNodes.get(`${ownerId}:${relation.target}`);
-        if (!source || !target) {
-            diagnostics.push({
-                severity: 'warning',
-                message: `Scheduling attribute in ${module.name} references unresolved members: ${relation.source}, ${relation.target}.`,
-                location: relation.sourceLocation || module.location
-            });
-            continue;
-        }
-        addEdge(source.id, target.id, relation.kind, relation.kind.replace(/-/g, ' '), true, {
-            mode: 'scheduling',
-            origin: relation.origin,
-            confidence: relation.confidence,
-            evidence: relation.evidence,
-            sourceLocation: relation.sourceLocation,
-            bidirectional: relation.bidirectional
-        });
     }
 }
 
@@ -787,31 +839,33 @@ function unresolvedWidth(reason) {
     return { bits: null, status: 'unresolved', reason };
 }
 
-function resolveNamedTarget(name, sourceFile, index, packageNodes = null) {
-    const candidates = index.get(name) || [];
-    if (candidates.length === 0) return null;
-    const samePackage = candidates.find((node) => node.packageName === sourceFile.packageName);
-    if (samePackage) return samePackage;
-    const importedNames = new Set((sourceFile.imports || []).map((entry) => entry.package));
-    const imported = candidates.find((node) => importedNames.has(node.packageName));
-    if (imported) return imported;
-    if (candidates.length === 1) return candidates[0];
-    if (packageNodes) {
-        const packageCandidate = candidates.find((node) => packageNodes.has(node.packageName));
-        if (packageCandidate) return packageCandidate;
-    }
-    return candidates[0];
+function resolveNamedTarget(name, sourceFile, _index, nodes, nodeById, kinds) {
+    return resolveArchitectureSymbol(name, {
+        nodes,
+        nodeById,
+        packageName: sourceFile.packageName,
+        importedPackages: (sourceFile.imports || []).map((entry) => entry.package),
+        kinds
+    });
 }
 
-function resolveNodeReference(reference, nodes, nodeById) {
-    if (nodeById.has(reference)) return nodeById.get(reference);
-    if (nodeById.has(`virtual:${reference}`)) return nodeById.get(`virtual:${reference}`);
-    const exact = nodes.filter((node) => node.name === reference || node.sourceId === reference);
-    if (exact.length === 1) return exact[0];
-    const module = exact.find((node) => node.kind === 'module');
-    if (module) return module;
-    const packageNode = exact.find((node) => node.kind === 'package');
-    return packageNode || exact[0] || null;
+function resolveNodeReference(reference, nodes, nodeById, options = {}) {
+    return resolveArchitectureSymbol(reference, { nodes, nodeById, ...options });
+}
+
+function addResolutionDiagnostic(diagnostics, reference, resolution, location, prefix = '') {
+    if (resolution.status === 'exact') return;
+    const label = prefix ? `${prefix} ` : '';
+    diagnostics.push({
+        severity: 'warning',
+        code: resolution.status === 'ambiguous'
+            ? 'resolution.ambiguous'
+            : 'resolution.unresolved',
+        message: resolution.status === 'ambiguous'
+            ? `${label}Ambiguous reference: ${reference}\nCandidates:\n${resolution.candidates.map((node) => `- ${node.id}`).join('\n')}`
+            : `${label}Unresolved reference: ${reference}. ${resolution.reason}`,
+        location
+    });
 }
 
 function createEdgeAdder(edges) {

@@ -32,10 +32,17 @@ function parseBscScheduleReport(text, options = {}) {
     const seen = new Set();
     let executionOrderSection = false;
     let currentMember = null;
+    let currentModule = options.moduleName || null;
     let offset = 0;
 
     for (const rawLine of report.split(/\r?\n/)) {
         const line = rawLine.trim();
+        const module = /^(?:Schedule dump for module|=== Generated schedule for)\s+([A-Za-z_$][\w$]*)/i.exec(line);
+        if (module) {
+            currentModule = cleanRuleName(module[1]);
+            offset += rawLine.length + 1;
+            continue;
+        }
         const member = /^(?:Method|Rule):\s*(.+)$/i.exec(line);
         if (member) {
             currentMember = cleanRuleName(member[1]);
@@ -61,7 +68,7 @@ function parseBscScheduleReport(text, options = {}) {
             const endpoints = item.kind === 'conflict' || item.kind === 'conflict-free'
                 ? [item.from, item.to].sort()
                 : [item.from, item.to];
-            const key = `${endpoints[0]}\u0000${endpoints[1]}\u0000${item.kind}`;
+            const key = `${currentModule || ''}\u0000${endpoints[0]}\u0000${endpoints[1]}\u0000${item.kind}`;
             if (seen.has(key)) continue;
             seen.add(key);
             const startColumn = Math.max(0, rawLine.indexOf(line));
@@ -75,6 +82,7 @@ function parseBscScheduleReport(text, options = {}) {
                 confidence: 'authoritative',
                 bidirectional: item.kind === 'conflict' || item.kind === 'conflict-free',
                 evidence: line,
+                moduleName: currentModule,
                 location: {
                     uri,
                     line: start.line,

@@ -9,6 +9,7 @@ const {
     parseJsonc
 } = require('./config');
 const { parseBsvFile } = require('./parser');
+const { SourceScheduleProvider } = require('./scheduling');
 const { BscScheduleProvider } = require('../compiler/bsc-schedule-provider');
 const {
     isPathInsideWorkspace,
@@ -24,6 +25,7 @@ class WorkspaceAnalyzer {
         this.decoder = new TextDecoder('utf-8');
         this.encoder = new TextEncoder();
         this.output = options.output || null;
+        this.sourceScheduleProvider = options.sourceScheduleProvider || new SourceScheduleProvider();
         this.bscScheduleProvider = options.bscScheduleProvider || new BscScheduleProvider();
     }
 
@@ -107,8 +109,12 @@ class WorkspaceAnalyzer {
             workspaceUri: folder?.uri?.toString() || null,
             activeFile,
             scheduleRelations: scheduleResult.relations,
-            scheduleProvider: scheduleResult.provider
+            scheduleProvider: scheduleResult.provider,
+            scheduleTopModule: config.scheduling?.topModule || null
         });
+        for (const diagnostic of model.diagnostics.filter((item) => item.code?.startsWith('resolution.'))) {
+            this.output?.appendLine(`[resolution] ${diagnostic.message}`);
+        }
         model.diagnostics.unshift(...analysisDiagnostics);
         model.stats.files = parsedFiles.length;
         model.analysisMode = request.fileOnly ? 'file' : 'workspace';
@@ -128,13 +134,32 @@ class WorkspaceAnalyzer {
 
     async analyzeScheduling(context) {
         const scheduling = context.config.scheduling || {};
-        if (scheduling.provider === 'off' || scheduling.provider === 'source') {
-            return { provider: scheduling.provider, source: 'source', relations: [], diagnostics: [] };
+        if (scheduling.provider === 'off') {
+            return { provider: 'off', source: 'source', relations: [], diagnostics: [] };
+        }
+        const sourceResult = await this.sourceScheduleProvider.analyze({
+            parsedFiles: context.parsedFiles,
+            sourceFiles: context.sourceFiles
+        }, context.token);
+        const sourceRelations = sourceResult.available ? sourceResult.relations || [] : [];
+        const sourceDiagnostics = sourceResult.diagnostics || [];
+        if (scheduling.provider === 'source') {
+            return {
+                provider: 'source',
+                source: 'source',
+                relations: sourceRelations,
+                diagnostics: sourceDiagnostics
+            };
         }
         const hasReport = scheduling.reportFiles.length > 0;
         const hasBuild = Boolean(scheduling.topModule) && context.uris.length > 0;
         if (scheduling.provider === 'auto' && !hasReport && !hasBuild) {
-            return { provider: 'source', source: 'source', relations: [], diagnostics: [] };
+            return {
+                provider: 'source',
+                source: 'source',
+                relations: sourceRelations,
+                diagnostics: sourceDiagnostics
+            };
         }
 
         const inputFiles = selectBscInputFiles(context.parsedFiles, context.uris, scheduling.topModule);
@@ -151,8 +176,8 @@ class WorkspaceAnalyzer {
             return {
                 provider: 'bsc',
                 source: result.source || 'compiler-output',
-                relations: result.relations || [],
-                diagnostics: result.diagnostics || [],
+                relations: [...sourceRelations, ...(result.relations || [])],
+                diagnostics: [...sourceDiagnostics, ...(result.diagnostics || [])],
                 reason: ''
             };
         }
@@ -160,8 +185,9 @@ class WorkspaceAnalyzer {
         return {
             provider: 'source',
             source: 'source-fallback',
-            relations: [],
+            relations: sourceRelations,
             diagnostics: [
+                ...sourceDiagnostics,
                 ...(result.diagnostics || []),
                 {
                     severity,

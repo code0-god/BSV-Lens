@@ -14,6 +14,7 @@ const {
     normalizeWhitespace,
     offsetToPosition,
     readIdentifier,
+    scanBsvAttributes,
     splitTopLevel,
     truncate
 } = require('./source-utils');
@@ -118,6 +119,15 @@ function parseBsvFile(text, options = {}) {
         packageName,
         packageLocation: makeLocation(uri, lineStarts, packageOffset),
         packageAnnotations: getLeadingAnnotations(text, lineStarts, packageOffset),
+        bsvAttributes: modules.length === 0
+            ? decorateBsvAttributes(
+                scanBsvAttributes(text).flatMap((attribute) => attribute.assignments),
+                uri,
+                lineStarts,
+                0,
+                { ownerKind: 'file', ownerName: packageName }
+            )
+            : [],
         imports,
         exports,
         modules,
@@ -162,7 +172,9 @@ function parseModules(text, masked, uri, lineStarts, diagnostics) {
         const bsvAttributes = decorateBsvAttributes(
             getLeadingBsvAttributes(text, match.index),
             uri,
-            lineStarts
+            lineStarts,
+            0,
+            { ownerKind: 'module', ownerName: nameToken.value }
         );
         modules.push({
             name: nameToken.value,
@@ -178,7 +190,6 @@ function parseModules(text, masked, uri, lineStarts, diagnostics) {
             methods: [],
             localFunctions: [],
             providedInterfaces: [],
-            scheduleRelations: scheduleRelationsFromAttributes(bsvAttributes),
             summary: summarizeAnnotations(annotations)
         });
 
@@ -671,14 +682,10 @@ function populateModuleMembers(module, text, masked, uri, lineStarts, allFunctio
     const bodyText = text.slice(bodyStart, bodyEnd);
 
     module.instances = parseInstances(bodyMasked, bodyText, bodyStart, uri, lineStarts);
-    module.rules = parseRules(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances);
-    module.methods = parseMethods(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances);
+    module.rules = parseRules(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances, module.name);
+    module.methods = parseMethods(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances, module.name);
     module.localFunctions = allFunctions.filter((fn) => fn.parentModuleName === module.name).map((fn) => fn.name);
     module.providedInterfaces = parseProvidedInterfaces(bodyMasked, bodyStart, uri, lineStarts);
-    module.scheduleRelations.push(
-        ...module.rules.flatMap((rule) => rule.scheduleRelations || []),
-        ...module.methods.flatMap((method) => method.scheduleRelations || [])
-    );
 }
 
 function parseInstances(bodyMasked, bodyText, baseOffset, uri, lineStarts) {
@@ -733,7 +740,7 @@ function classifyPrimitive(type, constructor) {
     return null;
 }
 
-function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances) {
+function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances, moduleName) {
     const rules = [];
     const expression = /\brule\s+([A-Za-z_$][\w$]*)/g;
     let match;
@@ -753,7 +760,8 @@ function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances
             getLeadingBsvAttributes(bodyText, match.index),
             uri,
             lineStarts,
-            baseOffset
+            baseOffset,
+            { ownerKind: 'rule', ownerName: match[1], moduleName }
         );
         const behavior = analyzeBehavior({
             text: contentText,
@@ -776,7 +784,6 @@ function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances
             name: match[1],
             guard: truncate(stripOuterParentheses(guardText), 220),
             bsvAttributes,
-            scheduleRelations: scheduleRelationsFromAttributes(bsvAttributes),
             calls: extractCalls(content),
             references: unique([...extractInstanceReferences(content, instances), ...combined.accesses.map((item) => item.instance)]),
             ...combined,
@@ -791,7 +798,7 @@ function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances
     return rules;
 }
 
-function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances) {
+function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances, moduleName) {
     const methods = [];
     const expression = /\bmethod\b/g;
     let match;
@@ -817,7 +824,8 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
             getLeadingBsvAttributes(bodyText, match.index),
             uri,
             lineStarts,
-            baseOffset
+            baseOffset,
+            { ownerKind: 'method', ownerName: callable.name, moduleName }
         );
         const behavior = analyzeBehavior({
             text: contentText,
@@ -848,7 +856,6 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
             ...classification,
             port: createMethodPort(callable, classification),
             bsvAttributes,
-            scheduleRelations: scheduleRelationsFromAttributes(bsvAttributes),
             inline,
             calls: extractCalls(content),
             references: unique([...extractInstanceReferences(content, instances), ...combined.accesses.map((item) => item.instance)]),
@@ -911,9 +918,10 @@ function unique(values) {
     return [...new Set(values)];
 }
 
-function decorateBsvAttributes(attributes, uri, lineStarts, baseOffset = 0) {
+function decorateBsvAttributes(attributes, uri, lineStarts, baseOffset = 0, owner = {}) {
     return attributes.map((attribute) => ({
         ...attribute,
+        ...owner,
         location: makeLocation(
             uri,
             lineStarts,
@@ -921,47 +929,6 @@ function decorateBsvAttributes(attributes, uri, lineStarts, baseOffset = 0) {
             baseOffset + attribute.range.end
         )
     }));
-}
-
-function scheduleRelationsFromAttributes(attributes) {
-    const relationKinds = {
-        descending_urgency: { kind: 'descending-urgency', ordered: true },
-        execution_order: { kind: 'execution-order', ordered: true },
-        preempts: { kind: 'preempts', ordered: true },
-        mutually_exclusive: { kind: 'mutually-exclusive', bidirectional: true },
-        conflict_free: { kind: 'conflict-free', bidirectional: true }
-    };
-    const relations = [];
-    for (const attribute of attributes) {
-        const descriptor = relationKinds[attribute.name.toLowerCase()];
-        if (!descriptor || attribute.names.length < 2) continue;
-        const pairs = descriptor.ordered
-            ? attribute.names.slice(0, -1).map((name, index) => [name, attribute.names[index + 1]])
-            : unorderedPairs(attribute.names);
-        for (const [source, target] of pairs) {
-            relations.push({
-                source,
-                target,
-                kind: descriptor.kind,
-                bidirectional: descriptor.bidirectional === true,
-                origin: 'source-attribute',
-                confidence: 'explicit',
-                evidence: `(* ${attribute.name} = ${attribute.rawValue} *)`,
-                sourceLocation: attribute.location
-            });
-        }
-    }
-    return relations;
-}
-
-function unorderedPairs(values) {
-    const pairs = [];
-    for (let left = 0; left < values.length; left += 1) {
-        for (let right = left + 1; right < values.length; right += 1) {
-            pairs.push([values[left], values[right]]);
-        }
-    }
-    return pairs;
 }
 
 function parseProvidedInterfaces(bodyMasked, baseOffset, uri, lineStarts) {
@@ -1026,6 +993,5 @@ module.exports = {
     parseBsvFile,
     parseCallableSignature,
     parseParameters,
-    classifyMethod,
-    scheduleRelationsFromAttributes
+    classifyMethod
 };

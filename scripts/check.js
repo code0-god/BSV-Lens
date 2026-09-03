@@ -29,6 +29,7 @@ const required = [
     'src/panel/html.js',
     'src/architecture/behavior-analysis.js',
     'src/architecture/scheduling.js',
+    'src/architecture/symbol-resolver.js',
     'src/architecture/symbol-index.js',
     'src/architecture/type-analysis.js',
     'src/compiler/bsc-schedule-provider.js',
