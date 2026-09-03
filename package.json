@@ -266,6 +266,7 @@
   },
   "scripts": {
     "check": "node scripts/check.js",
+    "check:release-tag": "node scripts/check-release-version.js",
     "test": "node --test test/*.test.js",
     "test:browser": "playwright test --config playwright.config.js",
     "test:extension": "node scripts/run-extension-host-tests.js",
@@ -277,7 +278,8 @@
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",
-    "@vscode/test-electron": "3.1.0"
+    "@vscode/test-electron": "3.1.0",
+    "@vscode/vsce": "3.9.2"
   },
   "files": [
     "src/**",

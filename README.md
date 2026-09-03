@@ -328,6 +328,8 @@ Node.js 22 이상:
 ```bash
 npm run check
 npm test
+npm run test:browser
+npm run test:extension
 npm run package
 ```
 
@@ -336,6 +338,10 @@ npm run package
 - `dist/bsv-lens-0.3.0.vsix`
 - `dist/bsv-lens-repository-0.3.0.zip`
 - `dist/SHA256SUMS.txt`
+
+CI 및 Marketplace federated identity 설정은
+[`docs/PUBLISHING.md`](https://github.com/code0-god/BSV-Lens/blob/main/docs/PUBLISHING.md)를 따릅니다. Marketplace publish는
+`v<package.json.version>` tag에서만 실행되며 PAT를 저장하지 않습니다.
 
 ## 내부 구조
 

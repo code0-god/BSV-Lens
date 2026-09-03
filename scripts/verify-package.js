@@ -26,6 +26,8 @@ for (const entry of [
     'extension/src/compiler/bsc-schedule-provider.js',
     'extension/src/security/workspace-boundary.js',
     'extension/media/graph-view.js',
+    'extension/media/text-metrics.js',
+    'extension/media/webview-layout.js',
     'extension/media/webview.js',
     'extension/media/webview.css',
     'extension.vsixmanifest',
@@ -69,13 +71,17 @@ for (const entry of [
     `${prefix}DESIGN.md`,
     `${prefix}docs/ARCHITECTURE.md`,
     `${prefix}docs/CONFIGURATION.md`,
+    `${prefix}docs/PUBLISHING.md`,
     `${prefix}examples/bsv-mini-accelerator/.bsv-arch.json`,
     `${prefix}test/fixtures/bsc-2026.sched`,
     `${prefix}test/view-model.test.js`
 ]) assert.ok(repository.has(entry), `Repository ZIP missing ${entry}`);
 for (const entry of repository.keys()) {
     assert.equal(
-        entry.includes('/dist/') || entry.includes('/.omo/') || entry.includes('/node_modules/'),
+        entry.includes('/dist/')
+            || entry.includes('/.omo/')
+            || entry.includes('/.vscode-test/')
+            || entry.includes('/node_modules/'),
         false,
         `Excluded path included in repository ZIP: ${entry}`
     );

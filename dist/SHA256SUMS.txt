@@ -1,2 +1,2 @@
-94fe770112d4451829967f5438aad0c3c30a1eb92ab0de0baaee2b452080b4bd  bsv-architecture-explorer-0.3.0.vsix
-32c6e1dafdea6ac636ee6e9585de773530cd4dac2f021cb14cbccec1f00b8d36  bsv-architecture-explorer-repository-0.3.0.zip
+f0b3e58340aabf9fc93daac9df4ffbb97262f3dd08d4a01005f66e42e764a27c  bsv-lens-0.3.0.vsix
+947cc1ccab8adbe553b2f029b8d5fed35a41f0bfd4cfc0f42577853b3ad5af09  bsv-lens-repository-0.3.0.zip

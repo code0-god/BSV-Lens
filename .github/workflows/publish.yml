@@ -1,0 +1,44 @@
+name: Publish VS Code extension
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: marketplace
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --ignore-scripts --no-package-lock
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: bsv-lens-${{ github.sha }}
+          path: dist
+      - run: npm run check:release-tag
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+      - run: npm run verify:package
+      - name: Publish verified VSIX with federated Azure identity
+        run: |
+          VSIX="dist/$(node -p "'bsv-lens-' + require('./package.json').version + '.vsix'")"
+          npx vsce publish --azure-credential --packagePath "$VSIX"

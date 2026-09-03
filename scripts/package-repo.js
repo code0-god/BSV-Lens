@@ -13,7 +13,9 @@ const entries = collectFiles(root, {
     prefix: manifest.name,
     exclude(relativePath, entry) {
         const segments = relativePath.split('/');
-        if (segments.some((segment) => ['.git', '.omo', 'node_modules', '.build', 'dist'].includes(segment))) return true;
+        if (segments.some((segment) => ['.git', '.omo', '.vscode-test', 'node_modules', '.build', 'dist'].includes(segment))) {
+            return true;
+        }
         return entry.isFile() && /(?:\.log|\.DS_Store)$/.test(relativePath);
     }
 });
