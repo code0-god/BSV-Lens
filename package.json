@@ -1,11 +1,19 @@
 {
-  "name": "bsv-architecture-explorer",
-  "displayName": "BSV Architecture Explorer",
-  "description": "Interactive architecture-level visualization for Bluespec SystemVerilog projects directly inside VS Code.",
+  "name": "bsv-lens",
+  "displayName": "BSV Lens",
+  "description": "Architecture, data-flow, and rule scheduling explorer for Bluespec SystemVerilog.",
   "version": "0.3.0",
   "publisher": "code0-god",
   "license": "MIT",
   "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/code0-god/BSV-Lens.git"
+  },
+  "homepage": "https://github.com/code0-god/BSV-Lens#readme",
+  "bugs": {
+    "url": "https://github.com/code0-god/BSV-Lens/issues"
+  },
   "categories": [
     "Visualization",
     "Programming Languages"
@@ -50,34 +58,34 @@
     "commands": [
       {
         "command": "bsvArchitecture.openWorkspace",
-        "title": "BSV Architecture: Open Workspace",
-        "category": "BSV Architecture"
+        "title": "BSV Lens: Open Workspace Architecture",
+        "category": "BSV Lens"
       },
       {
         "command": "bsvArchitecture.openCurrentFile",
-        "title": "BSV Architecture: Open Current File",
-        "category": "BSV Architecture"
+        "title": "BSV Lens: Open Current File",
+        "category": "BSV Lens"
       },
       {
         "command": "bsvArchitecture.refresh",
-        "title": "BSV Architecture: Refresh",
-        "category": "BSV Architecture",
+        "title": "BSV Lens: Refresh",
+        "category": "BSV Lens",
         "icon": "$(refresh)"
       },
       {
         "command": "bsvArchitecture.createConfig",
-        "title": "BSV Architecture: Create .bsv-arch.json",
-        "category": "BSV Architecture"
+        "title": "BSV Lens: Create .bsv-arch.json",
+        "category": "BSV Lens"
       },
       {
         "command": "bsvArchitecture.exportJson",
-        "title": "BSV Architecture: Export Architecture JSON",
-        "category": "BSV Architecture"
+        "title": "BSV Lens: Export Architecture JSON",
+        "category": "BSV Lens"
       },
       {
         "command": "bsvArchitecture.openSymbol",
-        "title": "BSV Architecture: Open Symbol",
-        "category": "BSV Architecture"
+        "title": "BSV Lens: Open Symbol",
+        "category": "BSV Lens"
       }
     ],
     "menus": {
@@ -112,7 +120,7 @@
       }
     ],
     "configuration": {
-      "title": "BSV Architecture Explorer",
+      "title": "BSV Lens",
       "properties": {
         "bsvArchitecture.autoRefresh": {
           "type": "boolean",

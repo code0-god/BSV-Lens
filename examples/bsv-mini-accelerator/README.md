@@ -1,6 +1,6 @@
 # Mini BSV accelerator workspace
 
-Open this directory in VS Code and run **BSV Architecture: Open Workspace**.
+Open this directory in VS Code and run **BSV Lens: Open Workspace Architecture**.
 It is a parser and visualization fixture; it is not intended to be synthesized.
 
 The fixture exercises all v0.3 analysis modes:

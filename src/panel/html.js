@@ -13,14 +13,14 @@ function getWebviewHtml(webview, extensionUri, vscode) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data:; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
     <link rel="stylesheet" href="${styleUri}">
-    <title>BSV Architecture Explorer</title>
+    <title>BSV Lens</title>
 </head>
 <body>
     <header class="toolbar" aria-label="Architecture controls">
         <div class="brand">
             <span class="brand-mark" aria-hidden="true">B</span>
             <div>
-                <strong id="architecture-title">BSV Architecture</strong>
+                <strong id="architecture-title">BSV Lens</strong>
                 <span id="architecture-subtitle">Waiting for analysis…</span>
             </div>
         </div>

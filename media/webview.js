@@ -258,7 +258,7 @@
         elements.groups.replaceChildren();
         elements.empty.hidden = false;
         elements.empty.querySelector('strong').textContent = 'Architecture analysis failed';
-        elements.empty.querySelector('span').textContent = message || 'See BSV Architecture Explorer Output Channel.';
+        elements.empty.querySelector('span').textContent = message || 'See BSV Lens Output Channel.';
         showToast(message || 'Analysis failed.', true);
     }
 

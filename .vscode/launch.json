@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run BSV Architecture Explorer",
+      "name": "Run BSV Lens",
       "type": "extensionHost",
       "request": "launch",
       "args": [

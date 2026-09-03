@@ -40,7 +40,7 @@ for (const entry of vsix.keys()) {
 
 const embedded = JSON.parse(vsix.get('extension/package.json').toString('utf8'));
 assert.equal(embedded.version, '0.3.0');
-assert.equal(`${embedded.publisher}.${embedded.name}`, 'code0-god.bsv-architecture-explorer');
+assert.equal(`${embedded.publisher}.${embedded.name}`, 'code0-god.bsv-lens');
 for (const key of [
     'defaultSourceScope',
     'defaultLevel',
@@ -56,7 +56,7 @@ for (const command of manifest.contributes.commands.map((item) => item.command))
 }
 
 const vsixManifest = vsix.get('extension.vsixmanifest').toString('utf8');
-assert.match(vsixManifest, /Id="bsv-architecture-explorer"/);
+assert.match(vsixManifest, /Id="bsv-lens"/);
 assert.match(vsixManifest, /Version="0\.3\.0"/);
 assert.match(vsixManifest, /Publisher="code0-god"/);
 

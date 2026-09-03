@@ -15,7 +15,7 @@
 
 ## 0.2.0 — 2026-09-02
 
-- Renamed the extension and package to BSV Architecture Explorer.
+- Renamed the extension and package to BSV Lens.
 - Replaced project-specific command IDs and settings with the `bsvArchitecture` namespace.
 - Made the generated starter configuration source-layout neutral.
 - Replaced the sample workspace with a generic mini BSV accelerator fixture.

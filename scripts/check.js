@@ -12,8 +12,8 @@ const Graph = require('../media/graph-view');
 const root = path.resolve(__dirname, '..');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 
-assert.equal(manifest.name, 'bsv-architecture-explorer');
-assert.equal(manifest.displayName, 'BSV Architecture Explorer');
+assert.equal(manifest.name, 'bsv-lens');
+assert.equal(manifest.displayName, 'BSV Lens');
 assert.equal(manifest.version, '0.3.0');
 assert.equal(manifest.publisher, 'code0-god');
 assert.equal(manifest.main, './src/extension.js');

@@ -1,8 +1,8 @@
-# BSV Architecture Explorer Design System
+# BSV Lens Design System
 
 ## 1. Atmosphere and identity
 
-BSV Architecture Explorer is an engineering instrument inside VS Code. Visual character stays precise, compact, and diagram-first: quiet chrome around strongly differentiated graph semantics. Existing VS Code-native appearance remains authoritative; v0.3.0 expands information hierarchy without creating a separate branded visual world.
+BSV Lens is an engineering instrument inside VS Code. Visual character stays precise, compact, and diagram-first: quiet chrome around strongly differentiated graph semantics. Existing VS Code-native appearance remains authoritative; v0.3.0 expands information hierarchy without creating a separate branded visual world.
 
 Signature moment: changing Level, Mode, or focus immediately reshapes one stable canvas while focus root remains visually anchored.
 

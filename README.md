@@ -1,12 +1,20 @@
-# BSV Architecture Explorer
+# BSV Lens
+
+Architecture · Data Flow · Rule Scheduling for Bluespec SystemVerilog
 
 Bluespec SystemVerilog(`.bsv`) 작업공간을 VS Code 안에서 구조, 데이터 흐름,
 rule scheduling 관점으로 탐색하는 오프라인 아키텍처 분석 확장입니다.
 
-- 확장 ID: `code0-god.bsv-architecture-explorer`
+- Marketplace 확장 ID: `code0-god.bsv-lens`
+- 호환 namespace: 기존 command와 설정 ID `bsvArchitecture.*` 유지
 - 런타임: CommonJS VS Code Extension + 순수 JavaScript/SVG Webview
 - 외부 CDN 및 런타임 npm dependency 없음
 - BSC 없이 Source-derived 분석 전체 사용 가능
+
+Marketplace의 기존 `code0-god.bsv-architecture-explorer`와 목표
+`code0-god.bsv-lens` 항목은 2026-09-03 확인 시 등록되지 않았습니다. 최초 등록 ID는
+`code0-god.bsv-lens`로 고정하며, 기존 설치 호환을 위해 command/config namespace와
+Webview type은 `bsvArchitecture.*`를 유지합니다.
 
 ![BSV architecture preview](media/preview.png)
 
@@ -34,7 +42,7 @@ rule scheduling 관점으로 탐색하는 오프라인 아키텍처 분석 확�
 ### VSIX
 
 ```bash
-code --install-extension dist/bsv-architecture-explorer-0.3.0.vsix
+code --install-extension dist/bsv-lens-0.3.0.vsix
 ```
 
 또는 VS Code에서 **Extensions: Install from VSIX...**를 실행합니다.
@@ -44,7 +52,7 @@ code --install-extension dist/bsv-architecture-explorer-0.3.0.vsix
 1. 저장소를 VS Code로 엽니다.
 2. `F5`로 Extension Development Host를 실행합니다.
 3. 개발 호스트에서 BSV 작업공간을 엽니다.
-4. **BSV Architecture: Open Workspace**를 실행합니다.
+4. **BSV Lens: Open Workspace Architecture**를 실행합니다.
 
 ## 네 개의 독립 View 축
 
@@ -232,12 +240,12 @@ Diagram에서 node를 선택하고 **Open source** 또는 `Enter`를 누르면 �
 
 | 명령 | 용도 |
 |---|---|
-| `BSV Architecture: Open Workspace` | Workspace source scope로 열기 |
-| `BSV Architecture: Open Current File` | Current File source scope로 열기 |
-| `BSV Architecture: Open Symbol` | CodeLens module/function focus 열기 |
-| `BSV Architecture: Refresh` | source와 선택적 schedule provider 재분석 |
-| `BSV Architecture: Create .bsv-arch.json` | starter config 생성 |
-| `BSV Architecture: Export Architecture JSON` | complete Architecture IR 저장 |
+| `BSV Lens: Open Workspace Architecture` | Workspace source scope로 열기 |
+| `BSV Lens: Open Current File` | Current File source scope로 열기 |
+| `BSV Lens: Open Symbol` | CodeLens module/function focus 열기 |
+| `BSV Lens: Refresh` | source와 선택적 schedule provider 재분석 |
+| `BSV Lens: Create .bsv-arch.json` | starter config 생성 |
+| `BSV Lens: Export Architecture JSON` | complete Architecture IR 저장 |
 
 기존 command ID와 `bsvArchitecture.*` namespace는 유지됩니다.
 
@@ -319,8 +327,8 @@ npm run package
 
 생성 결과:
 
-- `dist/bsv-architecture-explorer-0.3.0.vsix`
-- `dist/bsv-architecture-explorer-repository-0.3.0.zip`
+- `dist/bsv-lens-0.3.0.vsix`
+- `dist/bsv-lens-repository-0.3.0.zip`
 - `dist/SHA256SUMS.txt`
 
 ## 내부 구조

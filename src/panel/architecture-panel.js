@@ -20,7 +20,7 @@ class ArchitecturePanel {
 
         const panel = context.vscode.window.createWebviewPanel(
             VIEW_TYPE,
-            'BSV Architecture Explorer',
+            'BSV Lens',
             context.vscode.ViewColumn.Beside,
             {
                 enableScripts: true,
@@ -170,7 +170,7 @@ class ArchitecturePanel {
             });
             if (token !== this.refreshToken) return;
             this.model = model;
-            this.panel.title = model.title || 'BSV Architecture Explorer';
+            this.panel.title = model.title || 'BSV Lens';
             const initialFocus = this.resolveInitialFocus(model);
             this.panel.webview.postMessage({
                 type: 'model',
@@ -366,7 +366,7 @@ class ArchitecturePanel {
     reportError(error) {
         const message = error instanceof Error ? error.message : String(error);
         this.output?.appendLine(`[${new Date().toISOString()}] ERROR ${message}`);
-        this.vscode.window.showErrorMessage(`BSV Architecture Explorer: ${message}`);
+        this.vscode.window.showErrorMessage(`BSV Lens: ${message}`);
     }
 
     dispose() {

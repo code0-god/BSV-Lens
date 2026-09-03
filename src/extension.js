@@ -6,7 +6,7 @@ const { parseBsvFile } = require('./architecture/parser');
 const { ArchitecturePanel, VIEW_TYPE } = require('./panel/architecture-panel');
 
 function activate(context) {
-    const output = vscode.window.createOutputChannel('BSV Architecture Explorer');
+    const output = vscode.window.createOutputChannel('BSV Lens');
     const analyzer = new WorkspaceAnalyzer(vscode, { output });
     const runtime = { vscode, extensionUri: context.extensionUri };
     const codeLensProvider = new BsvArchitectureCodeLensProvider(vscode);
@@ -102,7 +102,7 @@ function activate(context) {
                 ? 'Created .bsv-arch.json with detected BSV source roots.'
                 : '.bsv-arch.json already exists.');
         } catch (error) {
-            vscode.window.showErrorMessage(`BSV Architecture Explorer: ${error.message}`);
+            vscode.window.showErrorMessage(`BSV Lens: ${error.message}`);
         }
     }));
 
@@ -115,8 +115,8 @@ function activate(context) {
 
     const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 90);
     status.command = 'bsvArchitecture.openCurrentFile';
-    status.text = '$(circuit-board) BSV Arch';
-    status.tooltip = 'Open BSV architecture visualization';
+    status.text = '$(circuit-board) BSV Lens';
+    status.tooltip = 'Open BSV Lens architecture visualization';
     context.subscriptions.push(status);
 
     const updateStatus = () => {
@@ -143,7 +143,7 @@ function activate(context) {
         }
     }));
 
-    output.appendLine('BSV Architecture Explorer activated.');
+    output.appendLine('BSV Lens activated.');
 }
 
 function deactivate() {
