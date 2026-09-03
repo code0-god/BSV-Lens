@@ -299,6 +299,7 @@ Project edge/scheduling configuration does not relabel Source-derived or BSC fac
 
 ## Trust and fallback
 
-Source analysis and configured report reads remain available without BSC. Compiler execution
-requires trusted workspace. Missing executable, missing capability, timeout, cancellation, or
-compiler failure returns Source-derived fallback instead of failing extension analysis.
+Source analysis and workspace-contained configured report reads remain available without BSC.
+Compiler execution and external report/working-directory access require a trusted workspace.
+Missing executable, missing capability, timeout, cancellation, or compiler failure returns
+Source-derived fallback instead of failing extension analysis.

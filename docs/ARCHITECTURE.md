@@ -273,7 +273,9 @@ instead of silently changing graph scope.
 - source content inserted with DOM `textContent`
 - workspace and save I/O stays in Extension Host
 - BSC executable receives an argument array, never a concatenated shell command
-- BSC execution is disabled in untrusted workspaces
+- Restricted Mode keeps workspace-contained source/config/report reads available
+- BSC execution and external reports/working directories are disabled in untrusted workspaces
+- local paths use resolved real paths and containment checks, including symlink escapes
 
 ## Export
 

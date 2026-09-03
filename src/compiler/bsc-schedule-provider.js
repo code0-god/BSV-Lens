@@ -5,6 +5,7 @@ const fs = require('fs');
 const os = require('os');
 const childProcess = require('child_process');
 const { createLineStarts, offsetToPosition } = require('../architecture/source-utils');
+const { validateTrustedExternalPath } = require('../security/workspace-boundary');
 
 const RELATION_KINDS = new Map([
     ['C', 'conflict'],
@@ -167,6 +168,7 @@ class BscScheduleProvider {
         this.spawn = capabilities.spawn === undefined ? childProcess.spawn : capabilities.spawn;
         this.execFile = capabilities.execFile || capabilities.exec || null;
         this.readFile = capabilities.readFile || fs.promises.readFile.bind(fs.promises);
+        this.realpath = capabilities.realpath || fs.promises.realpath.bind(fs.promises);
         this.makeTempDirectory = capabilities.makeTempDirectory
             || (() => fs.promises.mkdtemp(path.join(os.tmpdir(), 'bsv-architecture-')));
         this.removeDirectory = capabilities.removeDirectory
@@ -177,8 +179,10 @@ class BscScheduleProvider {
 
     async isAvailable(context = {}, token) {
         const config = schedulingConfig(context);
-        const cwd = workingDirectory(context, config);
-        if (await this.hasReadableReport(config.reportFiles, cwd, token)) return true;
+        const workingDirectoryResult = await this.resolveWorkingDirectory(context, config);
+        if (!workingDirectoryResult.allowed) return false;
+        const cwd = workingDirectoryResult.path;
+        if (await this.hasReadableReport(config.reportFiles, cwd, context, token)) return true;
         if (!isWorkspaceTrusted(context) || isCancelled(token)) return false;
         const probe = await this.probe(config.bscExecutable || 'bsc', cwd, config.timeoutMs, token, context);
         return probe.available;
@@ -186,8 +190,12 @@ class BscScheduleProvider {
 
     async analyze(context = {}, token) {
         const config = schedulingConfig(context);
-        const cwd = workingDirectory(context, config);
-        const reportResult = await this.readReports(config.reportFiles, cwd, token);
+        const workingDirectoryResult = await this.resolveWorkingDirectory(context, config);
+        if (!workingDirectoryResult.allowed) {
+            return unavailable(workingDirectoryResult.reason, [blockedDiagnostic(workingDirectoryResult.reason)]);
+        }
+        const cwd = workingDirectoryResult.path;
+        const reportResult = await this.readReports(config.reportFiles, cwd, context, token);
         if (reportResult.cancelled) return unavailable('Scheduling analysis was cancelled.');
         if (reportResult.read > 0) {
             return {
@@ -198,7 +206,12 @@ class BscScheduleProvider {
                 source: 'report-files'
             };
         }
-        if (!isWorkspaceTrusted(context)) return unavailable('BSC execution is disabled in an untrusted workspace.');
+        if (!isWorkspaceTrusted(context)) {
+            return unavailable(
+                'BSC execution is disabled in an untrusted workspace.',
+                reportResult.diagnostics
+            );
+        }
         if (isCancelled(token)) return unavailable('Scheduling analysis was cancelled.');
 
         const executable = config.bscExecutable || 'bsc';
@@ -225,15 +238,15 @@ class BscScheduleProvider {
             }
 
             const text = [execution.stdout, execution.stderr].filter(Boolean).join('\n');
-            const generated = await this.readGeneratedReports(text);
+            const generated = await this.readGeneratedReports(text, outputDirectory);
             return {
                 provider: 'bsc',
                 available: true,
-                relations: generated.length > 0
-                    ? generated
+                relations: generated.relations.length > 0
+                    ? generated.relations
                     : parseBscScheduleReport(text, { uri: 'bsc://schedule-output' }),
-                diagnostics: [],
-                source: generated.length > 0 ? 'compiler-report' : 'compiler-output',
+                diagnostics: generated.diagnostics,
+                source: generated.relations.length > 0 ? 'compiler-report' : 'compiler-output',
                 executable,
                 argv,
                 stdout: execution.stdout,
@@ -276,11 +289,13 @@ class BscScheduleProvider {
         return probe;
     }
 
-    async hasReadableReport(reportFiles, cwd, token) {
+    async hasReadableReport(reportFiles, cwd, context, token) {
         for (const reportFile of reportFiles || []) {
             if (isCancelled(token)) return false;
+            const boundary = await this.resolveReportPath(context, cwd, reportFile);
+            if (!boundary.allowed) continue;
             try {
-                await callReadFile(this.readFile, resolvePath(cwd, reportFile));
+                await callReadFile(this.readFile, boundary.path);
                 return true;
             } catch (_) {
                 // Missing configured reports are expected before a project has been built.
@@ -289,17 +304,21 @@ class BscScheduleProvider {
         return false;
     }
 
-    async readReports(reportFiles, cwd, token) {
+    async readReports(reportFiles, cwd, context, token) {
         const relations = [];
         const diagnostics = [];
         let read = 0;
         for (const reportFile of reportFiles || []) {
             if (isCancelled(token)) return { relations: [], diagnostics, read, cancelled: true };
-            const absolutePath = resolvePath(cwd, reportFile);
+            const boundary = await this.resolveReportPath(context, cwd, reportFile);
+            if (!boundary.allowed) {
+                diagnostics.push(blockedDiagnostic(boundary.reason));
+                continue;
+            }
             try {
-                const content = await callReadFile(this.readFile, absolutePath);
+                const content = await callReadFile(this.readFile, boundary.path);
                 read += 1;
-                relations.push(...parseBscScheduleReport(String(content), { uri: absolutePath }));
+                relations.push(...parseBscScheduleReport(String(content), { uri: boundary.path }));
             } catch (error) {
                 diagnostics.push({
                     severity: 'warning',
@@ -311,19 +330,57 @@ class BscScheduleProvider {
         return { relations, diagnostics, read, cancelled: false };
     }
 
-    async readGeneratedReports(output) {
+    async readGeneratedReports(output, outputDirectory) {
         const relations = [];
+        const diagnostics = [];
         const paths = [...String(output || '').matchAll(/Schedule dump file created:\s*(.+\.sched)\s*$/gim)]
             .map((match) => match[1].trim());
         for (const reportPath of paths) {
+            const boundary = await validateTrustedExternalPath({
+                workspacePath: outputDirectory,
+                basePath: outputDirectory,
+                value: reportPath,
+                workspaceTrusted: false,
+                purpose: 'generated schedule report',
+                allowTrustedExternal: false,
+                externalReason: 'Generated BSC schedule reports must stay inside the compiler output directory.',
+                realpath: this.realpath
+            });
+            if (!boundary.allowed) {
+                diagnostics.push(blockedDiagnostic(boundary.reason));
+                continue;
+            }
             try {
-                const content = await callReadFile(this.readFile, reportPath);
-                relations.push(...parseBscScheduleReport(String(content), { uri: reportPath }));
+                const content = await callReadFile(this.readFile, boundary.path);
+                relations.push(...parseBscScheduleReport(String(content), { uri: boundary.path }));
             } catch (_) {
                 // Some BSC wrappers remove temporary reports before returning.
             }
         }
-        return relations;
+        return { relations, diagnostics };
+    }
+
+    resolveWorkingDirectory(context, config) {
+        const root = workspaceRoot(context);
+        return validateTrustedExternalPath({
+            workspacePath: root,
+            basePath: root,
+            value: config.workingDirectory || '.',
+            workspaceTrusted: isWorkspaceTrusted(context),
+            purpose: 'BSC working directory',
+            realpath: this.realpath
+        });
+    }
+
+    resolveReportPath(context, cwd, reportFile) {
+        return validateTrustedExternalPath({
+            workspacePath: workspaceRoot(context),
+            basePath: cwd,
+            value: reportFile,
+            workspaceTrusted: isWorkspaceTrusted(context),
+            purpose: 'schedule report',
+            realpath: this.realpath
+        });
     }
 
     run(executable, argv, options) {
@@ -375,9 +432,12 @@ function schedulingConfig(context) {
     };
 }
 
-function workingDirectory(context, config) {
-    const root = context.workspacePath || context.rootPath || context.folder?.uri?.fsPath || context.workspaceFolder?.uri?.fsPath || process.cwd();
-    return path.resolve(root, config.workingDirectory || '.');
+function workspaceRoot(context) {
+    return context.workspacePath
+        || context.rootPath
+        || context.folder?.uri?.fsPath
+        || context.workspaceFolder?.uri?.fsPath
+        || process.cwd();
 }
 
 function isWorkspaceTrusted(context) {
@@ -388,12 +448,12 @@ function isWorkspaceTrusted(context) {
     return true;
 }
 
-function resolvePath(cwd, value) {
-    return path.isAbsolute(value) ? value : path.resolve(cwd, value);
+function unavailable(reason, diagnostics = []) {
+    return { provider: 'bsc', available: false, relations: [], diagnostics, reason };
 }
 
-function unavailable(reason) {
-    return { provider: 'bsc', available: false, relations: [], diagnostics: [], reason };
+function blockedDiagnostic(message) {
+    return { severity: 'warning', message, location: null };
 }
 
 function isCancelled(token) {

@@ -10,6 +10,10 @@ const {
 } = require('./config');
 const { parseBsvFile } = require('./parser');
 const { BscScheduleProvider } = require('../compiler/bsc-schedule-provider');
+const {
+    isPathInsideWorkspace,
+    validateTrustedExternalPath
+} = require('../security/workspace-boundary');
 
 const CONFIG_FILE = '.bsv-arch.json';
 const MAX_SOURCE_BYTES = 4 * 1024 * 1024;
@@ -37,9 +41,10 @@ class WorkspaceAnalyzer {
         });
         const config = configResult.config;
         const analysisDiagnostics = [...configResult.diagnostics];
-        const uris = request.fileOnly && request.activeUri
+        const discoveredUris = request.fileOnly && request.activeUri
             ? [request.activeUri]
             : await this.discoverFiles(folder, config, maxFiles, request.activeUri);
+        const uris = await this.filterSourceUris(folder, discoveredUris, analysisDiagnostics);
 
         if (uris.length >= maxFiles && !request.fileOnly) {
             analysisDiagnostics.push({
@@ -110,6 +115,14 @@ class WorkspaceAnalyzer {
         model.scheduling.source = scheduleResult.source;
         model.scheduling.reason = scheduleResult.reason || '';
         model.viewDefaults = viewDefaults(settings);
+        const workspaceTrusted = this.vscode.workspace?.isTrusted !== false;
+        model.security = {
+            workspaceTrusted,
+            restrictedMode: !workspaceTrusted,
+            sourceAnalysisAvailable: true,
+            bscExecutionEnabled: workspaceTrusted,
+            externalScheduleReportsEnabled: workspaceTrusted
+        };
         return model;
     }
 
@@ -241,6 +254,40 @@ class WorkspaceAnalyzer {
             results.set(activeUri.toString(), activeUri);
         }
         return [...results.values()].sort((left, right) => left.toString().localeCompare(right.toString()));
+    }
+
+    async filterSourceUris(folder, uris, diagnostics) {
+        if (this.vscode.workspace?.isTrusted !== false || !folder) return uris;
+        const allowed = [];
+        for (const uri of uris) {
+            let result;
+            if (uri.scheme === 'file' && folder.uri.scheme === 'file') {
+                result = await validateTrustedExternalPath({
+                    workspacePath: folder.uri.fsPath,
+                    basePath: folder.uri.fsPath,
+                    value: uri.fsPath,
+                    workspaceTrusted: false,
+                    purpose: 'source file'
+                });
+            } else {
+                const sameScheme = uri.scheme === folder.uri.scheme;
+                const insideWorkspace = sameScheme
+                    && isPathInsideWorkspace(folder.uri.path, uri.path, path.posix);
+                result = {
+                    allowed: insideWorkspace,
+                    reason: insideWorkspace
+                        ? ''
+                        : 'External source files are unavailable in a restricted workspace.'
+                };
+            }
+            if (result.allowed) allowed.push(uri);
+            else diagnostics.push({
+                severity: 'warning',
+                message: `${result.reason} Skipped ${uri.toString()}.`,
+                location: null
+            });
+        }
+        return allowed;
     }
 
     relativePath(folder, uri) {

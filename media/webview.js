@@ -42,6 +42,7 @@
         traceClear: document.getElementById('trace-clear'),
         scheduleLegend: document.getElementById('schedule-legend'),
         scheduleOrigin: document.getElementById('schedule-origin'),
+        restrictedMode: document.getElementById('restricted-mode'),
         workspace: document.querySelector('.workspace'),
         shell: document.getElementById('canvas-shell'),
         svg: document.getElementById('architecture-canvas'),
@@ -225,6 +226,7 @@
                 transform: { x: 40, y: 40, scale: 1 }
             };
         runtime.model = model;
+        elements.restrictedMode.hidden = model?.security?.restrictedMode !== true;
         runtime.view = Graph.createViewModel(model, {
             ...base,
             workspaceUri: model?.workspaceUri || null,
@@ -251,7 +253,7 @@
     function showError(message) {
         elements.body.classList.remove('busy');
         elements.workspace.setAttribute('aria-busy', 'false');
-        elements.title.textContent = 'BSV Architecture';
+        elements.title.textContent = 'BSV Lens';
         elements.subtitle.textContent = message || 'Analysis failed.';
         elements.nodes.replaceChildren();
         elements.edges.replaceChildren();

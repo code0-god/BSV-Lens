@@ -85,6 +85,11 @@ function getWebviewHtml(webview, extensionUri, vscode) {
         </div>
     </header>
 
+    <section id="restricted-mode" class="restricted-mode" role="status" hidden>
+        <strong>RESTRICTED MODE</strong>
+        <span>Source analysis remains available. BSC execution and external schedule reports are disabled.</span>
+    </section>
+
     <section class="filterbar" aria-label="Diagram filters">
         <label id="packages-filter"><input id="show-packages" type="checkbox"> Packages</label>
         <label id="imports-filter"><input id="show-imports" type="checkbox"> Imports</label>

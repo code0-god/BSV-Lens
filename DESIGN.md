@@ -96,6 +96,11 @@ Header, source location, primary actions, relation summary counts, then opt-in c
 
 Busy bar uses `aria-busy`; empty state explains next action; toast uses polite live announcements. Error text remains concise and points to Output Channel when evidence is longer.
 
+Restricted Mode uses one persistent status notice between toolbar and filters. It keeps source
+analysis controls available while naming disabled external capabilities. The notice uses VS
+Code warning foreground/background variables, a visible border, and `role="status"`; it never
+blocks or dims the source-derived graph.
+
 ## 6. Interaction and motion
 
 Interaction stays immediate and restrained.

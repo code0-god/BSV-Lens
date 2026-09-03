@@ -48,7 +48,8 @@
   ],
   "capabilities": {
     "untrustedWorkspaces": {
-      "supported": true
+      "supported": "limited",
+      "description": "BSV source analysis remains available. BSC execution and external schedule reports are disabled."
     },
     "virtualWorkspaces": {
       "supported": false

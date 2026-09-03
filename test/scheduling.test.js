@@ -94,9 +94,10 @@ test('BSC report parser accepts realistic and compact relation forms', async () 
     assert.ok(current.every((item) => item.origin === 'bsc' && item.confidence === 'authoritative'));
 });
 
-test('BscScheduleProvider reads configured reports before trust checks or process execution', async () => {
+test('BscScheduleProvider reads workspace-contained reports without process execution', async () => {
     let executions = 0;
     const provider = new BscScheduleProvider({
+        realpath: async (filePath) => filePath,
         readFile: async (filePath) => {
             assert.equal(filePath, path.resolve('/workspace/build/mkTop.sched'));
             return fixture('compact.sched');
@@ -118,6 +119,26 @@ test('BscScheduleProvider reads configured reports before trust checks or proces
     assert.equal(result.source, 'report-files');
     assert.equal(result.relations.length, 8);
     assert.equal(executions, 0);
+});
+
+test('BscScheduleProvider blocks external reports in an untrusted workspace', async () => {
+    let reads = 0;
+    const provider = new BscScheduleProvider({
+        realpath: async (filePath) => filePath,
+        readFile: async () => { reads += 1; return fixture('compact.sched'); }
+    });
+    const result = await provider.analyze({
+        workspacePath: '/workspace',
+        workspaceTrusted: false,
+        scheduling: {
+            workingDirectory: '.',
+            reportFiles: ['/outside/mkTop.sched']
+        }
+    });
+
+    assert.equal(result.available, false);
+    assert.equal(reads, 0);
+    assert.match(result.diagnostics[0].message, /trusted workspace/);
 });
 
 test('BscScheduleProvider probes help then invokes supported flags with executable separate from argv', async () => {
@@ -169,6 +190,35 @@ test('BscScheduleProvider probes help then invokes supported flags with executab
     ]);
     assert.deepEqual(result.relations.map((item) => item.kind), ['conflict-free', 'sequential-before']);
     assert.ok(output.join('').includes('left CF right'));
+});
+
+test('BscScheduleProvider ignores generated report paths outside its output directory', async () => {
+    let reads = 0;
+    const provider = new BscScheduleProvider({
+        realpath: async (filePath) => filePath,
+        readFile: async () => { reads += 1; return fixture('compact.sched'); },
+        makeTempDirectory: async () => '/tmp/bsv-lens-output',
+        removeDirectory: async () => {},
+        execFile(_executable, argv, _options, callback) {
+            if (argv[0] === '-help') {
+                callback(null, '-show-schedule -show-rule-rel-all', '');
+            } else {
+                callback(null, 'Schedule dump file created: /outside/leak.sched', '');
+            }
+            return { kill() {} };
+        }
+    });
+
+    const result = await provider.analyze({
+        workspacePath: '/workspace',
+        workspaceTrusted: true,
+        inputFiles: ['/workspace/Top.bsv'],
+        scheduling: { topModule: 'mkTop', timeoutMs: 1000 }
+    });
+
+    assert.equal(result.available, true);
+    assert.equal(reads, 0);
+    assert.match(result.diagnostics[0].message, /compiler output directory/);
 });
 
 test('BscScheduleProvider discovers hidden relation-report capability', async () => {

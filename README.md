@@ -186,6 +186,12 @@ Provider 값:
 배열은 `child_process.spawn`/`execFile`로 분리됩니다. timeout, cancellation,
 workspace trust를 적용하고 stdout/stderr는 Output Channel에 기록합니다.
 
+Restricted Mode에서는 workspace 내부 `.bsv` source와 안전한 workspace 내부 config,
+schedule report만 읽습니다. BSC process, workspace 밖 report, `../` escape, absolute
+external path, symlink escape, workspace 밖 working directory는 차단됩니다. 경로 판정은
+`path.resolve`, `fs.realpath`, `path.relative`를 함께 사용합니다. UI의
+`RESTRICTED MODE` notice가 source 분석은 계속 가능함을 표시합니다.
+
 ## Type width
 
 정확히 해석한 값만 `{ bits, status: "exact", origin }`으로 표시합니다.

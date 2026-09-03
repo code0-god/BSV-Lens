@@ -32,6 +32,7 @@ const required = [
     'src/architecture/symbol-index.js',
     'src/architecture/type-analysis.js',
     'src/compiler/bsc-schedule-provider.js',
+    'src/security/workspace-boundary.js',
     'media/graph-view.js',
     'media/webview.js',
     'media/webview.css',

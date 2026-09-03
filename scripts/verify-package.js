@@ -23,6 +23,7 @@ for (const entry of [
     'extension/src/architecture/symbol-index.js',
     'extension/src/architecture/type-analysis.js',
     'extension/src/compiler/bsc-schedule-provider.js',
+    'extension/src/security/workspace-boundary.js',
     'extension/media/graph-view.js',
     'extension/media/webview.js',
     'extension/media/webview.css',

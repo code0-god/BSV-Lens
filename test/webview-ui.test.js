@@ -55,6 +55,7 @@ test('webview retains CSP offline scripts exports and accessible graph semantics
     assert.match(content, /id="export-json"/);
     assert.match(content, /role="application"/);
     assert.match(content, /aria-describedby="diagram-help"/);
+    assert.match(content, /id="restricted-mode"/);
 });
 
 test('webview runtime uses indexed graph helper and actual SVG chevrons', () => {
@@ -173,6 +174,7 @@ test('standalone SVG export removes live interaction semantics', () => {
 });
 
 test('responsive accessibility styles cover compact high-contrast and reduced-motion use', () => {
+    const source = fs.readFileSync(path.join(root, 'media', 'webview.js'), 'utf8');
     const styles = fs.readFileSync(path.join(root, 'media', 'webview.css'), 'utf8');
     assert.match(styles, /@media \(max-width: 900px\)/);
     assert.match(styles, /@media \(max-width: 680px\)/);
@@ -180,4 +182,5 @@ test('responsive accessibility styles cover compact high-contrast and reduced-mo
     assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
     assert.match(styles, /\.segmented button:focus-visible/);
     assert.match(styles, /\.workspace\s*\{[\s\S]*min-height: 0/);
+    assert.match(source, /model\?\.security\?\.restrictedMode/);
 });

@@ -40,7 +40,7 @@ body {
 
 body {
     display: grid;
-    grid-template-rows: auto auto auto auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto auto minmax(0, 1fr);
 }
 
 .sr-only {
@@ -316,7 +316,7 @@ button svg {
 }
 
 .filterbar {
-    grid-row: 2;
+    grid-row: 3;
     min-height: 38px;
     display: flex;
     align-items: center;
@@ -326,6 +326,31 @@ button svg {
     background: var(--vscode-editor-background);
     color: var(--muted);
     user-select: none;
+}
+
+.restricted-mode {
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--vscode-inputValidation-warningBorder, var(--panel-border));
+    color: var(--vscode-inputValidation-warningForeground, var(--vscode-foreground));
+    background: var(--vscode-inputValidation-warningBackground, var(--surface-raised));
+}
+
+.restricted-mode[hidden] {
+    display: none;
+}
+
+.restricted-mode strong {
+    flex: none;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+}
+
+.restricted-mode span {
+    color: var(--muted);
 }
 
 .filterbar label.is-disabled {
@@ -375,11 +400,11 @@ button svg {
 }
 
 .tracebar {
-    grid-row: 3;
+    grid-row: 4;
 }
 
 .schedule-legend {
-    grid-row: 4;
+    grid-row: 5;
 }
 
 .tracebar[hidden],
@@ -459,7 +484,7 @@ button svg {
 }
 
 .workspace {
-    grid-row: 5;
+    grid-row: 6;
     width: 100%;
     min-height: 0;
     display: grid;
