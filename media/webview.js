@@ -1513,7 +1513,16 @@
     }
 
     function setTraceStart(nodeId) {
-        viewState().trace = { startId: nodeId, targetId: null, paths: [], index: 0 };
+        viewState().trace = {
+            startId: nodeId,
+            targetId: null,
+            paths: [],
+            index: 0,
+            truncated: false,
+            visitedNodes: 0,
+            elapsedMs: 0,
+            limitReason: null
+        };
         updateTraceUi();
         applySelectionHighlight();
         persistState();
@@ -1522,14 +1531,25 @@
 
     function traceTo(targetId) {
         const trace = viewState().trace;
-        const paths = Graph.shortestPaths(trace.startId, targetId, runtime.graph.edges, { directed: true });
+        const result = Graph.shortestPaths(trace.startId, targetId, runtime.graph.edges, { directed: true });
         trace.targetId = targetId;
-        trace.paths = paths;
+        trace.paths = result.paths;
         trace.index = 0;
+        trace.truncated = result.truncated;
+        trace.visitedNodes = result.visitedNodes;
+        trace.elapsedMs = result.elapsedMs;
+        trace.limitReason = result.limitReason;
         updateTraceUi();
         applySelectionHighlight();
         persistState();
-        showToast(paths.length ? `${paths.length} shortest path${paths.length === 1 ? '' : 's'} found.` : 'No path in current view.', paths.length === 0);
+        showToast(
+            result.paths.length
+                ? result.truncated
+                    ? `${result.paths.length}+ shortest paths found. Additional shortest paths were omitted.`
+                    : `${result.paths.length} shortest path${result.paths.length === 1 ? '' : 's'} found.`
+                : result.truncated ? 'Path search limit reached.' : 'No path in current view.',
+            result.paths.length === 0
+        );
     }
 
     function traceRelations(nodeId, direction, kinds) {
@@ -1542,7 +1562,11 @@
             startId: paths[0]?.[0] || nodeId,
             targetId: paths[0]?.at(-1) || null,
             paths,
-            index: 0
+            index: 0,
+            truncated: false,
+            visitedNodes: 0,
+            elapsedMs: 0,
+            limitReason: null
         };
         updateTraceUi();
         applySelectionHighlight();
@@ -1560,7 +1584,16 @@
 
     function clearTrace(persist = true) {
         if (!runtime.view) return;
-        viewState().trace = { startId: null, targetId: null, paths: [], index: 0 };
+        viewState().trace = {
+            startId: null,
+            targetId: null,
+            paths: [],
+            index: 0,
+            truncated: false,
+            visitedNodes: 0,
+            elapsedMs: 0,
+            limitReason: null
+        };
         updateTraceUi();
         applySelectionHighlight();
         if (persist) persistState();
@@ -1574,9 +1607,20 @@
         const count = trace.paths.length;
         const activePath = trace.paths[trace.index] || [];
         const activeTarget = activePath.at(-1) || trace.targetId;
-        elements.traceSummary.textContent = count
-            ? `${nodeLabel(activePath[0] || trace.startId)} to ${nodeLabel(activeTarget)} · ${trace.index + 1} of ${count}`
-            : `Start: ${nodeLabel(trace.startId)}${trace.targetId ? ' · no path' : ''}`;
+        if (count) {
+            const limitNotice = trace.truncated
+                ? trace.limitReason === 'max-paths'
+                    ? ' · Additional shortest paths were omitted.'
+                    : ' · Path search limit reached.'
+                : '';
+            elements.traceSummary.textContent = `${nodeLabel(activePath[0] || trace.startId)} to ${nodeLabel(activeTarget)} · ${trace.index + 1} of ${count}${trace.truncated ? '+' : ''}${limitNotice}`;
+        } else {
+            elements.traceSummary.textContent = `Start: ${nodeLabel(trace.startId)}${
+                trace.targetId
+                    ? trace.truncated ? ' · Path search limit reached' : ' · No path'
+                    : ''
+            }`;
+        }
         elements.tracePrevious.disabled = count < 2;
         elements.traceNext.disabled = count < 2;
     }
@@ -1674,7 +1718,7 @@
                 ? state.activeFile || 'Current BSV file'
                 : `${runtime.model.workspaceName || 'Workspace'} · generated ${formatTimestamp(runtime.model.generatedAt)}`;
         const focusName = focus?.label || focus?.name || 'none';
-        const hops = state.hopScope === 'all' ? 'All' : `${state.hopScope} hop${state.hopScope === 1 ? '' : 's'}`;
+        const hops = state.hopScope === 'all' ? 'Component' : `${state.hopScope} hop${state.hopScope === 1 ? '' : 's'}`;
         elements.focusSummary.textContent = `Focus: ${focusName} · ${titleCase(state.analysisMode)} · ${hops} · ${runtime.graph.nodes.length}/${runtime.model.stats.nodes} nodes · ${runtime.graph.edges.length} edges`;
         elements.stats.textContent = `${runtime.graph.nodes.length}/${runtime.model.stats.nodes} nodes · ${runtime.graph.edges.length} edges · ${runtime.model.stats.files} files`;
         const diagnostics = runtime.model.diagnostics || [];

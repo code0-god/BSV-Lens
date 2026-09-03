@@ -217,12 +217,27 @@
     }
 
     function normalizeTrace(value) {
-        if (!value || typeof value !== 'object') return { startId: null, targetId: null, paths: [], index: 0 };
+        if (!value || typeof value !== 'object') {
+            return {
+                startId: null,
+                targetId: null,
+                paths: [],
+                index: 0,
+                truncated: false,
+                visitedNodes: 0,
+                elapsedMs: 0,
+                limitReason: null
+            };
+        }
         return {
             startId: value.startId || null,
             targetId: value.targetId || null,
             paths: Array.isArray(value.paths) ? value.paths.map((path) => path.slice()) : [],
-            index: Number.isInteger(value.index) && value.index >= 0 ? value.index : 0
+            index: Number.isInteger(value.index) && value.index >= 0 ? value.index : 0,
+            truncated: value.truncated === true,
+            visitedNodes: Number.isInteger(value.visitedNodes) ? Math.max(0, value.visitedNodes) : 0,
+            elapsedMs: Number.isFinite(value.elapsedMs) ? Math.max(0, value.elapsedMs) : 0,
+            limitReason: typeof value.limitReason === 'string' ? value.limitReason : null
         };
     }
 
@@ -636,43 +651,102 @@
     }
 
     function shortestPaths(sourceId, targetId, edges, options = {}) {
-        if (!sourceId || !targetId) return [];
-        if (sourceId === targetId) return [[sourceId]];
+        const now = typeof options.now === 'function'
+            ? options.now
+            : () => globalThis.performance?.now?.() ?? Date.now();
+        const startedAt = now();
+        const maxPaths = positiveInteger(options.maxPaths, 50);
+        const maxVisitedNodes = positiveInteger(options.maxVisitedNodes, 10000);
+        const timeBudgetMs = nonNegativeNumber(options.timeBudgetMs, 100);
+        const finish = (paths, truncated = false, limitReason = null, visitedNodes = 0) => ({
+            paths,
+            truncated,
+            visitedNodes,
+            elapsedMs: Math.max(0, now() - startedAt),
+            limitReason
+        });
+        if (!sourceId || !targetId) return finish([]);
+        if (sourceId === targetId) return finish([[sourceId]], false, null, 1);
         const directed = options.directed !== false;
         const outgoing = new Map();
         for (const edge of (edges || []).slice().sort(compareEdges)) {
+            if (now() - startedAt >= timeBudgetMs) {
+                return finish([], true, 'time-budget');
+            }
             addAdjacent(outgoing, edge.source, edge.target);
             if (!directed || edge.bidirectional) addAdjacent(outgoing, edge.target, edge.source);
         }
         const distance = new Map([[sourceId, 0]]);
         const predecessors = new Map();
         const queue = [sourceId];
+        let limitReason = null;
+        let targetDistance = null;
         for (let cursor = 0; cursor < queue.length; cursor += 1) {
+            if (now() - startedAt >= timeBudgetMs) {
+                limitReason = 'time-budget';
+                break;
+            }
             const current = queue[cursor];
+            const currentDistance = distance.get(current);
+            if (targetDistance !== null && currentDistance >= targetDistance) continue;
             for (const next of [...(outgoing.get(current) || [])].sort(compareText)) {
-                const candidate = distance.get(current) + 1;
+                if (now() - startedAt >= timeBudgetMs) {
+                    limitReason = 'time-budget';
+                    break;
+                }
+                const candidate = currentDistance + 1;
                 if (!distance.has(next)) {
+                    if (distance.size >= maxVisitedNodes) {
+                        limitReason = 'max-visited-nodes';
+                        break;
+                    }
                     distance.set(next, candidate);
                     predecessors.set(next, [current]);
                     queue.push(next);
+                    if (next === targetId) targetDistance = candidate;
                 } else if (distance.get(next) === candidate) {
                     predecessors.get(next).push(current);
                 }
             }
+            if (limitReason) break;
         }
-        if (!distance.has(targetId)) return [];
+        if (!distance.has(targetId)) {
+            return finish([], Boolean(limitReason), limitReason, distance.size);
+        }
         const paths = [];
-        const visit = (id, suffix) => {
-            if (id === sourceId) {
-                paths.push([sourceId, ...suffix]);
-                return;
+        const stack = [{ id: targetId, reversePath: [targetId] }];
+        while (stack.length > 0) {
+            if (now() - startedAt >= timeBudgetMs) {
+                limitReason = limitReason || 'time-budget';
+                break;
             }
-            for (const previous of [...new Set(predecessors.get(id) || [])].sort(compareText)) {
-                visit(previous, [id, ...suffix]);
+            const current = stack.pop();
+            if (current.id === sourceId) {
+                if (paths.length >= maxPaths) {
+                    limitReason = limitReason || 'max-paths';
+                    break;
+                }
+                paths.push(current.reversePath.slice().reverse());
+                continue;
             }
-        };
-        visit(targetId, []);
-        return paths.sort((left, right) => compareText(left.join('\u0000'), right.join('\u0000')));
+            const previousNodes = [...new Set(predecessors.get(current.id) || [])].sort(compareText);
+            for (let index = previousNodes.length - 1; index >= 0; index -= 1) {
+                stack.push({
+                    id: previousNodes[index],
+                    reversePath: [...current.reversePath, previousNodes[index]]
+                });
+            }
+        }
+        paths.sort((left, right) => compareText(left.join('\u0000'), right.join('\u0000')));
+        return finish(paths, Boolean(limitReason), limitReason, distance.size);
+    }
+
+    function positiveInteger(value, fallback) {
+        return Number.isInteger(value) && value > 0 ? value : fallback;
+    }
+
+    function nonNegativeNumber(value, fallback) {
+        return Number.isFinite(value) && value >= 0 ? value : fallback;
     }
 
     function addAdjacent(index, source, target) {
@@ -680,15 +754,22 @@
         index.get(source).push(target);
     }
 
-    function createPathNavigator(paths) {
-        const ordered = (paths || []).map((path) => path.slice())
+    function createPathNavigator(value) {
+        const result = Array.isArray(value)
+            ? { paths: value, truncated: false, visitedNodes: 0, elapsedMs: 0, limitReason: null }
+            : value || { paths: [], truncated: false, visitedNodes: 0, elapsedMs: 0, limitReason: null };
+        const ordered = (result.paths || []).map((path) => path.slice())
             .sort((left, right) => compareText(left.join('\u0000'), right.join('\u0000')));
         let index = 0;
         return {
             get paths() { return ordered.map((path) => path.slice()); },
             get index() { return index; },
             get current() { return ordered[index] ? ordered[index].slice() : null; },
-            get label() { return ordered.length ? `${index + 1} of ${ordered.length}` : '0 of 0'; },
+            get label() { return ordered.length ? `${index + 1} of ${ordered.length}${result.truncated ? '+' : ''}` : '0 of 0'; },
+            get truncated() { return result.truncated === true; },
+            get visitedNodes() { return result.visitedNodes || 0; },
+            get elapsedMs() { return result.elapsedMs || 0; },
+            get limitReason() { return result.limitReason || null; },
             next() {
                 if (ordered.length) index = (index + 1) % ordered.length;
                 return this.current;
@@ -762,15 +843,17 @@
             return this.state.expandedAggregations[id];
         }
 
-        neighborhood(startId, depth = this.state.hopScope, mode = this.state.analysisMode) {
+        neighborhood(startId, depth = this.state.hopScope, mode = this.state.analysisMode, allowedIds = null) {
             const limit = normalizeHopScope(depth);
             const adjacency = this.indexes.adjacencyByMode.get(normalizeAnalysisMode(mode)) || new Map();
+            if (allowedIds && !allowedIds.has(startId)) return [];
             const distance = new Map([[startId, 0]]);
             const queue = [startId];
             for (let cursor = 0; cursor < queue.length; cursor += 1) {
                 const current = queue[cursor];
                 if (limit !== 'all' && distance.get(current) >= limit) continue;
                 for (const next of adjacency.get(current) || []) {
+                    if (allowedIds && !allowedIds.has(next)) continue;
                     if (distance.has(next)) continue;
                     distance.set(next, distance.get(current) + 1);
                     queue.push(next);
@@ -802,7 +885,7 @@
             const scopedIds = new Set(scoped.map((node) => node.id));
             let nodes = this.levelNodes(level, analysisMode, focusId, scoped, scopedIds);
 
-            if (focusId && hopScope !== 'all') {
+            if (focusId) {
                 const allowed = this.focusNeighborhood(focusId, hopScope, analysisMode, nodes);
                 nodes = nodes.filter((node) =>
                     node.synthetic
@@ -945,16 +1028,21 @@
         }
 
         focusNeighborhood(focusId, hopScope, analysisMode, visibleNodes) {
-            const direct = this.neighborhood(focusId, hopScope, analysisMode);
-            if (direct.length > 1 || this.indexes.nodeById.get(focusId)?.kind !== 'module') return new Set(direct);
-            const childIds = new Set((this.indexes.children.get(focusId) || []).map((node) => node.id));
+            const materializedIds = new Set(visibleNodes.filter((node) => !node.synthetic).map((node) => node.id));
+            const ownerId = ownerModuleId(focusId, this.indexes);
+            const rootId = materializedIds.has(focusId) ? focusId : ownerId || focusId;
+            const direct = this.neighborhood(rootId, hopScope, analysisMode, materializedIds);
+            if (direct.length > 1 || this.indexes.nodeById.get(rootId)?.kind !== 'module') return new Set(direct);
+            const childIds = new Set((this.indexes.children.get(rootId) || []).map((node) => node.id));
             const seeds = visibleNodes.filter((node) => childIds.has(node.id) && !node.synthetic);
-            const allowed = new Set([focusId]);
+            const allowed = new Set([rootId]);
             for (const seed of seeds) {
                 allowed.add(seed.id);
                 const remaining = hopScope === 'all' ? 'all' : Math.max(0, hopScope - 1);
                 if (remaining === 0) continue;
-                for (const id of this.neighborhood(seed.id, remaining, analysisMode)) allowed.add(id);
+                for (const id of this.neighborhood(seed.id, remaining, analysisMode, materializedIds)) {
+                    allowed.add(id);
+                }
             }
             return allowed;
         }

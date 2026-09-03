@@ -23,7 +23,7 @@ Webview type은 `bsvArchitecture.*`를 유지합니다.
 - Workspace 또는 Current File source scope
 - System, Module, Behavior abstraction level
 - Structure, Data Flow, Scheduling analysis mode
-- 선택 node 기준 1/2/3-hop 또는 All focus
+- 선택 node 기준 1/2/3-hop 또는 Component focus
 - module별 Interfaces, Methods, Rules, Local Functions, State, Child Instances, Types group
 - 접힌 group의 명시적 SVG chevron과 module 요약 count
 - 같은 target module의 반복 instance 집계
@@ -86,7 +86,7 @@ Mode마다 edge set이 분리됩니다. Structure edge가 Data Flow hop 계산�
 ### Neighborhood Scope
 
 - **1**, **2**, **3**: 현재 Mode edge만 사용하는 undirected neighborhood BFS
-- **All**: 현재 활성 component 전체
+- **Component**: 현재 Analysis Mode edge로 연결된 component 전체
 
 **Set as focus**로 root를 바꾸면 diagram을 Fit하고 중앙에 배치합니다.
 **Back**, breadcrumb, **Clear focus**로 이전 focus를 복원합니다.

@@ -219,6 +219,62 @@ test('All scope reaches complete active component only', () => {
     assert.ok(!view.neighborhood('rule', 'all', 'data-flow').includes('b'));
 });
 
+test('visible applies one two three and component scopes to focused mode edges', () => {
+    const view = Graph.createViewModel(fixture(), {
+        level: 'behavior',
+        analysisMode: 'data-flow',
+        focusStack: ['rule']
+    });
+    const visibleIds = (hopScope) => new Set(view.visible({ hopScope }).nodes.map((item) => item.id));
+
+    assert.deepEqual(visibleIds(1), new Set(['rule', 'fifo', 'fn']));
+    assert.deepEqual(visibleIds(2), new Set(['rule', 'fifo', 'fn', 'method']));
+    assert.deepEqual(visibleIds(3), new Set(['rule', 'fifo', 'fn', 'method']));
+    assert.deepEqual(visibleIds('all'), new Set(['rule', 'fifo', 'fn', 'method']));
+    assert.deepEqual(
+        new Set(view.visible({ hopScope: 1, analysisMode: 'scheduling' }).nodes.map((item) => item.id)),
+        new Set(['rule', 'method'])
+    );
+});
+
+test('visible ignores hop scope when no focus exists', () => {
+    const view = Graph.createViewModel(fixture(), {
+        level: 'behavior',
+        analysisMode: 'data-flow',
+        hopScope: 1
+    });
+    const ids = new Set(view.visible().nodes.map((item) => item.id));
+
+    assert.ok(ids.has('reg'));
+    assert.ok(ids.has('method'));
+    assert.ok(ids.has('missing'));
+});
+
+test('visible focus traversal cannot cross unmaterialized level nodes', () => {
+    const model = {
+        nodes: [
+            node('pkg', 'package', null),
+            node('module-a', 'module', 'pkg'),
+            node('module-b', 'module', 'pkg'),
+            node('start', 'rule', 'module-a'),
+            node('target', 'rule', 'module-a'),
+            node('bridge', 'rule', 'module-b')
+        ],
+        edges: [
+            { id: 'to-bridge', source: 'start', target: 'bridge', kind: 'invoke', mode: 'data-flow' },
+            { id: 'to-target', source: 'bridge', target: 'target', kind: 'invoke', mode: 'data-flow' }
+        ]
+    };
+    const view = Graph.createViewModel(model, {
+        level: 'behavior',
+        analysisMode: 'data-flow',
+        focusStack: ['start'],
+        hopScope: 'all'
+    });
+
+    assert.deepEqual(view.visible().nodes.map((item) => item.id), ['start']);
+});
+
 test('collapse and expand update one owner bucket only', () => {
     const view = Graph.createViewModel(fixture(), { level: 'module', focusStack: ['a'] });
     view.expand('a', 'methods');
@@ -268,15 +324,125 @@ test('focus breadcrumbs restore valid order and remove duplicates', () => {
 
 test('shortest paths honor mode and navigate all equal paths', () => {
     const view = Graph.createViewModel(fixture());
-    assert.deepEqual(view.shortestPaths('rule', 'method', { analysisMode: 'data-flow' }), [
+    const result = view.shortestPaths('rule', 'method', { analysisMode: 'data-flow' });
+
+    assert.deepEqual(result.paths, [
         ['rule', 'fifo', 'method'],
         ['rule', 'fn', 'method']
     ]);
-    assert.deepEqual(view.shortestPaths('a', 'b', { analysisMode: 'data-flow' }), []);
+    assert.equal(result.truncated, false);
+    assert.ok(result.visitedNodes >= 4);
+    assert.deepEqual(view.shortestPaths('a', 'b', { analysisMode: 'data-flow' }).paths, []);
+    const navigator = Graph.createPathNavigator({
+        paths: [
+            ['rule', 'z', 'method'],
+            ['rule', 'a', 'method']
+        ],
+        truncated: true,
+        visitedNodes: 4,
+        elapsedMs: 1
+    });
+    assert.equal(navigator.label, '1 of 2+');
+    assert.equal(navigator.truncated, true);
+    assert.equal(navigator.visitedNodes, 4);
+    assert.deepEqual(navigator.next(), ['rule', 'z', 'method']);
+    assert.deepEqual(navigator.previous(), ['rule', 'a', 'method']);
+});
+
+test('shortest paths return one directional path and reverse bidirectional scheduling', () => {
+    const edges = [
+        { id: 'one', source: 'source', target: 'middle', kind: 'write' },
+        { id: 'two', source: 'middle', target: 'target', kind: 'read' }
+    ];
+
+    assert.deepEqual(Graph.shortestPaths('source', 'target', edges).paths, [
+        ['source', 'middle', 'target']
+    ]);
+    assert.deepEqual(Graph.shortestPaths('target', 'source', edges).paths, []);
+    assert.deepEqual(Graph.shortestPaths('target', 'source', [{
+        id: 'schedule',
+        source: 'source',
+        target: 'target',
+        kind: 'mutually-exclusive',
+        bidirectional: true
+    }]).paths, [['target', 'source']]);
+});
+
+test('shortest paths cap combinatorial results at fifty', () => {
+    const edges = Array.from({ length: 51 }, (_, index) => [
+        { id: `left-${index}`, source: 'source', target: `middle-${index}` },
+        { id: `right-${index}`, source: `middle-${index}`, target: 'target' }
+    ]).flat();
+    const result = Graph.shortestPaths('source', 'target', edges, { maxPaths: 50 });
+
+    assert.equal(result.paths.length, 50);
+    assert.equal(result.truncated, true);
+    assert.equal(result.limitReason, 'max-paths');
+});
+
+test('shortest paths bound visited nodes before exploring a large graph', () => {
+    const edges = Array.from({ length: 100 }, (_, index) => ({
+        id: `edge-${index}`,
+        source: `node-${index}`,
+        target: `node-${index + 1}`
+    }));
+    const result = Graph.shortestPaths('node-0', 'node-100', edges, {
+        maxVisitedNodes: 10
+    });
+
+    assert.deepEqual(result.paths, []);
+    assert.equal(result.truncated, true);
+    assert.equal(result.limitReason, 'max-visited-nodes');
+    assert.equal(result.visitedNodes, 10);
+});
+
+test('shortest paths enforce deterministic time budget', () => {
+    let tick = 0;
+    const result = Graph.shortestPaths('source', 'target', [{
+        id: 'edge',
+        source: 'source',
+        target: 'target'
+    }], {
+        timeBudgetMs: 1,
+        now: () => tick++
+    });
+
+    assert.deepEqual(result.paths, []);
+    assert.equal(result.truncated, true);
+    assert.equal(result.limitReason, 'time-budget');
+    assert.ok(result.elapsedMs >= 1);
+});
+
+test('shortest paths handle large cyclic graphs without recursion overflow', () => {
+    const count = 5000;
+    const edges = Array.from({ length: count }, (_, index) => ({
+        id: `cycle-${index}`,
+        source: `node-${index}`,
+        target: `node-${(index + 1) % count}`
+    }));
+    const result = Graph.shortestPaths('node-0', 'node-4000', edges, {
+        maxVisitedNodes: count,
+        timeBudgetMs: 1000
+    });
+
+    assert.equal(result.paths.length, 1);
+    assert.equal(result.paths[0].length, 4001);
+    assert.equal(result.truncated, false);
+});
+
+test('legacy all hop scope migrates as component-compatible state', () => {
+    const indexes = Graph.buildIndexes(fixture());
+
+    assert.equal(Graph.migrateState({ hops: 'all' }, indexes).hopScope, 'all');
+    assert.equal(Graph.migrateState({ hopScope: 'All' }, indexes).hopScope, 'all');
+});
+
+test('path navigator remains compatible with direct path arrays', () => {
     const navigator = Graph.createPathNavigator([
         ['rule', 'z', 'method'],
         ['rule', 'a', 'method']
     ]);
+
     assert.equal(navigator.label, '1 of 2');
     assert.deepEqual(navigator.next(), ['rule', 'z', 'method']);
     assert.deepEqual(navigator.previous(), ['rule', 'a', 'method']);

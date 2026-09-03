@@ -44,6 +44,7 @@ test('webview declares independent source level mode and hop controls', () => {
     assert.match(content, /data-level="system"/);
     assert.match(content, /data-analysis-mode="scheduling"/);
     assert.match(content, /data-hop="3"/);
+    assert.match(content, /data-hop="all"[^>]*>Component<\/button>/);
 });
 
 test('webview retains CSP offline scripts exports and accessible graph semantics', () => {
@@ -65,6 +66,8 @@ test('webview runtime uses indexed graph helper and actual SVG chevrons', () => 
     assert.match(source, /class: 'group-chevron'/);
     assert.match(source, /marker-start/);
     assert.match(source, /Graph\.shortestPaths/);
+    assert.match(source, /result\.truncated/);
+    assert.match(source, /result\.limitReason/);
     assert.match(source, /function compareNodes/);
     assert.doesNotMatch(source, /\.append\(svgElement\('title'\)\)\.textContent/);
     assert.match(source, /aria-expanded/);

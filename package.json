@@ -184,8 +184,14 @@
             "3",
             "all"
           ],
+          "enumDescriptions": [
+            "Show focused nodes within one active-mode hop.",
+            "Show focused nodes within two active-mode hops.",
+            "Show focused nodes within three active-mode hops.",
+            "Show the focused active-mode connected component. Persisted value remains \"all\" for compatibility."
+          ],
           "default": "all",
-          "description": "Initial focus neighborhood depth."
+          "description": "Initial active-mode focus scope."
         },
         "bsvArchitecture.syncWithEditor": {
           "type": "boolean",

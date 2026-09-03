@@ -54,7 +54,7 @@ function getWebviewHtml(webview, extensionUri, vscode) {
                     <button type="button" data-hop="1" aria-pressed="false" title="Show one-hop neighborhood">1</button>
                     <button type="button" data-hop="2" aria-pressed="false" title="Show two-hop neighborhood">2</button>
                     <button type="button" data-hop="3" aria-pressed="false" title="Show three-hop neighborhood">3</button>
-                    <button type="button" data-hop="all" aria-pressed="true" title="Show all active relations">All</button>
+                    <button type="button" data-hop="all" aria-pressed="true" title="Show connected component">Component</button>
                 </div>
             </fieldset>
         </div>
