@@ -93,6 +93,34 @@ test('data flow edges preserve producer FIFO consumer direction and evidence', (
     assert.ok(data.every((edge) => edge.origin && edge.confidence && edge.evidence));
 });
 
+test('data flow excludes pure FIFO state effects while scheduling consumes them', () => {
+    const model = build(`
+package FifoEffects;
+import FIFOF::*;
+module mkFifoEffects(Empty);
+    FIFOF#(UInt#(8)) fifo <- mkFIFOF;
+    rule firstConsumer;
+        let value = fifo.first;
+        fifo.deq;
+    endrule
+    rule secondConsumer;
+        fifo.deq;
+    endrule
+endmodule
+endpackage
+`);
+    const fifoId = model.nodes.find((node) => node.name === 'fifo').id;
+    const dataLabels = model.edges
+        .filter((edge) => edge.mode === 'data-flow' && [edge.source, edge.target].includes(fifoId))
+        .map((edge) => edge.label);
+    const dependency = model.edges.find((edge) =>
+        edge.kind === 'potential-state-dependency' && edge.label === 'fifo'
+    );
+
+    assert.deepEqual(dataLabels, ['first']);
+    assert.match(dependency.evidence, /dequeues fifo/);
+});
+
 test('interface method ports include exact widths only when resolvable', () => {
     const model = build(FEATURE_SOURCE);
     const moduleNode = model.nodes.find((node) => node.kind === 'module');
@@ -113,6 +141,36 @@ test('interface method ports include exact widths only when resolvable', () => {
         bits: 12,
         status: 'exact',
         origin: 'Pair'
+    });
+});
+
+test('instance graph details retain parser identity and multiplicity metadata', () => {
+    const model = build(`
+package InstanceDetails;
+module mkInstanceDetails(Empty);
+    ChildIfc#(8) child <- mkChild#(8)(True);
+    Vector#(4, ChildIfc) children <- replicateM(mkChild);
+endmodule
+endpackage
+`);
+    const child = model.nodes.find((node) => node.name === 'child');
+    const children = model.nodes.find((node) => node.name === 'children');
+
+    assert.deepEqual({
+        declaredType: child.details.declaredType,
+        constructorExpression: child.details.constructorExpression,
+        staticArguments: child.details.staticArguments,
+        specialization: child.details.specialization
+    }, {
+        declaredType: 'ChildIfc#(8)',
+        constructorExpression: 'mkChild#(8)(True)',
+        staticArguments: ['8'],
+        specialization: '#(8)'
+    });
+    assert.deepEqual(children.details.multiplicity, {
+        status: 'exact',
+        count: 4,
+        expression: '4'
     });
 });
 

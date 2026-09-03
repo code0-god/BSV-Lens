@@ -236,7 +236,15 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
                     primitive: Boolean(instance.primitiveKind),
                     details: {
                         type: instance.type,
+                        declaredType: instance.declaredType,
                         constructor: instance.constructor,
+                        constructorExpression: instance.constructorExpression,
+                        staticArguments: instance.staticArguments,
+                        arguments: instance.arguments,
+                        specialization: instance.specialization,
+                        multiplicity: instance.multiplicity,
+                        role: instance.role,
+                        config: instance.config,
                         primitiveKind: instance.primitiveKind,
                         dataType,
                         width: dataType ? analyzeTypeWidth(dataType, typeDefinitions) : unresolvedWidth('instance data type is unknown'),
@@ -440,8 +448,9 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
     const scheduleRelations = context.scheduleRelations
         || normalizeScheduleAttributes(parsedFiles);
     addExternalScheduleEdges(scheduleRelations, nodes, addEdge, diagnostics, context);
-    attachMemberBuckets(nodes, edges);
     attachCompilerSupportingEvidence(edges);
+    const limits = applyGraphLimits(nodes, edges, context.limits, diagnostics);
+    attachMemberBuckets(nodes, edges);
     attachScheduleRelations(nodes, edges);
 
     for (const node of nodes) {
@@ -479,8 +488,42 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         roots,
         scheduling,
         diagnostics,
-        stats
+        stats,
+        limits
     };
+}
+
+function applyGraphLimits(nodes, edges, requested = {}, diagnostics = []) {
+    const maxNodes = graphLimit(requested.maxNodes, 10000);
+    const maxEdges = graphLimit(requested.maxEdges, 25000);
+    const originalNodes = nodes.length;
+    const originalEdges = edges.length;
+    if (nodes.length > maxNodes) nodes.splice(maxNodes);
+    const retained = new Set(nodes.map((node) => node.id));
+    for (let index = edges.length - 1; index >= 0; index -= 1) {
+        if (!retained.has(edges[index].source) || !retained.has(edges[index].target)) edges.splice(index, 1);
+    }
+    const edgeLimitTruncated = Math.max(0, edges.length - maxEdges);
+    if (edges.length > maxEdges) edges.splice(maxEdges);
+    const nodesTruncated = originalNodes - nodes.length;
+    const edgesTruncated = originalEdges - edges.length;
+    if (nodesTruncated > 0) diagnostics.push({
+        severity: 'warning',
+        code: 'limit.nodes',
+        message: `Architecture graph reached the ${maxNodes}-node limit; ${nodesTruncated} nodes were omitted.`,
+        location: null
+    });
+    if (edgeLimitTruncated > 0) diagnostics.push({
+        severity: 'warning',
+        code: 'limit.edges',
+        message: `Architecture graph reached the ${maxEdges}-edge limit; ${edgesTruncated} edges were omitted.`,
+        location: null
+    });
+    return { maxNodes, maxEdges, originalNodes, originalEdges, nodesTruncated, edgesTruncated };
+}
+
+function graphLimit(value, fallback) {
+    return Number.isSafeInteger(value) && value > 0 ? value : fallback;
 }
 
 function addExternalScheduleEdges(relations, nodes, addEdge, diagnostics, context = {}) {
@@ -692,14 +735,15 @@ function addBehaviorAccessEdges(sourceNode, accesses, ownerId, file, childNodes,
             sourceLocation: access.location || sourceNode.location
         };
 
-        if (access.kind === 'write') {
+        if (access.dataFlow === 'write') {
             addEdge(sourceNode.id, target.id, 'write', access.operation || 'write', true, metadata);
             continue;
         }
-        if (access.kind === 'read') {
+        if (access.dataFlow === 'read') {
             addEdge(target.id, sourceNode.id, 'read', access.operation || 'read', true, metadata);
             continue;
         }
+        if (['read', 'write'].includes(access.kind)) continue;
 
         const method = resolveInstanceMethod(target, access.member, file, interfaceDefinitions);
         const category = method?.category || (access.kind === 'return' ? 'action-value' : 'unknown');
@@ -733,13 +777,24 @@ function addPotentialStateDependencies(ownerId, nodes, addEdge) {
         for (let right = left + 1; right < behavior.length; right += 1) {
             const first = behavior[left];
             const second = behavior[right];
+            const firstEffects = schedulingEffects(first);
+            const secondEffects = schedulingEffects(second);
             const shared = intersect(
-                [...first.reads, ...first.writes],
-                [...second.reads, ...second.writes]
-            ).filter((name) => first.writes.includes(name) || second.writes.includes(name));
+                firstEffects.map((effect) => effect.instance),
+                secondEffects.map((effect) => effect.instance)
+            );
             for (const stateName of shared) {
-                const ordered = orderDependency(first, second, stateName);
-                const evidence = dependencyEvidence(ordered[0], ordered[1], stateName);
+                const firstStateEffects = firstEffects.filter((effect) => effect.instance === stateName);
+                const secondStateEffects = secondEffects.filter((effect) => effect.instance === stateName);
+                if (!hasSchedulingMutation(firstStateEffects) && !hasSchedulingMutation(secondStateEffects)) continue;
+                const ordered = orderEffectDependency(first, second, firstStateEffects, secondStateEffects);
+                const evidence = dependencyEvidence(
+                    ordered[0],
+                    ordered[1],
+                    stateName,
+                    ordered[0] === first ? firstStateEffects : secondStateEffects,
+                    ordered[1] === second ? secondStateEffects : firstStateEffects
+                );
                 addEdge(ordered[0].id, ordered[1].id, 'potential-state-dependency', stateName, true, {
                     mode: 'scheduling',
                     origin: 'source-heuristic',
@@ -753,16 +808,45 @@ function addPotentialStateDependencies(ownerId, nodes, addEdge) {
     }
 }
 
-function orderDependency(first, second, stateName) {
-    if (first.writes.includes(stateName) && !second.writes.includes(stateName)) return [first, second];
-    if (second.writes.includes(stateName) && !first.writes.includes(stateName)) return [second, first];
+function schedulingEffects(node) {
+    const effects = (node.details?.accesses || [])
+        .filter((access) => access.instance && access.stateEffect)
+        .map((access) => ({ instance: access.instance, effect: access.stateEffect }));
+    if (effects.length > 0) return effects;
+    return [
+        ...(node.reads || []).map((instance) => ({ instance, effect: 'read' })),
+        ...(node.writes || []).map((instance) => ({ instance, effect: 'write' }))
+    ];
+}
+
+function hasSchedulingMutation(effects) {
+    return effects.some(({ effect }) => !['read', 'observe'].includes(effect));
+}
+
+function orderEffectDependency(first, second, firstEffects, secondEffects) {
+    if (hasSchedulingMutation(firstEffects) && !hasSchedulingMutation(secondEffects)) return [first, second];
+    if (hasSchedulingMutation(secondEffects) && !hasSchedulingMutation(firstEffects)) return [second, first];
     return [first, second];
 }
 
-function dependencyEvidence(source, target, stateName) {
-    const sourceAction = source.writes.includes(stateName) ? 'writes' : 'reads';
-    const targetAction = target.writes.includes(stateName) ? 'writes' : 'reads';
+function dependencyEvidence(source, target, stateName, sourceEffects, targetEffects) {
+    const sourceAction = effectVerb(sourceEffects);
+    const targetAction = effectVerb(targetEffects);
     return `${source.name} ${sourceAction} ${stateName}; ${target.name} ${targetAction} ${stateName}`;
+}
+
+function effectVerb(effects) {
+    const effect = effects.find((item) => !['read', 'observe'].includes(item.effect))?.effect
+        || effects[0]?.effect
+        || 'access';
+    return {
+        read: 'reads',
+        observe: 'observes',
+        write: 'writes',
+        enqueue: 'enqueues',
+        dequeue: 'dequeues',
+        clear: 'clears'
+    }[effect] || `${effect}s`;
 }
 
 function intersect(left, right) {

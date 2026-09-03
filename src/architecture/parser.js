@@ -651,12 +651,14 @@ function parseTypedefStatement(masked, original) {
 }
 
 function parseEnumVariants(body) {
+    const variantValues = splitTopLevel(body, ',')
+        .map((part) => normalizeWhitespace(part))
+        .map((part) => /^([A-Za-z_$][\w$]*)(?:\s*=\s*(.+))?$/.exec(part))
+        .filter(Boolean)
+        .map((match) => ({ name: match[1], value: match[2] || null }));
     return {
-        variants: splitTopLevel(body, ',')
-            .map((part) => normalizeWhitespace(part))
-            .map((part) => /^([A-Za-z_$][\w$]*)/.exec(part))
-            .filter(Boolean)
-            .map((match) => match[1])
+        variants: variantValues.map((variant) => variant.name),
+        variantValues
     };
 }
 
@@ -690,7 +692,7 @@ function populateModuleMembers(module, text, masked, uri, lineStarts, allFunctio
 
 function parseInstances(bodyMasked, bodyText, baseOffset, uri, lineStarts) {
     const instances = [];
-    const expression = /<-\s*(mk[A-Za-z_$][\w$]*)\b/g;
+    const expression = /<-\s*(mk[A-Za-z_$][\w$]*|replicateM|mapM)\b/g;
     let match;
 
     while ((match = expression.exec(bodyMasked)) !== null) {
@@ -698,17 +700,29 @@ function parseInstances(bodyMasked, bodyText, baseOffset, uri, lineStarts) {
         const declaration = bodyMasked.slice(declarationStart, match.index);
         const nameToken = identifierBefore(declaration, declaration.length);
         if (!nameToken) continue;
-        const typeText = normalizeWhitespace(declaration.slice(0, nameToken.start).replace(/^(?:begin|end|action|actionvalue)\b\s*/i, ''));
-        if (!typeText || CONTROL_WORDS.has(nameToken.value.toLowerCase())) continue;
+        const declaredType = normalizeWhitespace(declaration.slice(0, nameToken.start).replace(/^(?:begin|end|action|actionvalue)\b\s*/i, ''));
+        const inferred = declaredType === 'let';
+        if (!declaredType || CONTROL_WORDS.has(nameToken.value.toLowerCase()) || !inferred && CONTROL_WORDS.has(declaredType.toLowerCase())) {
+            continue;
+        }
 
         const statementEnd = findStatementEnd(bodyMasked, match.index);
         const end = statementEnd >= 0 ? statementEnd + 1 : expression.lastIndex;
+        const constructorStart = match.index + match[0].lastIndexOf(match[1]);
+        const constructorExpression = normalizeWhitespace(bodyText.slice(constructorStart, statementEnd >= 0 ? statementEnd : end));
+        const constructor = parseConstructorExpression(constructorExpression);
         const absoluteName = baseOffset + declarationStart + nameToken.start;
         instances.push({
             name: nameToken.value,
-            type: typeText,
-            constructor: match[1],
-            primitiveKind: classifyPrimitive(typeText, match[1]),
+            type: inferred ? 'inferred' : declaredType,
+            declaredType: inferred ? null : declaredType,
+            constructor: constructor.name,
+            constructorExpression,
+            staticArguments: constructor.staticArguments,
+            arguments: constructor.arguments,
+            specialization: constructor.specialization,
+            multiplicity: instanceMultiplicity(inferred ? '' : declaredType, constructor.name),
+            primitiveKind: classifyPrimitive(inferred ? '' : declaredType, constructor.name),
             signature: truncate(bodyText.slice(declarationStart, end), 260),
             location: makeLocation(uri, lineStarts, absoluteName, absoluteName + nameToken.value.length),
             sourceRange: makeLocation(uri, lineStarts, baseOffset + declarationStart, baseOffset + end),
@@ -718,6 +732,42 @@ function parseInstances(bodyMasked, bodyText, baseOffset, uri, lineStarts) {
     }
 
     return instances;
+}
+
+function parseConstructorExpression(expression) {
+    const nameMatch = /^([A-Za-z_$][\w$]*)/.exec(expression);
+    if (!nameMatch) return { name: expression, staticArguments: [], arguments: [], specialization: null };
+    let cursor = nameMatch[0].length;
+    while (/\s/.test(expression[cursor] || '')) cursor += 1;
+    let specialization = null;
+    let staticArguments = [];
+    if (expression[cursor] === '#') {
+        const open = expression.indexOf('(', cursor + 1);
+        const close = open >= 0 ? findMatchingDelimiter(expression, open, '(', ')') : -1;
+        if (close >= 0) {
+            specialization = `#(${normalizeWhitespace(expression.slice(open + 1, close))})`;
+            staticArguments = splitTopLevel(expression.slice(open + 1, close), ',').map(normalizeWhitespace);
+            cursor = close + 1;
+        }
+    }
+    while (/\s/.test(expression[cursor] || '')) cursor += 1;
+    let args = [];
+    if (expression[cursor] === '(') {
+        const close = findMatchingDelimiter(expression, cursor, '(', ')');
+        if (close >= 0) args = splitTopLevel(expression.slice(cursor + 1, close), ',').map(normalizeWhitespace);
+    }
+    return { name: nameMatch[1], staticArguments, arguments: args, specialization };
+}
+
+function instanceMultiplicity(type, constructor) {
+    if (!['replicateM', 'mapM'].includes(constructor)) return null;
+    const expression = /^Vector\s*#/i.test(type) ? typeApplicationArguments(type)[0] || null : null;
+    if (!expression) return { status: 'unresolved', count: null, expression: null };
+    if (/^\d+$/.test(expression)) {
+        const count = Number(expression);
+        if (Number.isSafeInteger(count)) return { status: 'exact', count, expression };
+    }
+    return { status: 'parameterized', count: null, expression };
 }
 
 function findPreviousStatementBoundary(text, offset) {

@@ -57,6 +57,62 @@ test('enum uses minimum width needed for its tag', () => {
     assert.deepEqual(analyzeTypeWidth('State', types), { bits: 3, status: 'exact', origin: 'State' });
 });
 
+test('enum width accounts for explicit values and never returns zero bits', () => {
+    const encoded = [
+        {
+            kind: 'enum',
+            name: 'Encoded',
+            details: {
+                variants: ['Idle', 'Busy', 'Error'],
+                variantValues: [
+                    { name: 'Idle', value: '0' },
+                    { name: 'Busy', value: '3' },
+                    { name: 'Error', value: '7' }
+                ]
+            }
+        },
+        {
+            kind: 'enum',
+            name: 'Singleton',
+            details: {
+                variants: ['Only'],
+                variantValues: [{ name: 'Only', value: null }]
+            }
+        }
+    ];
+
+    assert.deepEqual(analyzeTypeWidth('Encoded', encoded), {
+        bits: 3,
+        status: 'exact',
+        origin: 'Encoded'
+    });
+    assert.deepEqual(analyzeTypeWidth('Singleton', encoded), {
+        bits: 1,
+        status: 'exact',
+        origin: 'Singleton'
+    });
+});
+
+test('symbolic enum encodings remain unresolved instead of using variant count', () => {
+    const symbolic = [{
+        kind: 'enum',
+        name: 'Symbolic',
+        details: {
+            variants: ['Idle', 'Dynamic'],
+            variantValues: [
+                { name: 'Idle', value: '0' },
+                { name: 'Dynamic', value: 'encodingWidth' }
+            ]
+        }
+    }];
+
+    assert.deepEqual(analyzeTypeWidth('Symbolic', symbolic), {
+        bits: null,
+        status: 'unresolved',
+        reason: 'enum Symbolic has nonliteral encoding encodingWidth'
+    });
+});
+
 test('unresolved numeric parameters remain unresolved', () => {
     assert.deepEqual(analyzeTypeWidth('Bit#(weightWidth)'), {
         bits: null,

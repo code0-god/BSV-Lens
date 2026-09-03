@@ -99,6 +99,38 @@ endpackage
     ));
 });
 
+test('FIFO accesses separate payload data flow from state effects', () => {
+    const parsed = parse(`
+package Effects;
+import FIFOF::*;
+module mkEffects(Empty);
+    FIFOF#(UInt#(8)) fifo <- mkFIFOF;
+    rule inspect;
+        let ready = fifo.notEmpty;
+        let value = fifo.peek;
+        fifo.deq;
+        fifo.clear;
+    endrule
+endmodule
+endpackage
+`);
+    const accesses = new Map(parsed.modules[0].rules[0].accesses.map((access) => [access.member, access]));
+
+    assert.deepEqual(
+        ['notEmpty', 'peek', 'deq', 'clear'].map((member) => ({
+            member,
+            dataFlow: accesses.get(member).dataFlow,
+            stateEffect: accesses.get(member).stateEffect
+        })),
+        [
+            { member: 'notEmpty', dataFlow: 'read', stateEffect: 'observe' },
+            { member: 'peek', dataFlow: 'read', stateEffect: 'observe' },
+            { member: 'deq', dataFlow: null, stateEffect: 'dequeue' },
+            { member: 'clear', dataFlow: null, stateEffect: 'clear' }
+        ]
+    );
+});
+
 test('ActionValue result binding is retained as return data flow', () => {
     const parsed = parse(`
 package Binding;
@@ -118,6 +150,104 @@ endpackage
     assert.equal(access.resultBinding, 'item');
     assert.equal(access.kind, 'return');
     assert.equal(access.operation, 'action-value-result');
+});
+
+test('parameterized and inferred instances preserve constructor specialization', () => {
+    const parsed = parse(`
+package Instances;
+module mkInstances(Empty);
+    ChildIfc#(8) typed <- mkChild#(8)(True);
+    let inferred <- mkChild#(16)(False);
+endmodule
+endpackage
+`);
+
+    assert.deepEqual(parsed.modules[0].instances.map((instance) => ({
+        name: instance.name,
+        type: instance.type,
+        declaredType: instance.declaredType,
+        constructor: instance.constructor,
+        constructorExpression: instance.constructorExpression,
+        staticArguments: instance.staticArguments,
+        arguments: instance.arguments,
+        specialization: instance.specialization
+    })), [
+        {
+            name: 'typed',
+            type: 'ChildIfc#(8)',
+            declaredType: 'ChildIfc#(8)',
+            constructor: 'mkChild',
+            constructorExpression: 'mkChild#(8)(True)',
+            staticArguments: ['8'],
+            arguments: ['True'],
+            specialization: '#(8)'
+        },
+        {
+            name: 'inferred',
+            type: 'inferred',
+            declaredType: null,
+            constructor: 'mkChild',
+            constructorExpression: 'mkChild#(16)(False)',
+            staticArguments: ['16'],
+            arguments: ['False'],
+            specialization: '#(16)'
+        }
+    ]);
+});
+
+test('replicateM and mapM preserve exact parameterized and unresolved multiplicity', () => {
+    const parsed = parse(`
+package Multiplicity;
+module mkMultiplicity#(numeric type lanes)(Empty);
+    Vector#(4, ChildIfc) exact <- replicateM(mkChild);
+    Vector#(lanes, ChildIfc) parameterized <- replicateM(mkChild);
+    let mapped <- mapM(mkChild, configs);
+endmodule
+endpackage
+`);
+
+    assert.deepEqual(parsed.modules[0].instances.map((instance) => ({
+        name: instance.name,
+        constructor: instance.constructor,
+        primitiveKind: instance.primitiveKind,
+        multiplicity: instance.multiplicity
+    })), [
+        {
+            name: 'exact',
+            constructor: 'replicateM',
+            primitiveKind: 'vector',
+            multiplicity: { status: 'exact', count: 4, expression: '4' }
+        },
+        {
+            name: 'parameterized',
+            constructor: 'replicateM',
+            primitiveKind: 'vector',
+            multiplicity: { status: 'parameterized', count: null, expression: 'lanes' }
+        },
+        {
+            name: 'mapped',
+            constructor: 'mapM',
+            primitiveKind: null,
+            multiplicity: { status: 'unresolved', count: null, expression: null }
+        }
+    ]);
+});
+
+test('enum parser preserves explicit encoding expressions', () => {
+    const parsed = parse(`
+package Encoded;
+typedef enum { Idle = 0, Busy = 3, Error = 7 } State deriving (Bits, Eq);
+endpackage
+`);
+
+    assert.deepEqual(parsed.types[0].details, {
+        variants: ['Idle', 'Busy', 'Error'],
+        variantValues: [
+            { name: 'Idle', value: '0' },
+            { name: 'Busy', value: '3' },
+            { name: 'Error', value: '7' }
+        ]
+    });
 });
 
 test('parser preserves raw scheduling attributes with owners', () => {

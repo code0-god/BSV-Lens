@@ -87,6 +87,8 @@ function collectAssignments(instance, statement, original, callable, makeLocatio
             member: null,
             kind: 'write',
             operation: instance.primitiveKind === 'register' ? 'register-write' : 'state-write',
+            dataFlow: 'write',
+            stateEffect: 'write',
             statement,
             original,
             matchIndex: match.index,
@@ -112,6 +114,8 @@ function collectMemberAccesses(instance, statement, original, callable, makeLoca
             memberPath: members.join('.'),
             kind,
             operation,
+            dataFlow: resultBinding ? 'return' : classification.dataFlow,
+            stateEffect: classification.stateEffect,
             resultBinding,
             statement,
             original,
@@ -133,6 +137,8 @@ function collectRegisterReads(instance, statement, original, callable, makeLocat
             member: null,
             kind: 'read',
             operation: 'register-read',
+            dataFlow: 'read',
+            stateEffect: 'read',
             statement,
             original,
             matchIndex: match.index,
@@ -144,15 +150,25 @@ function collectRegisterReads(instance, statement, original, callable, makeLocat
 
 function classifyMemberOperation(primitiveKind, members) {
     const operations = PRIMITIVE_OPERATIONS[primitiveKind];
-    if (!operations) return { kind: 'access', operation: 'unclassified-access' };
+    if (!operations) {
+        return { kind: 'access', operation: 'unclassified-access', dataFlow: null, stateEffect: null };
+    }
     const matched = [...members].reverse().find((member) =>
         operations.read.includes(member) || operations.write.includes(member)
     );
-    if (!matched) return { kind: 'access', operation: 'unclassified-access' };
-    return {
-        kind: operations.write.includes(matched) ? 'write' : 'read',
-        operation: OPERATION_NAMES[matched] || `${primitiveKind}-${matched}`
-    };
+    if (!matched) return { kind: 'access', operation: 'unclassified-access', dataFlow: null, stateEffect: null };
+    const kind = operations.write.includes(matched) ? 'write' : 'read';
+    const operation = OPERATION_NAMES[matched] || `${primitiveKind}-${matched}`;
+    if (primitiveKind === 'fifo') {
+        if (matched === 'deq' || matched === 'clear') {
+            return { kind, operation, dataFlow: null, stateEffect: operation };
+        }
+        if (['first', 'notEmpty', 'notFull', 'peek'].includes(matched)) {
+            return { kind, operation, dataFlow: 'read', stateEffect: 'observe' };
+        }
+        if (matched === 'enq') return { kind, operation, dataFlow: 'write', stateEffect: 'enqueue' };
+    }
+    return { kind, operation, dataFlow: kind, stateEffect: kind };
 }
 
 function bindingBefore(statement, accessOffset) {
@@ -184,6 +200,8 @@ function addAccess(data, accesses, seen) {
         memberPath: data.memberPath || data.member || null,
         kind: data.kind,
         operation: data.operation,
+        dataFlow: data.dataFlow ?? null,
+        stateEffect: data.stateEffect ?? null,
         resultBinding: data.resultBinding || null,
         analysisOrigin: 'Source-derived',
         confidence: data.operation === 'unclassified-access' ? 'unknown' : 'explicit',

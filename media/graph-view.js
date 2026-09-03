@@ -187,6 +187,7 @@
             focusStack: restoreFocus(old, indexes),
             selectedId: old.selectedId || old.selection || null,
             collapseModuleMembers: old.collapseModuleMembers !== false,
+            showMethodPorts: old.showMethodPorts !== false,
             collapsedGroups,
             expandedAggregations: { ...(old.expandedAggregations || {}) },
             filters: old.filters && typeof old.filters === 'object' ? { ...old.filters } : {},
@@ -274,8 +275,20 @@
                     : 'unresolved';
             const target = details.targetId || details.parameterizedTargetId
                 || details.targetName || details.constructor || details.type || 'unresolved';
-            const key = `${status}:${target}`;
-            if (!groups.has(key)) groups.set(key, { status, target, members: [] });
+            const key = stableIdentity([
+                status,
+                target,
+                details.declaredType ?? details.type ?? null,
+                details.constructor ?? null,
+                details.constructorExpression ?? null,
+                details.staticArguments ?? null,
+                details.arguments ?? null,
+                details.specialization ?? null,
+                details.role ?? null,
+                details.config ?? null,
+                details.multiplicity ?? null
+            ]);
+            if (!groups.has(key)) groups.set(key, { key, status, target, members: [] });
             groups.get(key).members.push(node);
         }
         return [...groups.values()].sort((left, right) => compareText(left.target, right.target)).map((group) => {
@@ -283,7 +296,7 @@
             const targetName = members[0].details?.targetName || members[0].details?.constructor || group.target;
             const exact = group.status === 'exact';
             return {
-                id: `instance-group:${moduleId}:${encodeURIComponent(`${group.status}:${group.target}`)}`,
+                id: `instance-group:${moduleId}:${encodeURIComponent(group.key)}`,
                 kind: 'instance-group',
                 label: `${targetName || 'unresolved'} × ${exact ? members.length : 'N'}`,
                 parentId: moduleId,
@@ -297,6 +310,12 @@
                 synthetic: true
             };
         });
+    }
+
+    function stableIdentity(value) {
+        if (value === null || typeof value !== 'object') return String(value);
+        if (Array.isArray(value)) return `[${value.map(stableIdentity).join(',')}]`;
+        return `{${Object.keys(value).sort().map((key) => `${key}:${stableIdentity(value[key])}`).join(',')}}`;
     }
 
     function layoutModuleHierarchy(nodes, edges, sizes, options = {}) {
@@ -808,7 +827,10 @@
                 .map((edge) => this.indexes.nodeById.get(edge.target))
                 .filter((node) => node && !node.hidden);
             return BUCKETS.map((descriptor) => {
-                const members = descriptor.kind === 'interfaces'
+                const hiddenMethods = descriptor.kind === 'methods' && this.state.showMethodPorts === false;
+                const members = hiddenMethods
+                    ? []
+                    : descriptor.kind === 'interfaces'
                     ? uniqueNodes([...children.filter((node) => bucketFor(node) === descriptor.kind), ...implemented])
                     : children.filter((node) => bucketFor(node) === descriptor.kind);
                 const configured = moduleNode?.memberBuckets?.[configuredBucketName(descriptor.kind)];
@@ -816,7 +838,9 @@
                     ? false
                     : configured?.collapsed ?? descriptor.collapsed;
                 const collapsed = this.state.collapsedGroups[moduleId]?.[descriptor.kind] ?? defaultCollapsed;
-                const totalCount = Number.isInteger(configured?.totalCount)
+                const totalCount = hiddenMethods
+                    ? 0
+                    : Number.isInteger(configured?.totalCount)
                     ? configured.totalCount
                     : members.length;
                 return {
@@ -910,7 +934,11 @@
             if (analysisMode === ANALYSIS_MODES.SCHEDULING && focusId) {
                 const ownerId = ownerModuleId(focusId, this.indexes);
                 const members = (this.indexes.children.get(ownerId) || [])
-                    .filter((node) => !node.hidden && ['rule', 'method'].includes(node.kind));
+                    .filter((node) =>
+                        !node.hidden
+                        && ['rule', 'method'].includes(node.kind)
+                        && (this.state.showMethodPorts !== false || node.kind !== 'method')
+                    );
                 return members.filter((node) => scopedIds.has(node.id));
             }
             if (level === LEVELS.SYSTEM) {
@@ -926,6 +954,7 @@
                 const members = (this.indexes.children.get(moduleId) || []).filter((node) =>
                     !node.hidden
                     && (BEHAVIOR_KINDS.has(node.kind) || node.primitive || STATE_KINDS.has(node.kind) || node.kind === 'instance')
+                    && (this.state.showMethodPorts !== false || node.kind !== 'method')
                     && scopedIds.has(node.id)
                 );
                 return [moduleNode, ...members];

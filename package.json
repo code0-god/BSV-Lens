@@ -225,6 +225,27 @@
           "default": 750,
           "description": "Maximum number of BSV files analyzed per workspace."
         },
+        "bsvArchitecture.maxSourceBytes": {
+          "type": "integer",
+          "minimum": 65536,
+          "maximum": 67108864,
+          "default": 4194304,
+          "description": "Maximum UTF-8 byte size analyzed for one BSV source file."
+        },
+        "bsvArchitecture.maxNodes": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 100000,
+          "default": 10000,
+          "description": "Maximum architecture nodes retained in one analysis."
+        },
+        "bsvArchitecture.maxEdges": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 250000,
+          "default": 25000,
+          "description": "Maximum architecture edges retained in one analysis."
+        },
         "bsvArchitecture.exclude": {
           "type": "array",
           "items": {

@@ -112,7 +112,18 @@ function resolveDefinition(definition, definitions, resolving, origin) {
         if (!Array.isArray(variants) || variants.length === 0) {
             return unresolved(`enum ${definition.name} has no variants`);
         }
-        return exact(Math.ceil(Math.log2(variants.length)), origin);
+        let maximumValue = -1;
+        for (const variant of definition.details?.variantValues || definition.variantValues || []) {
+            if (variant?.value === null || variant?.value === undefined) continue;
+            const value = String(variant.value).trim();
+            if (!/^\d+$/.test(value) || !Number.isSafeInteger(Number(value))) {
+                return unresolved(`enum ${definition.name} has nonliteral encoding ${value}`);
+            }
+            maximumValue = Math.max(maximumValue, Number(value));
+        }
+        const countBits = Math.max(1, Math.ceil(Math.log2(variants.length)));
+        const valueBits = maximumValue < 0 ? 1 : Math.max(1, Math.ceil(Math.log2(maximumValue + 1)));
+        return exact(Math.max(countBits, valueBits), origin);
     }
 
     return unresolved(`unsupported typedef kind ${definition.kind || 'unknown'} for ${definition.name}`);

@@ -295,6 +295,19 @@ test('collapseModuleMembers false expands default member buckets', () => {
     assert.equal(view.memberBuckets('a').find((item) => item.kind === 'state').collapsed, false);
 });
 
+test('showMethodPorts false removes method cards and their empty bucket', () => {
+    const view = Graph.createViewModel(fixture(), {
+        level: 'module',
+        focusStack: ['a'],
+        collapseModuleMembers: false,
+        showMethodPorts: false
+    });
+    const visible = view.visible({ hopScope: 'all' }).nodes;
+
+    assert.equal(visible.some((item) => item.kind === 'method'), false);
+    assert.equal(visible.some((item) => item.kind === 'member-group' && item.bucket === 'methods'), false);
+});
+
 test('expanded child instances aggregate exact and unresolved multiplicity', () => {
     const view = Graph.createViewModel(fixture(), { level: 'module', focusStack: ['a'] });
     const groups = view.visible({ hopScope: 'all' }).nodes.filter((item) => item.kind === 'instance-group');
@@ -313,6 +326,48 @@ test('expanded child instances aggregate exact and unresolved multiplicity', () 
     const expandedIds = view.visible({ hopScope: 'all' }).nodes.map((item) => item.id);
     assert.ok(expandedIds.includes('exact-a'));
     assert.ok(expandedIds.includes('exact-z'));
+});
+
+test('instance aggregation keeps every semantic identity dimension distinct', () => {
+    const model = fixture();
+    const base = {
+        targetId: 'b',
+        targetName: 'mkB',
+        declaredType: 'ChildIfc#(8)',
+        constructor: 'mkB',
+        staticArguments: ['8'],
+        specialization: '#(8)',
+        role: 'worker',
+        config: { clock: 'fast' }
+    };
+    const variants = [
+        ['identity-base', base],
+        ['identity-type', { ...base, declaredType: 'OtherIfc#(8)' }],
+        ['identity-constructor', { ...base, constructor: 'mkOther' }],
+        ['identity-static', { ...base, staticArguments: ['16'] }],
+        ['identity-specialization', { ...base, specialization: '#(16)' }],
+        ['identity-role', { ...base, role: 'controller' }],
+        ['identity-config', { ...base, config: { clock: 'slow' } }]
+    ];
+    for (const [id, details] of variants) {
+        model.nodes.push(node(id, 'instance', 'a', details));
+        model.edges.push({
+            id: `contains-${id}`,
+            source: 'a',
+            target: id,
+            kind: 'contains',
+            mode: 'structure',
+            evidence: id
+        });
+    }
+
+    const view = Graph.createViewModel(model, { level: 'module', focusStack: ['a'] });
+    const identityGroups = view.visible({ hopScope: 'all' }).nodes
+        .filter((item) => item.kind === 'instance-group')
+        .filter((item) => item.sourceIds.some((id) => id.startsWith('identity-')));
+
+    assert.equal(identityGroups.length, variants.length);
+    assert.ok(identityGroups.every((group) => group.sourceIds.length === 1));
 });
 
 test('focus breadcrumbs restore valid order and remove duplicates', () => {

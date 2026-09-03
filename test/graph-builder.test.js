@@ -96,7 +96,8 @@ test('example project produces meaningful structure data-flow and scheduling vie
 
     assert.ok(byMode.get('structure').some((edge) => edge.kind === 'instantiate'));
     assert.ok(byMode.get('data-flow').some((edge) => edge.kind === 'write' && edge.label === 'enqueue'));
-    assert.ok(byMode.get('data-flow').some((edge) => edge.kind === 'read' && edge.label === 'dequeue'));
+    assert.ok(byMode.get('data-flow').some((edge) => edge.kind === 'read' && edge.label === 'first'));
+    assert.equal(byMode.get('data-flow').some((edge) => edge.label === 'dequeue'), false);
     assert.ok(byMode.get('scheduling').some((edge) => edge.kind === 'descending-urgency'));
     assert.ok(byMode.get('scheduling').some((edge) => edge.kind === 'potential-state-dependency'));
 

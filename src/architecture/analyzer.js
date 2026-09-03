@@ -17,36 +17,45 @@ const {
 } = require('../security/workspace-boundary');
 
 const CONFIG_FILE = '.bsv-arch.json';
-const MAX_SOURCE_BYTES = 4 * 1024 * 1024;
 
 class WorkspaceAnalyzer {
     constructor(vscode, options = {}) {
         this.vscode = vscode;
         this.decoder = new TextDecoder('utf-8');
         this.encoder = new TextEncoder();
+        this.clock = options.clock || Date.now;
         this.output = options.output || null;
         this.sourceScheduleProvider = options.sourceScheduleProvider || new SourceScheduleProvider();
         this.bscScheduleProvider = options.bscScheduleProvider || new BscScheduleProvider();
     }
 
     async analyze(request = {}) {
+        const totalStartedAt = this.clock();
+        const timing = {};
         const folder = request.folder || this.resolveWorkspaceFolder(request.activeUri);
         const settings = this.vscode.workspace.getConfiguration('bsvArchitecture', folder?.uri);
         const settingsExclude = settings.get('exclude', []);
         const settingsShowPrimitives = settings.get('showPrimitives', false);
         const settingsIncludePotentialScheduleDependencies = settings.get('includePotentialScheduleDependencies', true);
         const maxFiles = settings.get('maxFiles', 750);
+        const maxSourceBytes = settings.get('maxSourceBytes', 4 * 1024 * 1024);
+        const maxNodes = settings.get('maxNodes', 10000);
+        const maxEdges = settings.get('maxEdges', 25000);
+        const configStartedAt = this.clock();
         const configResult = await this.loadConfig(folder, {
             settingsExclude,
             settingsShowPrimitives,
             settingsIncludePotentialScheduleDependencies
         });
+        timing.configMs = this.clock() - configStartedAt;
         const config = configResult.config;
         const analysisDiagnostics = [...configResult.diagnostics];
+        const discoveryStartedAt = this.clock();
         const discoveredUris = request.fileOnly && request.activeUri
             ? [request.activeUri]
             : await this.discoverFiles(folder, config, maxFiles, request.activeUri);
         const uris = await this.filterSourceUris(folder, discoveredUris, analysisDiagnostics);
+        timing.discoveryMs = this.clock() - discoveryStartedAt;
 
         if (uris.length >= maxFiles && !request.fileOnly) {
             analysisDiagnostics.push({
@@ -56,13 +65,14 @@ class WorkspaceAnalyzer {
             });
         }
 
+        const readParseStartedAt = this.clock();
         const sourceResults = (await mapLimit(uris, 16, async (uri) => {
             try {
                 const bytes = await this.vscode.workspace.fs.readFile(uri);
-                if (bytes.byteLength > MAX_SOURCE_BYTES) {
+                if (bytes.byteLength > maxSourceBytes) {
                     analysisDiagnostics.push({
                         severity: 'warning',
-                        message: `Skipped ${this.relativePath(folder, uri)} because it is larger than ${MAX_SOURCE_BYTES / (1024 * 1024)} MiB.`,
+                        message: `Skipped ${this.relativePath(folder, uri)} because it is larger than ${maxSourceBytes} bytes.`,
                         location: { uri: uri.toString(), line: 0, column: 0, endLine: 0, endColumn: 0 }
                     });
                     return null;
@@ -86,7 +96,9 @@ class WorkspaceAnalyzer {
                 return null;
             }
         })).filter(Boolean);
+        timing.readParseMs = this.clock() - readParseStartedAt;
         const parsedFiles = sourceResults.map((item) => item.parsed);
+        const schedulingStartedAt = this.clock();
         const scheduleResult = await this.analyzeScheduling({
             folder,
             config,
@@ -99,19 +111,23 @@ class WorkspaceAnalyzer {
             })),
             token: request.token
         });
+        timing.schedulingMs = this.clock() - schedulingStartedAt;
         analysisDiagnostics.push(...scheduleResult.diagnostics);
 
         const activeFile = request.activeUri
             ? this.relativePath(folder, request.activeUri)
             : null;
+        const graphBuildStartedAt = this.clock();
         const model = buildArchitectureModel(parsedFiles, config, {
             workspaceName: folder?.name || (request.activeUri ? path.basename(request.activeUri.fsPath || request.activeUri.path) : 'BSV'),
             workspaceUri: folder?.uri?.toString() || null,
             activeFile,
             scheduleRelations: scheduleResult.relations,
             scheduleProvider: scheduleResult.provider,
-            scheduleTopModule: config.scheduling?.topModule || null
+            scheduleTopModule: config.scheduling?.topModule || null,
+            limits: { maxNodes, maxEdges }
         });
+        timing.graphBuildMs = this.clock() - graphBuildStartedAt;
         for (const diagnostic of model.diagnostics.filter((item) => item.code?.startsWith('resolution.'))) {
             this.output?.appendLine(`[resolution] ${diagnostic.message}`);
         }
@@ -121,6 +137,30 @@ class WorkspaceAnalyzer {
         model.scheduling.source = scheduleResult.source;
         model.scheduling.reason = scheduleResult.reason || '';
         model.viewDefaults = viewDefaults(settings);
+        model.analysisMetrics = {
+            discoveredFiles: discoveredUris.length,
+            eligibleFiles: uris.length,
+            parsedFiles: parsedFiles.length,
+            skippedFiles: discoveredUris.length - parsedFiles.length,
+            nodes: model.stats.nodes,
+            edges: model.stats.edges
+        };
+        model.limits = {
+            ...model.limits,
+            maxFiles,
+            maxSourceBytes,
+            maxNodes,
+            maxEdges,
+            sourceFilesSkipped: uris.length - sourceResults.length
+        };
+        model.analysisTiming = {
+            totalMs: this.clock() - totalStartedAt,
+            configMs: timing.configMs,
+            discoveryMs: timing.discoveryMs,
+            readParseMs: timing.readParseMs,
+            schedulingMs: timing.schedulingMs,
+            graphBuildMs: timing.graphBuildMs
+        };
         const workspaceTrusted = this.vscode.workspace?.isTrusted !== false;
         model.security = {
             workspaceTrusted,
