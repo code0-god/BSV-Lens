@@ -2,6 +2,8 @@
 
 function getWebviewHtml(webview, extensionUri, vscode) {
     const graphViewUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'graph-view.js'));
+    const textMetricsUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'text-metrics.js'));
+    const layoutUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'webview-layout.js'));
     const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'webview.js'));
     const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'webview.css'));
     const nonce = createNonce();
@@ -116,6 +118,7 @@ function getWebviewHtml(webview, extensionUri, vscode) {
             <li data-kind="descending-urgency">Urgency</li>
             <li data-kind="preempts">Preemption</li>
             <li data-kind="execution-order">Execution order</li>
+            <li data-kind="cycle">Cycle SCC</li>
             <li data-kind="potential-state-dependency">Potential dependency</li>
         </ul>
     </section>
@@ -168,6 +171,8 @@ function getWebviewHtml(webview, extensionUri, vscode) {
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script nonce="${nonce}" src="${graphViewUri}"></script>
+    <script nonce="${nonce}" src="${textMetricsUri}"></script>
+    <script nonce="${nonce}" src="${layoutUri}"></script>
     <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
 </html>`;

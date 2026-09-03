@@ -267,11 +267,17 @@
   "scripts": {
     "check": "node scripts/check.js",
     "test": "node --test test/*.test.js",
+    "test:browser": "playwright test --config playwright.config.js",
+    "test:extension": "node scripts/run-extension-host-tests.js",
     "package:vsix": "node scripts/package-vsix.js",
     "package:repo": "node scripts/package-repo.js",
     "package": "npm run check && npm test && npm run package:vsix && npm run package:repo && npm run checksums && npm run verify:package",
     "checksums": "node scripts/checksums.js",
     "verify:package": "node scripts/verify-package.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@vscode/test-electron": "3.1.0"
   },
   "files": [
     "src/**",

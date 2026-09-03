@@ -15,6 +15,7 @@ const model = buildModel();
 const server = http.createServer((request, response) => {
     const url = new URL(request.url, 'http://127.0.0.1');
     if (url.pathname === '/health') return send(response, 200, 'text/plain', 'ready\n');
+    if (url.pathname === '/favicon.ico') return send(response, 204, 'image/x-icon', '');
     if (url.pathname === '/model.json') {
         return send(response, 200, 'application/json', `${JSON.stringify(model, null, 2)}\n`);
     }
@@ -30,7 +31,7 @@ const server = http.createServer((request, response) => {
     return send(response, 200, 'text/html; charset=utf-8', harnessHtml(server.address().port, url));
 });
 
-server.listen(0, '127.0.0.1', () => {
+server.listen(Number.parseInt(process.env.PORT || '0', 10), '127.0.0.1', () => {
     console.log(`READY http://127.0.0.1:${server.address().port}`);
 });
 
@@ -66,6 +67,48 @@ function buildModel() {
 
 function harnessHtml(port, url) {
     const origin = `http://127.0.0.1:${port}`;
+    const workspaceTrusted = url.searchParams.get('trusted') !== 'false';
+    const cjk = url.searchParams.get('cjk') === 'true';
+    const cycle = url.searchParams.get('cycle') === 'true';
+    const cycleRules = model.nodes
+        .filter((node) => node.kind === 'rule' && /AcceleratorController\.bsv$/.test(node.relativePath || ''))
+        .slice(0, 3);
+    const cycleEdges = cycle && cycleRules.length === 3
+        ? cycleRules.map((node, index) => ({
+            id: `preview-cycle-${index}`,
+            source: node.id,
+            target: cycleRules[(index + 1) % cycleRules.length].id,
+            kind: 'execution-order',
+            label: 'execution order',
+            mode: 'scheduling',
+            origin: 'source-attribute',
+            confidence: 'explicit',
+            evidence: 'preview scheduling cycle',
+            bidirectional: false,
+            inferred: true
+        }))
+        : [];
+    const pageModel = {
+        ...model,
+        title: cjk ? 'BSV 렌즈 가속기 구조' : model.title,
+        nodes: cjk
+            ? model.nodes.map((node) => node.name === 'mkAcceleratorController'
+                ? { ...node, label: '가속기 제어 모듈 상태 처리 파이프라인' }
+                : node)
+            : model.nodes,
+        edges: [...model.edges, ...cycleEdges],
+        viewDefaults: {
+            ...model.viewDefaults,
+            showMethodPorts: url.searchParams.get('ports') !== 'false'
+        },
+        security: {
+            workspaceTrusted,
+            restrictedMode: !workspaceTrusted,
+            sourceAnalysisAvailable: true,
+            bscExecutionEnabled: workspaceTrusted,
+            externalScheduleReportsEnabled: workspaceTrusted
+        }
+    };
     const extensionUri = { relative: '' };
     const vscode = {
         Uri: {
@@ -83,7 +126,7 @@ function harnessHtml(port, url) {
     let html = getWebviewHtml(webview, extensionUri, vscode);
     const nonce = /script-src 'nonce-([^']+)'/.exec(html)?.[1];
     const state = {
-        workspaceUri: model.workspaceUri,
+        workspaceUri: null,
         sourceScope: url.searchParams.get('scope') || 'workspace',
         level: url.searchParams.get('level') || 'system',
         analysisMode: url.searchParams.get('mode') || 'structure',
@@ -96,7 +139,13 @@ function harnessHtml(port, url) {
     const boot = `<script nonce="${nonce}">
         window.__hostMessages = [];
         window.__savedState = ${safeJson(state)};
-        window.__model = ${safeJson(model)};
+        window.__initial = ${safeJson({
+            sourceScope: state.sourceScope,
+            level: state.level,
+            analysisMode: state.analysisMode,
+            hopScope: state.hopScope
+        })};
+        window.__model = ${safeJson(pageModel)};
         window.acquireVsCodeApi = () => ({
             getState: () => window.__savedState,
             setState: (value) => { window.__savedState = value; },
@@ -104,14 +153,14 @@ function harnessHtml(port, url) {
                 window.__hostMessages.push(message);
                 if (message.type === 'ready') {
                     queueMicrotask(() => window.dispatchEvent(new MessageEvent('message', {
-                        data: { type: 'model', model: window.__model, initial: {} }
+                        data: { type: 'model', model: window.__model, initial: window.__initial }
                     })));
                 }
                 if (message.type === 'refresh') {
                     window.dispatchEvent(new MessageEvent('message', { data: { type: 'busy', value: true } }));
                     queueMicrotask(() => {
                         window.dispatchEvent(new MessageEvent('message', {
-                            data: { type: 'model', model: window.__model, initial: {} }
+                            data: { type: 'model', model: window.__model, initial: window.__initial }
                         }));
                         window.dispatchEvent(new MessageEvent('message', { data: { type: 'busy', value: false } }));
                     });

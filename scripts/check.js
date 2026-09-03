@@ -35,6 +35,8 @@ const required = [
     'src/compiler/bsc-schedule-provider.js',
     'src/security/workspace-boundary.js',
     'media/graph-view.js',
+    'media/text-metrics.js',
+    'media/webview-layout.js',
     'media/webview.js',
     'media/webview.css',
     'media/icon.png'
@@ -129,7 +131,7 @@ console.log('check: generic manifest, JavaScript syntax, CSP, parser, graph mode
 
 function walk(directory) {
     return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-        if (['.git', '.omo', 'node_modules', '.build', 'dist'].includes(entry.name)) return [];
+        if (['.git', '.omo', '.vscode-test', 'node_modules', '.build', 'dist'].includes(entry.name)) return [];
         const fullPath = path.join(directory, entry.name);
         return entry.isDirectory() ? walk(fullPath) : [fullPath];
     });

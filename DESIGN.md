@@ -86,7 +86,9 @@ Actual SVG path plus marker. Relation kind is encoded by label, marker/direction
 
 ### Origin badge and scheduling legend
 
-Badges: `SOURCE-DERIVED`, `HEURISTIC`, `BSC AUTHORITATIVE`, `MIXED`. Legend is always visible in Scheduling mode and names conflict, conflict-free, sequential-before, mutually-exclusive, urgency, preemption, execution order, and potential dependency.
+Scheduling precedence cycles use one dashed warning-token region behind their member nodes while every original relation keeps its own kind, marker, and evidence. The region label reports member count and never replaces relation semantics.
+
+Badges: `SOURCE-DERIVED`, `HEURISTIC`, `BSC AUTHORITATIVE`, `MIXED`. Legend is always visible in Scheduling mode and names conflict, conflict-free, sequential-before, mutually-exclusive, urgency, preemption, execution order, cycle SCC, and potential dependency.
 
 ### Inspector
 

@@ -3,6 +3,8 @@
 (() => {
     const vscode = acquireVsCodeApi();
     const Graph = globalThis.BsvArchitectureGraph;
+    const Text = globalThis.BsvArchitectureText;
+    const Layout = globalThis.BsvArchitectureLayout;
     const NS = 'http://www.w3.org/2000/svg';
     const saved = Graph.migrateState(vscode.getState() || {});
 
@@ -95,7 +97,13 @@
     function installEventHandlers() {
         window.addEventListener('message', (event) => handleHostMessage(event.data));
         window.addEventListener('resize', debounce(() => {
-            if (runtime.graph.nodes.length > 0) fitDiagram(false);
+            if (runtime.graph.nodes.length === 0) return;
+            const anchorId = viewState().selectedId
+                || viewState().focusStack.at(-1)
+                || runtime.graph.nodes[0]?.id;
+            if (anchorId) preserveNodeAnchor(anchorId, { clampToViewport: true });
+            runtime.fitOnNextRender = false;
+            render();
         }, 140));
 
         elements.sourceScope.addEventListener('change', () => {
@@ -223,12 +231,14 @@
                     primitives: model?.config?.view?.showPrimitives === true
                 },
                 collapseModuleMembers: defaults.collapseModuleMembers !== false,
+                showMethodPorts: defaults.showMethodPorts !== false,
                 transform: { x: 40, y: 40, scale: 1 }
             };
         runtime.model = model;
         elements.restrictedMode.hidden = model?.security?.restrictedMode !== true;
         runtime.view = Graph.createViewModel(model, {
             ...base,
+            showMethodPorts: defaults.showMethodPorts !== false,
             workspaceUri: model?.workspaceUri || null,
             activeWorkspace: model?.workspaceUri || null,
             activeFile: initial.activeFile || model?.activeFile || base.activeFile || null
@@ -237,6 +247,14 @@
         if (initial.focusId && runtime.view.indexes.nodeById.has(initial.focusId)) {
             state.focusStack = [initial.focusId];
             state.selectedId = initial.focusId;
+        } else if (state.level !== 'system' && state.focusStack.length === 0) {
+            const initialModule = runtime.view.indexes.visibleNodes.find((node) =>
+                node.kind === 'module'
+                && (!state.activeFile || node.relativePath === state.activeFile)
+            ) || runtime.view.indexes.visibleNodes.find((node) =>
+                node.kind === 'module' && model.roots?.includes(node.id)
+            );
+            if (initialModule) state.focusStack = [initialModule.id];
         }
         runtime.transform = state.transform;
         runtime.firstModel = false;
@@ -351,11 +369,15 @@
         const grouped = viewState().level === 'system'
             && viewState().analysisMode === 'structure'
             && viewState().focusStack.length === 0;
-        const layout = layoutGraph(visible.nodes, visible.edges, visible.groups, {
+        const layout = Layout.layoutGraph(visible.nodes, visible.edges, visible.groups, {
             direction: runtime.model.config?.view?.direction || 'LR',
             grouped,
             focusId: viewState().focusStack.at(-1) || null,
-            viewport: elements.svg.getBoundingClientRect()
+            viewport: elements.svg.getBoundingClientRect(),
+            viewportWidth: elements.svg.getBoundingClientRect().width,
+            level: viewState().level,
+            analysisMode: viewState().analysisMode,
+            layoutModuleHierarchy: Graph.layoutModuleHierarchy
         });
         runtime.graph = {
             ...visible,
@@ -368,6 +390,7 @@
         elements.edges.replaceChildren();
         elements.nodes.replaceChildren();
         renderGroups(layout.groups);
+        renderCycles(layout.cycles);
         renderHierarchyBus(layout.hierarchyBus);
         renderEdges(visible.edges, layout.positions);
         renderNodes(visible.nodes, layout.positions);
@@ -389,6 +412,7 @@
             if (position) {
                 runtime.transform.x = anchor.x - position.x * runtime.transform.scale;
                 runtime.transform.y = anchor.y - position.y * runtime.transform.scale;
+                if (anchor.clampToViewport) clampNodeToViewport(position);
             }
             applyTransform();
             persistState();
@@ -472,199 +496,6 @@
         }
     }
 
-    function layoutGraph(nodes, edges, groups, options) {
-        const sizes = new Map(nodes.map((node) => [node.id, measureNode(node)]));
-        if (viewState().level === 'module' && viewState().analysisMode === 'structure') {
-            return Graph.layoutModuleHierarchy(nodes, edges, sizes, options);
-        }
-        if (viewState().level === 'behavior' || viewState().analysisMode === 'scheduling') {
-            return layoutCompactGrid(nodes, sizes, options.direction, options.focusId);
-        }
-        return options.grouped && groups.length > 1
-            ? layoutByGroups(nodes, groups, sizes, options.direction)
-            : layoutByRanks(nodes, edges, sizes, options.direction, options.focusId);
-    }
-
-    function layoutCompactGrid(nodes, sizes, direction, focusId) {
-        const compact = elements.svg.getBoundingClientRect().width < 700;
-        const margin = compact ? 20 : 40;
-        const horizontalGap = compact ? 20 : 46;
-        const verticalGap = compact ? 18 : 42;
-        const sorted = nodes.slice().sort((left, right) =>
-            (left.id === focusId ? -1 : right.id === focusId ? 1 : 0)
-            || nodePriority(left) - nodePriority(right)
-            || compareNodes(left, right)
-        );
-        const columns = Math.min(3, Math.max(1, Math.ceil(Math.sqrt(sorted.length))));
-        const rows = Math.ceil(sorted.length / columns);
-        const columnWidths = Array.from({ length: columns }, (_, column) =>
-            Math.max(190, ...sorted.filter((_, index) => index % columns === column).map((node) => sizes.get(node.id).width))
-        );
-        const rowHeights = Array.from({ length: rows }, (_, row) =>
-            Math.max(78, ...sorted.slice(row * columns, (row + 1) * columns).map((node) => sizes.get(node.id).height))
-        );
-        const xOffsets = columnWidths.map((_, index) =>
-            margin + columnWidths.slice(0, index).reduce((sum, width) => sum + width + horizontalGap, 0)
-        );
-        const yOffsets = rowHeights.map((_, index) =>
-            margin + rowHeights.slice(0, index).reduce((sum, height) => sum + height + verticalGap, 0)
-        );
-        const positions = new Map();
-        sorted.forEach((node, index) => {
-            const column = index % columns;
-            const row = Math.floor(index / columns);
-            const size = sizes.get(node.id);
-            positions.set(node.id, {
-                x: xOffsets[column] + (columnWidths[column] - size.width) / 2,
-                y: yOffsets[row],
-                ...size
-            });
-        });
-        return { positions, groups: [], bounds: computeBounds([...positions.values()], []), direction };
-    }
-
-    function layoutByGroups(nodes, groups, sizes, direction) {
-        const positions = new Map();
-        const layouts = [];
-        const order = new Map(groups.map((group, index) => [group.id, group.order ?? index]));
-        const grouped = new Map();
-        for (const node of nodes) {
-            const id = node.group || 'root';
-            if (!grouped.has(id)) grouped.set(id, []);
-            grouped.get(id).push(node);
-        }
-        const entries = [...grouped].sort((left, right) =>
-            (order.get(left[0]) ?? 10000) - (order.get(right[0]) ?? 10000)
-            || compareText(left[0], right[0])
-        );
-        let cursor = 40;
-        for (const [groupId, members] of entries) {
-            const sorted = members.slice().sort(compareNodes);
-            const columns = sorted.length > 8 ? 2 : 1;
-            const rows = Math.ceil(sorted.length / columns);
-            const cellWidth = Math.max(230, ...sorted.map((node) => sizes.get(node.id).width)) + 26;
-            const rowHeight = Math.max(100, ...sorted.map((node) => sizes.get(node.id).height)) + 22;
-            const width = columns * cellWidth + 32;
-            const height = Math.max(130, rows * rowHeight + 62);
-            const metadata = groups.find((group) => group.id === groupId) || { id: groupId, label: titleCase(groupId) };
-            const x = direction === 'TB' ? 40 : cursor;
-            const y = direction === 'TB' ? cursor : 40;
-            layouts.push({ ...metadata, x, y, width, height });
-            sorted.forEach((node, index) => {
-                const column = Math.floor(index / rows);
-                const row = index % rows;
-                const size = sizes.get(node.id);
-                positions.set(node.id, {
-                    x: x + 20 + column * cellWidth,
-                    y: y + 48 + row * rowHeight,
-                    ...size
-                });
-            });
-            cursor += (direction === 'TB' ? height : width) + 90;
-        }
-        return { positions, groups: layouts, bounds: computeBounds([...positions.values()], layouts), direction };
-    }
-
-    function layoutByRanks(nodes, edges, sizes, direction, focusId) {
-        const positions = new Map();
-        const ids = new Set(nodes.map((node) => node.id));
-        const rank = new Map(nodes.map((node) => [node.id, initialRank(node, focusId)]));
-        const relevant = edges.filter((edge) => ids.has(edge.source) && ids.has(edge.target) && edge.kind !== 'import');
-        for (let iteration = 0; iteration < Math.min(nodes.length, 12); iteration += 1) {
-            let changed = false;
-            for (const edge of relevant) {
-                if (edge.target === focusId || edge.bidirectional) continue;
-                const candidate = Math.min(8, (rank.get(edge.source) || 0) + 1);
-                if (candidate > (rank.get(edge.target) || 0)) {
-                    rank.set(edge.target, candidate);
-                    changed = true;
-                }
-            }
-            if (!changed) break;
-        }
-        const layers = new Map();
-        for (const node of nodes) {
-            const value = rank.get(node.id) || 0;
-            if (!layers.has(value)) layers.set(value, []);
-            layers.get(value).push(node);
-        }
-        const ordered = [...layers].sort((left, right) => left[0] - right[0]);
-        const dimensions = [];
-        let primary = 40;
-        let maxCross = 0;
-        for (const [value, layer] of ordered) {
-            layer.sort((left, right) => nodePriority(left) - nodePriority(right) || compareNodes(left, right));
-            const primarySize = Math.max(...layer.map((node) =>
-                direction === 'TB' ? sizes.get(node.id).height : sizes.get(node.id).width
-            ));
-            const crossSize = layer.reduce((sum, node) =>
-                sum + (direction === 'TB' ? sizes.get(node.id).width : sizes.get(node.id).height), 0
-            ) + Math.max(0, layer.length - 1) * 28;
-            dimensions.push({ value, layer, primary, primarySize, crossSize });
-            primary += primarySize + 110;
-            maxCross = Math.max(maxCross, crossSize);
-        }
-        for (const layer of dimensions) {
-            let cross = 40 + (maxCross - layer.crossSize) / 2;
-            for (const node of layer.layer) {
-                const size = sizes.get(node.id);
-                positions.set(node.id, direction === 'TB'
-                    ? { x: cross, y: layer.primary, ...size }
-                    : { x: layer.primary, y: cross, ...size });
-                cross += (direction === 'TB' ? size.width : size.height) + 28;
-            }
-        }
-        return { positions, groups: [], bounds: computeBounds([...positions.values()], []), direction };
-    }
-
-    function initialRank(node, focusId) {
-        if (node.id === focusId || node.kind === 'module') return 0;
-        if (node.kind === 'member-group') return 1;
-        if (node.kind === 'instance-group') return 2;
-        if (focusId && node.parentId === focusId) return 2;
-        return 0;
-    }
-
-    function nodePriority(node) {
-        return {
-            module: 0,
-            package: 1,
-            interface: 2,
-            'member-group': 3,
-            rule: 4,
-            method: 5,
-            function: 6,
-            'instance-group': 7,
-            instance: 8,
-            register: 9,
-            fifo: 9,
-            memory: 9,
-            wire: 9
-        }[node.kind] ?? 10;
-    }
-
-    function measureNode(node) {
-        if (node.kind === 'member-group') return { width: 220, height: 52 };
-        if (node.kind === 'instance-group') return { width: 230, height: 66 };
-        if (viewState().level === 'module' && node.kind === 'method') return { width: 154, height: 58 };
-        if (node.kind === 'module') {
-            if (viewState().level === 'system') return { width: 230, height: 112 };
-            return { width: 300, height: 88 };
-        }
-        const labelLength = String(node.label || node.name || '').length;
-        return { width: clamp(180 + Math.max(0, labelLength - 18) * 4.2, 180, 230), height: 78 };
-    }
-
-    function computeBounds(positions, groups) {
-        const items = [...positions, ...groups];
-        if (items.length === 0) return { x: 0, y: 0, width: 1, height: 1 };
-        const minX = Math.min(...items.map((item) => item.x));
-        const minY = Math.min(...items.map((item) => item.y));
-        const maxX = Math.max(...items.map((item) => item.x + item.width));
-        const maxY = Math.max(...items.map((item) => item.y + item.height));
-        return { x: minX, y: minY, width: Math.max(1, maxX - minX), height: Math.max(1, maxY - minY) };
-    }
-
     function renderGroups(groups) {
         for (const group of groups) {
             const wrapper = svgElement('g', {
@@ -693,7 +524,40 @@
         }
     }
 
+    function renderCycles(cycles = []) {
+        for (const cycle of cycles) {
+            const bounds = cycle.bounds;
+            const group = svgElement('g', {
+                class: 'cycle-overlay',
+                'data-cycle-id': cycle.id,
+                role: 'group',
+                'aria-label': `Scheduling cycle with ${cycle.members.length} members`
+            });
+            group.append(
+                svgElement('rect', {
+                    class: 'cycle-region',
+                    x: bounds.x,
+                    y: bounds.y,
+                    width: bounds.width,
+                    height: bounds.height,
+                    rx: 12,
+                    ry: 12
+                }),
+                textElement(
+                    'cycle-label',
+                    bounds.x + 12,
+                    bounds.y + 17,
+                    `Scheduling cycle · ${cycle.members.length} members`
+                )
+            );
+            elements.groups.append(group);
+        }
+    }
+
     function renderEdges(edges, positions) {
+        const cycleEdges = new Set((runtime.graph.layout?.cycles || []).flatMap((cycle) => cycle.edgeIds));
+        const direction = runtime.graph.layout?.direction || 'LR';
+        const sameRankLanes = assignSameRankLanes(edges, positions, direction);
         for (const edge of edges) {
             const source = positions.get(edge.source);
             const target = positions.get(edge.target);
@@ -703,11 +567,12 @@
             const route = hierarchyRoute || routeEdge(
                 source,
                 target,
-                runtime.graph.layout?.direction || 'LR',
-                edge.id
+                direction,
+                edge.id,
+                sameRankLanes.get(edge.id)
             );
             const group = svgElement('g', {
-                class: 'edge-group',
+                class: `edge-group${cycleEdges.has(edge.id) ? ' cycle-edge' : ''}`,
                 'data-edge-id': edge.id,
                 tabindex: edge.origin === 'view-model' ? '-1' : '0',
                 role: edge.origin === 'view-model' ? 'presentation' : 'button',
@@ -727,17 +592,23 @@
             group.append(path);
             if (!edge.suppressLabel && (edge.label || edge.kind)) {
                 const label = truncate(edge.label || titleCase(edge.kind), 34);
-                const width = Math.max(34, label.length * 5.5 + 10);
+                const width = Math.max(34, Text.displayWidth(label) * 5.5 + 10);
+                const labelX = route.labelOutside === 'right'
+                    ? route.labelBoundary + 8 + width / 2
+                    : route.labelX;
+                const labelY = route.labelOutside === 'bottom'
+                    ? route.labelBoundary + 17
+                    : route.labelY;
                 group.append(
                     svgElement('rect', {
                         class: 'edge-label-bg',
-                        x: route.labelX - width / 2,
-                        y: route.labelY - 9,
+                        x: labelX - width / 2,
+                        y: labelY - 9,
                         width,
                         height: 15,
                         rx: 3
                     }),
-                    textElement('edge-label', route.labelX, route.labelY + 2, label, { 'text-anchor': 'middle' })
+                    textElement('edge-label', labelX, labelY + 2, label, { 'text-anchor': 'middle' })
                 );
             }
             group.addEventListener('click', (event) => {
@@ -763,9 +634,45 @@
         }));
     }
 
-    function routeEdge(source, target, direction, seed) {
+    function assignSameRankLanes(edges, positions, direction) {
+        const groups = new Map();
+        for (const edge of edges) {
+            const source = positions.get(edge.source);
+            const target = positions.get(edge.target);
+            if (!source || !target) continue;
+            const sameRank = direction === 'TB'
+                ? Math.abs(source.y - target.y) < 1
+                : Math.abs(source.x - target.x) < 1;
+            if (!sameRank) continue;
+            const key = String(Math.round(direction === 'TB' ? source.y : source.x));
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key).push(edge);
+        }
+        const lanes = new Map();
+        for (const group of groups.values()) {
+            group.sort((left, right) => compareText(left.id, right.id))
+                .forEach((edge, index) => lanes.set(edge.id, index));
+        }
+        return lanes;
+    }
+
+    function routeEdge(source, target, direction, seed, sameRankLane) {
         const jitter = (hashString(seed) % 17) - 8;
         if (direction === 'TB') {
+            if (Number.isInteger(sameRankLane)) {
+                const sx = source.x + source.width / 2;
+                const sy = source.y + source.height;
+                const tx = target.x + target.width / 2;
+                const ty = target.y + target.height;
+                const lane = Math.max(sy, ty) + 24 + sameRankLane * 18;
+                return {
+                    path: `M ${sx} ${sy} V ${lane} H ${tx} V ${ty}`,
+                    labelX: (sx + tx) / 2 + sameRankLane * 18,
+                    labelY: lane - 4,
+                    labelOutside: 'bottom',
+                    labelBoundary: Math.max(sy, ty)
+                };
+            }
             const forward = target.y >= source.y;
             const sx = source.x + source.width / 2;
             const sy = forward ? source.y + source.height : source.y;
@@ -773,6 +680,20 @@
             const ty = forward ? target.y : target.y + target.height;
             const mid = (sy + ty) / 2 + jitter;
             return { path: `M ${sx} ${sy} V ${mid} H ${tx} V ${ty}`, labelX: (sx + tx) / 2, labelY: mid - 3 };
+        }
+        if (Number.isInteger(sameRankLane)) {
+            const sx = source.x + source.width;
+            const sy = source.y + source.height / 2;
+            const tx = target.x + target.width;
+            const ty = target.y + target.height / 2;
+            const lane = Math.max(sx, tx) + 24 + sameRankLane * 18;
+            return {
+                path: `M ${sx} ${sy} H ${lane} V ${ty} H ${tx}`,
+                labelX: lane,
+                labelY: (sy + ty) / 2 - 4 + sameRankLane * 18,
+                labelOutside: 'right',
+                labelBoundary: Math.max(sx, tx)
+            };
         }
         const forward = target.x >= source.x;
         const sx = forward ? source.x + source.width : source.x;
@@ -784,6 +705,23 @@
     }
 
     function renderNodes(nodes, positions) {
+        const disclosures = nodes
+            .filter((node) => node.kind === 'member-group' || node.kind === 'instance-group')
+            .sort((left, right) => Number(right.kind === 'instance-group') - Number(left.kind === 'instance-group'));
+        const controlledRegions = new Map(disclosures.map((node) => {
+            const expanded = node.kind === 'member-group'
+                ? !node.collapsed
+                : Boolean(viewState().expandedAggregations[node.id]);
+            const region = svgElement('g', {
+                id: controlledRegionId(node.id),
+                class: 'controlled-member-region',
+                role: 'group',
+                'aria-label': `${node.label} members`,
+                'aria-hidden': String(!expanded)
+            });
+            elements.nodes.append(region);
+            return [node.id, region];
+        }));
         for (const node of nodes) {
             const position = positions.get(node.id);
             if (!position) continue;
@@ -797,9 +735,13 @@
                 'aria-selected': String(node.id === viewState().selectedId),
                 'data-node-id': node.id
             });
-            if (node.kind === 'member-group') group.setAttribute('aria-expanded', String(!node.collapsed));
+            if (node.kind === 'member-group') {
+                group.setAttribute('aria-expanded', String(!node.collapsed));
+                group.setAttribute('aria-controls', controlledRegionId(node.id));
+            }
             if (node.kind === 'instance-group') {
                 group.setAttribute('aria-expanded', String(Boolean(viewState().expandedAggregations[node.id])));
+                group.setAttribute('aria-controls', controlledRegionId(node.id));
             }
             const tooltip = svgElement('title');
             tooltip.textContent = nodeTooltip(node);
@@ -829,8 +771,22 @@
             else if (denseMethod) renderDenseMethodNode(group, node, position);
             else renderStandardNode(group, node, position);
             installNodeHandlers(group, node);
-            elements.nodes.append(group);
+            const controller = disclosures.find((candidate) => controlsNode(candidate, node));
+            (controlledRegions.get(controller?.id) || elements.nodes).append(group);
         }
+    }
+
+    function controlsNode(disclosure, node) {
+        if (disclosure.id === node.id) return false;
+        if (disclosure.kind === 'instance-group') return disclosure.sourceIds.includes(node.id);
+        if (disclosure.sourceIds.includes(node.id)) return true;
+        return node.kind === 'instance-group'
+            && disclosure.bucket === 'child-instances'
+            && node.sourceIds.some((id) => disclosure.sourceIds.includes(id));
+    }
+
+    function controlledRegionId(nodeId) {
+        return `controlled-${encodeURIComponent(nodeId)}`;
     }
 
     function renderMemberGroup(group, node, position) {
@@ -839,7 +795,7 @@
             d: node.collapsed ? 'M 17 19 L 22 24 L 17 29' : 'M 15 21 L 20 26 L 25 21'
         });
         group.append(chevron);
-        group.append(textElement('node-title', 35, 25, node.label));
+        group.append(textElement('node-title', 35, 25, truncate(node.label, 22)));
         group.append(textElement(
             'bucket-count',
             position.width - 14,
@@ -1378,14 +1334,28 @@
         setFocus(targetId);
     }
 
-    function preserveNodeAnchor(nodeId) {
+    function preserveNodeAnchor(nodeId, options = {}) {
         const position = runtime.graph.layout?.positions.get(nodeId);
         if (!position) return;
         runtime.anchorAfterRender = {
             nodeId,
             x: runtime.transform.x + position.x * runtime.transform.scale,
-            y: runtime.transform.y + position.y * runtime.transform.scale
+            y: runtime.transform.y + position.y * runtime.transform.scale,
+            clampToViewport: options.clampToViewport === true
         };
+    }
+
+    function clampNodeToViewport(position) {
+        const rect = elements.svg.getBoundingClientRect();
+        const padding = 12;
+        const left = runtime.transform.x + position.x * runtime.transform.scale;
+        const top = runtime.transform.y + position.y * runtime.transform.scale;
+        const right = left + position.width * runtime.transform.scale;
+        const bottom = top + position.height * runtime.transform.scale;
+        if (left < padding) runtime.transform.x += padding - left;
+        else if (right > rect.width - padding) runtime.transform.x -= right - (rect.width - padding);
+        if (top < padding) runtime.transform.y += padding - top;
+        else if (bottom > rect.height - padding) runtime.transform.y -= bottom - (rect.height - padding);
     }
 
     function setFocus(nodeId) {
@@ -1741,7 +1711,7 @@
         const rect = elements.svg.getBoundingClientRect();
         if (rect.width < 20 || rect.height < 20) return;
         const padding = rect.width < 700 ? 18 : 54;
-        const minimumScale = rect.width < 700 ? 0.75 : 0.08;
+        const minimumScale = rect.width < 700 ? 0.75 : 0.8;
         runtime.transform.scale = clamp(
             Math.min((rect.width - padding * 2) / bounds.width, (rect.height - padding * 2) / bounds.height),
             minimumScale,
@@ -1882,7 +1852,10 @@
     }
 
     function serializeSvg() {
-        const bounds = runtime.graph.layout?.bounds || { x: 0, y: 0, width: 100, height: 100 };
+        const renderedBounds = elements.viewport.getBBox();
+        const bounds = renderedBounds.width > 1 && renderedBounds.height > 1
+            ? renderedBounds
+            : runtime.graph.layout?.bounds || { x: 0, y: 0, width: 100, height: 100 };
         const padding = 28;
         const width = Math.ceil(bounds.width + padding * 2);
         const height = Math.ceil(bounds.height + padding * 2);
@@ -1936,6 +1909,8 @@
             .kind-type .node-accent,.kind-enum .node-accent,.kind-struct .node-accent,.kind-union .node-accent{fill:#475467}
             .edge.sequential-before,.edge.sequential-before-reverse,.edge.execution-order{stroke:#1570ef}
             .edge.data,.edge.control{stroke:#039855;stroke-width:1.8}
+            .cycle-region{fill:#fffaeb;fill-opacity:.35;stroke:#dc6803;stroke-width:1.5;stroke-dasharray:6 4}
+            .cycle-label{fill:#b54708;font-size:10px;font-weight:700}.edge-group.cycle-edge .edge{stroke-width:2.4}
         `;
     }
 
@@ -2088,8 +2063,7 @@
     }
 
     function truncate(value, length) {
-        const text = String(value || '').replace(/\s+/g, ' ').trim();
-        return text.length <= length ? text : `${text.slice(0, Math.max(1, length - 1))}…`;
+        return Text.truncateWidth(value, length);
     }
 
     function safeName(value) {

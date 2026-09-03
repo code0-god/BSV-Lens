@@ -51,7 +51,9 @@ test('webview retains CSP offline scripts exports and accessible graph semantics
     const content = html();
     assert.match(content, /default-src 'none'/);
     assert.doesNotMatch(content, /https?:\/\/(?:cdn|unpkg|jsdelivr)/);
-    assert.ok(content.indexOf('media/graph-view.js') < content.indexOf('media/webview.js'));
+    assert.ok(content.indexOf('media/graph-view.js') < content.indexOf('media/text-metrics.js'));
+    assert.ok(content.indexOf('media/text-metrics.js') < content.indexOf('media/webview-layout.js'));
+    assert.ok(content.indexOf('media/webview-layout.js') < content.indexOf('media/webview.js'));
     assert.match(content, /id="export-svg"/);
     assert.match(content, /id="export-json"/);
     assert.match(content, /role="application"/);
@@ -71,6 +73,8 @@ test('webview runtime uses indexed graph helper and actual SVG chevrons', () => 
     assert.match(source, /function compareNodes/);
     assert.doesNotMatch(source, /\.append\(svgElement\('title'\)\)\.textContent/);
     assert.match(source, /aria-expanded/);
+    assert.match(source, /aria-controls/);
+    assert.match(source, /function controlledRegionId/);
     assert.match(source, /runtime\.graph\.edgeById/);
 });
 
@@ -87,6 +91,7 @@ test('Scheduling mode ships legend origin badge and actionable empty state', () 
         'descending-urgency',
         'preempts',
         'execution-order',
+        'cycle',
         'potential-state-dependency'
     ]) assert.match(content, new RegExp(`data-kind="${kind}"`));
     assert.match(source, /runtime\.model\.scheduling\?\.badge/);
@@ -111,9 +116,10 @@ test('module selection has no inline method sub-selection state', () => {
 
 test('Module card keeps one stable summary while Methods owns disclosure', () => {
     const source = fs.readFileSync(path.join(root, 'media', 'webview.js'), 'utf8');
-    const measureNode = source.slice(
-        source.indexOf('function measureNode('),
-        source.indexOf('function computeBounds(')
+    const layoutSource = fs.readFileSync(path.join(root, 'media', 'webview-layout.js'), 'utf8');
+    const measureNode = layoutSource.slice(
+        layoutSource.indexOf('function measureNode('),
+        layoutSource.indexOf('function computeBounds(')
     );
     const renderModule = source.slice(
         source.indexOf('function renderModuleNode('),
@@ -142,15 +148,24 @@ test('disclosure groups activate once per click and with either activation key',
 test('compact fit preserves node legibility and wraps canvas actions', () => {
     const source = fs.readFileSync(path.join(root, 'media', 'webview.js'), 'utf8');
     const styles = fs.readFileSync(path.join(root, 'media', 'webview.css'), 'utf8');
-    assert.match(source, /const minimumScale = rect\.width < 700 \? 0\.75 : 0\.08/);
+    const resizeHandler = source.slice(
+        source.indexOf("window.addEventListener('resize'"),
+        source.indexOf('elements.sourceScope.addEventListener')
+    );
+    assert.match(source, /const minimumScale = rect\.width < 700 \? 0\.75 : 0\.8/);
     assert.match(source, /runtime\.graph\.layout\?\.positions\.has\(selectedId\)/);
     assert.match(source, /const targetId = focusId \|\| viewState\(\)\.selectedId/);
+    assert.match(resizeHandler, /preserveNodeAnchor/);
+    assert.match(resizeHandler, /clampToViewport: true/);
+    assert.match(resizeHandler, /render\(\)/);
+    assert.doesNotMatch(resizeHandler, /fitDiagram/);
     assert.match(styles, /@media \(max-width: 680px\)[\s\S]*\.icon-controls\s*\{[\s\S]*flex: 1 1 100%/);
 });
 
 test('Module layout delegates adaptive panels with no inline method fallback', () => {
     const source = fs.readFileSync(path.join(root, 'media', 'webview.js'), 'utf8');
-    assert.match(source, /Graph\.layoutModuleHierarchy\(nodes, edges, sizes, options\)/);
+    assert.match(source, /Layout\.layoutGraph/);
+    assert.match(source, /layoutModuleHierarchy: Graph\.layoutModuleHierarchy/);
     assert.match(source, /viewport: elements\.svg\.getBoundingClientRect\(\)/);
     assert.match(source, /kind-\$\{cssKind\(group\.kind\)\}/);
     assert.match(source, /dense-method/);
@@ -164,6 +179,8 @@ test('Module hierarchy paints one fixed marker bus and uses panel containment', 
     assert.match(content, /id="hierarchy-arrow"[^>]*markerWidth="6"[^>]*markerHeight="6"/);
     assert.match(content, /id="hierarchy-arrow"[^>]*markerUnits="userSpaceOnUse"/);
     assert.match(source, /renderHierarchyBus\(layout\.hierarchyBus\)/);
+    assert.match(source, /renderCycles\(layout\.cycles\)/);
+    assert.match(source, /cycle-edge/);
     assert.match(source, /edge\.origin === 'view-model' && !hierarchyRoute/);
     assert.match(source, /hierarchyRoute\?\.marker === 'hierarchy'/);
     assert.match(styles, /\.hierarchy-bus,\s*\.edge\.hierarchy-branch\s*\{[\s\S]*vector-effect: non-scaling-stroke/);
@@ -174,12 +191,16 @@ test('standalone SVG export removes live interaction semantics', () => {
     assert.match(source, /clone\.setAttribute\('role', 'img'\)/);
     assert.match(source, /clone\.removeAttribute\('aria-describedby'\)/);
     assert.match(source, /querySelectorAll\('\[role=\"button\"\], \[aria-selected\], \[aria-expanded\]'\)/);
+    assert.match(source, /\.cycle-region\{fill:/);
+    assert.match(source, /\.cycle-label\{fill:/);
+    assert.match(source, /\.edge-group\.cycle-edge \.edge/);
 });
 
 test('responsive accessibility styles cover compact high-contrast and reduced-motion use', () => {
     const source = fs.readFileSync(path.join(root, 'media', 'webview.js'), 'utf8');
     const styles = fs.readFileSync(path.join(root, 'media', 'webview.css'), 'utf8');
     assert.match(styles, /@media \(max-width: 900px\)/);
+    assert.match(styles, /@media \(max-width: 900px\)[\s\S]*\.inspector:has\(\.inspector-empty\)\s*\{[\s\S]*display: none/);
     assert.match(styles, /@media \(max-width: 680px\)/);
     assert.match(styles, /@media \(forced-colors: active\)/);
     assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
