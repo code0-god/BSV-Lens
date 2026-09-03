@@ -1,0 +1,34 @@
+# Temporary one-time diagnostic helper. Remove after publisher authorization succeeds.
+name: Resolve Marketplace Identity
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    environment: marketplace
+    steps:
+      - name: Log in to Azure with GitHub OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Print Marketplace Azure DevOps Profile ID
+        shell: bash
+        run: |
+          set -euo pipefail
+          PROFILE_ID="$(
+            az rest \
+              --url https://app.vssps.visualstudio.com/_apis/profile/profiles/me \
+              --resource 499b84ac-1321-427f-aa17-267ca6975798 \
+              --query id \
+              -o tsv
+          )"
+          test -n "$PROFILE_ID"
+          printf 'Marketplace Azure DevOps Profile ID: %s\n' "$PROFILE_ID"

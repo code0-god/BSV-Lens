@@ -26,17 +26,23 @@ The publish job grants only `contents: read` and `id-token: write`. The OIDC
 token authenticates `azure/login@v2`; `vsce publish --azure-credential` then
 uses the federated Azure identity. Do not add `VSCE_PAT`.
 
-## One-time Marketplace authorization
+## First-time publisher authorization
 
-After federated Azure login, retrieve the identity's Azure DevOps profile:
+The temporary `Resolve Marketplace Identity` workflow is a one-time diagnostic
+helper for Marketplace publisher membership:
 
-```bash
-az rest \
-  --url https://app.vssps.visualstudio.com/_apis/profile/profiles/me \
-  --resource 499b84ac-1321-427f-aa17-267ca6975798
-```
+1. Run GitHub Actions workflow `Resolve Marketplace Identity`.
+2. Copy `Marketplace Azure DevOps Profile ID` from its log.
+3. Open Visual Studio Marketplace publisher `code0-god`.
+4. Open **Members**.
+5. Add the returned Azure DevOps Profile ID.
+6. Grant **Contributor**.
+7. After successful authorization, remove
+   `.github/workflows/resolve-marketplace-identity.yml`.
+8. Only then create tag `v0.3.0`.
 
-Add the returned `id` to the publisher membership and grant Contributor.
+Marketplace **Members** requires the **Azure DevOps Profile ID**. Do not enter
+the Azure Client ID, Principal/Object ID, Subscription ID, or Tenant ID.
 
 ## Release contract
 
