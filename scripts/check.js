@@ -14,7 +14,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'ut
 
 assert.equal(manifest.name, 'bsv-lens');
 assert.equal(manifest.displayName, 'BSV Lens');
-assert.equal(manifest.version, '0.3.1');
+assert.equal(manifest.version, '0.3.2');
 assert.equal(manifest.publisher, 'code0-god');
 assert.equal(manifest.main, './src/extension.js');
 assert.equal(manifest.engines.vscode.startsWith('^'), true);
@@ -28,6 +28,9 @@ const required = [
     'src/panel/architecture-panel.js',
     'src/panel/html.js',
     'src/architecture/behavior-analysis.js',
+    'src/architecture/interface-contract-diagnostics.js',
+    'src/architecture/interface-contract-types.js',
+    'src/architecture/interface-contracts.js',
     'src/architecture/scheduling.js',
     'src/architecture/symbol-resolver.js',
     'src/architecture/symbol-index.js',
@@ -115,12 +118,14 @@ const brandedSources = walk(root).filter((item) => {
     return fs.statSync(item).isFile();
 });
 const externalFixtureReferences = new Set([
+    'CHANGELOG.md',
     '.github/workflows/ci.yml',
     'playwright.aqua.config.js',
     'scripts/aqua-fixture.js',
     'scripts/preview-webview.js',
     'scripts/run-aqua-extension-host-tests.js',
     'test/aqua-fixture.test.js',
+    'test/aqua-matmul-webview.e2e.js',
     'test/aqua-webview.e2e.js',
     'test/extension-host/aqua.js',
     'test/release-workflows.test.js'

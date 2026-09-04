@@ -42,7 +42,7 @@ Webview type은 `bsvArchitecture.*`를 유지합니다.
 ### VSIX
 
 ```bash
-code --install-extension dist/bsv-lens-0.3.0.vsix
+code --install-extension dist/bsv-lens-0.3.2.vsix
 ```
 
 또는 VS Code에서 **Extensions: Install from VSIX...**를 실행합니다.
@@ -335,8 +335,8 @@ npm run package
 
 생성 결과:
 
-- `dist/bsv-lens-0.3.0.vsix`
-- `dist/bsv-lens-repository-0.3.0.zip`
+- `dist/bsv-lens-0.3.2.vsix`
+- `dist/bsv-lens-repository-0.3.2.zip`
 - `dist/SHA256SUMS.txt`
 
 CI 및 Marketplace federated identity 설정은

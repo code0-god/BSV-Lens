@@ -6,6 +6,19 @@ BSV Lens is an engineering instrument inside VS Code. Visual character stays pre
 
 Signature moment: changing Level, Mode, or focus immediately reshapes one stable canvas while focus root remains visually anchored.
 
+Product direction: BSV Lens primarily performs **BSV architecture and code analysis**. Its
+primary projections are instantiated hardware architecture, typed interface/method flow, state
+and behavior relationships, rule/method scheduling, and source evidence. Source/package maps
+remain secondary projections, not the product architecture center.
+
+The v0.4.0 semantic direction is:
+
+```text
+Definition -> Instance -> Endpoint -> Protocol Channel -> Semantic Flow -> Presentation
+```
+
+This direction records the boundary only; v0.3.2 does not implement Architecture Flow UI.
+
 ## 2. Color
 
 All live UI colors use VS Code theme variables. Fixed colors are allowed only inside exported standalone SVG so exports remain readable outside VS Code.

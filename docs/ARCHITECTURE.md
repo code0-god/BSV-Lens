@@ -25,6 +25,7 @@ BSV source parser    BscScheduleProvider
 Architecture graph builder
   - schema version 2
   - hierarchy and member buckets
+  - interface/module contracts
   - directional data flow
   - scheduling provenance
   - type widths and Method Ports
@@ -77,6 +78,7 @@ Top-level fields:
 - normalized `config`
 - `viewDefaults`
 - `files`, `nodes`, `edges`, `groups`, `roots`
+- `interfaceContracts`
 - `scheduling`
 - `diagnostics`, `stats`
 
@@ -117,6 +119,26 @@ Methods, Rules, Local Functions, and State default to collapsed.
 Method Ports stay metadata, not extra graph nodes. This prevents interface-heavy modules from
 inflating System level while retaining parameter, return, category, direction, width, guard,
 and declaration evidence.
+
+### Interface/module contracts
+
+Modules with a resolved return interface receive one source-derived semantic contract:
+
+```js
+{
+    interfaceId,
+    moduleId,
+    status: "exact" | "mismatch" | "unresolved",
+    methods: [],
+    diagnostics: [],
+    analysisOrigin: "Source-derived"
+}
+```
+
+Validation compares method presence, duplicate implementations, category, parameter count,
+return type, and only confidently comparable parameter types. Generic type expressions that
+cannot be specialized from source remain `unresolved`; they are never reported as definite
+mismatches.
 
 ### Edge contract
 
@@ -289,3 +311,11 @@ instead of silently changing graph scope.
 - Potential state dependency is not compiler conflict.
 - Unknown width is never estimated.
 - Only BSC provider output is Compiler-authoritative.
+
+## Product architecture direction
+
+BSV Lens centers BSV architecture and code analysis: instantiated hardware, typed
+interface/method flow, state and behavior relationships, rule/method scheduling, and source
+evidence. Source/package maps remain secondary. The v0.4.0 direction is
+`Definition -> Instance -> Endpoint -> Protocol Channel -> Semantic Flow -> Presentation`;
+v0.3.2 records this direction without implementing the future Architecture Flow UI.

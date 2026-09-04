@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.3.2 — 2026-09-04
+
+- Fix inline value method signature parsing.
+- Add source-derived interface-to-module contract validation.
+- Fix State primitive group counts to reflect global filter visibility.
+- Add AQuA MatmulScheduler semantic regression coverage.
+- Ship an analysis-correctness hotfix without changing architecture semantics or expanding Source Map.
+
 ## 0.3.1 — 2026-09-04
 
 - Replace custom VSIX manifest generation with official `@vscode/vsce` packaging.
