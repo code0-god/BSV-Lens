@@ -1,8 +1,8 @@
 {
   "name": "bsv-lens",
   "displayName": "BSV Lens",
-  "description": "Architecture, data-flow, and rule scheduling explorer for Bluespec SystemVerilog.",
-  "version": "0.3.2",
+  "description": "Architecture and code-flow analyzer for Bluespec SystemVerilog.",
+  "version": "0.4.0",
   "publisher": "code0-god",
   "license": "MIT",
   "icon": "media/icon.png",

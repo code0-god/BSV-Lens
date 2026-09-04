@@ -14,7 +14,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'ut
 
 assert.equal(manifest.name, 'bsv-lens');
 assert.equal(manifest.displayName, 'BSV Lens');
-assert.equal(manifest.version, '0.3.2');
+assert.equal(manifest.version, '0.4.0');
 assert.equal(manifest.publisher, 'code0-god');
 assert.equal(manifest.main, './src/extension.js');
 assert.equal(manifest.engines.vscode.startsWith('^'), true);

@@ -8,12 +8,12 @@ const test = require('node:test');
 const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
 
 test('BSV Lens identity preserves command compatibility', () => {
-    assert.equal(manifest.version, '0.3.2');
+    assert.equal(manifest.version, '0.4.0');
     assert.equal(manifest.name, 'bsv-lens');
     assert.equal(manifest.displayName, 'BSV Lens');
     assert.equal(
         manifest.description,
-        'Architecture, data-flow, and rule scheduling explorer for Bluespec SystemVerilog.'
+        'Architecture and code-flow analyzer for Bluespec SystemVerilog.'
     );
     assert.equal(`${manifest.publisher}.${manifest.name}`, 'code0-god.bsv-lens');
     assert.equal(manifest.repository.url, 'https://github.com/code0-god/BSV-Lens.git');

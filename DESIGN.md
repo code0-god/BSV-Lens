@@ -2,7 +2,10 @@
 
 ## 1. Atmosphere and identity
 
-BSV Lens is an engineering instrument inside VS Code. Visual character stays precise, compact, and diagram-first: quiet chrome around strongly differentiated graph semantics. Existing VS Code-native appearance remains authoritative; v0.3.0 expands information hierarchy without creating a separate branded visual world.
+BSV Lens is an engineering instrument inside VS Code. Visual character stays precise, compact,
+and diagram-first: quiet chrome around strongly differentiated graph semantics. Existing VS
+Code-native appearance remains authoritative; v0.4.0 changes semantic hierarchy without creating
+a separate branded visual world.
 
 Signature moment: changing Level, Mode, or focus immediately reshapes one stable canvas while focus root remains visually anchored.
 
@@ -17,7 +20,8 @@ The v0.4.0 semantic direction is:
 Definition -> Instance -> Endpoint -> Protocol Channel -> Semantic Flow -> Presentation
 ```
 
-This direction records the boundary only; v0.3.2 does not implement Architecture Flow UI.
+v0.4.0 implements this source-derived semantic pipeline. It does not present source analysis as
+compiler-elaborated RTL.
 
 ## 2. Color
 
@@ -83,11 +87,21 @@ Back button, breadcrumb buttons, and concise focus status. Breadcrumb order is s
 
 SVG group with body, semantic accent, title, summary, optional member buckets, real port circles, and focus ring. States: default, hover, selected, connected, trace, dimmed, editor reveal, focus-visible.
 
-System module cards show architecture counts only. Module cards keep one stable interface and non-zero member-count summary; they never embed Method Port rows or change size when a bucket toggles. Behavior cards show individual rules, methods, functions, and state.
+System cards show source-derived instance name as primary title and target module definition as
+secondary label. Synthetic roots and unresolved targets remain explicit. Module context cards keep
+one stable interface and non-zero member-count summary; they never embed raw Method Port rows or
+change size when a bucket toggles. Behavior cards show contextual rules, methods, relevant
+endpoints, and state.
 
 ### Member bucket
 
-SVG disclosure row with chevron path, relationship token, label, total/visible count, and expanded members. Buckets with zero real and configured members are omitted. The bucket is the sole disclosure owner: its expanded members live inside one measured member panel and never reappear inside the module card. Native interaction contract follows beui.dev `bouncy-accordion`: button semantics, `aria-expanded`, controlled content identity, inert hidden content, and reduced-motion fallback. Source: <https://beui.dev/r/bouncy-accordion/raw>.
+SVG disclosure row with chevron path, relationship token, label, total/visible count, and expanded
+members. Protocol Channels and Child Instances are primary expanded groups. State, Rules, Methods,
+Local Functions, and Types stay available without flooding System view. Buckets with zero members
+are omitted. Bucket remains sole disclosure owner: expanded members live inside one measured panel
+and never reappear inside context card. Native interaction follows beui.dev `bouncy-accordion`:
+button semantics, `aria-expanded`, controlled content identity, inert hidden content, and
+reduced-motion fallback. Source: <https://beui.dev/r/bouncy-accordion/raw>.
 
 ### Method port
 
@@ -105,7 +119,10 @@ Badges: `SOURCE-DERIVED`, `HEURISTIC`, `BSC AUTHORITATIVE`, `MIXED`. Legend is a
 
 ### Inspector
 
-Header, source location, primary actions, relation summary counts, then opt-in collapsible details grouped by relation kind. Evidence uses monospace text. Duplicate relations are grouped by deduplication key.
+Header, source location, primary actions, then semantic sections. Behavior inspection includes
+Summary, Guard, Inputs, Outputs, State reads, State writes, Invocations, Protocol membership,
+Upstream, Downstream, and Source evidence. Relation counts and expandable details follow.
+Evidence uses monospace text. Duplicate relations are grouped by deduplication key.
 
 ### Feedback
 
@@ -152,7 +169,7 @@ Required:
 - Touch targets remain usable at compact widths.
 - Reduced motion is complete.
 
-Accepted debt for v0.3.0:
+Accepted debt for v0.4.0:
 
 - Layout uses deterministic source-derived dimensions rather than text measurement.
 - Graph node keyboard traversal may follow rendered order instead of geometric nearest-neighbor navigation.

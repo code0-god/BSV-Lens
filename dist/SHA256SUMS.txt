@@ -1,2 +1,2 @@
-b916e7d1ed5a29f27976635da0dabadb5acd87b2cd959673486dd6172fca7ecc  bsv-lens-0.3.2.vsix
-ad7602c9e2e2b9cd114f4a1e0c5fb5229d60d48b49758a6b020dda54299d32a7  bsv-lens-repository-0.3.2.zip
+c124c6ae35cacdccef556f245abe2d9a7dcf5ed6b4fb9fff9be3e68aeda6c762  bsv-lens-0.4.0.vsix
+68b62b96323a9007c847d8226d32a39e596ec3d4b8963b214e77c9575985359a  bsv-lens-repository-0.4.0.zip

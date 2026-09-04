@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.4.0 — 2026-09-04
+
+- Add source-derived instance architecture with stable definition and occurrence identities.
+- Separate module definitions from instantiated hardware projections.
+- Add method and nested subinterface Endpoint IR with exact contract links.
+- Resolve structural constructor bindings and explicit interface forwarding.
+- Add conservative ProtocolChannel inference for ready/action, valid/payload/consume, and request/response forms.
+- Add typed cross-module SemanticFlow for bounded direct, alias, ActionValue, and return dependencies.
+- Add deterministic StateBehavior summaries with guards, state effects, invocations, and source evidence.
+- Make instance Architecture the primary System projection while keeping Source Map secondary.
+- Preserve source-heuristic and BSC-authoritative scheduling provenance in instance context.
+- Retain legacy graph fields, commands, settings, navigation, trace, and export compatibility.
+
 ## 0.3.2 — 2026-09-04
 
 - Fix inline value method signature parsing.

@@ -22,13 +22,24 @@ BSV source parser    BscScheduleProvider
       │               │
       └───────┬───────┘
               ▼
-Architecture graph builder
-  - schema version 2
-  - hierarchy and member buckets
-  - interface/module contracts
-  - directional data flow
-  - scheduling provenance
-  - type widths and Method Ports
+Definition IR
+      │
+      ▼
+Instance hierarchy
+      │
+      ▼
+Endpoint + Binding IR
+      │
+      ▼
+ProtocolChannel + SemanticFlow + StateBehavior
+      │
+      ▼
+Architecture projection
+  - schema version 3
+  - instance-first hierarchy
+  - typed cross-module flow
+  - contextual scheduling provenance
+  - legacy graph compatibility
               │
               ▼
 Serializable Architecture IR
@@ -60,8 +71,9 @@ Keyword candidates therefore retain source locations without accepting fake synt
 
 Module bodies retain:
 
+- static/type formals, constructor formals, full return interface, and provisos
 - instances and primitive classification
-- rules, methods, local functions, provided interfaces
+- rules, methods, local functions, provided-interface paths and explicit RHS aliases
 - guards, calls, references
 - structured `accesses`, `reads`, `writes`, `invocations`
 - immediately leading scheduling attributes
@@ -69,7 +81,7 @@ Module bodies retain:
 Each access includes callable, instance, member, line, classification, snippet, origin, and
 confidence. Unknown member chains remain `unclassified-access`.
 
-## Architecture IR schema version 2
+## Architecture IR schema version 3
 
 Top-level fields:
 
@@ -78,11 +90,97 @@ Top-level fields:
 - normalized `config`
 - `viewDefaults`
 - `files`, `nodes`, `edges`, `groups`, `roots`
-- `interfaceContracts`
+- `definitions`, `instances`, `endpoints`, `bindings`
+- `protocolChannels`, `semanticFlows`, `stateBehaviors`
+- `interfaceContracts`, `scheduleRelations`
+- `architectureRoots`, `semanticRoots`
+- `provenance`, `semanticDiagnostics`
 - `scheduling`
 - `diagnostics`, `stats`
 
-Existing schema version 1 fields remain. JSON export always writes complete, unfiltered IR.
+Legacy presentation fields remain additive. `nodes` and `edges` are projections, not canonical
+architecture truth. JSON export always writes complete, unfiltered IR. Non-serialized semantic
+indexes stay in the Extension Host and are rebuilt once per workspace analysis.
+
+### Definition IR
+
+Stable IDs use package symbol identity, not source line numbers:
+
+```text
+def:MatmulScheduler:mkMatmulScheduler
+def:MatmulScheduler:MatmulSchedulerIfc
+```
+
+Definitions cover package, module, interface, type, and function facts. Module definitions retain
+full return-interface expressions, numeric/type formals, constructor formals, provisos, child
+instance declarations, methods, rules, local functions, state declarations, provided interfaces,
+location, source range, and Source-derived provenance.
+
+### Instance IR
+
+Every source occurrence has its own stable path and target definition:
+
+```js
+{
+    id: "instance:...",
+    name: "staging",
+    path: "mkAquaMemorySubsystem.staging",
+    parentInstanceId: "instance:...",
+    targetDefinitionId: "def:LoadStager:mkLoadStager",
+    staticBindings: [],
+    parameterBindings: [],
+    multiplicity: { status: "exact", count: 1, expression: "1" },
+    targetResolutionStatus: "exact",
+    analysisOrigin: "Source-derived"
+}
+```
+
+Configured entrypoints are exclusive when exactly resolvable. Without configuration, every module
+definition not used by an exact child constructor becomes a root candidate. An empty natural set
+uses deterministic cycle fallback. Roots are synthetic Source-derived projections. Recursion,
+depth, breadth, and occurrence budgets cut branches with diagnostics. `Vector`, `replicateM`, and
+`mapM` remain one aggregate occurrence; parameterized counts are never invented.
+
+### Endpoint and Binding IR
+
+Method and subinterface endpoints belong to an instance occurrence. Full paths such as
+`activationPort.requests.put` remain distinct. Exact interface contracts connect method
+declarations to module implementations; mismatch or unresolved contracts never fabricate links.
+
+Bindings include:
+
+- exact constructor binding only when an actual resolves to a sibling instance/interface symbol
+- explicit interface forwarding from provided-interface RHS expressions
+- behavior access to child instance, full endpoint path, arguments, and result/value binding
+
+Scalar/config expressions remain parameter metadata. Forwarding preserves both paths, source
+evidence, location, confidence, and resolution status.
+
+### ProtocolChannel IR
+
+Protocol channels group exact endpoints only when contract, method category, compatible payload
+type, unique pairing, and naming evidence agree. Supported forms are ready/action,
+valid/payload/consume, valid/payload, valid/consume acknowledgement, and exact sibling
+requests/responses subinterfaces. Ambiguous candidates remain individual endpoints with an info
+diagnostic.
+
+### SemanticFlow and StateBehavior
+
+Semantic flow kinds include `payload`, `invoke`, `return`, `interface-forward`,
+`constructor-binding`, `state-read`, and `state-write`. Bounded expression dependency supports:
+
+- direct endpoint argument
+- direct ActionValue result binding
+- simple `let` or typed local alias with one source
+- method return expression
+
+Branch merges, loop-carried mutation, dynamic index aliasing, and multi-source aliases remain
+unresolved. Payload flow retains source/target endpoint IDs, parameter index/name, payload type,
+type status, channel, confidence, evidence, and location.
+
+StateBehavior is deterministic source evidence, not a synthesized FSM. Each contextual rule/method
+retains summary, guard, inputs, outputs, reads, writes, invocations, transitions, protocol
+membership, evidence, and location.
 
 ### Node contract
 
@@ -113,8 +211,9 @@ Module nodes contain `memberBuckets`:
 }
 ```
 
-Buckets are Interfaces, Methods, Rules, Local Functions, State, Child Instances, and Types.
-Methods, Rules, Local Functions, and State default to collapsed.
+Buckets are Protocol Channels, Interfaces, Methods, Rules, Local Functions, State,
+Child Instances, and Types. Protocol Channels and Child Instances default expanded; dense
+Methods, Rules, Local Functions, and State default collapsed.
 
 Method Ports stay metadata, not extra graph nodes. This prevents interface-heavy modules from
 inflating System level while retaining parameter, return, category, direction, width, guard,
@@ -318,4 +417,6 @@ BSV Lens centers BSV architecture and code analysis: instantiated hardware, type
 interface/method flow, state and behavior relationships, rule/method scheduling, and source
 evidence. Source/package maps remain secondary. The v0.4.0 direction is
 `Definition -> Instance -> Endpoint -> Protocol Channel -> Semantic Flow -> Presentation`;
-v0.3.2 records this direction without implementing the future Architecture Flow UI.
+v0.4.0 implements this source-derived semantic pipeline while preserving legacy graph fields.
+It does not claim compiler elaboration, physical RTL nets, inferred widths, or authoritative
+scheduling unless those facts come from BSC.

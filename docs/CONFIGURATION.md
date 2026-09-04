@@ -83,7 +83,7 @@ manually migrating existing files.
 - `1`: fully supported legacy format
 - `2`: current starter format
 
-Normalizer emits internal config `schemaVersion: 2` for both.
+Normalizer emits internal config `schemaVersion: 3` for both.
 
 ### `title`
 

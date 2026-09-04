@@ -1,9 +1,10 @@
 # BSV Lens
 
-Architecture · Data Flow · Rule Scheduling for Bluespec SystemVerilog
+Architecture and code-flow analyzer for Bluespec SystemVerilog
 
-Bluespec SystemVerilog(`.bsv`) 작업공간을 VS Code 안에서 구조, 데이터 흐름,
-rule scheduling 관점으로 탐색하는 오프라인 아키텍처 분석 확장입니다.
+Bluespec SystemVerilog(`.bsv`) 작업공간에서 source-derived instance architecture,
+typed interface/method flow, protocol channel, state behavior, rule scheduling, source
+evidence를 분석하는 VS Code 확장입니다.
 
 - Marketplace 확장 ID: `code0-god.bsv-lens`
 - 호환 namespace: 기존 command와 설정 ID `bsvArchitecture.*` 유지
@@ -11,10 +12,8 @@ rule scheduling 관점으로 탐색하는 오프라인 아키텍처 분석 확�
 - 외부 CDN 및 런타임 npm dependency 없음
 - BSC 없이 Source-derived 분석 전체 사용 가능
 
-Marketplace의 기존 `code0-god.bsv-architecture-explorer`와 목표
-`code0-god.bsv-lens` 항목은 2026-09-03 확인 시 등록되지 않았습니다. 최초 등록 ID는
-`code0-god.bsv-lens`로 고정하며, 기존 설치 호환을 위해 command/config namespace와
-Webview type은 `bsvArchitecture.*`를 유지합니다.
+Marketplace listing은 `code0-god.bsv-lens`입니다. 기존 설치 호환을 위해
+command/config namespace와 Webview type은 `bsvArchitecture.*`를 유지합니다.
 
 ![BSV architecture preview](media/preview.png)
 
@@ -23,8 +22,14 @@ Webview type은 `bsvArchitecture.*`를 유지합니다.
 - Workspace 또는 Current File source scope
 - System, Module, Behavior abstraction level
 - Structure, Data Flow, Scheduling analysis mode
+- module definition과 source-derived instance occurrence 분리
+- bounded instance hierarchy와 constructor formal/actual binding
+- nested subinterface Endpoint와 explicit interface forwarding
+- ready/action, valid/payload/consume, request/response Protocol Channel
+- direct/alias/ActionValue/return expression의 typed Semantic Flow
+- rule/method guard, state read/write, invocation, transition summary
 - 선택 node 기준 1/2/3-hop 또는 Component focus
-- module별 Interfaces, Methods, Rules, Local Functions, State, Child Instances, Types group
+- module별 Protocol Channels, Child Instances, State, Rules, Methods, Local Functions, Types group
 - 접힌 group의 명시적 SVG chevron과 module 요약 count
 - 같은 target module의 반복 instance 집계
 - interface Method Port category, parameter, return type, 정확한 경우만 width 표시
@@ -42,7 +47,7 @@ Webview type은 `bsvArchitecture.*`를 유지합니다.
 ### VSIX
 
 ```bash
-code --install-extension dist/bsv-lens-0.3.2.vsix
+code --install-extension dist/bsv-lens-0.4.0.vsix
 ```
 
 또는 VS Code에서 **Extensions: Install from VSIX...**를 실행합니다.
@@ -65,14 +70,15 @@ Source Scope는 파일 범위만 바꿉니다. Level, Mode, hop 계산과 독립
 
 ### Abstraction Level
 
-- **System**: module, resolved module relation, virtual node, configured subsystem 중심.
-  method, rule, local function, primitive state node를 처음부터 visible DOM에 만들지 않습니다.
-- **Module**: focus module, interface, Method Ports, child instance, storage와 member group.
-  Methods, Rules, Local Functions, State는 기본 접힘입니다.
-- **Behavior**: rule, method, local function, Reg, FIFO/FIFOF, Wire/RWire,
-  BRAM/RegFile와 상세 call/access를 개별 node로 표시합니다.
+- **System**: synthetic root와 실제 child instance occurrence 중심 architecture hierarchy.
+  큰 제목은 instance name, 보조 제목은 target module definition입니다.
+- **Module**: 선택 instance/definition의 Protocol Channels, Child Instances, State, Rules,
+  Methods, Local Functions, Types를 group으로 표시합니다.
+- **Behavior**: rule, method, relevant endpoint/state와 invoke, return, payload,
+  state-read/state-write relation을 표시합니다.
 
-System module card는 `Instances`, `Methods`, `Rules`, `State` count를 보여줍니다.
+`Source Map` filter는 package/module/interface source projection을 secondary view로
+노출합니다. 기본 System architecture에는 package directory map을 섞지 않습니다.
 
 ### Analysis Mode
 
@@ -120,6 +126,9 @@ source statement에서 다음을 분류합니다.
 - memory request/response
 - interface method invocation
 - `<-` ActionValue result binding
+- direct endpoint argument
+- 동일 callable 안의 simple `let`/typed local alias
+- method return expression
 
 모든 inferred edge는 callable, referenced instance, member, statement line,
 classification, source snippet evidence를 보존합니다. 분류하지 못한 member access는
@@ -300,10 +309,14 @@ mode/origin을 보완합니다. 새 starter config는 version 2를 생성합니�
 ## JSON과 SVG export
 
 - SVG: 현재 visible/collapsed/focused graph만 standalone SVG로 저장
-- JSON: filter와 무관하게 complete Architecture IR schema version 2 저장
+- JSON: filter와 무관하게 complete Architecture IR schema version 3 저장
 
 JSON node/edge에는 가능한 경우 origin, confidence, evidence, source/compiler location,
 reads/writes/invocations, Method Ports, schedule relations가 포함됩니다.
+Canonical fields는 `definitions`, `instances`, `endpoints`, `bindings`,
+`protocolChannels`, `semanticFlows`, `stateBehaviors`, `interfaceContracts`,
+`diagnostics`, `provenance`입니다. 기존 `nodes`/`edges`는 additive compatibility와
+presentation projection을 위해 유지됩니다.
 
 ## 제한 사항
 
@@ -330,13 +343,14 @@ npm run check
 npm test
 npm run test:browser
 npm run test:extension
+AQUA_WORKSPACE=/path/to/pinned/acceptance-fixture npm run test:aqua
 npm run package
 ```
 
 생성 결과:
 
-- `dist/bsv-lens-0.3.2.vsix`
-- `dist/bsv-lens-repository-0.3.2.zip`
+- `dist/bsv-lens-0.4.0.vsix`
+- `dist/bsv-lens-repository-0.4.0.zip`
 - `dist/SHA256SUMS.txt`
 
 CI 및 Marketplace federated identity 설정은
