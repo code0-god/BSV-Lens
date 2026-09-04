@@ -10,7 +10,7 @@ if (!previewToken) throw new Error('BSV_PREVIEW_TOKEN is required.');
 
 module.exports = defineConfig({
     testDir: './test',
-    testMatch: 'aqua-webview.e2e.js',
+    testMatch: ['aqua-webview.e2e.js', 'aqua-matmul-webview.e2e.js'],
     outputDir: '.build/playwright-aqua-results',
     reporter: 'line',
     fullyParallel: false,

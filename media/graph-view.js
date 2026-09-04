@@ -821,7 +821,10 @@
 
         memberBuckets(moduleId) {
             const moduleNode = this.indexes.nodeById.get(moduleId);
-            const children = (this.indexes.children.get(moduleId) || []).filter((node) => !node.hidden);
+            const rawChildren = (this.indexes.children.get(moduleId) || []).filter((node) => !node.hidden);
+            const children = rawChildren.filter((node) =>
+                nodeAllowedByFilters(node, this.state.filters, this.state.analysisMode)
+            );
             const implemented = this.activeEdges('structure')
                 .filter((edge) => edge.source === moduleId && edge.kind === 'implements')
                 .map((edge) => this.indexes.nodeById.get(edge.target))
@@ -833,6 +836,9 @@
                     : descriptor.kind === 'interfaces'
                     ? uniqueNodes([...children.filter((node) => bucketFor(node) === descriptor.kind), ...implemented])
                     : children.filter((node) => bucketFor(node) === descriptor.kind);
+                const rawMembers = descriptor.kind === 'interfaces'
+                    ? uniqueNodes([...rawChildren.filter((node) => bucketFor(node) === descriptor.kind), ...implemented])
+                    : rawChildren.filter((node) => bucketFor(node) === descriptor.kind);
                 const configured = moduleNode?.memberBuckets?.[configuredBucketName(descriptor.kind)];
                 const defaultCollapsed = this.state.collapseModuleMembers === false && descriptor.collapsed
                     ? false
@@ -842,7 +848,7 @@
                     ? 0
                     : Number.isInteger(configured?.totalCount)
                     ? configured.totalCount
-                    : members.length;
+                    : rawMembers.length;
                 return {
                     id: `${moduleId}:${descriptor.kind}`,
                     moduleId,
@@ -918,7 +924,11 @@
                 );
             }
 
-            nodes = uniqueNodes(nodes).sort(compareNodes);
+            nodes = uniqueNodes(nodes)
+                .filter((node) =>
+                    node.synthetic || nodeAllowedByFilters(node, this.state.filters, analysisMode)
+                )
+                .sort(compareNodes);
             const ids = new Set(nodes.map((node) => node.id));
             let edges = this.activeEdges(analysisMode)
                 .filter((edge) => ids.has(edge.source) && ids.has(edge.target) && edgeAllowedByFilters(edge, this.state.filters));
@@ -1125,6 +1135,19 @@
         return true;
     }
 
+    function nodeAllowedByFilters(node, filters, analysisMode) {
+        if (node.hidden) return false;
+        if (filters?.packages === false && node.kind === 'package') return false;
+        if (filters?.rules === false && ['rule', 'method'].includes(node.kind)) return false;
+        if (
+            filters?.primitives !== true
+            && (node.primitive || STATE_KINDS.has(node.kind))
+        ) {
+            return normalizeAnalysisMode(analysisMode) === ANALYSIS_MODES.DATA_FLOW;
+        }
+        return true;
+    }
+
     function viewEdge(id, source, target, kind, label, layoutOnly) {
         return {
             id,
@@ -1166,6 +1189,7 @@
         classifyEdge: edgeMode,
         filterEdgesByMode,
         filterModeEdges: filterEdgesByMode,
+        nodeAllowedByFilters,
         migrateState,
         restoreFocus,
         normalizeSourceScope,

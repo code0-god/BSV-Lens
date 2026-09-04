@@ -487,13 +487,11 @@
     }
 
     function nodeAllowed(node) {
-        const filters = viewState().filters;
-        if (filters.packages === false && node.kind === 'package') return false;
-        if (filters.rules === false && ['rule', 'method'].includes(node.kind)) return false;
-        if (filters.primitives !== true && (node.primitive || ['register', 'fifo', 'wire', 'memory', 'vector'].includes(node.kind))) {
-            return viewState().analysisMode === 'data-flow';
-        }
-        return !node.hidden;
+        return Graph.nodeAllowedByFilters(
+            node,
+            viewState().filters,
+            viewState().analysisMode
+        );
     }
 
     function edgeAllowed(edge) {
@@ -826,7 +824,7 @@
             'bucket-count',
             position.width - 14,
             25,
-            `${node.visibleCount}/${node.totalCount}`,
+            `${node.visibleCount}/${node.totalCount} visible`,
             { 'text-anchor': 'end' }
         ));
         group.append(textElement(
@@ -954,7 +952,7 @@
 
     function nodeAriaLabel(node) {
         if (node.kind === 'member-group') {
-            return `${node.label}, ${memberGroupRelationship(node.bucket)} ${node.totalCount} members, ${node.collapsed ? 'collapsed' : 'expanded'}`;
+            return `${node.label}, ${node.visibleCount} visible of ${node.totalCount} members, ${node.collapsed ? 'collapsed' : 'expanded'}`;
         }
         const relations = node.synthetic ? 0 : runtime.view.relations(node.id).length;
         const drill = canDrill(node) ? ', expandable' : '';
