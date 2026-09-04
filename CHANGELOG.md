@@ -4,7 +4,10 @@
 
 - Replace custom VSIX manifest generation with official `@vscode/vsce` packaging.
 - Fix Visual Studio Marketplace PackageManifest compatibility.
-- No parser, Architecture IR, Webview UI, or layout semantics changed.
+- Harden Webview refresh state against stale revisions and clear invalid selections after scope changes.
+- Improve dense scheduling views with incident-only one-hop edges, bounded fit behavior, and legend parity.
+- Prevent comments from contaminating typedef struct fields and alias targets.
+- Add pinned real-project browser and Extension Host acceptance coverage.
 
 ## 0.3.0 — 2026-09-02
 

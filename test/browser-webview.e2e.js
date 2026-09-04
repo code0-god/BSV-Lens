@@ -19,6 +19,11 @@ test('real browser drives webview controls inspector refresh and exports', async
     await page.goto('/');
     await expect(page.locator('.arch-node').first()).toBeVisible();
 
+    await page.locator('#search').fill('MKACCELERATORCONTROLLER');
+    await page.locator('#search').press('Enter');
+    await expect(page.locator('#inspector')).toContainText('mkAcceleratorController');
+    await page.locator('#search').press('Escape');
+
     await page.locator('[data-analysis-mode="data-flow"]').click();
     await expect(page.locator('[data-analysis-mode="data-flow"]')).toHaveAttribute('aria-pressed', 'true');
     await page.evaluate(() => new Promise((resolve) =>
@@ -240,6 +245,54 @@ test('scheduling cycles render bounded overlays without changing relation kinds'
     const overlay = page.locator('.cycle-overlay');
     await expect(overlay).toHaveCount(1);
     await expect(overlay.locator('.cycle-label')).toContainText('Scheduling cycle');
+    expect(await page.evaluate(() => {
+        const sample = (kind) => getComputedStyle(
+            document.querySelector(`#schedule-legend [data-kind="${kind}"]`),
+            '::before'
+        );
+        const conflictFree = sample('conflict-free');
+        const cycle = sample('cycle');
+        return {
+            conflictFree: conflictFree.borderTopStyle,
+            cycle: {
+                style: cycle.borderTopStyle,
+                height: cycle.height,
+                color: cycle.borderTopColor
+            }
+        };
+    })).toEqual({
+        conflictFree: 'dashed',
+        cycle: {
+            style: 'dashed',
+            height: '8px',
+            color: 'rgb(204, 167, 0)'
+        }
+    });
+    expect(await page.evaluate(() => {
+        const svg = document.getElementById('architecture-canvas');
+        return ['preempts', 'execution-order', 'potential-state-dependency'].map((kind) => {
+            const edge = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            edge.setAttribute('class', `edge ${kind}`);
+            svg.append(edge);
+            const live = getComputedStyle(edge);
+            const legend = getComputedStyle(
+                document.querySelector(`#schedule-legend [data-kind="${kind}"]`),
+                '::before'
+            );
+            const liveStyle = live.strokeDasharray === 'none' ? 'solid' : 'dashed';
+            const result = {
+                kind,
+                colorMatches: legend.borderTopColor === live.stroke,
+                styleMatches: legend.borderTopStyle === liveStyle
+            };
+            edge.remove();
+            return result;
+        });
+    })).toEqual([
+        { kind: 'preempts', colorMatches: true, styleMatches: true },
+        { kind: 'execution-order', colorMatches: true, styleMatches: true },
+        { kind: 'potential-state-dependency', colorMatches: true, styleMatches: true }
+    ]);
     expect(await overlay.evaluate((element) => ({
         regionStroke: getComputedStyle(element.querySelector('.cycle-region')).stroke,
         labelFill: getComputedStyle(element.querySelector('.cycle-label')).fill

@@ -73,6 +73,7 @@
         editorRevealId: null,
         editorRevealTimer: null,
         selectedEdgeId: null,
+        revision: 0,
         anchorAfterRender: null
     };
 
@@ -135,7 +136,8 @@
         elements.search.addEventListener('input', updateSearch);
         elements.search.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
-                const first = runtime.graph.nodes.find((node) => nodeMatchesSearch(node, elements.search.value));
+                const query = elements.search.value.trim().toLowerCase();
+                const first = runtime.graph.nodes.find((node) => nodeMatchesSearch(node, query));
                 if (first) selectNode(first.id, true);
             } else if (event.key === 'Escape') {
                 elements.search.value = '';
@@ -178,7 +180,12 @@
     function handleHostMessage(message) {
         switch (message?.type) {
             case 'model':
-                receiveModel(message.model, message.initial || {});
+                receiveModel(
+                    message.model,
+                    message.initial || {},
+                    message.revision,
+                    message.resetView === true
+                );
                 break;
             case 'busy':
                 elements.body.classList.toggle('busy', Boolean(message.value));
@@ -210,7 +217,7 @@
         }
     }
 
-    function receiveModel(model, initial) {
+    function receiveModel(model, initial, revision, resetView) {
         const previous = runtime.view?.state || saved;
         const sameWorkspace = Boolean(
             previous.workspaceUri
@@ -244,6 +251,16 @@
             activeFile: initial.activeFile || model?.activeFile || base.activeFile || null
         });
         const state = runtime.view.state;
+        runtime.revision = Number.isInteger(revision) ? revision : runtime.revision;
+        if (resetView) {
+            state.sourceScope = initial.sourceScope || defaults.sourceScope || state.sourceScope;
+            state.level = initial.level || defaults.level || state.level;
+            state.analysisMode = initial.analysisMode || defaults.analysisMode || state.analysisMode;
+            state.hopScope = initial.hopScope || defaults.hopScope || state.hopScope;
+            state.focusStack = [];
+            state.selectedId = null;
+            state.trace = null;
+        }
         if (initial.focusId && runtime.view.indexes.nodeById.has(initial.focusId)) {
             state.focusStack = [initial.focusId];
             state.selectedId = initial.focusId;
@@ -258,7 +275,8 @@
         }
         runtime.transform = state.transform;
         runtime.firstModel = false;
-        runtime.fitOnNextRender = !sameWorkspace && !(saved.workspaceUri === model?.workspaceUri && saved.transform);
+        runtime.fitOnNextRender = resetView
+            || !sameWorkspace && !(saved.workspaceUri === model?.workspaceUri && saved.transform);
         initializeControls(state);
         render();
         persistState();
@@ -366,6 +384,14 @@
     function render() {
         if (!runtime.view || !runtime.model) return;
         const visible = deriveVisibleGraph();
+        const visibleNodeIds = new Set(visible.nodes.map((node) => node.id));
+        const visibleEdgeIds = new Set(visible.edges.map((edge) => edge.id));
+        if (viewState().selectedId && !visibleNodeIds.has(viewState().selectedId)) {
+            viewState().selectedId = null;
+        }
+        if (runtime.selectedEdgeId && !visibleEdgeIds.has(runtime.selectedEdgeId)) {
+            runtime.selectedEdgeId = null;
+        }
         const grouped = viewState().level === 'system'
             && viewState().analysisMode === 'structure'
             && viewState().focusStack.length === 0;
@@ -1270,6 +1296,7 @@
         ]);
         return Object.entries(details).flatMap(([key, value]) => {
             if (hidden.has(key) || value === null || value === undefined || value === '') return [];
+            if (typeof value === 'object' && Object.keys(value).length === 0) return [];
             if (typeof value === 'object') return [[titleCase(key), truncate(JSON.stringify(value), 240)]];
             return [[titleCase(key), value]];
         }).slice(0, 18);
@@ -1706,7 +1733,23 @@
     }
 
     function fitDiagram(announce, focusId = null) {
-        const bounds = runtime.graph.layout?.bounds;
+        const renderedBounds = elements.viewport.getBBox();
+        const layoutBounds = runtime.graph.layout?.bounds;
+        const routeOverflow = 96;
+        const bounds = layoutBounds && renderedBounds.width > 1 && renderedBounds.height > 1
+            ? {
+                x: Math.max(renderedBounds.x, layoutBounds.x - routeOverflow),
+                y: Math.max(renderedBounds.y, layoutBounds.y - routeOverflow),
+                width: Math.min(
+                    renderedBounds.x + renderedBounds.width,
+                    layoutBounds.x + layoutBounds.width + routeOverflow
+                ) - Math.max(renderedBounds.x, layoutBounds.x - routeOverflow),
+                height: Math.min(
+                    renderedBounds.y + renderedBounds.height,
+                    layoutBounds.y + layoutBounds.height + routeOverflow
+                ) - Math.max(renderedBounds.y, layoutBounds.y - routeOverflow)
+            }
+            : layoutBounds || renderedBounds;
         if (!bounds || bounds.width <= 1 || bounds.height <= 1) return;
         const rect = elements.svg.getBoundingClientRect();
         if (rect.width < 20 || rect.height < 20) return;
@@ -1937,7 +1980,7 @@
             search: state.search
         };
         vscode.setState(value);
-        vscode.postMessage({ type: 'state', state: value });
+        vscode.postMessage({ type: 'state', revision: runtime.revision, state: value });
     }
 
     function moduleOwnerId(id) {

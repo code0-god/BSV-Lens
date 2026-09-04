@@ -5,6 +5,7 @@ const test = require('node:test');
 const { buildArchitectureModel } = require('../src/architecture/graph-builder');
 const { normalizeConfig } = require('../src/architecture/config');
 const { parseBsvFile } = require('../src/architecture/parser');
+const { analyzeTypeWidth } = require('../src/architecture/type-analysis');
 
 function parse(source, name = 'Feature.bsv') {
     return parseBsvFile(source, {
@@ -12,6 +13,37 @@ function parse(source, name = 'Feature.bsv') {
         relativePath: name
     });
 }
+
+test('struct field comments do not contaminate following field types', () => {
+    const parsed = parse(`
+package CommentedStruct;
+typedef struct {
+    UInt#(32) first;
+    // The next field carries a hardware contract.
+    UInt#(32) second;
+} Packet deriving (Bits, Eq);
+endpackage
+`);
+
+    assert.deepEqual(parsed.types[0].details.fields, [
+        { name: 'first', type: 'UInt#(32)' },
+        { name: 'second', type: 'UInt#(32)' }
+    ]);
+});
+
+test('typedef alias comments do not contaminate target widths', () => {
+    const parsed = parse(`
+package CommentedAlias;
+typedef UInt#(/* hardware width */ 32) Word;
+endpackage
+`);
+
+    assert.deepEqual(analyzeTypeWidth('Word', parsed.types), {
+        bits: 32,
+        status: 'exact',
+        origin: 'Word'
+    });
+});
 
 test('interface methods expose categories directions parameters and guards', () => {
     const parsed = parse(`

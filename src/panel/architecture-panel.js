@@ -14,7 +14,7 @@ class ArchitecturePanel {
         if (ArchitecturePanel.currentPanel) {
             ArchitecturePanel.currentPanel.panel.reveal(context.vscode.ViewColumn.Beside);
             ArchitecturePanel.currentPanel.updateRequest(request);
-            await ArchitecturePanel.currentPanel.refresh();
+            await ArchitecturePanel.currentPanel.refresh({ resetView: true });
             return ArchitecturePanel.currentPanel;
         }
 
@@ -68,6 +68,7 @@ class ArchitecturePanel {
         this.watcherDisposables = [];
         this.model = null;
         this.refreshToken = 0;
+        this.modelRevision = 0;
         this.analysisCancellation = null;
         this.refreshTimer = null;
         this.selectionTimer = null;
@@ -153,8 +154,13 @@ class ArchitecturePanel {
         }, 350);
     }
 
-    async refresh() {
+    async refresh(options = {}) {
         const token = ++this.refreshToken;
+        const requestedInitial = {
+            mode: this.request.initialMode || this.defaultView(),
+            ...this.defaultViewState(),
+            focusId: this.request.focusId || null
+        };
         this.analysisCancellation?.cancel?.();
         this.analysisCancellation?.dispose?.();
         this.analysisCancellation = typeof this.vscode.CancellationTokenSource === 'function'
@@ -170,17 +176,19 @@ class ArchitecturePanel {
             });
             if (token !== this.refreshToken) return;
             this.model = model;
+            this.modelRevision = token;
             this.panel.title = model.title || 'BSV Lens';
             const initialFocus = this.resolveInitialFocus(model);
             this.panel.webview.postMessage({
                 type: 'model',
                 model,
                 initial: {
-                    mode: this.request.initialMode || this.defaultView(),
-                    ...this.defaultViewState(),
+                    ...requestedInitial,
                     focusId: initialFocus,
                     activeFile: model.activeFile
-                }
+                },
+                revision: token,
+                resetView: options.resetView === true
             });
             this.output?.appendLine(`[${new Date().toISOString()}] Analyzed ${model.stats.files} BSV files, ${model.stats.nodes} nodes, ${model.stats.edges} edges.`);
         } catch (error) {
@@ -239,7 +247,9 @@ class ArchitecturePanel {
                                 ...this.defaultViewState(),
                                 focusId: this.resolveInitialFocus(this.model),
                                 activeFile: this.model.activeFile
-                            }
+                            },
+                            revision: this.modelRevision,
+                            resetView: false
                         });
                     }
                     break;
@@ -260,6 +270,7 @@ class ArchitecturePanel {
                     this.panel.webview.postMessage({ type: 'toast', message: 'SVG copied to the clipboard.' });
                     break;
                 case 'state':
+                    if (message.revision !== this.refreshToken || message.revision !== this.modelRevision) break;
                     this.request.initialSourceScope = message.state?.sourceScope || this.request.initialSourceScope;
                     this.request.initialLevel = message.state?.level || this.request.initialLevel;
                     this.request.initialAnalysisMode = message.state?.analysisMode || this.request.initialAnalysisMode;

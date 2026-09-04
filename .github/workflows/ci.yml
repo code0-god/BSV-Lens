@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: code0-god/AQuA
+          ref: 6692a52973fbb487a421b07fc8cd881d0542e964
+          path: .build/aqua-fixture
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -22,6 +27,9 @@ jobs:
       - run: npx playwright install --with-deps chrome
       - run: npm run test:browser
       - run: xvfb-run -a npm run test:extension
+      - run: xvfb-run -a npm run test:aqua
+        env:
+          AQUA_WORKSPACE: ${{ github.workspace }}/.build/aqua-fixture
       - run: npm run package
       - run: unzip -t dist/*.vsix
       - run: unzip -t dist/*-repository-*.zip

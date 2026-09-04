@@ -446,10 +446,11 @@ button svg {
 
 .schedule-legend li[data-kind="conflict-free"]::before {
     border-color: var(--vscode-charts-green, #89d185);
-    border-top-style: double;
+    border-top-style: dashed;
 }
 
 .schedule-legend li[data-kind="potential-state-dependency"]::before {
+    border-color: var(--muted);
     border-top-style: dashed;
 }
 
@@ -463,13 +464,19 @@ button svg {
 }
 
 .schedule-legend li[data-kind="preempts"]::before {
-    border-color: var(--vscode-editorError-foreground, #f14c4c);
-    border-top-width: 3px;
+    border-color: var(--vscode-charts-orange, #ee9d28);
+    border-top-width: 2px;
 }
 
 .schedule-legend li[data-kind="execution-order"]::before {
     border-color: var(--vscode-charts-blue, #75beff);
-    border-top-style: dotted;
+    border-top-style: solid;
+}
+
+.schedule-legend li[data-kind="cycle"]::before {
+    height: 8px;
+    border: 1.5px dashed var(--vscode-editorWarning-foreground, #cca700);
+    border-radius: 2px;
 }
 
 .origin-badge {

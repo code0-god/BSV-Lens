@@ -3,22 +3,31 @@
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 const { normalizeConfig, parseJsonc } = require('../src/architecture/config');
 const { buildArchitectureModel } = require('../src/architecture/graph-builder');
 const { parseBsvFile } = require('../src/architecture/parser');
+const { simpleGlobToRegExp } = require('../src/architecture/source-utils');
 const { getWebviewHtml } = require('../src/panel/html');
 
 const root = path.resolve(__dirname, '..');
 const exampleRoot = path.join(root, 'examples', 'bsv-mini-accelerator');
+const workspaceRoot = process.env.BSV_TEST_WORKSPACE
+    ? path.resolve(process.env.BSV_TEST_WORKSPACE)
+    : exampleRoot;
+const previewToken = process.env.BSV_PREVIEW_TOKEN;
+if (!previewToken) throw new Error('BSV_PREVIEW_TOKEN is required.');
 const model = buildModel();
 
 const server = http.createServer((request, response) => {
     const url = new URL(request.url, 'http://127.0.0.1');
+    const expectedHost = `127.0.0.1:${server.address().port}`;
+    if (request.headers.host !== expectedHost) return send(response, 403, 'text/plain', 'invalid host\n');
     if (url.pathname === '/health') return send(response, 200, 'text/plain', 'ready\n');
-    if (url.pathname === '/favicon.ico') return send(response, 204, 'image/x-icon', '');
-    if (url.pathname === '/model.json') {
-        return send(response, 200, 'application/json', `${JSON.stringify(model, null, 2)}\n`);
+    if (request.headers['x-bsv-preview-token'] !== previewToken) {
+        return send(response, 403, 'text/plain', 'invalid capability\n');
     }
+    if (url.pathname === '/favicon.ico') return send(response, 204, 'image/x-icon', '');
     if (url.pathname.startsWith('/media/')) {
         const relative = url.pathname.slice(1);
         const filePath = path.join(root, relative);
@@ -36,21 +45,49 @@ server.listen(Number.parseInt(process.env.PORT || '0', 10), '127.0.0.1', () => {
 });
 
 function buildModel() {
-    const sourceRoot = path.join(exampleRoot, 'hw', 'bsv', 'src');
-    const parsed = walk(sourceRoot)
-        .filter((filePath) => filePath.endsWith('.bsv'))
-        .map((filePath) => parseBsvFile(fs.readFileSync(filePath, 'utf8'), {
-            uri: `file://${filePath}`,
-            relativePath: path.relative(exampleRoot, filePath).replace(/\\/g, '/')
-        }));
+    const workspaceName = process.env.BSV_TEST_WORKSPACE_NAME || path.basename(workspaceRoot);
+    const activeFile = process.env.BSV_TEST_ACTIVE_FILE
+        || (workspaceRoot === exampleRoot
+            ? 'hw/bsv/src/control/AcceleratorController.bsv'
+            : null);
+    const configPath = path.join(workspaceRoot, '.bsv-arch.json');
     const config = normalizeConfig(
-        parseJsonc(fs.readFileSync(path.join(exampleRoot, '.bsv-arch.json'), 'utf8')),
-        { workspaceName: 'Mini BSV Accelerator' }
+        fs.existsSync(configPath)
+            ? parseJsonc(fs.readFileSync(configPath, 'utf8'))
+            : {},
+        { workspaceName }
     );
+    const detectedRoots = ['hw/bsv/src', 'bsv/src', 'src']
+        .filter((candidate) => fs.existsSync(path.join(workspaceRoot, candidate)));
+    const sourceRoots = config.sourceRoots.length > 0
+        ? config.sourceRoots
+        : detectedRoots.length > 0 ? detectedRoots : ['.'];
+    const workspaceRealPath = fs.realpathSync(workspaceRoot);
+    const excluded = config.exclude.flatMap((pattern) => [
+        simpleGlobToRegExp(pattern),
+        pattern.startsWith('**/') ? simpleGlobToRegExp(pattern.slice(3)) : null
+    ]).filter(Boolean);
+    const sourceFiles = sourceRoots.flatMap((configuredRoot) => {
+        const rootPath = path.resolve(workspaceRoot, configuredRoot);
+        if (!fs.existsSync(rootPath)) return [];
+        const rootRealPath = fs.realpathSync(rootPath);
+        if (!isInside(workspaceRealPath, rootRealPath)) return [];
+        return walk(rootPath);
+    }).filter((filePath) => {
+        if (!filePath.endsWith('.bsv') || !fs.lstatSync(filePath).isFile()) return false;
+        const relativePath = path.relative(workspaceRoot, filePath).replace(/\\/g, '/');
+        return isInside(workspaceRealPath, fs.realpathSync(filePath))
+            && !excluded.some((pattern) => pattern.test(relativePath));
+    });
+    const parsed = [...new Set(sourceFiles)]
+        .map((filePath) => parseBsvFile(fs.readFileSync(filePath, 'utf8'), {
+            uri: pathToFileURL(filePath).toString(),
+            relativePath: path.relative(workspaceRoot, filePath).replace(/\\/g, '/')
+        }));
     const result = buildArchitectureModel(parsed, config, {
-        workspaceName: 'Mini BSV Accelerator',
-        workspaceUri: 'file:///bsv-mini-accelerator',
-        activeFile: 'hw/bsv/src/control/AcceleratorController.bsv',
+        workspaceName,
+        workspaceUri: pathToFileURL(workspaceRoot).toString(),
+        activeFile,
         scheduleProvider: 'source'
     });
     result.viewDefaults = {
@@ -69,6 +106,9 @@ function harnessHtml(port, url) {
     const origin = `http://127.0.0.1:${port}`;
     const workspaceTrusted = url.searchParams.get('trusted') !== 'false';
     const cjk = url.searchParams.get('cjk') === 'true';
+    const cjkModuleName = model.nodes.some((node) => node.name === 'mkAquaLoopMatmul')
+        ? 'mkAquaLoopMatmul'
+        : 'mkAcceleratorController';
     const cycle = url.searchParams.get('cycle') === 'true';
     const cycleRules = model.nodes
         .filter((node) => node.kind === 'rule' && /AcceleratorController\.bsv$/.test(node.relativePath || ''))
@@ -90,10 +130,10 @@ function harnessHtml(port, url) {
         : [];
     const pageModel = {
         ...model,
-        title: cjk ? 'BSV 렌즈 가속기 구조' : model.title,
+        title: cjk ? 'AQuA BSV 구조 검증' : model.title,
         nodes: cjk
-            ? model.nodes.map((node) => node.name === 'mkAcceleratorController'
-                ? { ...node, label: '가속기 제어 모듈 상태 처리 파이프라인' }
+            ? model.nodes.map((node) => node.name === cjkModuleName
+                ? { ...node, label: '행렬 가속기 제어 파이프라인' }
                 : node)
             : model.nodes,
         edges: [...model.edges, ...cycleEdges],
@@ -183,6 +223,11 @@ function walk(directory) {
         const filePath = path.join(directory, entry.name);
         return entry.isDirectory() ? walk(filePath) : [filePath];
     });
+}
+
+function isInside(rootPath, candidatePath) {
+    const relative = path.relative(rootPath, candidatePath);
+    return relative === '' || !path.isAbsolute(relative) && relative !== '..' && !relative.startsWith(`..${path.sep}`);
 }
 
 function send(response, status, type, body) {

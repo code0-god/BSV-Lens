@@ -922,6 +922,14 @@
             const ids = new Set(nodes.map((node) => node.id));
             let edges = this.activeEdges(analysisMode)
                 .filter((edge) => ids.has(edge.source) && ids.has(edge.target) && edgeAllowedByFilters(edge, this.state.filters));
+            const focused = this.indexes.nodeById.get(focusId);
+            if (
+                analysisMode === ANALYSIS_MODES.SCHEDULING
+                && hopScope === 1
+                && ['rule', 'method'].includes(focused?.kind)
+            ) {
+                edges = edges.filter((edge) => edge.source === focusId || edge.target === focusId);
+            }
             if (level === LEVELS.MODULE && analysisMode === ANALYSIS_MODES.STRUCTURE) {
                 const moduleId = ownerModuleId(focusId, this.indexes)
                     || nodes.find((node) => node.kind === 'module')?.id;

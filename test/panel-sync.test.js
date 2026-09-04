@@ -86,3 +86,87 @@ test('editor synchronization respects setting and BSV files', () => {
     other.instance.revealEditorSelection(event);
     assert.equal(other.messages.length, 0);
 });
+
+test('stale webview state cannot overwrite a newer host request', async () => {
+    const { instance } = makePanel(true);
+    instance.refreshToken = 2;
+    instance.modelRevision = 2;
+    instance.request = {
+        initialSourceScope: 'current-file',
+        initialLevel: 'module',
+        initialAnalysisMode: 'structure',
+        initialHopScope: 'all',
+        focusId: 'module'
+    };
+
+    await instance.handleMessage({
+        type: 'state',
+        revision: 1,
+        state: {
+            sourceScope: 'workspace',
+            level: 'system',
+            analysisMode: 'scheduling',
+            hopScope: '1',
+            focusStack: []
+        }
+    });
+    await instance.handleMessage({
+        type: 'state',
+        state: {
+            sourceScope: 'workspace',
+            level: 'system',
+            analysisMode: 'scheduling',
+            hopScope: '1',
+            focusStack: []
+        }
+    });
+
+    assert.deepEqual(instance.request, {
+        initialSourceScope: 'current-file',
+        initialLevel: 'module',
+        initialAnalysisMode: 'structure',
+        initialHopScope: 'all',
+        focusId: 'module'
+    });
+
+    await instance.handleMessage({
+        type: 'state',
+        revision: 2,
+        state: {
+            sourceScope: 'workspace',
+            level: 'system',
+            analysisMode: 'scheduling',
+            hopScope: '1',
+            focusStack: ['rule']
+        }
+    });
+
+    assert.deepEqual(instance.request, {
+        initialSourceScope: 'workspace',
+        initialLevel: 'system',
+        initialAnalysisMode: 'scheduling',
+        initialHopScope: '1',
+        focusId: 'rule'
+    });
+});
+
+test('ready model message carries current refresh revision', async () => {
+    const { instance, messages } = makePanel(true);
+    instance.refreshToken = 3;
+    instance.modelRevision = 2;
+    instance.request = {};
+    instance.defaultView = () => 'system';
+    instance.defaultViewState = () => ({
+        sourceScope: 'workspace',
+        level: 'system',
+        analysisMode: 'structure',
+        hopScope: 'all'
+    });
+    instance.resolveInitialFocus = () => null;
+
+    await instance.handleMessage({ type: 'ready' });
+
+    assert.equal(messages[0].type, 'model');
+    assert.equal(messages[0].revision, 2);
+    assert.equal(messages[0].resetView, false);
+});

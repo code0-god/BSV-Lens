@@ -627,7 +627,7 @@ function parseTypedefStatement(masked, original) {
         const nameToken = readIdentifier(masked, closing + 1);
         if (!nameToken) return { name: null };
         const opening = masked.indexOf('{');
-        const body = opening >= 0 ? original.slice(opening + 1, closing) : '';
+        const body = opening >= 0 ? masked.slice(opening + 1, closing) : '';
         const details = kind === 'enum' ? parseEnumVariants(body) : parseStructFields(body);
         return {
             kind,
@@ -645,7 +645,7 @@ function parseTypedefStatement(masked, original) {
         name: nameToken.value,
         nameOffset: nameToken.start,
         details: {
-            target: normalizeWhitespace(original.slice('typedef'.length, nameToken.start))
+            target: normalizeWhitespace(masked.slice('typedef'.length, nameToken.start))
         }
     };
 }
