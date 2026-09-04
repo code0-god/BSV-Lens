@@ -93,7 +93,7 @@ function getWebviewHtml(webview, extensionUri, vscode) {
     </section>
 
     <section class="filterbar" aria-label="Diagram filters">
-        <label id="packages-filter"><input id="show-packages" type="checkbox"> Packages</label>
+        <label id="packages-filter" title="Show the secondary package/module source projection"><input id="show-packages" type="checkbox"> Source Map</label>
         <label id="imports-filter"><input id="show-imports" type="checkbox"> Imports</label>
         <label id="rules-filter"><input id="show-rules" type="checkbox" checked> Rules / Methods</label>
         <label id="primitives-filter"><input id="show-primitives" type="checkbox"> State primitives</label>

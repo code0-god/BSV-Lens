@@ -358,7 +358,11 @@ endpackage
 `;
     const parsed = parse(source, 'Duplicate.bsv');
     const model = buildArchitectureModel([parsed], normalizeConfig({}), {});
-    const methods = model.nodes.filter((node) => node.kind === 'method' && node.name === 'update');
+    const methods = model.nodes.filter((node) =>
+        node.kind === 'method'
+        && node.name === 'update'
+        && !node.semanticId
+    );
 
     assert.equal(methods.length, 2);
     assert.notEqual(methods[0].id, methods[1].id);

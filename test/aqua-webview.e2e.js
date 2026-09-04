@@ -14,6 +14,7 @@ function browserErrors(page) {
 test('AQuA system graph supports analysis modes focus navigation and exports', async ({ page }) => {
     const errors = browserErrors(page);
     await page.goto('/');
+    await page.locator('#show-packages').check();
     await expect(page.locator('#architecture-title')).toContainText('AQuA');
     await expect(page.locator('.arch-node').first()).toBeVisible();
 
@@ -40,7 +41,9 @@ test('AQuA system graph supports analysis modes focus navigation and exports', a
     await page.locator('#search').press('Escape');
 
     await page.locator('[data-level="module"]').click();
-    await expect(page.locator('.kind-module')).toContainText('mkAquaLoopMatmul');
+    await expect(page.locator('.kind-instance, .kind-module').filter({
+        hasText: 'mkAquaLoopMatmul'
+    })).toBeVisible();
     const rules = page.locator('.kind-member-group').filter({ hasText: 'Rules' });
     await expect(rules).toHaveAttribute('aria-expanded', 'false');
     await rules.click();

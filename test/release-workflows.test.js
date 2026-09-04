@@ -48,7 +48,10 @@ test('Marketplace publish uses minimal OIDC permissions and duplicate rejection'
 });
 
 test('CI pins and executes the AQuA acceptance fixture', () => {
-    assert.equal(manifest.scripts['test:aqua'], 'npm run test:aqua:host && npm run test:aqua:browser');
+    assert.equal(
+        manifest.scripts['test:aqua'],
+        'npm run test:aqua:semantic && npm run test:aqua:host && npm run test:aqua:browser'
+    );
     assert.match(ci, /repository: code0-god\/AQuA/);
     assert.ok(ci.includes(`ref: ${EXPECTED_AQUA_REVISION}`));
     assert.match(ci, /npm run test:aqua/);

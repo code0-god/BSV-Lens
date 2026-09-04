@@ -31,6 +31,21 @@ const required = [
     'src/architecture/interface-contract-diagnostics.js',
     'src/architecture/interface-contract-types.js',
     'src/architecture/interface-contracts.js',
+    'src/architecture/semantic/behavior-bindings.js',
+    'src/architecture/semantic/constructor-bindings.js',
+    'src/architecture/semantic/contracts.js',
+    'src/architecture/semantic/definitions.js',
+    'src/architecture/semantic/endpoints.js',
+    'src/architecture/semantic/ids.js',
+    'src/architecture/semantic/indexes.js',
+    'src/architecture/semantic/instances.js',
+    'src/architecture/semantic/model.js',
+    'src/architecture/semantic/projection.js',
+    'src/architecture/semantic/protocol-channels.js',
+    'src/architecture/semantic/provenance.js',
+    'src/architecture/semantic/scheduling.js',
+    'src/architecture/semantic/semantic-flow.js',
+    'src/architecture/semantic/state-behaviors.js',
     'src/architecture/scheduling.js',
     'src/architecture/symbol-resolver.js',
     'src/architecture/symbol-index.js',
@@ -90,7 +105,7 @@ const model = buildArchitectureModel(parsedFiles, config, {
 });
 
 assert.equal(model.diagnostics.length, 0);
-assert.equal(model.schemaVersion, 2);
+assert.equal(model.schemaVersion, 3);
 assert.ok(model.nodes.some((node) => node.name === 'mapGlobalRow' && node.kind === 'function'));
 assert.ok(model.nodes.some((node) => node.name === 'mkAcceleratorTop' && node.entry));
 assert.ok(model.edges.some((edge) => edge.kind === 'instantiate' && edge.label === 'quantizer'));
@@ -126,8 +141,13 @@ const externalFixtureReferences = new Set([
     'scripts/run-aqua-extension-host-tests.js',
     'test/aqua-fixture.test.js',
     'test/aqua-matmul-webview.e2e.js',
+    'test/aqua-semantic-fixture.js',
+    'test/aqua-semantic-memory.acceptance.js',
+    'test/aqua-semantic-schedulers.acceptance.js',
+    'test/aqua-semantic-webview.e2e.js',
     'test/aqua-webview.e2e.js',
     'test/extension-host/aqua.js',
+    'test/fixtures/semantic-workspace/src/SemanticFlowFixture.bsv',
     'test/release-workflows.test.js'
 ]);
 const forbiddenBrandTokens = [

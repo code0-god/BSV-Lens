@@ -3,6 +3,9 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const vscode = require('vscode');
+const {
+    assertAquaSemanticArchitecture
+} = require('./aqua-semantic-assertions');
 
 const MATMUL_SCHEDULER_METHODS = [
     'startReady',
@@ -38,6 +41,7 @@ async function run() {
     const { ArchitecturePanel } = require(path.join(extensionRoot, 'src', 'panel', 'architecture-panel'));
     const panel = ArchitecturePanel.currentPanel;
     assert.ok(panel, 'AQuA architecture panel opened');
+    assertAquaSemanticArchitecture(panel.model);
     assert.equal(panel.model.stats.files, 14);
     assert.ok(panel.model.stats.nodes >= 300);
     assert.ok(panel.model.stats.edges >= 900);

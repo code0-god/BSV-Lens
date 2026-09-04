@@ -2,12 +2,19 @@
 
 const { applyNodeConfiguration, groupForPath } = require('./config');
 const { analyzeTypeWidth } = require('./type-analysis');
-const { buildInterfaceContracts } = require('./interface-contracts');
+const { buildSemanticModel } = require('./semantic/model');
+const { projectSemanticModel } = require('./semantic/projection');
 const { findMatchingDelimiter, normalizeWhitespace, splitTopLevel } = require('./source-utils');
 const { normalizeScheduleAttributes } = require('./scheduling');
 const { resolveArchitectureSymbol } = require('./symbol-resolver');
 
 function buildArchitectureModel(parsedFiles, config, context = {}) {
+    const scheduleRelations = context.scheduleRelations
+        || normalizeScheduleAttributes(parsedFiles);
+    const semanticModel = buildSemanticModel(parsedFiles, config, {
+        ...context,
+        scheduleRelations: semanticScheduleInputs(scheduleRelations, parsedFiles, context)
+    });
     const nodes = [];
     const edges = [];
     const diagnostics = parsedFiles.flatMap((file) => file.diagnostics || []);
@@ -430,7 +437,6 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         }
     }
 
-    const interfaceContracts = buildInterfaceContracts(parsedFiles, nodes, diagnostics);
     for (const virtualNode of config.virtualNodes) addNode(virtualNode);
     for (const manualEdge of config.edges) {
         const source = resolveNodeReference(manualEdge.from, nodes, nodeById);
@@ -451,11 +457,15 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         }
     }
 
-    const scheduleRelations = context.scheduleRelations
-        || normalizeScheduleAttributes(parsedFiles);
     addExternalScheduleEdges(scheduleRelations, nodes, addEdge, diagnostics, context);
     attachCompilerSupportingEvidence(edges);
-    const limits = applyGraphLimits(nodes, edges, context.limits, diagnostics);
+    const legacyGraphSize = { nodes: nodes.length, edges: edges.length };
+    const projection = projectSemanticModel(semanticModel);
+    for (const node of projection.nodes) addNode(node);
+    for (const edge of projection.edges) {
+        addEdge(edge.source, edge.target, edge.kind, edge.label, edge.inferred, edge);
+    }
+    const limits = applyGraphLimits(nodes, edges, context.limits, diagnostics, legacyGraphSize);
     attachMemberBuckets(nodes, edges);
     attachScheduleRelations(nodes, edges);
 
@@ -479,8 +489,8 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
     const stats = countKinds(visibleNodes, edges);
     const scheduling = summarizeScheduling(edges, context.scheduleProvider);
 
-    return {
-        schemaVersion: 2,
+    const model = {
+        schemaVersion: 3,
         title: config.title,
         generatedAt: new Date().toISOString(),
         workspaceName: context.workspaceName || '',
@@ -492,49 +502,121 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         edges,
         groups,
         roots,
+        architectureRoots: projection.architectureRoots.filter((id) =>
+            nodes.some((node) => node.id === id)
+        ),
+        definitions: semanticModel.definitions,
+        instances: semanticModel.instances,
+        endpoints: semanticModel.endpoints,
+        bindings: semanticModel.bindings,
+        protocolChannels: semanticModel.protocolChannels,
+        semanticFlows: semanticModel.semanticFlows,
+        stateBehaviors: semanticModel.stateBehaviors,
+        scheduleRelations: semanticModel.scheduleRelations,
+        semanticRoots: semanticModel.roots,
+        provenance: semanticModel.provenance,
         scheduling,
-        interfaceContracts,
+        interfaceContracts: projection.interfaceContracts,
         diagnostics,
+        semanticDiagnostics: semanticModel.diagnostics,
         stats,
         limits
     };
+    Object.defineProperty(model, 'semanticIndexes', {
+        value: semanticModel.indexes,
+        enumerable: false
+    });
+    return model;
 }
 
-function applyGraphLimits(nodes, edges, requested = {}, diagnostics = []) {
+function applyGraphLimits(nodes, edges, requested = {}, diagnostics = [], legacySize = null) {
     const maxNodes = graphLimit(requested.maxNodes, 10000);
     const maxEdges = graphLimit(requested.maxEdges, 25000);
-    const originalNodes = nodes.length;
-    const originalEdges = edges.length;
+    const originalNodes = legacySize?.nodes ?? nodes.length;
+    const originalEdges = legacySize?.edges ?? edges.length;
+    const projectedOriginalNodes = nodes.length;
+    const projectedOriginalEdges = edges.length;
+    const nodeLimitActive = nodes.length > maxNodes;
+    const edgeLimitActive = edges.length > maxEdges;
+    if (nodeLimitActive) {
+        nodes.sort((left, right) =>
+            Number(Boolean(right.semanticId)) - Number(Boolean(left.semanticId))
+        );
+    }
+    if (nodeLimitActive || edgeLimitActive) {
+        edges.sort((left, right) =>
+            Number(right.id.startsWith('semantic-edge:')) - Number(left.id.startsWith('semantic-edge:'))
+        );
+    }
     if (nodes.length > maxNodes) nodes.splice(maxNodes);
     const retained = new Set(nodes.map((node) => node.id));
     for (let index = edges.length - 1; index >= 0; index -= 1) {
         if (!retained.has(edges[index].source) || !retained.has(edges[index].target)) edges.splice(index, 1);
     }
-    const edgeLimitTruncated = Math.max(0, edges.length - maxEdges);
     if (edges.length > maxEdges) edges.splice(maxEdges);
-    const nodesTruncated = originalNodes - nodes.length;
-    const edgesTruncated = originalEdges - edges.length;
-    if (nodesTruncated > 0) diagnostics.push({
+    const retainedLegacyNodes = nodes.filter((node) => !node.semanticId).length;
+    const retainedLegacyEdges = edges.filter((edge) =>
+        !edge.id.startsWith('semantic-edge:')
+    ).length;
+    const nodesTruncated = Math.max(0, originalNodes - retainedLegacyNodes);
+    const edgesTruncated = Math.max(0, originalEdges - retainedLegacyEdges);
+    const projectedNodesTruncated = projectedOriginalNodes - nodes.length;
+    const projectedEdgesTruncated = projectedOriginalEdges - edges.length;
+    if (projectedNodesTruncated > 0) diagnostics.push({
         severity: 'warning',
         code: 'limit.nodes',
-        message: `Architecture graph reached the ${maxNodes}-node limit; ${nodesTruncated} nodes were omitted.`,
+        message: `Architecture graph reached the ${maxNodes}-node limit; ${projectedNodesTruncated} nodes were omitted.`,
         location: null
     });
-    if (edgeLimitTruncated > 0) diagnostics.push({
+    if (projectedEdgesTruncated > 0) diagnostics.push({
         severity: 'warning',
         code: 'limit.edges',
-        message: `Architecture graph reached the ${maxEdges}-edge limit; ${edgesTruncated} edges were omitted.`,
+        message: `Architecture graph reached the ${maxEdges}-edge limit; ${projectedEdgesTruncated} edges were omitted.`,
         location: null
     });
-    return { maxNodes, maxEdges, originalNodes, originalEdges, nodesTruncated, edgesTruncated };
+    return {
+        maxNodes,
+        maxEdges,
+        originalNodes,
+        originalEdges,
+        nodesTruncated,
+        edgesTruncated,
+        projectedOriginalNodes,
+        projectedOriginalEdges,
+        projectedNodesTruncated,
+        projectedEdgesTruncated
+    };
 }
 
 function graphLimit(value, fallback) {
     return Number.isSafeInteger(value) && value > 0 ? value : fallback;
 }
 
+function semanticScheduleInputs(relations, parsedFiles, context) {
+    return relations.flatMap((relation) => {
+        if (relation.moduleName || relation.module) return [relation];
+        if (context.scheduleTopModule) return [{ ...relation, moduleName: context.scheduleTopModule }];
+        const sourceName = relation.from || relation.source;
+        const targetName = relation.to || relation.target;
+        const owners = parsedFiles.flatMap((file) => file.modules
+            .filter((module) => !relation.packageName || file.packageName === relation.packageName)
+            .filter((module) => {
+                const names = new Set([
+                    ...module.rules.map((item) => item.name),
+                    ...module.methods.map((item) => item.name)
+                ]);
+                return names.has(sourceName) && names.has(targetName);
+            })
+            .map((module) => ({ packageName: file.packageName, moduleName: module.name }))
+        );
+        return owners.length === 1 ? [{ ...relation, ...owners[0] }] : [];
+    });
+}
+
 function addExternalScheduleEdges(relations, nodes, addEdge, diagnostics, context = {}) {
-    const behavior = nodes.filter((node) => ['rule', 'method'].includes(node.kind));
+    const behavior = nodes.filter((node) =>
+        ['rule', 'method'].includes(node.kind) && !node.semanticId
+    );
     const nodeById = new Map(nodes.map((node) => [node.id, node]));
     for (const relation of relations) {
         const sourceName = relation.from || relation.source;

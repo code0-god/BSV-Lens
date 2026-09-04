@@ -61,11 +61,11 @@ endmodule
 endpackage
 `;
 
-test('schema version 2 preserves old fields and adds node provenance', () => {
+test('schema version 3 preserves legacy fields and adds semantic provenance', () => {
     const model = build(FEATURE_SOURCE);
     const moduleNode = model.nodes.find((node) => node.kind === 'module');
 
-    assert.equal(model.schemaVersion, 2);
+    assert.equal(model.schemaVersion, 3);
     assert.equal(moduleNode.parentId, 'package:Feature');
     assert.equal(moduleNode.ownerId, 'package:Feature');
     assert.equal(moduleNode.analysisOrigin, 'Source-derived');

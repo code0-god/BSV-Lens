@@ -37,7 +37,9 @@ async function focusMatmulScheduler(page) {
     await page.getByRole('button', { name: 'Set as focus' }).click();
     await page.locator('#search').press('Escape');
     await page.locator('[data-level="module"]').click();
-    await expect(page.locator('.kind-module')).toContainText('mkMatmulScheduler');
+    await expect(page.locator('.kind-instance, .kind-module').filter({
+        hasText: 'mkMatmulScheduler'
+    })).toBeVisible();
 }
 
 async function expectAllGraphNodesInsideCanvas(page) {

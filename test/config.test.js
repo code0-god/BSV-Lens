@@ -63,7 +63,7 @@ test('version 1 project configuration gains safe scheduling defaults', () => {
     });
 
     assert.equal(config.version, 1);
-    assert.equal(config.schemaVersion, 2);
+    assert.equal(config.schemaVersion, 3);
     assert.deepEqual(config.sourceRoots, ['src']);
     assert.equal(config.edges[0].mode, 'data-flow');
     assert.equal(config.edges[0].origin, 'config');

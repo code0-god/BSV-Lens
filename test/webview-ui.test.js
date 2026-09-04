@@ -145,14 +145,14 @@ test('disclosure groups activate once per click and with either activation key',
     assert.match(content, /Click group to expand or collapse/);
 });
 
-test('compact fit preserves node legibility and wraps canvas actions', () => {
+test('dense fit preserves full containment and wraps canvas actions', () => {
     const source = fs.readFileSync(path.join(root, 'media', 'webview.js'), 'utf8');
     const styles = fs.readFileSync(path.join(root, 'media', 'webview.css'), 'utf8');
     const resizeHandler = source.slice(
         source.indexOf("window.addEventListener('resize'"),
         source.indexOf('elements.sourceScope.addEventListener')
     );
-    assert.match(source, /const minimumScale = rect\.width < 700 \? 0\.75 : 0\.8/);
+    assert.match(source, /,\s*0\.08,\s*1\.35/);
     assert.match(source, /runtime\.graph\.layout\?\.positions\.has\(selectedId\)/);
     assert.match(source, /const targetId = focusId \|\| viewState\(\)\.selectedId/);
     assert.match(resizeHandler, /preserveNodeAnchor/);

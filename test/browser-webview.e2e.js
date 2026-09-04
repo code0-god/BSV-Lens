@@ -24,15 +24,23 @@ test('real browser drives webview controls inspector refresh and exports', async
     await expect(page.locator('#inspector')).toContainText('mkAcceleratorController');
     await page.locator('#search').press('Escape');
 
+    await page.locator('#show-packages').check();
     await page.locator('[data-analysis-mode="data-flow"]').click();
     await expect(page.locator('[data-analysis-mode="data-flow"]')).toHaveAttribute('aria-pressed', 'true');
     await page.evaluate(() => new Promise((resolve) =>
         requestAnimationFrame(() => requestAnimationFrame(resolve))
     ));
-    expect(Number(/\bscale\(([^)]+)\)/.exec(
-        await page.locator('#viewport').getAttribute('transform')
-    )[1])).toBeGreaterThanOrEqual(0.8);
-    expect(await page.locator('.edge[data-source][data-target]').first().evaluate((edge) => {
+    expect(await page.locator('.arch-node').evaluateAll((nodes) => {
+        const canvas = document.getElementById('architecture-canvas').getBoundingClientRect();
+        return nodes.filter((node) => {
+            const rect = node.getBoundingClientRect();
+            return rect.left < canvas.left - 1
+                || rect.right > canvas.right + 1
+                || rect.top < canvas.top - 1
+                || rect.bottom > canvas.bottom + 1;
+        }).map((node) => node.dataset.nodeId);
+    })).toEqual([]);
+    expect(await page.locator('.edge.data[data-source][data-target]').first().evaluate((edge) => {
         const source = document.querySelector(`[data-node-id="${CSS.escape(edge.dataset.source)}"]`);
         const target = document.querySelector(`[data-node-id="${CSS.escape(edge.dataset.target)}"]`);
         const sourceX = Number(/translate\(([^ ]+)/.exec(source.getAttribute('transform'))[1]);

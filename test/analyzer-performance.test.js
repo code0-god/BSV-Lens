@@ -95,6 +95,31 @@ test('large synthetic graph truncation is deterministic without timing sleeps', 
     assert.equal(first.limits.originalEdges, 1001);
 });
 
+test('tight graph limits retain primary semantic architecture before Source Map nodes', async () => {
+    // Given
+    const { vscode, folder } = workspaceFixture({
+        'Top.bsv': `
+package Top;
+module mkTop(Empty);
+endmodule
+endpackage
+`
+    }, { maxNodes: 2, maxEdges: 2 });
+
+    // When
+    const model = await new WorkspaceAnalyzer(vscode).analyze({ folder });
+
+    // Then
+    assert.ok(model.nodes.some((node) =>
+        node.architectureInstance && node.details.root
+    ));
+    assert.ok(model.architectureRoots.every((id) =>
+        model.nodes.some((node) => node.id === id)
+    ));
+    assert.ok(model.limits.projectedOriginalNodes > model.limits.originalNodes);
+    assert.ok(model.limits.projectedNodesTruncated > 0);
+});
+
 function workspaceFixture(files, settings = {}) {
     const root = '/workspace';
     const uri = (relativePath) => ({

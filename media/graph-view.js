@@ -14,8 +14,11 @@
         SCHEDULING: 'scheduling'
     });
     const MODE_EDGE_KINDS = Object.freeze({
-        structure: new Set(['instantiate', 'implements', 'contains', 'import', 'control', 'structure']),
-        'data-flow': new Set(['read', 'write', 'invoke', 'return', 'value', 'producer', 'consumer', 'access', 'call', 'data']),
+        structure: new Set(['instantiate', 'implements', 'contains', 'import', 'control', 'structure', 'instance-child']),
+        'data-flow': new Set([
+            'read', 'write', 'invoke', 'return', 'value', 'producer', 'consumer', 'access', 'call', 'data',
+            'payload', 'state-read', 'state-write', 'constructor-binding', 'interface-forward'
+        ]),
         scheduling: new Set([
             'conflict', 'conflict-free', 'sequential-before', 'sequential-before-reverse',
             'mutually-exclusive', 'descending-urgency', 'execution-order', 'preempts',
@@ -23,6 +26,7 @@
         ])
     });
     const BUCKETS = Object.freeze([
+        { kind: 'protocol-channels', collapsed: false },
         { kind: 'interfaces', collapsed: false },
         { kind: 'methods', collapsed: true },
         { kind: 'rules', collapsed: true },
@@ -254,6 +258,7 @@
     }
 
     function bucketFor(node) {
+        if (node.kind === 'protocol-channel') return 'protocol-channels';
         if (node.kind === 'interface') return 'interfaces';
         if (node.kind === 'method') return 'methods';
         if (node.kind === 'rule') return 'rules';
@@ -320,8 +325,9 @@
 
     function layoutModuleHierarchy(nodes, edges, sizes, options = {}) {
         const direction = options.direction === 'TB' ? 'TB' : 'LR';
-        const root = nodes.find((node) => node.id === options.focusId && node.kind === 'module')
-            || nodes.find((node) => node.kind === 'module');
+        const isRoot = (node) => node.kind === 'module' || node.architectureInstance;
+        const root = nodes.find((node) => node.id === options.focusId && isRoot(node))
+            || nodes.find(isRoot);
         if (!root) return emptyHierarchyLayout(direction);
 
         const spacing = {
@@ -829,7 +835,10 @@
                 .filter((edge) => edge.source === moduleId && edge.kind === 'implements')
                 .map((edge) => this.indexes.nodeById.get(edge.target))
                 .filter((node) => node && !node.hidden);
-            return BUCKETS.map((descriptor) => {
+            const descriptors = moduleNode?.architectureInstance
+                ? BUCKETS
+                : BUCKETS.filter((descriptor) => descriptor.kind !== 'protocol-channels');
+            return descriptors.map((descriptor) => {
                 const hiddenMethods = descriptor.kind === 'methods' && this.state.showMethodPorts === false;
                 const members = hiddenMethods
                     ? []
@@ -960,6 +969,13 @@
                 return members.filter((node) => scopedIds.has(node.id));
             }
             if (level === LEVELS.SYSTEM) {
+                const hasArchitecture = scoped.some((node) => node.architectureInstance);
+                if (hasArchitecture) return scoped.filter((node) =>
+                    node.virtual
+                    || node.architectureInstance
+                    || this.state.filters.packages === true
+                        && ['module', 'interface', 'package'].includes(node.kind)
+                );
                 return scoped.filter((node) =>
                     node.virtual || ['module', 'interface', 'package'].includes(node.kind)
                 ).filter((node) => this.state.filters.packages !== false || node.kind !== 'package');
@@ -971,11 +987,21 @@
             if (level === LEVELS.BEHAVIOR) {
                 const members = (this.indexes.children.get(moduleId) || []).filter((node) =>
                     !node.hidden
-                    && (BEHAVIOR_KINDS.has(node.kind) || node.primitive || STATE_KINDS.has(node.kind) || node.kind === 'instance')
+                    && (BEHAVIOR_KINDS.has(node.kind) || node.primitive || STATE_KINDS.has(node.kind)
+                        || !moduleNode.architectureInstance && node.kind === 'instance')
                     && (this.state.showMethodPorts !== false || node.kind !== 'method')
                     && scopedIds.has(node.id)
                 );
-                return [moduleNode, ...members];
+                if (!moduleNode.architectureInstance) return [moduleNode, ...members];
+                const memberIds = new Set(members.map((node) => node.id));
+                const endpointIds = new Set(this.activeEdges(analysisMode).flatMap((edge) => {
+                    if (memberIds.has(edge.source) && this.indexes.nodeById.get(edge.target)?.kind === 'endpoint') return [edge.target];
+                    if (memberIds.has(edge.target) && this.indexes.nodeById.get(edge.source)?.kind === 'endpoint') return [edge.source];
+                    return [];
+                }));
+                const relatedEndpoints = [...endpointIds].map((id) => this.indexes.nodeById.get(id))
+                    .filter((node) => node && scopedIds.has(node.id));
+                return [moduleNode, ...members, ...relatedEndpoints];
             }
             return this.moduleLevelNodes(moduleNode, scopedIds);
         }
@@ -1001,10 +1027,19 @@
                 nodes.push(group);
                 if (bucket.collapsed) continue;
                 if (bucket.kind === 'child-instances') {
-                    for (const aggregate of aggregateInstances(moduleNode.id, bucket.members)) {
+                    const semanticInstances = bucket.members.filter((member) =>
+                        member.architectureInstance
+                    );
+                    nodes.push(...semanticInstances.filter((member) => scopedIds.has(member.id)));
+                    const legacyInstances = bucket.members.filter((member) =>
+                        !member.architectureInstance
+                    );
+                    for (const aggregate of aggregateInstances(moduleNode.id, legacyInstances)) {
                         nodes.push(aggregate);
                         if (this.state.expandedAggregations[aggregate.id]) {
-                            nodes.push(...bucket.members.filter((member) => aggregate.sourceIds.includes(member.id)));
+                            nodes.push(...legacyInstances.filter((member) =>
+                                aggregate.sourceIds.includes(member.id)
+                            ));
                         }
                     }
                 } else {
@@ -1031,6 +1066,18 @@
                     true
                 ));
                 if (group.bucket === 'child-instances') {
+                    for (const memberId of group.sourceIds) {
+                        const member = visibleById.get(memberId);
+                        if (!member?.architectureInstance) continue;
+                        edges.push(viewEdge(
+                            `view:${group.id}:${member.id}`,
+                            group.id,
+                            member.id,
+                            'instance-child',
+                            member.name,
+                            false
+                        ));
+                    }
                     for (const aggregate of nodes.filter((node) =>
                         node.kind === 'instance-group'
                         && node.parentId === moduleId
@@ -1079,7 +1126,8 @@
             const ownerId = ownerModuleId(focusId, this.indexes);
             const rootId = materializedIds.has(focusId) ? focusId : ownerId || focusId;
             const direct = this.neighborhood(rootId, hopScope, analysisMode, materializedIds);
-            if (direct.length > 1 || this.indexes.nodeById.get(rootId)?.kind !== 'module') return new Set(direct);
+            const root = this.indexes.nodeById.get(rootId);
+            if (direct.length > 1 || root?.kind !== 'module' && !root?.architectureInstance) return new Set(direct);
             const childIds = new Set((this.indexes.children.get(rootId) || []).map((node) => node.id));
             const seeds = visibleNodes.filter((node) => childIds.has(node.id) && !node.synthetic);
             const allowed = new Set([rootId]);
@@ -1098,14 +1146,14 @@
     function ownerModuleId(id, indexes) {
         let node = indexes.nodeById.get(id);
         if (!node) return null;
-        if (node.kind === 'module') return node.id;
+        if (node.kind === 'module' || node.architectureInstance) return node.id;
         if (node.kind === 'instance' && node.details?.targetId) {
             const target = indexes.nodeById.get(node.details.targetId);
             if (target?.kind === 'module') return target.id;
         }
         while (node?.parentId) {
             node = indexes.nodeById.get(node.parentId);
-            if (node?.kind === 'module') return node.id;
+            if (node?.kind === 'module' || node?.architectureInstance) return node.id;
         }
         return null;
     }
@@ -1119,6 +1167,7 @@
 
     function bucketLabel(kind) {
         return {
+            'protocol-channels': 'Protocol Channels',
             interfaces: 'Interfaces',
             methods: 'Methods',
             rules: 'Rules',

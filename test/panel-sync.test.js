@@ -170,3 +170,81 @@ test('ready model message carries current refresh revision', async () => {
     assert.equal(messages[0].revision, 2);
     assert.equal(messages[0].resetView, false);
 });
+
+test('direct source navigation accepts only locations owned by current model', async () => {
+    // Given
+    const opened = [];
+    const selected = [];
+    const instance = Object.create(ArchitecturePanel.prototype);
+    const modelLocation = {
+        uri: 'file:///workspace/Top.bsv',
+        line: 8,
+        column: 4
+    };
+    instance.model = {
+        nodes: [{ id: 'top', location: modelLocation }],
+        edges: [{
+            id: 'flow',
+            sourceLocation: {
+                uri: 'file:///workspace/Flow.bsv',
+                line: 2,
+                column: 1
+            }
+        }],
+        diagnostics: [],
+        semanticDiagnostics: []
+    };
+    instance.vscode = {
+        Uri: { parse(uri) { return { uri }; } },
+        Position: class Position {
+            constructor(line, column) {
+                this.line = line;
+                this.column = column;
+            }
+        },
+        Selection: class Selection {
+            constructor(start, end) {
+                this.start = start;
+                this.end = end;
+            }
+        },
+        Range: class Range {
+            constructor(start, end) {
+                this.start = start;
+                this.end = end;
+            }
+        },
+        TextEditorRevealType: { InCenterIfOutsideViewport: 1 },
+        ViewColumn: { One: 1 },
+        workspace: {
+            async openTextDocument(uri) {
+                opened.push(uri.uri);
+                return { uri };
+            }
+        },
+        window: {
+            async showTextDocument() {
+                return {
+                    set selection(value) { selected.push(value); },
+                    revealRange() {}
+                };
+            }
+        }
+    };
+
+    // When
+    await instance.openSource(null, instance.model.edges[0].sourceLocation);
+
+    // Then
+    assert.deepEqual(opened, ['file:///workspace/Flow.bsv']);
+    assert.equal(selected.length, 1);
+    await assert.rejects(
+        instance.openSource(null, {
+            uri: 'file:///outside/Injected.bsv',
+            line: 0,
+            column: 0
+        }),
+        /not owned by the current architecture model/
+    );
+    assert.deepEqual(opened, ['file:///workspace/Flow.bsv']);
+});

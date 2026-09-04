@@ -292,6 +292,9 @@ class ArchitecturePanel {
         if (!target?.uri) {
             throw new Error('This architecture element has no source location.');
         }
+        if (!node && !modelOwnsLocation(this.model, target)) {
+            throw new Error('Source location is not owned by the current architecture model.');
+        }
         const uri = this.vscode.Uri.parse(target.uri);
         const document = await this.vscode.workspace.openTextDocument(uri);
         const editor = await this.vscode.window.showTextDocument(document, {
@@ -401,6 +404,31 @@ class ArchitecturePanel {
             }
         }
     }
+}
+
+function modelOwnsLocation(model, target) {
+    const collections = [
+        'nodes',
+        'edges',
+        'definitions',
+        'instances',
+        'endpoints',
+        'bindings',
+        'protocolChannels',
+        'semanticFlows',
+        'stateBehaviors',
+        'scheduleRelations',
+        'interfaceContracts',
+        'diagnostics',
+        'semanticDiagnostics'
+    ];
+    return collections.some((name) => (model?.[name] || []).some((item) =>
+        [item.location, item.sourceLocation, item.compilerLocation].some((location) =>
+            location?.uri === target.uri
+            && (location.line || 0) === (target.line || 0)
+            && (location.column || 0) === (target.column || 0)
+        )
+    ));
 }
 
 function safeName(value) {

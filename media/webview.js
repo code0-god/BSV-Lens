@@ -137,7 +137,11 @@
         elements.search.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 const query = elements.search.value.trim().toLowerCase();
-                const first = runtime.graph.nodes.find((node) => nodeMatchesSearch(node, query));
+                const first = runtime.graph.nodes
+                    .filter((node) => nodeMatchesSearch(node, query))
+                    .sort((left, right) =>
+                        nodeSearchScore(left, query) - nodeSearchScore(right, query)
+                    )[0];
                 if (first) selectNode(first.id, true);
             } else if (event.key === 'Escape') {
                 elements.search.value = '';
@@ -582,6 +586,7 @@
         const cycleEdges = new Set((runtime.graph.layout?.cycles || []).flatMap((cycle) => cycle.edgeIds));
         const direction = runtime.graph.layout?.direction || 'LR';
         const sameRankLanes = assignSameRankLanes(edges, positions, direction);
+        const occupiedLabels = [];
         for (const edge of edges) {
             const source = positions.get(edge.source);
             const target = positions.get(edge.target);
@@ -615,14 +620,23 @@
             const path = svgElement('path', attributes);
             group.append(path);
             if (!edge.suppressLabel && (edge.label || edge.kind)) {
-                const label = truncate(edge.label || titleCase(edge.kind), 34);
+                const label = truncate(
+                    edge.label || titleCase(edge.kind),
+                    edge.kind === 'interface-forward' ? 72 : 34
+                );
                 const width = Math.max(34, Text.displayWidth(label) * 5.5 + 10);
                 const labelX = route.labelOutside === 'right'
                     ? route.labelBoundary + 8 + width / 2
                     : route.labelX;
-                const labelY = route.labelOutside === 'bottom'
+                const initialLabelY = route.labelOutside === 'bottom'
                     ? route.labelBoundary + 17
                     : route.labelY;
+                const labelY = reserveLabelLane(
+                    labelX,
+                    initialLabelY,
+                    width,
+                    occupiedLabels
+                );
                 group.append(
                     svgElement('rect', {
                         class: 'edge-label-bg',
@@ -647,6 +661,31 @@
             });
             elements.edges.append(group);
         }
+    }
+
+    function reserveLabelLane(x, y, width, occupied) {
+        for (let attempt = 0; attempt < 64; attempt += 1) {
+            const offset = attempt === 0
+                ? 0
+                : Math.ceil(attempt / 2) * 19 * (attempt % 2 ? 1 : -1);
+            const candidateY = y + offset;
+            const box = {
+                left: x - width / 2 - 3,
+                right: x + width / 2 + 3,
+                top: candidateY - 10,
+                bottom: candidateY + 9
+            };
+            if (occupied.every((other) =>
+                box.right <= other.left
+                || box.left >= other.right
+                || box.bottom <= other.top
+                || box.top >= other.bottom
+            )) {
+                occupied.push(box);
+                return candidateY;
+            }
+        }
+        return y;
     }
 
     function renderHierarchyBus(bus) {
@@ -989,7 +1028,12 @@
         if (node.kind === 'rule') return node.details?.guard ? `guard: ${node.details.guard}` : 'unguarded rule';
         if (node.kind === 'method') return node.details?.returnType || 'method';
         if (node.kind === 'function') return node.details?.returnType || 'function';
-        if (node.primitive || node.kind === 'instance') return node.details?.constructor || node.details?.type || 'instance';
+        if (node.architectureInstance) {
+            return node.details?.targetName || node.details?.constructor || 'unresolved target';
+        }
+        if (node.primitive || node.kind === 'instance') {
+            return node.details?.constructor || node.details?.type || 'instance';
+        }
         if (node.kind === 'instance-group') return multiplicityText(node.multiplicity);
         return node.packageName || node.description || '';
     }
@@ -1072,9 +1116,9 @@
         if (node.location?.uri) actions.append(makeButton('Open source', () => openNodeSource(node.id), 'primary'));
         if (!node.synthetic) actions.append(makeButton('Set as focus', () => setFocus(node.id)));
         if (canDrill(node)) actions.append(makeButton(drillLabel(node), () => drillInto(node.id)));
-        actions.append(makeButton('Set trace start', () => setTraceStart(node.id)));
+        actions.append(makeButton('Trace from here', () => setTraceStart(node.id)));
         if (viewState().trace.startId && viewState().trace.startId !== node.id) {
-            actions.append(makeButton('Trace to…', () => traceTo(node.id)));
+            actions.append(makeButton('Trace to here', () => traceTo(node.id)));
         }
         appendDirectionalTraceActions(actions, node);
         actions.append(makeButton('Copy ID', async () => {
@@ -1094,10 +1138,59 @@
             section.append(code);
             content.append(section);
         }
-        const details = flattenDetails(node.details || {});
-        if (details.length) content.append(detailSection('Details', details));
+        if (node.semanticBehavior) {
+            renderSemanticBehaviorDetails(content, node);
+        } else {
+            const details = flattenDetails(node.details || {});
+            if (details.length) content.append(detailSection('Details', details));
+        }
         renderRelationInspector(content, node);
         elements.inspector.replaceChildren(content);
+    }
+
+    function renderSemanticBehaviorDetails(container, node) {
+        const details = node.details || {};
+        const relations = runtime.view.relations(node.id);
+        const incoming = relations
+            .filter((relation) => relation.direction === 'in')
+            .map((relation) => relation.edge);
+        const outgoing = relations
+            .filter((relation) => relation.direction === 'out')
+            .map((relation) => relation.edge);
+        const sections = [
+            ['Summary', details.summary || node.description],
+            ['Guard', details.guard || 'Always eligible'],
+            ['Category', details.category],
+            ['Return Type', details.returnType],
+            ['Inputs', semanticList(details.inputs)],
+            ['Outputs', semanticList(details.outputs)],
+            ['State reads', semanticList(details.stateReads)],
+            ['State writes', semanticList(details.stateWrites)],
+            ['Invocations', semanticList(details.invocations)],
+            ['Protocol membership', semanticList(details.protocolMembership)],
+            ['Upstream', semanticRelations(incoming)],
+            ['Downstream', semanticRelations(outgoing)],
+            ['Source evidence', semanticList(details.sourceEvidence)]
+        ];
+        for (const [label, value] of sections) {
+            const section = inspectorSection(label);
+            section.append(paragraph(value || 'None', 'inspector-description'));
+            container.append(section);
+        }
+    }
+
+    function semanticList(value) {
+        if (!Array.isArray(value) || value.length === 0) return 'None';
+        return value.map((item) => {
+            if (typeof item !== 'object' || item === null) return String(item);
+            if (item.name && item.type) return `${item.name}: ${item.type}`;
+            return item.name || item.type || item.effect || JSON.stringify(item);
+        }).join('\n');
+    }
+
+    function semanticRelations(edges) {
+        if (!edges.length) return 'None';
+        return edges.map((edge) => edge.label || relationSummaryLabel(edge.kind)).join('\n');
     }
 
     function renderEdgeInspector(edge) {
@@ -1603,12 +1696,30 @@
         const activePath = trace.paths[trace.index] || [];
         const activeTarget = activePath.at(-1) || trace.targetId;
         if (count) {
+            const pathEdges = activePath.slice(0, -1).map((source, index) =>
+                runtime.graph.edges.find((edge) =>
+                    edge.source === source && edge.target === activePath[index + 1]
+                )
+            ).filter(Boolean);
+            const payloads = [...new Set(pathEdges
+                .map((edge) => edge.label)
+                .filter(Boolean))];
+            const payloadNotice = payloads.length
+                ? ` · Payload ${payloads.join(', ')}`
+                : '';
+            const evidenceNotice = pathEdges.some((edge) =>
+                edge.sourceLocation || edge.evidence
+            ) ? ' · Source evidence' : '';
             const limitNotice = trace.truncated
                 ? trace.limitReason === 'max-paths'
                     ? ' · Additional shortest paths were omitted.'
                     : ' · Path search limit reached.'
                 : '';
-            elements.traceSummary.textContent = `${nodeLabel(activePath[0] || trace.startId)} to ${nodeLabel(activeTarget)} · ${trace.index + 1} of ${count}${trace.truncated ? '+' : ''}${limitNotice}`;
+            elements.traceSummary.textContent = `Path ${trace.index + 1} of ${count}${
+                trace.truncated ? '+' : ''
+            } · ${nodeLabel(activePath[0] || trace.startId)} to ${
+                nodeLabel(activeTarget)
+            }${payloadNotice}${evidenceNotice}${limitNotice}`;
         } else {
             elements.traceSummary.textContent = `Start: ${nodeLabel(trace.startId)}${
                 trace.targetId
@@ -1699,8 +1810,20 @@
         if (!node) return false;
         return [
             node.label, node.name, node.kind, node.packageName, node.relativePath,
-            node.description, node.signature, JSON.stringify(node.ports || [])
+            node.description, node.signature, node.details?.targetName,
+            node.details?.targetDefinitionId, node.details?.path,
+            JSON.stringify(node.ports || [])
         ].filter(Boolean).some((value) => String(value).toLowerCase().includes(query));
+    }
+
+    function nodeSearchScore(node, query) {
+        const primary = [node.label, node.name, node.details?.targetName]
+            .filter(Boolean)
+            .map((value) => String(value).toLowerCase());
+        if (primary.some((value) => value === query)) return 0;
+        if (primary.some((value) => value.startsWith(query))) return 1;
+        if (primary.some((value) => value.includes(query))) return 2;
+        return 3;
     }
 
     function updateHeader() {
@@ -1716,10 +1839,20 @@
         const hops = state.hopScope === 'all' ? 'Component' : `${state.hopScope} hop${state.hopScope === 1 ? '' : 's'}`;
         elements.focusSummary.textContent = `Focus: ${focusName} · ${titleCase(state.analysisMode)} · ${hops} · ${runtime.graph.nodes.length}/${runtime.model.stats.nodes} nodes · ${runtime.graph.edges.length} edges`;
         elements.stats.textContent = `${runtime.graph.nodes.length}/${runtime.model.stats.nodes} nodes · ${runtime.graph.edges.length} edges · ${runtime.model.stats.files} files`;
-        const diagnostics = runtime.model.diagnostics || [];
+        const diagnostics = [...new Map([
+            ...(runtime.model.diagnostics || []),
+            ...(runtime.model.semanticDiagnostics || []).filter((item) =>
+                item.severity !== 'info'
+            )
+        ].map((item) => [
+            `${item.severity}|${item.code || ''}|${item.message}|${formatLocation(item.location)}`,
+            item
+        ])).values()];
         const errors = diagnostics.filter((item) => item.severity === 'error').length;
         const warnings = diagnostics.filter((item) => item.severity === 'warning').length;
-        elements.diagnostics.textContent = errors || warnings ? `${errors} errors · ${warnings} warnings` : 'No parser diagnostics';
+        elements.diagnostics.textContent = errors || warnings
+            ? `${errors} errors · ${warnings} warnings`
+            : 'No diagnostics';
         elements.diagnostics.classList.toggle('has-issues', Boolean(errors || warnings));
         elements.diagnostics.title = diagnostics.slice(0, 10).map((item) => item.message).join('\n');
     }
@@ -1752,10 +1885,9 @@
         const rect = elements.svg.getBoundingClientRect();
         if (rect.width < 20 || rect.height < 20) return;
         const padding = rect.width < 700 ? 18 : 54;
-        const minimumScale = rect.width < 700 ? 0.75 : 0.8;
         runtime.transform.scale = clamp(
             Math.min((rect.width - padding * 2) / bounds.width, (rect.height - padding * 2) / bounds.height),
-            minimumScale,
+            0.08,
             1.35
         );
         runtime.transform.x = (rect.width - bounds.width * runtime.transform.scale) / 2 - bounds.x * runtime.transform.scale;

@@ -14,7 +14,8 @@ const DEFAULT_EXCLUDE = [
 
 const SCHEDULING_PROVIDERS = new Set(['auto', 'source', 'bsc', 'off']);
 const DATA_FLOW_EDGE_KINDS = new Set([
-    'data', 'read', 'write', 'invoke', 'return', 'value', 'producer', 'consumer'
+    'data', 'read', 'write', 'invoke', 'return', 'value', 'producer', 'consumer',
+    'payload', 'state-read', 'state-write', 'constructor-binding', 'interface-forward'
 ]);
 const SCHEDULING_EDGE_KINDS = new Set([
     'conflict', 'conflict-free', 'sequential-before', 'sequential-before-reverse',
@@ -111,7 +112,7 @@ function normalizeConfig(raw = {}, context = {}) {
 
     return {
         version: Number.isInteger(raw.version) ? raw.version : 1,
-        schemaVersion: 2,
+        schemaVersion: 3,
         title: typeof raw.title === 'string' && raw.title.trim()
             ? raw.title.trim()
             : (context.workspaceName ? `${context.workspaceName} BSV Architecture` : 'BSV Architecture'),
