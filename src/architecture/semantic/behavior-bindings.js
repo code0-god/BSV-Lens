@@ -1,0 +1,98 @@
+'use strict';
+
+const { behaviorAccessBindingId } = require('./ids');
+
+const SOURCE_ORIGIN = 'Source-derived';
+
+function buildBehaviorBindings(stateBehaviors, callableByBehaviorId, instances, endpoints, structuralBindings = []) {
+    const bindings = [];
+    const childrenByParent = groupBy(instances.filter((item) => item.parentInstanceId),
+        (item) => item.parentInstanceId);
+    const instanceById = new Map(instances.map((item) => [item.id, item]));
+    const parametersByTarget = groupBy(structuralBindings.filter((item) =>
+        item.kind === 'constructor-binding' && item.resolutionStatus === 'exact'),
+    (item) => item.targetInstanceId);
+    const endpointByOwnerPath = new Map(endpoints.map((endpoint) => [
+        endpointKey(endpoint.ownerInstanceId, endpoint.interfacePath), endpoint
+    ]));
+    const methodEndpoints = endpoints.filter((endpoint) => endpoint.kind === 'method-endpoint');
+
+    for (const behavior of stateBehaviors) {
+        const callable = callableByBehaviorId.get(behavior.id);
+        const children = childrenByParent.get(behavior.ownerInstanceId) || [];
+        const childByName = new Map(children.map((child) => [child.name, child]));
+        for (const binding of parametersByTarget.get(behavior.ownerInstanceId) || []) {
+            const source = instanceById.get(binding.sourceInstanceId);
+            if (source) childByName.set(binding.formalParameter.name, source);
+        }
+        const accesses = callable?.accesses || [];
+        for (const [index, access] of accesses.entries()) {
+            const child = childByName.get(access.instance);
+            if (!child) continue;
+            const endpoint = access.memberPath
+                ? endpointByOwnerPath.get(endpointKey(child.id, access.memberPath.split('.')))
+                : null;
+            bindings.push(makeBinding(behavior, access, child, endpoint, index));
+        }
+        const explicit = new Set(accesses.map((access) => `${access.kind}\u0000${access.instance}`));
+        let syntheticIndex = accesses.length;
+        if (behavior.kind === 'method' && accesses.length === 0) {
+            const delegates = (parametersByTarget.get(behavior.ownerInstanceId) || []).flatMap((binding) =>
+                methodEndpoints.filter((endpoint) => endpoint.ownerInstanceId === binding.sourceInstanceId
+                    && endpoint.name === behavior.name).map((endpoint) => ({ binding, endpoint })));
+            if (delegates.length === 1) {
+                const { binding, endpoint } = delegates[0];
+                const source = instanceById.get(binding.sourceInstanceId);
+                const path = endpoint.interfacePath.join('.');
+                bindings.push(makeBinding(behavior, {
+                    instance: binding.formalParameter.name, kind: 'return', operation: 'method-return',
+                    memberPath: path, arguments: [], sourceEvidence: `return ${binding.formalParameter.name}.${path};`,
+                    evidence: { callable: behavior.name, referencedInstance: binding.formalParameter.name },
+                    location: behavior.location
+                }, source, endpoint, syntheticIndex));
+                syntheticIndex += 1;
+            }
+        }
+        for (const [kind, names] of [['read', behavior.reads], ['write', behavior.writes]]) {
+            for (const name of names) {
+                const child = childByName.get(name);
+                if (!child?.primitiveKind || explicit.has(`${kind}\u0000${name}`)) continue;
+                bindings.push(makeBinding(behavior, {
+                    instance: name, kind, operation: `state-${kind}`, memberPath: null,
+                    arguments: [], sourceEvidence: behavior.evidence[0] || '',
+                    evidence: { callable: behavior.name, referencedInstance: name },
+                    location: behavior.location
+                }, child, null, syntheticIndex));
+                syntheticIndex += 1;
+            }
+        }
+    }
+    return { bindings };
+}
+
+function makeBinding(behavior, access, child, endpoint, index) {
+    return {
+        id: behaviorAccessBindingId(behavior.id, index), kind: 'behavior-access',
+        behaviorId: behavior.id, ownerInstanceId: behavior.ownerInstanceId,
+        targetInstanceId: child.id, endpointId: endpoint?.id || null,
+        accessKind: endpoint ? endpointAccessKind(endpoint) : access.kind,
+        operation: access.operation, memberPath: access.memberPath,
+        arguments: [...(access.arguments || [])], resultBinding: access.resultBinding || null,
+        valueBinding: access.valueBinding || null,
+        resolutionStatus: endpoint || child.primitiveKind ? 'exact' : 'unresolved',
+        sourceEvidence: access.sourceEvidence, evidence: access.evidence,
+        location: access.location || behavior.location || null, analysisOrigin: SOURCE_ORIGIN,
+        confidence: endpoint || child.primitiveKind ? 'explicit' : 'unknown'
+    };
+}
+function endpointAccessKind(endpoint) {
+    return endpoint.direction === 'output' ? 'return' : 'invoke';
+}
+function endpointKey(ownerId, path) { return `${ownerId}\u0000${path.join('.')}`; }
+function groupBy(items, key) {
+    const result = new Map();
+    for (const item of items) result.set(key(item), [...(result.get(key(item)) || []), item]);
+    return result;
+}
+
+module.exports = { buildBehaviorBindings };

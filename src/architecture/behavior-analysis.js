@@ -1,6 +1,11 @@
 'use strict';
 
-const { normalizeWhitespace, splitStatements } = require('./source-utils');
+const {
+    findMatchingDelimiter,
+    normalizeWhitespace,
+    splitStatements,
+    splitTopLevel
+} = require('./source-utils');
 
 const PRIMITIVE_OPERATIONS = Object.freeze({
     register: Object.freeze({
@@ -104,7 +109,8 @@ function collectMemberAccesses(instance, statement, original, callable, makeLoca
     while ((match = expression.exec(statement.text)) !== null) {
         const members = [...match[1].matchAll(/[A-Za-z_$][\w$]*/g)].map((entry) => entry[0]);
         if (members.length === 0) continue;
-        const resultBinding = bindingBefore(statement.text, match.index);
+        const resultBinding = resultBindingBefore(statement.text, match.index);
+        const valueBinding = valueBindingBefore(statement.text, match.index);
         const classification = classifyMemberOperation(instance.primitiveKind, members);
         const kind = resultBinding ? 'return' : classification.kind;
         const operation = resultBinding ? 'action-value-result' : classification.operation;
@@ -117,6 +123,8 @@ function collectMemberAccesses(instance, statement, original, callable, makeLoca
             dataFlow: resultBinding ? 'return' : classification.dataFlow,
             stateEffect: classification.stateEffect,
             resultBinding,
+            valueBinding,
+            arguments: invocationArguments(statement.text, original, expression.lastIndex),
             statement,
             original,
             matchIndex: match.index,
@@ -171,10 +179,27 @@ function classifyMemberOperation(primitiveKind, members) {
     return { kind, operation, dataFlow: kind, stateEffect: kind };
 }
 
-function bindingBefore(statement, accessOffset) {
+function resultBindingBefore(statement, accessOffset) {
     const before = statement.slice(0, accessOffset);
     const match = /(?:\blet\s+|\b[A-Za-z_$][\w$#(),\s]*\s+)?([A-Za-z_$][\w$]*)\s*<-\s*$/.exec(before);
     return match ? match[1] : null;
+}
+
+function valueBindingBefore(statement, accessOffset) {
+    const before = statement.slice(0, accessOffset);
+    const match = /(?:\blet\s+|\b[A-Za-z_$][\w$]*(?:\s*#\s*\([^;]*\))?\s+)([A-Za-z_$][\w$]*)\s*=\s*$/.exec(before);
+    return match ? match[1] : null;
+}
+
+function invocationArguments(masked, original, memberEnd) {
+    let open = memberEnd;
+    while (/\s/.test(masked[open] || '')) open += 1;
+    if (masked[open] !== '(') return [];
+    const close = findMatchingDelimiter(masked, open, '(', ')');
+    if (close < 0) return [];
+    return splitTopLevel(original.slice(open + 1, close), ',')
+        .map(normalizeWhitespace)
+        .filter(Boolean);
 }
 
 function addAccess(data, accesses, seen) {
@@ -186,6 +211,7 @@ function addAccess(data, accesses, seen) {
         data.kind,
         data.operation,
         data.resultBinding || '',
+        data.valueBinding || '',
         absolute
     ].join('|');
     if (seen.has(key)) return;
@@ -203,6 +229,8 @@ function addAccess(data, accesses, seen) {
         dataFlow: data.dataFlow ?? null,
         stateEffect: data.stateEffect ?? null,
         resultBinding: data.resultBinding || null,
+        valueBinding: data.valueBinding || null,
+        arguments: data.arguments || [],
         analysisOrigin: 'Source-derived',
         confidence: data.operation === 'unclassified-access' ? 'unknown' : 'explicit',
         sourceEvidence: snippet,

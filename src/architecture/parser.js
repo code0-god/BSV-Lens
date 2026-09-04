@@ -166,8 +166,7 @@ function parseModules(text, masked, uri, lineStarts, diagnostics) {
             diagnostics.push(makeDiagnostic(uri, lineStarts, match.index, 'error', `Module ${nameToken.value} has no endmodule.`));
         }
 
-        const header = masked.slice(match.index, headerEnd + 1);
-        const returnInterface = extractModuleReturnInterface(masked, nameToken.end, headerEnd);
+        const moduleSignature = parseModuleSignature(masked, nameToken.end, headerEnd);
         const annotations = getLeadingAnnotations(text, lineStarts, match.index);
         const bsvAttributes = decorateBsvAttributes(
             getLeadingBsvAttributes(text, match.index),
@@ -178,7 +177,11 @@ function parseModules(text, masked, uri, lineStarts, diagnostics) {
         );
         modules.push({
             name: nameToken.value,
-            returnInterface,
+            returnInterface: moduleSignature.returnInterface,
+            returnInterfaceExpression: moduleSignature.returnInterfaceExpression,
+            typeParameters: moduleSignature.typeParameters,
+            constructorParameters: moduleSignature.constructorParameters,
+            provisos: moduleSignature.provisos,
             signature: truncate(text.slice(match.index, headerEnd + 1), 260),
             annotations,
             bsvAttributes,
@@ -199,30 +202,95 @@ function parseModules(text, masked, uri, lineStarts, diagnostics) {
     return modules;
 }
 
-function extractModuleReturnInterface(masked, start, end) {
+function parseModuleSignature(masked, start, end) {
+    const result = {
+        returnInterface: null,
+        returnInterfaceExpression: null,
+        typeParameters: [],
+        constructorParameters: [],
+        provisos: []
+    };
     let cursor = start;
-    while (cursor < end) {
+    while (/\s/.test(masked[cursor] || '')) cursor += 1;
+
+    if (masked[cursor] === '#') {
+        cursor += 1;
         while (/\s/.test(masked[cursor] || '')) cursor += 1;
-        if (masked[cursor] === '#') {
-            cursor += 1;
-            while (/\s/.test(masked[cursor] || '')) cursor += 1;
-            if (masked[cursor] === '(') {
-                const closing = findMatchingDelimiter(masked, cursor, '(', ')');
-                if (closing < 0) return null;
-                cursor = closing + 1;
-                continue;
-            }
-        }
         if (masked[cursor] === '(') {
             const closing = findMatchingDelimiter(masked, cursor, '(', ')');
-            if (closing < 0 || closing > end) return null;
-            const content = masked.slice(cursor + 1, closing);
-            const match = /^\s*([A-Za-z_$][\w$]*)/.exec(content);
-            return match ? match[1] : null;
+            if (closing < 0 || closing > end) return result;
+            for (const rawParameter of splitTopLevel(masked.slice(cursor + 1, closing), ',')) {
+                const declaration = normalizeWhitespace(rawParameter);
+                if (!declaration) continue;
+                const typeFormal = /^(numeric\s+type|type)\s+([A-Za-z_$][\w$]*)$/.exec(declaration);
+                if (typeFormal) {
+                    result.typeParameters.push({
+                        name: typeFormal[2],
+                        kind: /^numeric\b/.test(typeFormal[1]) ? 'numeric-type' : 'type',
+                        declaration
+                    });
+                    continue;
+                }
+                const nameToken = identifierBefore(declaration, declaration.length);
+                if (nameToken) {
+                    result.constructorParameters.push({
+                        name: nameToken.value,
+                        type: normalizeWhitespace(declaration.slice(0, nameToken.start)) || 'inferred',
+                        declaration
+                    });
+                }
+            }
+            cursor = closing + 1;
         }
-        cursor += 1;
     }
-    return null;
+
+    while (/\s/.test(masked[cursor] || '')) cursor += 1;
+    if (masked[cursor] === '(') {
+        const closing = findMatchingDelimiter(masked, cursor, '(', ')');
+        if (closing >= 0 && closing <= end) {
+            const expression = normalizeWhitespace(masked.slice(cursor + 1, closing));
+            const interfaceName = /^([A-Za-z_$][\w$]*)/.exec(expression);
+            result.returnInterface = interfaceName ? interfaceName[1] : null;
+            result.returnInterfaceExpression = expression || null;
+            cursor = closing + 1;
+        }
+    }
+
+    const remainder = masked.slice(cursor, end);
+    const provisosOffset = findTopLevelKeyword(remainder, 'provisos');
+    if (provisosOffset >= 0) {
+        let open = provisosOffset + 'provisos'.length;
+        while (/\s/.test(remainder[open] || '')) open += 1;
+        if (remainder[open] === '(') {
+            const close = findMatchingDelimiter(remainder, open, '(', ')');
+            if (close >= 0) {
+                result.provisos = splitTopLevel(remainder.slice(open + 1, close), ',')
+                    .map(normalizeWhitespace)
+                    .filter(Boolean);
+            }
+        }
+    }
+    return result;
+}
+
+function parseTypeParameters(masked, start, end) {
+    let cursor = start;
+    while (/\s/.test(masked[cursor] || '')) cursor += 1;
+    if (masked[cursor] !== '#') return [];
+    cursor += 1;
+    while (/\s/.test(masked[cursor] || '')) cursor += 1;
+    if (masked[cursor] !== '(') return [];
+    const closing = findMatchingDelimiter(masked, cursor, '(', ')');
+    if (closing < 0 || closing > end) return [];
+    return splitTopLevel(masked.slice(cursor + 1, closing), ',').flatMap((rawParameter) => {
+        const declaration = normalizeWhitespace(rawParameter);
+        const match = /^(numeric\s+type|type)\s+([A-Za-z_$][\w$]*)$/.exec(declaration);
+        return match ? [{
+            name: match[2],
+            kind: /^numeric\b/.test(match[1]) ? 'numeric-type' : 'type',
+            declaration
+        }] : [];
+    });
 }
 
 function parseInterfaces(text, masked, uri, lineStarts, moduleSpans, diagnostics) {
@@ -246,6 +314,7 @@ function parseInterfaces(text, masked, uri, lineStarts, moduleSpans, diagnostics
         const body = masked.slice(bodyStart, endKeyword);
         interfaces.push({
             name: nameToken.value,
+            typeParameters: parseTypeParameters(masked, nameToken.end, headerEnd),
             annotations: getLeadingAnnotations(text, lineStarts, match.index),
             signature: truncate(text.slice(match.index, headerEnd + 1), 260),
             methods: parseInterfaceMethodDeclarations(body, bodyStart, uri, lineStarts, nameToken.value),
@@ -685,9 +754,27 @@ function populateModuleMembers(module, text, masked, uri, lineStarts, allFunctio
 
     module.instances = parseInstances(bodyMasked, bodyText, bodyStart, uri, lineStarts);
     module.rules = parseRules(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances, module.name);
-    module.methods = parseMethods(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances, module.name);
-    module.localFunctions = allFunctions.filter((fn) => fn.parentModuleName === module.name).map((fn) => fn.name);
     module.providedInterfaces = parseProvidedInterfaces(bodyMasked, bodyStart, uri, lineStarts);
+    module.methods = parseMethods(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances, module.name);
+    annotateProvidedInterfaceMethods(module.methods, module.providedInterfaces);
+    module.localFunctions = allFunctions.filter((fn) => fn.parentModuleName === module.name).map((fn) => fn.name);
+}
+
+function annotateProvidedInterfaceMethods(methods, providedInterfaces) {
+    const blocks = providedInterfaces.filter((item) =>
+        item.form === 'block' && item.complete && item.range
+    );
+    for (const method of methods) {
+        const owner = blocks
+            .filter((item) =>
+                item.range.start <= method.range.start
+                && item.range.end >= method.range.end
+            )
+            .sort((left, right) =>
+                left.range.end - left.range.start - (right.range.end - right.range.start)
+            )[0];
+        method.interfacePath = owner ? [...owner.path] : [];
+    }
 }
 
 function parseInstances(bodyMasked, bodyText, baseOffset, uri, lineStarts) {
@@ -983,22 +1070,17 @@ function decorateBsvAttributes(attributes, uri, lineStarts, baseOffset = 0, owne
 
 function parseProvidedInterfaces(bodyMasked, baseOffset, uri, lineStarts) {
     const result = [];
+    const stack = [];
+    const context = { baseOffset, uri, lineStarts };
     const expression = /\b(?:interface|endinterface)\b/g;
-    let depth = 0;
-    let outer = null;
     let match;
     while ((match = expression.exec(bodyMasked)) !== null) {
         if (match[0] === 'endinterface') {
-            if (depth === 0) continue;
-            depth -= 1;
-            if (depth === 0 && outer) {
-                result.push(makeProvidedInterface(outer, expression.lastIndex, {
-                    baseOffset,
-                    uri,
-                    lineStarts
-                }, true));
-                outer = null;
-            }
+            const block = stack.pop();
+            if (!block) continue;
+            const provided = makeProvidedInterface(block, expression.lastIndex, context, true);
+            if (stack.length === 0) result.push(provided);
+            else stack.at(-1).members.push(provided);
             continue;
         }
 
@@ -1008,31 +1090,33 @@ function parseProvidedInterfaces(bodyMasked, baseOffset, uri, lineStarts) {
         const declaration = /^interface\s+(?:([A-Za-z_$][\w$]*(?:\s*#\s*\([^;]+?\))?)\s+)?([A-Za-z_$][\w$]*)\s*(?:=|;)/.exec(header);
         expression.lastIndex = statementEnd + 1;
         if (!declaration) continue;
+        const parentPath = stack.map((item) => item.name);
+        const equals = findTopLevelCharacter(header, '=');
         const parsed = {
             type: normalizeWhitespace(declaration[1] || 'inferred'),
             name: declaration[2],
             start: match.index,
-            headerEnd: statementEnd + 1
+            headerEnd: statementEnd + 1,
+            parentPath,
+            path: [...parentPath, declaration[2]],
+            form: equals >= 0 ? 'alias' : 'block',
+            targetExpression: equals >= 0
+                ? normalizeWhitespace(header.slice(equals + 1, -1))
+                : null,
+            members: []
         };
-        if (findTopLevelCharacter(header, '=') >= 0) {
-            if (depth === 0) {
-                result.push(makeProvidedInterface(parsed, statementEnd + 1, {
-                    baseOffset,
-                    uri,
-                    lineStarts
-                }, true));
-            }
-            continue;
+        if (equals >= 0) {
+            const provided = makeProvidedInterface(parsed, statementEnd + 1, context, true);
+            if (stack.length === 0) result.push(provided);
+            else stack.at(-1).members.push(provided);
+        } else {
+            stack.push(parsed);
         }
-        if (depth === 0) outer = parsed;
-        depth += 1;
     }
-    if (outer) {
-        result.push(makeProvidedInterface(outer, outer.headerEnd, {
-            baseOffset,
-            uri,
-            lineStarts
-        }, false));
+    if (stack.length > 0) {
+        const outer = stack[0];
+        outer.members = [];
+        result.push(makeProvidedInterface(outer, outer.headerEnd, context, false));
     }
     return result;
 }
@@ -1041,6 +1125,11 @@ function makeProvidedInterface(declaration, end, context, complete) {
     return {
         type: declaration.type,
         name: declaration.name,
+        path: declaration.path,
+        parentPath: declaration.parentPath,
+        form: declaration.form,
+        targetExpression: declaration.targetExpression,
+        members: complete ? declaration.members : [],
         complete,
         location: makeLocation(
             context.uri,
