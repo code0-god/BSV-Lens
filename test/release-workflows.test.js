@@ -32,10 +32,12 @@ test('Marketplace publish uses minimal OIDC permissions and duplicate rejection'
     assert.match(publish, /contents: read/);
     assert.match(publish, /id-token: write/);
     assert.match(publish, /environment: marketplace/);
-    assert.match(publish, /azure\/login@v2/);
-    for (const variable of ['AZURE_CLIENT_ID', 'AZURE_TENANT_ID', 'AZURE_SUBSCRIPTION_ID']) {
+    assert.match(publish, /azure\/login@v3/);
+    assert.match(publish, /allow-no-subscriptions: true/);
+    for (const variable of ['AZURE_CLIENT_ID', 'AZURE_TENANT_ID']) {
         assert.ok(publish.includes(`vars.${variable}`));
     }
+    assert.doesNotMatch(publish, /subscription-id|AZURE_SUBSCRIPTION_ID/);
     assert.match(publish, /npm run check:release-tag/);
     assert.match(publish, /vsce publish --azure-credential --packagePath/);
     assert.doesNotMatch(publish, /VSCE_PAT|--skip-duplicate|contents: write/);

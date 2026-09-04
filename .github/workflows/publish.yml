@@ -25,11 +25,11 @@ jobs:
         with:
           node-version: 22
       - run: npm ci --ignore-scripts
-      - uses: azure/login@v2
+      - uses: azure/login@v3
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
       - uses: actions/download-artifact@v4
         with:
           name: bsv-lens-${{ github.sha }}

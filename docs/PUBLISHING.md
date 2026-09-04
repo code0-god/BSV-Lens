@@ -16,15 +16,17 @@ workflow. No Personal Access Token is stored.
    role. Use its Azure DevOps profile resource ID, not its client ID.
 5. Create a protected GitHub environment named `marketplace`.
 
-The GitHub environment defines these non-secret variables:
+The GitHub environment requires these non-secret variables:
 
 - `AZURE_CLIENT_ID`: managed identity client ID
 - `AZURE_TENANT_ID`: Entra tenant ID
-- `AZURE_SUBSCRIPTION_ID`: Azure subscription ID
 
-The publish job grants only `contents: read` and `id-token: write`. The OIDC
-token authenticates `azure/login@v2`; `vsce publish --azure-credential` then
-uses the federated Azure identity. Do not add `VSCE_PAT`.
+An existing `AZURE_SUBSCRIPTION_ID` variable may remain configured, but these
+workflows do not use it. The publish job grants only `contents: read` and
+`id-token: write`. The OIDC token authenticates `azure/login@v3` with
+`allow-no-subscriptions: true`; `vsce publish --azure-credential` then uses the
+federated Azure identity. Marketplace publishing requires no Azure subscription
+Reader or Contributor RBAC. Do not add `VSCE_PAT`.
 
 ## First-time publisher authorization
 
