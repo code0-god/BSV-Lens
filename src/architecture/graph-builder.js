@@ -2,6 +2,7 @@
 
 const { applyNodeConfiguration, groupForPath } = require('./config');
 const { analyzeTypeWidth } = require('./type-analysis');
+const { buildInterfaceContracts } = require('./interface-contracts');
 const { findMatchingDelimiter, normalizeWhitespace, splitTopLevel } = require('./source-utils');
 const { normalizeScheduleAttributes } = require('./scheduling');
 const { resolveArchitectureSymbol } = require('./symbol-resolver');
@@ -164,7 +165,11 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
                     stateCount: item.instances.filter((instance) => instance.primitiveKind).length,
                     childInstanceCount: item.instances.filter((instance) => !instance.primitiveKind).length,
                     localFunctions: item.localFunctions,
-                    providedInterfaces: item.providedInterfaces,
+                    providedInterfaces: item.providedInterfaces.map((provided) => ({
+                        type: provided.type,
+                        name: provided.name,
+                        location: provided.location
+                    })),
                     methodPorts: ports
                 }
             });
@@ -425,6 +430,7 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         }
     }
 
+    const interfaceContracts = buildInterfaceContracts(parsedFiles, nodes, diagnostics);
     for (const virtualNode of config.virtualNodes) addNode(virtualNode);
     for (const manualEdge of config.edges) {
         const source = resolveNodeReference(manualEdge.from, nodes, nodeById);
@@ -487,6 +493,7 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         groups,
         roots,
         scheduling,
+        interfaceContracts,
         diagnostics,
         stats,
         limits

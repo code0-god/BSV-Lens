@@ -4,10 +4,26 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const vscode = require('vscode');
 
+const MATMUL_SCHEDULER_METHODS = [
+    'startReady',
+    'start',
+    'publishReady',
+    'publishStripe',
+    'workValid',
+    'currentWork',
+    'completeWork',
+    'lookaheadValid',
+    'lookaheadStripe',
+    'completionValid',
+    'completion',
+    'consumeCompletion'
+];
+
 async function run() {
     const extensionRoot = path.resolve(__dirname, '..', '..');
     const workspaceRoot = path.resolve(process.env.AQUA_WORKSPACE);
     const activePath = path.join(workspaceRoot, 'hw', 'bsv', 'src', 'control', 'AquaLoopMatmul.bsv');
+    const schedulerPath = path.join(workspaceRoot, 'hw', 'bsv', 'src', 'control', 'MatmulScheduler.bsv');
     const activeUri = vscode.Uri.file(activePath);
     const extension = vscode.extensions.getExtension('code0-god.bsv-lens');
     assert.ok(extension, 'development extension is discoverable');
@@ -39,6 +55,56 @@ async function run() {
         'mkLoadController',
         'mkStoreController'
     ]) assert.ok(panel.model.nodes.some((node) => node.name === name), `${name} is modeled`);
+
+    const matmulScheduler = panel.model.nodes.find((node) =>
+        node.kind === 'module' && node.name === 'mkMatmulScheduler'
+    );
+    const matmulSchedulerInterface = panel.model.nodes.find((node) =>
+        node.kind === 'interface' && node.name === 'MatmulSchedulerIfc'
+    );
+    assert.ok(matmulScheduler, 'mkMatmulScheduler module is modeled');
+    assert.ok(matmulSchedulerInterface, 'MatmulSchedulerIfc interface is modeled');
+    const implementationMethods = panel.model.nodes.filter((node) =>
+        node.kind === 'method' && node.parentId === matmulScheduler.id
+    );
+    assert.deepEqual(
+        matmulSchedulerInterface.ports.map((method) => method.name),
+        MATMUL_SCHEDULER_METHODS
+    );
+    assert.deepEqual(
+        implementationMethods.map((method) => method.name),
+        MATMUL_SCHEDULER_METHODS
+    );
+    const workValid = implementationMethods.find((method) => method.name === 'workValid');
+    assert.ok(workValid, 'workValid method is modeled');
+    await panel.handleMessage({ type: 'openSource', nodeId: workValid.id });
+    assert.equal(vscode.window.activeTextEditor.document.uri.fsPath, schedulerPath);
+    assert.equal(vscode.window.activeTextEditor.selection.active.line, workValid.location.line);
+    const matmulContract = panel.model.interfaceContracts.find((contract) =>
+        contract.moduleId === matmulScheduler.id
+    );
+    assert.ok(matmulContract, 'MatmulScheduler interface contract is modeled');
+    assert.equal(matmulContract.status, 'exact');
+    assert.equal(matmulContract.diagnostics.length, 0);
+    assert.equal(
+        panel.model.nodes.filter((node) => node.kind === 'method' && node.name === 'isValid').length,
+        0
+    );
+    assert.deepEqual(
+        panel.model.nodes
+            .filter((node) => node.parentId === matmulScheduler.id && node.primitive)
+            .map((node) => [node.name, node.kind])
+            .sort(([left], [right]) => left.localeCompare(right)),
+        [
+            ['activeDescriptor', 'register'],
+            ['activeStripe', 'register'],
+            ['completions', 'fifo'],
+            ['nextStripeId', 'register'],
+            ['publishedUntil', 'register'],
+            ['stripeLookahead', 'register'],
+            ['workPosition', 'register']
+        ]
+    );
 
     const loop = panel.model.nodes.find((node) => node.name === 'mkAquaLoopMatmul');
     assert.deepEqual(
@@ -92,6 +158,10 @@ async function run() {
     const exported = JSON.parse(new TextDecoder().decode(await vscode.workspace.fs.readFile(jsonUri)));
     assert.deepEqual(exported.stats, panel.model.stats);
     assert.equal(exported.nodes.find((node) => node.id === loop.id).name, 'mkAquaLoopMatmul');
+    assert.equal(
+        exported.interfaceContracts.find((contract) => contract.moduleId === matmulScheduler.id).status,
+        'exact'
+    );
     const svg = '<svg xmlns="http://www.w3.org/2000/svg"><text>AQuA</text></svg>';
     await panel.handleMessage({ type: 'exportSvg', svg, suggestedName: 'aqua-diagram.svg' });
     assert.equal(new TextDecoder().decode(await vscode.workspace.fs.readFile(svgUri)), svg);

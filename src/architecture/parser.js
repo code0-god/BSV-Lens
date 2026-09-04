@@ -352,10 +352,12 @@ function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics)
 }
 
 function parseCallableSignature(header) {
-    const guardOffset = findTopLevelKeyword(header, 'if');
-    const declaration = guardOffset >= 0 ? header.slice(0, guardOffset) : header;
+    const bodyOffset = findTopLevelCharacter(header, '=');
+    const signature = bodyOffset >= 0 ? header.slice(0, bodyOffset) : header;
+    const guardOffset = findTopLevelKeyword(signature, 'if');
+    const declaration = guardOffset >= 0 ? signature.slice(0, guardOffset) : signature;
     const guard = guardOffset >= 0
-        ? stripOuterParentheses(normalizeWhitespace(header.slice(guardOffset + 2)))
+        ? stripOuterParentheses(normalizeWhitespace(signature.slice(guardOffset + 2)))
         : '';
     const open = findCallableParameterOpen(declaration);
     if (open >= 0) {
@@ -372,13 +374,11 @@ function parseCallableSignature(header) {
         };
     }
 
-    const boundary = findTopLevelCharacter(declaration, '=');
-    const before = boundary >= 0 ? declaration.slice(0, boundary) : declaration;
-    const nameToken = identifierBefore(before, before.length);
+    const nameToken = identifierBefore(declaration, declaration.length);
     return {
         name: nameToken ? nameToken.value : null,
         nameOffset: nameToken ? nameToken.start : 0,
-        returnType: nameToken ? normalizeWhitespace(before.slice(0, nameToken.start)) : '',
+        returnType: nameToken ? normalizeWhitespace(declaration.slice(0, nameToken.start)) : '',
         parameters: [],
         guard
     };
@@ -983,16 +983,82 @@ function decorateBsvAttributes(attributes, uri, lineStarts, baseOffset = 0, owne
 
 function parseProvidedInterfaces(bodyMasked, baseOffset, uri, lineStarts) {
     const result = [];
-    const expression = /\binterface\s+(?:([A-Za-z_$][\w$]*(?:\s*#\s*\([^;]+?\))?)\s+)?([A-Za-z_$][\w$]*)\s*(?:=|;)/g;
+    const expression = /\b(?:interface|endinterface)\b/g;
+    let depth = 0;
+    let outer = null;
     let match;
     while ((match = expression.exec(bodyMasked)) !== null) {
-        result.push({
-            type: normalizeWhitespace(match[1] || 'inferred'),
-            name: match[2],
-            location: makeLocation(uri, lineStarts, baseOffset + match.index, baseOffset + expression.lastIndex)
-        });
+        if (match[0] === 'endinterface') {
+            if (depth === 0) continue;
+            depth -= 1;
+            if (depth === 0 && outer) {
+                result.push(makeProvidedInterface(outer, expression.lastIndex, {
+                    baseOffset,
+                    uri,
+                    lineStarts
+                }, true));
+                outer = null;
+            }
+            continue;
+        }
+
+        const statementEnd = findStatementEnd(bodyMasked, expression.lastIndex);
+        if (statementEnd < 0) break;
+        const header = bodyMasked.slice(match.index, statementEnd + 1);
+        const declaration = /^interface\s+(?:([A-Za-z_$][\w$]*(?:\s*#\s*\([^;]+?\))?)\s+)?([A-Za-z_$][\w$]*)\s*(?:=|;)/.exec(header);
+        expression.lastIndex = statementEnd + 1;
+        if (!declaration) continue;
+        const parsed = {
+            type: normalizeWhitespace(declaration[1] || 'inferred'),
+            name: declaration[2],
+            start: match.index,
+            headerEnd: statementEnd + 1
+        };
+        if (findTopLevelCharacter(header, '=') >= 0) {
+            if (depth === 0) {
+                result.push(makeProvidedInterface(parsed, statementEnd + 1, {
+                    baseOffset,
+                    uri,
+                    lineStarts
+                }, true));
+            }
+            continue;
+        }
+        if (depth === 0) outer = parsed;
+        depth += 1;
+    }
+    if (outer) {
+        result.push(makeProvidedInterface(outer, outer.headerEnd, {
+            baseOffset,
+            uri,
+            lineStarts
+        }, false));
     }
     return result;
+}
+
+function makeProvidedInterface(declaration, end, context, complete) {
+    return {
+        type: declaration.type,
+        name: declaration.name,
+        complete,
+        location: makeLocation(
+            context.uri,
+            context.lineStarts,
+            context.baseOffset + declaration.start,
+            context.baseOffset + declaration.headerEnd
+        ),
+        sourceRange: makeLocation(
+            context.uri,
+            context.lineStarts,
+            context.baseOffset + declaration.start,
+            context.baseOffset + end
+        ),
+        range: {
+            start: context.baseOffset + declaration.start,
+            end: context.baseOffset + end
+        }
+    };
 }
 
 function stripOuterParentheses(value) {
