@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.1 — 2026-09-04
+
+- Replace custom VSIX manifest generation with official `@vscode/vsce` packaging.
+- Fix Visual Studio Marketplace PackageManifest compatibility.
+- No parser, Architecture IR, Webview UI, or layout semantics changed.
+
 ## 0.3.0 — 2026-09-02
 
 - Split source scope, abstraction level, analysis mode, and hop scope into independent controls.

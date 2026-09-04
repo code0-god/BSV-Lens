@@ -8,7 +8,7 @@ const test = require('node:test');
 const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
 
 test('BSV Lens identity preserves command compatibility', () => {
-    assert.equal(manifest.version, '0.3.0');
+    assert.equal(manifest.version, '0.3.1');
     assert.equal(manifest.name, 'bsv-lens');
     assert.equal(manifest.displayName, 'BSV Lens');
     assert.equal(
