@@ -28,20 +28,33 @@ workflows do not use it. The publish job grants only `contents: read` and
 federated Azure identity. Marketplace publishing requires no Azure subscription
 Reader or Contributor RBAC. Do not add `VSCE_PAT`.
 
-## First-time publisher authorization
+## Marketplace publisher authorization
 
-The temporary `Resolve Marketplace Identity` workflow is a one-time diagnostic
-helper for Marketplace publisher membership:
+Publisher `code0-god` currently grants Contributor access to managed identity
+`bsv-lens-marketplace`. The one-time identity resolver workflow was removed
+after this authorization completed.
 
-1. Run GitHub Actions workflow `Resolve Marketplace Identity`.
-2. Copy `Marketplace Azure DevOps Profile ID` from its log.
-3. Open Visual Studio Marketplace publisher `code0-god`.
-4. Open **Members**.
-5. Add the returned Azure DevOps Profile ID.
-6. Grant **Contributor**.
-7. After successful authorization, remove
-   `.github/workflows/resolve-marketplace-identity.yml`.
-8. Only then create tag `v0.3.0`.
+For future reconstruction:
+
+1. Configure the managed identity, GitHub OIDC federated credential, protected
+   `marketplace` environment, and required variables described above.
+2. Add a temporary `workflow_dispatch` helper that logs in with
+   `azure/login@v3`, `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, and
+   `allow-no-subscriptions: true`.
+3. After login, resolve the Azure DevOps Profile ID:
+
+   ```bash
+   az rest \
+     --url https://app.vssps.visualstudio.com/_apis/profile/profiles/me \
+     --resource 499b84ac-1321-427f-aa17-267ca6975798 \
+     --query id \
+     -o tsv
+   ```
+
+4. Add the returned Azure DevOps Profile ID to publisher `code0-god` under
+   **Members**.
+5. Grant **Contributor**.
+6. Remove the temporary helper after authorization succeeds.
 
 Marketplace **Members** requires the **Azure DevOps Profile ID**. Do not enter
 the Azure Client ID, Principal/Object ID, Subscription ID, or Tenant ID.
