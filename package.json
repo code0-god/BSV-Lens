@@ -279,7 +279,8 @@
   "devDependencies": {
     "@playwright/test": "1.62.1",
     "@vscode/test-electron": "3.1.0",
-    "@vscode/vsce": "3.9.2"
+    "@vscode/vsce": "3.9.2",
+    "xml2js": "0.5.0"
   },
   "files": [
     "src/**",

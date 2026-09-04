@@ -5,6 +5,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const zlib = require('node:zlib');
+const { Parser } = require('xml2js');
 const { crc32 } = require('./zip');
 
 const root = path.resolve(__dirname, '..');
@@ -30,20 +31,21 @@ for (const entry of [
     'extension/media/webview-layout.js',
     'extension/media/webview.js',
     'extension/media/webview.css',
+    'extension/media/icon.png',
     'extension.vsixmanifest',
     '[Content_Types].xml'
 ]) assert.ok(vsix.has(entry), `VSIX missing ${entry}`);
 
 for (const entry of vsix.keys()) {
-    assert.equal(
-        /^(?:extension\/(?:test|examples|docs|scripts|dist|\.omo|node_modules)\/)/.test(entry),
-        false,
-        `Development-only path included in VSIX: ${entry}`
+    assert.match(
+        entry,
+        /^(?:\[Content_Types\]\.xml|extension\.vsixmanifest|extension\/(?:package\.json|(?:readme|changelog)\.md|LICENSE(?:\.txt)?|src\/.+|media\/.+))$/i,
+        `Unexpected path included in VSIX: ${entry}`
     );
 }
 
 const embedded = JSON.parse(vsix.get('extension/package.json').toString('utf8'));
-assert.equal(embedded.version, '0.3.0');
+assert.equal(embedded.version, manifest.version);
 assert.equal(`${embedded.publisher}.${embedded.name}`, 'code0-god.bsv-lens');
 for (const key of [
     'defaultSourceScope',
@@ -59,10 +61,63 @@ for (const command of manifest.contributes.commands.map((item) => item.command))
     assert.ok(embedded.contributes.commands.some((item) => item.command === command));
 }
 
-const vsixManifest = vsix.get('extension.vsixmanifest').toString('utf8');
-assert.match(vsixManifest, /Id="bsv-lens"/);
-assert.match(vsixManifest, /Version="0\.3\.0"/);
-assert.match(vsixManifest, /Publisher="code0-god"/);
+const packageManifest = parseXml(vsix.get('extension.vsixmanifest'), 'VSIX manifest').PackageManifest;
+assert.ok(packageManifest, 'VSIX manifest lacks PackageManifest root');
+assert.equal(packageManifest.$.Version, '2.0.0');
+assert.equal(packageManifest.$.xmlns, 'http://schemas.microsoft.com/developer/vsx-schema/2011');
+const metadata = one(packageManifest.Metadata, 'VSIX Metadata');
+const identity = one(metadata.Identity, 'VSIX Identity').$;
+assert.equal(identity.Id, manifest.name);
+assert.equal(identity.Publisher, manifest.publisher);
+assert.equal(identity.Version, manifest.version);
+
+const contentTypes = parseXml(vsix.get('[Content_Types].xml'), 'VSIX content types').Types;
+assert.ok(contentTypes, 'VSIX content types lacks Types root');
+assert.equal(contentTypes.$.xmlns, 'http://schemas.openxmlformats.org/package/2006/content-types');
+const contentTypeByExtension = new Map();
+for (const item of contentTypes.Default || []) {
+    const extension = item.$.Extension;
+    const contentType = item.$.ContentType;
+    assert.ok(contentType, `VSIX content type is empty: ${extension}`);
+    assert.equal(contentTypeByExtension.has(extension), false, `Duplicate VSIX content type: ${extension}`);
+    contentTypeByExtension.set(extension, contentType);
+}
+for (const [extension, contentType] of [
+    ['.vsixmanifest', 'text/xml'],
+    ['.json', 'application/json'],
+    ['.js', 'application/javascript'],
+    ['.css', 'text/css'],
+    ['.md', 'text/markdown'],
+    ['.png', 'image/png'],
+    ['.txt', 'text/plain']
+]) assert.equal(contentTypeByExtension.get(extension), contentType, `Invalid VSIX content type: ${extension}`);
+for (const extension of contentTypeByExtension.keys()) {
+    assert.match(extension, /^\./, `VSIX content type extension lacks leading dot: ${extension}`);
+}
+for (const entry of vsix.keys()) {
+    if (entry === '[Content_Types].xml') continue;
+    const extension = path.posix.extname(entry);
+    assert.ok(contentTypeByExtension.has(extension), `VSIX content type missing for ${entry}`);
+}
+
+const assetByType = new Map();
+for (const asset of one(packageManifest.Assets, 'VSIX Assets').Asset) {
+    assert.equal(assetByType.has(asset.$.Type), false, `Duplicate VSIX asset type: ${asset.$.Type}`);
+    assetByType.set(asset.$.Type, asset.$);
+}
+for (const [type, assetPath] of [
+    ['Microsoft.VisualStudio.Code.Manifest', 'extension/package.json'],
+    ['Microsoft.VisualStudio.Services.Content.Details', 'extension/readme.md'],
+    ['Microsoft.VisualStudio.Services.Content.Changelog', 'extension/changelog.md'],
+    ['Microsoft.VisualStudio.Services.Content.License', 'extension/LICENSE.txt'],
+    ['Microsoft.VisualStudio.Services.Icons.Default', 'extension/media/icon.png']
+]) {
+    const asset = assetByType.get(type);
+    assert.ok(asset, `VSIX missing ${type} asset`);
+    assert.equal(asset.Path, assetPath);
+    assert.equal(asset.Addressable, 'true');
+    assert.ok(vsix.has(assetPath), `VSIX asset path missing: ${assetPath}`);
+}
 
 const prefix = `${manifest.name}/`;
 for (const entry of [
@@ -160,6 +215,25 @@ function findEndOfCentralDirectory(archive) {
         if (archive.readUInt32LE(offset) === 0x06054b50) return offset;
     }
     throw new Error('ZIP end-of-central-directory record not found');
+}
+
+function parseXml(buffer, label) {
+    assert.ok(buffer.length <= 1024 * 1024, `${label} is unexpectedly large`);
+    let parsed;
+    let parseError;
+    new Parser({ strict: true, explicitRoot: true, explicitArray: true })
+        .parseString(buffer.toString('utf8'), (error, value) => {
+            parseError = error;
+            parsed = value;
+        });
+    assert.ifError(parseError);
+    assert.ok(parsed, `${label} did not parse`);
+    return parsed;
+}
+
+function one(values, label) {
+    assert.equal(values?.length, 1, `${label} must occur exactly once`);
+    return values[0];
 }
 
 module.exports = { readZip };
