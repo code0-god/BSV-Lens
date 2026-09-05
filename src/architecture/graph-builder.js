@@ -510,6 +510,7 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         endpoints: semanticModel.endpoints,
         bindings: semanticModel.bindings,
         protocolChannels: semanticModel.protocolChannels,
+        semanticBoundaries: semanticModel.semanticBoundaries,
         semanticFlows: semanticModel.semanticFlows,
         stateBehaviors: semanticModel.stateBehaviors,
         scheduleRelations: semanticModel.scheduleRelations,

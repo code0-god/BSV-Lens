@@ -10,6 +10,14 @@ function projectSemanticModel(model) {
     const instances = new Map(model.instances.map((item) => [item.id, item]));
     const endpoints = new Map(model.endpoints.map((item) => [item.id, item]));
     const channels = new Map(model.protocolChannels.map((item) => [item.id, item]));
+    const roots = new Map(model.roots.map((item) => [item.instanceId, item]));
+    const boundaries = new Map((model.semanticBoundaries || []).map((item) => [
+        item.rootInstanceId, item
+    ]));
+    const channelExposure = new Map();
+    for (const boundary of boundaries.values()) for (const exposure of boundary.channels) {
+        channelExposure.set(exposure.channelId, { boundary, exposure });
+    }
     const channelByEndpoint = new Map();
     for (const channel of channels.values()) {
         for (const endpointId of Object.values(channel.methods || {}))
@@ -29,9 +37,22 @@ function projectSemanticModel(model) {
     }
 
     const nodes = [];
-    for (const instance of instances.values()) nodes.push(instanceNode(instance, definitions));
+    for (const instance of instances.values()) nodes.push(instanceNode(
+        instance,
+        definitions,
+        roots.get(instance.id),
+        boundaries.get(instance.id)
+    ));
     for (const behavior of model.stateBehaviors) nodes.push(behaviorNode(behavior, instances, definitions));
-    for (const channel of channels.values()) nodes.push(channelNode(channel, instances));
+    for (const channel of channels.values()) nodes.push(channelNode(
+        channel,
+        instances,
+        channelExposure.get(channel.id)
+    ));
+    for (const boundary of boundaries.values()) {
+        nodes.push(boundaryNode(boundary, instances, 'inbound'));
+        nodes.push(boundaryNode(boundary, instances, 'outbound'));
+    }
     for (const id of neededEndpoints) {
         const endpoint = endpoints.get(id);
         if (endpoint) nodes.push(endpointNode(endpoint, instances, channelByEndpoint));
@@ -69,6 +90,37 @@ function projectSemanticModel(model) {
         if (sourceOwner && targetOwner && sourceOwner !== targetOwner
             && nodeIds.has(sourceOwner) && nodeIds.has(targetOwner)) {
             addFlowEdge(edges, sourceOwner, targetOwner, flow, 'payload', 'aggregate');
+        }
+    }
+    for (const boundary of boundaries.values()) {
+        for (const exposure of boundary.channels) {
+            if (!nodeIds.has(exposure.channelId)) continue;
+            for (const direction of boundaryDirections(exposure)) {
+                const inbound = direction.direction === 'inbound';
+                const boundaryNodeId = boundaryPresentationId(
+                    boundary.rootInstanceId,
+                    direction.direction
+                );
+                if (!nodeIds.has(boundaryNodeId)) continue;
+                addEdge(
+                    edges,
+                    inbound ? boundaryNodeId : exposure.channelId,
+                    inbound ? exposure.channelId : boundaryNodeId,
+                    inbound ? 'boundary-input' : 'boundary-output',
+                    direction.payloadTypes.join(' | '),
+                    exposure.location,
+                    {
+                        mode: 'data-flow', boundary: true, external: true, inferred: false,
+                        semanticFlowId: null, semanticBoundaryId: boundary.id,
+                        boundaryNodeId, rootInstanceId: boundary.rootInstanceId,
+                        channelId: exposure.channelId, direction: direction.direction,
+                        payloadTypes: direction.payloadTypes,
+                        analysisOrigin: boundary.analysisOrigin, confidence: boundary.confidence,
+                        evidence: `Unbound ${direction.direction} root channel ${exposure.name}`,
+                        idSuffix: `${boundary.id}:${exposure.channelId}:${direction.direction}`
+                    }
+                );
+            }
         }
     }
     for (const binding of model.bindings) {
@@ -129,7 +181,7 @@ function projectSemanticModel(model) {
     };
 }
 
-function instanceNode(instance, definitions) {
+function instanceNode(instance, definitions, root, boundary) {
     const definition = definitions.get(instance.targetDefinitionId);
     const primitive = Boolean(instance.primitiveKind);
     const source = {
@@ -150,6 +202,14 @@ function instanceNode(instance, definitions) {
             targetName: definition?.name || instance.constructor || null,
             path: instance.path,
             root: instance.root === true,
+            rootReason: root?.reason || instance.rootReason || null,
+            rootStatus: root?.rootStatus || instance.rootStatus || null,
+            externalBoundaryIds: boundary ? {
+                inbound: boundaryPresentationId(instance.id, 'inbound'),
+                outbound: boundaryPresentationId(instance.id, 'outbound')
+            } : null,
+            externalChannelCount: boundary?.channels.length || 0,
+            unmatchedPublicEndpointCount: boundary?.unmatchedEndpoints.length || 0,
             resolution: instance.targetResolutionStatus || (definition ? 'exact' : 'unresolved'),
             specialization: instance.specialization || null,
             multiplicity: instance.multiplicity || null,
@@ -188,12 +248,72 @@ function behaviorNode(behavior, instances, definitions) {
     });
 }
 
-function channelNode(channel, instances) {
+function channelNode(channel, instances, boundaryExposure) {
     const owner = instances.get(channel.ownerInstanceId);
-    return baseNode({ ...channel, location: owner?.location, relativePath: owner?.relativePath }, {
+    const boundary = boundaryExposure?.boundary;
+    const exposure = boundaryExposure?.exposure;
+    return baseNode({ ...channel, relativePath: owner?.relativePath }, {
         parentId: channel.ownerInstanceId,
         memberGroup: 'protocol-channels',
-        details: { direction: channel.direction, payloadType: channel.payloadType, methods: channel.methods }
+        externalChannel: Boolean(boundary),
+        boundaryRootId: boundary?.rootInstanceId || null,
+        details: {
+            direction: channel.direction,
+            payloadType: channel.payloadType,
+            methods: channel.methods,
+            boundaryStatus: exposure?.bindingStatus || null,
+            semanticBoundaryId: boundary?.id || null,
+            boundaryNodeIds: boundary ? {
+                inbound: boundaryPresentationId(boundary.rootInstanceId, 'inbound'),
+                outbound: boundaryPresentationId(boundary.rootInstanceId, 'outbound')
+            } : null,
+            legs: exposure?.legs || []
+        }
+    });
+}
+
+function boundaryNode(boundary, instances, direction) {
+    const root = instances.get(boundary.rootInstanceId);
+    const input = direction === 'inbound';
+    const channels = boundary.channels.filter((exposure) =>
+        boundaryDirections(exposure).some((item) => item.direction === direction)
+    );
+    const unmatchedEndpoints = boundary.unmatchedEndpoints.filter((endpoint) =>
+        (endpoint.legs || []).some((leg) => leg.direction === direction)
+    );
+    return baseNode({
+        ...boundary,
+        id: boundaryPresentationId(boundary.rootInstanceId, direction),
+        name: `${root?.name || boundary.path} External ${input ? 'Inputs' : 'Outputs'}`,
+        location: null,
+        sourceRange: null,
+        relativePath: root?.relativePath || null
+    }, {
+        semanticId: boundary.id,
+        label: `External ${input ? 'Inputs' : 'Outputs'}`,
+        kind: 'root-boundary',
+        parentId: null,
+        virtual: true,
+        external: true,
+        rootBoundary: true,
+        presentationRole: input ? 'external-input' : 'external-output',
+        boundaryDirection: direction,
+        boundaryRootId: boundary.rootInstanceId,
+        bindingStatus: boundary.bindingStatus,
+        details: {
+            rootInstanceId: boundary.rootInstanceId,
+            rootReason: boundary.rootReason,
+            rootStatus: boundary.rootStatus,
+            bindingStatus: boundary.bindingStatus,
+            direction,
+            presentationRole: input ? 'external-input' : 'external-output',
+            channelCount: channels.length,
+            totalChannelCount: boundary.channels.length,
+            unmatchedEndpointCount: unmatchedEndpoints.length,
+            totalUnmatchedEndpointCount: boundary.unmatchedEndpoints.length,
+            channels,
+            unmatchedEndpoints
+        }
     });
 }
 
@@ -251,7 +371,35 @@ function addEdge(edges, source, target, kind, label, location, extra = {}) {
     });
 }
 
+function boundaryDirections(exposure) {
+    const legDirections = unique((exposure.legs || []).map((leg) => leg.direction).filter(Boolean));
+    const logical = legDirections.length > 0
+        ? legDirections
+        : exposure.direction === 'input' || exposure.direction === 'ack'
+            ? ['inbound']
+            : exposure.direction === 'request-response'
+                ? ['inbound', 'outbound']
+                : ['outbound'];
+    return logical.map((direction) => {
+        const legPayloadTypes = (exposure.legs || [])
+            .filter((leg) => leg.direction === direction
+                && leg.transfer !== 'control'
+                && leg.payloadType !== 'Bool')
+            .map((leg) => leg.payloadType)
+            .filter(Boolean);
+        return {
+            direction,
+            payloadTypes: unique(legPayloadTypes.length > 0 || exposure.legs?.length > 0
+                ? legPayloadTypes
+                : exposure.payloadType ? [exposure.payloadType] : [])
+        };
+    });
+}
+function boundaryPresentationId(rootInstanceId, direction) {
+    return `boundary-${direction === 'inbound' ? 'input' : 'output'}:${rootInstanceId}`;
+}
 function endpointOwner(id, endpoints) { return endpoints.get(id)?.ownerInstanceId || null; }
+function unique(items) { return [...new Set(items)]; }
 function legacyDefinitionId(definition) {
     if (!definition) return null;
     if (definition.kind === 'module-definition') return `module:${definition.packageName}.${definition.name}`;

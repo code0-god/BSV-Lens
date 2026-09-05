@@ -14,19 +14,30 @@ const KIND_PRIORITY = new Map([
     ['package', 5]
 ]);
 
-function findSmallestNodeAtPosition(nodes, uri, line, column) {
+function findSmallestNodesAtPosition(nodes, uri, line, column) {
     const candidates = (nodes || []).filter((node) => {
         const range = node.sourceRange || node.location;
         return range?.uri === uri && positionInRange(line, column, range);
     });
-    candidates.sort((left, right) => {
-        const leftRange = left.sourceRange || left.location;
-        const rightRange = right.sourceRange || right.location;
-        return rangeWeight(leftRange) - rangeWeight(rightRange)
-            || (KIND_PRIORITY.get(left.kind) ?? 9) - (KIND_PRIORITY.get(right.kind) ?? 9)
-            || String(left.id).localeCompare(String(right.id));
-    });
-    return candidates[0] || null;
+    if (candidates.length === 0) return [];
+    const weight = (node) => {
+        const range = node.sourceRange || node.location;
+        return [rangeWeight(range), KIND_PRIORITY.get(node.kind) ?? 9];
+    };
+    const minimum = candidates.reduce((best, node) => {
+        const current = weight(node);
+        return current[0] < best[0] || current[0] === best[0] && current[1] < best[1]
+            ? current : best;
+    }, [Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY]);
+    return candidates.filter((node) => {
+        const current = weight(node);
+        return current[0] === minimum[0] && current[1] === minimum[1];
+    }).sort((left, right) => String(left.id).localeCompare(String(right.id)));
+}
+
+function findSmallestNodeAtPosition(nodes, uri, line, column) {
+    const candidates = findSmallestNodesAtPosition(nodes, uri, line, column);
+    return candidates.length === 1 ? candidates[0] : null;
 }
 
 function positionInRange(line, column, range) {
@@ -48,5 +59,7 @@ function rangeWeight(range) {
 
 module.exports = {
     findSmallestNodeAtPosition,
-    positionInRange
+    findSmallestNodesAtPosition,
+    positionInRange,
+    ...require('./semantic/source-references')
 };

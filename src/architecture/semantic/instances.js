@@ -52,14 +52,25 @@ function buildInstances(definitions, parsedFiles, config = {}, context = {}) {
             break;
         }
         const path = rootNames[index];
-        const instance = rootInstance(definition, path);
+        const instance = rootInstance(definition, path, reason);
         instances.push(instance);
         roots.push({
             instanceId: instance.id,
             targetDefinitionId: definition.id,
             name: definition.name,
             path,
-            reason
+            reason,
+            rootStatus: 'unbound',
+            parentInstanceId: null,
+            analysisOrigin: ROOT_ORIGIN,
+            confidence: 'exact',
+            evidence: {
+                selectionReason: reason,
+                path,
+                targetDefinitionId: definition.id
+            },
+            location: definition.location || null,
+            sourceRange: definition.sourceRange || null
         });
         queue.push({ instance, definition, ancestors: new Set([definition.id]), depth: 0 });
     }
@@ -123,7 +134,7 @@ function buildInstances(definitions, parsedFiles, config = {}, context = {}) {
     return { instances, bindings, roots, diagnostics };
 }
 
-function rootInstance(definition, path) {
+function rootInstance(definition, path, reason) {
     return {
         id: instanceOccurrenceId(definition.id, path),
         kind: 'instance-occurrence',
@@ -144,12 +155,19 @@ function rootInstance(definition, path) {
             expression: '1'
         },
         root: true,
+        rootReason: reason,
+        rootStatus: 'unbound',
         synthetic: true,
         expansionStatus: 'expanded',
         parameterBindings: [],
         location: definition.location || null,
         sourceRange: definition.sourceRange || null,
-        analysisOrigin: ROOT_ORIGIN
+        analysisOrigin: ROOT_ORIGIN,
+        evidence: {
+            selectionReason: reason,
+            path,
+            targetDefinitionId: definition.id
+        }
     };
 }
 

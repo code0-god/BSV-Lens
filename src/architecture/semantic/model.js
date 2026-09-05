@@ -5,6 +5,7 @@ const { buildInstances } = require('./instances');
 const { buildSemanticContracts } = require('./contracts');
 const { buildEndpoints } = require('./endpoints');
 const { buildProtocolChannels } = require('./protocol-channels');
+const { buildSemanticBoundaries } = require('./boundaries');
 const {
     attachProtocolMembership,
     buildStateBehaviors
@@ -20,6 +21,7 @@ const ARRAY_FIELDS = [
     'endpoints',
     'bindings',
     'protocolChannels',
+    'semanticBoundaries',
     'semanticFlows',
     'stateBehaviors',
     'interfaceContracts'
@@ -82,6 +84,12 @@ function buildSemanticModel(parsedFiles, config, context = {}) {
     model.endpoints = [...endpointIR.endpoints, ...model.endpoints];
     model.bindings = [...structuralBindings, ...accessIR.bindings, ...model.bindings];
     model.protocolChannels = [...protocolIR.channels, ...model.protocolChannels];
+    model.semanticBoundaries = buildSemanticBoundaries(
+        model.roots || instanceIR.roots,
+        instanceIR.instances,
+        model.endpoints,
+        model.protocolChannels
+    );
     model.semanticFlows = flowIR.flows;
     model.stateBehaviors = [...behaviorIR.stateBehaviors, ...model.stateBehaviors];
     model.scheduleRelations = scheduleIR.relations;

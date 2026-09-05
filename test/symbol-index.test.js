@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const {
     findSmallestNodeAtPosition,
+    findSmallestNodesAtPosition,
     positionInRange
 } = require('../src/architecture/symbol-index');
 
@@ -36,6 +37,15 @@ test('smallest containing architecture node wins', () => {
     assert.equal(findSmallestNodeAtPosition(nodes, uri, 6, 10).id, 'state');
     assert.equal(findSmallestNodeAtPosition(nodes, uri, 8, 2).id, 'rule');
     assert.equal(findSmallestNodeAtPosition(nodes, uri, 18, 0).id, 'module');
+});
+
+test('equal smallest presentation ranges remain ambiguous without first-match', () => {
+    const duplicate = { ...nodes[1], id: 'rule-copy' };
+    assert.deepEqual(
+        findSmallestNodesAtPosition([...nodes, duplicate], uri, 8, 2).map((node) => node.id),
+        ['rule', 'rule-copy']
+    );
+    assert.equal(findSmallestNodeAtPosition([...nodes, duplicate], uri, 8, 2), null);
 });
 
 test('unmatched files and positions return null', () => {
