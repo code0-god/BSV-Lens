@@ -3,11 +3,12 @@
 (() => {
     const vscode = acquireVsCodeApi();
     const Graph = globalThis.BsvArchitectureGraph;
+    const Navigation = globalThis.BsvArchitectureNavigation;
     const Text = globalThis.BsvArchitectureText;
     const Layout = globalThis.BsvArchitectureLayout;
     const SourceResolution = globalThis.SourceResolution;
     const NS = 'http://www.w3.org/2000/svg';
-    const saved = Graph.migrateState(vscode.getState() || {});
+    const saved = Navigation.migrateState(Graph.migrateState(vscode.getState() || {}));
 
     const elements = {
         body: document.body,
@@ -22,6 +23,7 @@
         hopButtons: [...document.querySelectorAll('[data-hop]')],
         focusSummary: document.getElementById('focus-summary'),
         focusBack: document.getElementById('focus-back'),
+        focusForward: document.getElementById('focus-forward'),
         clearFocus: document.getElementById('clear-focus'),
         breadcrumbs: document.getElementById('breadcrumbs'),
         search: document.getElementById('search'),
@@ -79,6 +81,8 @@
         editorRevealTimer: null,
         selectedEdgeId: null,
         revision: 0,
+        navigation: null,
+        clickSequenceSelection: null,
         anchorAfterRender: null
     };
 
@@ -140,12 +144,24 @@
 
         elements.sourceScope.addEventListener('change', () => {
             if (!runtime.view) return;
-            runtime.view.setSourceScope(elements.sourceScope.value);
-            reconcileCurrentFileFocus();
-            clearTrace(false);
-            runtime.fitOnNextRender = true;
-            render();
-            persistState();
+            const focus = runtime.view.indexes.nodeById.get(viewState().focusStack.at(-1));
+            const owner = runtime.view.indexes.nodeById.get(moduleOwnerId(focus?.id));
+            const source = owner || focus;
+            const outsideCurrentFile = elements.sourceScope.value === 'current-file'
+                && viewState().activeFile
+                && source?.relativePath !== viewState().activeFile;
+            const result = runtime.navigation.setProjection({
+                sourceScope: elements.sourceScope.value,
+                focusStack: outsideCurrentFile ? [] : viewState().focusStack,
+                selectedId: outsideCurrentFile ? null : viewState().selectedId,
+                trace: emptyTrace()
+            });
+            if (result.status !== 'committed') {
+                elements.sourceScope.value = viewState().sourceScope;
+                showToast('The requested source scope has no exact presentation.', true);
+                return;
+            }
+            finishNavigation();
         });
         elements.rootSelect.addEventListener('change', () => {
             if (!runtime.view) return;
@@ -163,6 +179,7 @@
             button.addEventListener('click', () => setHopScope(button.dataset.hop));
         }
         elements.focusBack.addEventListener('click', navigateBack);
+        elements.focusForward.addEventListener('click', navigateForward);
         elements.clearFocus.addEventListener('click', clearFocus);
 
         const updateSearch = debounce(() => {
@@ -305,6 +322,7 @@
             state.focusStack = [];
             state.selectedId = null;
             state.trace = null;
+            state.navigationHistory = { back: [], forward: [] };
         }
         if (initial.focusId && runtime.view.indexes.nodeById.has(initial.focusId)) {
             state.focusStack = runtime.view.focusPath(initial.focusId);
@@ -318,6 +336,15 @@
                     : null;
             if (initialModule) state.focusStack = runtime.view.focusPath(initialModule.id);
         }
+        runtime.navigation = Navigation.createIntentController({
+            state,
+            modelRevision: runtime.revision,
+            getNode: (id) => runtime.view.indexes.nodeById.get(id),
+            focusPath: (id) => runtime.view.focusPath(id),
+            rootFor: (id) => runtime.view.rootFor(id),
+            project: navigationProjectionIsValid
+        });
+        runtime.navigation.reconcileModel(runtime.revision);
         syncRootSelector();
         runtime.transform = state.transform;
         runtime.firstModel = false;
@@ -326,6 +353,17 @@
         initializeControls(state);
         render();
         persistState();
+    }
+
+    function navigationProjectionIsValid(candidate) {
+        try {
+            const projection = Graph.createViewModel(runtime.model, candidate).visible();
+            const ids = new Set(projection.nodes.map((node) => node.id));
+            return projection.nodes.length > 0
+                && (!candidate.selectedId || ids.has(candidate.selectedId));
+        } catch (_) {
+            return false;
+        }
     }
 
     function legacySourceScope(value) {
@@ -348,45 +386,57 @@
 
     function setLevel(level) {
         if (!runtime.view) return;
-        runtime.view.setLevel(level);
-        const state = runtime.view.state;
-        if (level !== 'system' && state.focusStack.length === 0) {
-            const candidate = selectedModelNode();
-            const moduleId = moduleOwnerId(candidate?.id);
-            if (moduleId) state.focusStack = runtime.view.focusPath(moduleId);
-            else if (runtime.view.architectureRoots().length > 1) {
-                showToast('Choose an architecture root before opening this level.');
-                runtime.view.setLevel('system');
-            } else if (runtime.view.architectureRoots().length === 1) {
-                state.focusStack = runtime.view.focusPath(runtime.view.architectureRoots()[0].id);
+        const state = viewState();
+        let focusStack = state.focusStack;
+        if (level !== 'system' && focusStack.length === 0) {
+            const ownerId = moduleOwnerId(selectedModelNode()?.id);
+            if (ownerId) focusStack = runtime.view.focusPath(ownerId);
+            else {
+                const roots = runtime.view.architectureRoots();
+                if (roots.length !== 1) {
+                    showToast('Choose an architecture root before opening this level.');
+                    syncPressed(elements.levelButtons, 'level', state.level);
+                    return;
+                }
+                focusStack = runtime.view.focusPath(roots[0].id);
             }
         }
-        clearTrace(false);
-        runtime.fitOnNextRender = true;
-        syncPressed(elements.levelButtons, 'level', state.level);
-        render();
-        persistState();
+        const result = runtime.navigation.setProjection({
+            level,
+            focusStack,
+            trace: emptyTrace()
+        });
+        if (result.status !== 'committed') {
+            showToast('The requested level has no exact presentation.', true);
+            syncPressed(elements.levelButtons, 'level', state.level);
+            return;
+        }
+        finishNavigation();
     }
 
     function setAnalysisMode(mode) {
         if (!runtime.view) return;
-        runtime.view.setAnalysisMode(mode);
+        const result = runtime.navigation.setProjection({
+            analysisMode: mode,
+            selectedId: null,
+            trace: emptyTrace()
+        });
+        if (result.status !== 'committed') {
+            showToast('The requested analysis mode has no exact presentation.', true);
+            return;
+        }
         runtime.selectedEdgeId = null;
-        clearTrace(false);
-        runtime.fitOnNextRender = true;
-        syncPressed(elements.modeButtons, 'analysisMode', runtime.view.state.analysisMode);
-        render();
-        persistState();
+        finishNavigation();
     }
 
     function setHopScope(scope) {
         if (!runtime.view) return;
-        runtime.view.setHopScope(scope);
-        clearTrace(false);
-        runtime.fitOnNextRender = true;
-        syncPressed(elements.hopButtons, 'hop', String(runtime.view.state.hopScope));
-        render();
-        persistState();
+        const result = runtime.navigation.setProjection({
+            hopScope: scope === 'all' ? 'all' : Number(scope),
+            trace: emptyTrace()
+        });
+        if (result.status !== 'committed') return;
+        finishNavigation();
     }
 
     function syncPressed(buttons, dataKey, value) {
@@ -397,16 +447,21 @@
 
     function updateFilters() {
         if (!runtime.view) return;
-        runtime.view.state.filters = {
-            packages: elements.showPackages.checked,
-            imports: elements.showImports.checked,
-            rules: elements.showRules.checked,
-            primitives: elements.showPrimitives.checked
-        };
-        clearTrace(false);
-        runtime.fitOnNextRender = true;
-        render();
-        persistState();
+        const result = runtime.navigation.setProjection({
+            filters: {
+                packages: elements.showPackages.checked,
+                imports: elements.showImports.checked,
+                rules: elements.showRules.checked,
+                primitives: elements.showPrimitives.checked
+            },
+            selectedId: null,
+            trace: emptyTrace()
+        });
+        if (result.status !== 'committed') {
+            syncFilterControls(viewState().filters);
+            return;
+        }
+        finishNavigation();
     }
 
     function syncFilterControls(filters = {}) {
@@ -438,6 +493,7 @@
         const visibleEdgeIds = new Set(visible.edges.map((edge) => edge.id));
         if (viewState().selectedId && !visibleNodeIds.has(viewState().selectedId)) {
             viewState().selectedId = null;
+            runtime.navigation?.reconcileModel(runtime.revision);
         }
         if (runtime.selectedEdgeId && !visibleEdgeIds.has(runtime.selectedEdgeId)) {
             runtime.selectedEdgeId = null;
@@ -476,6 +532,7 @@
         renderBreadcrumbs();
         syncRootSelector();
         renderInspector();
+        renderNavigationRecovery();
         updateHeader();
         updateLegend();
         updateTraceUi();
@@ -1012,11 +1069,17 @@
                 drillInto(node.id);
                 return;
             }
+            if (event.detail === 1) runtime.clickSequenceSelection = viewState().selectedId;
+            if (event.detail >= 2) {
+                restoreClickSequenceSelection();
+                return;
+            }
             selectNode(node.id, false);
         });
         group.addEventListener('dblclick', (event) => {
             event.stopPropagation();
             if (!disclosure) drillInto(node.id);
+            runtime.clickSequenceSelection = null;
         });
         group.addEventListener('keydown', (event) => {
             if ((event.key === 'Enter' || event.key === ' ') && disclosure) {
@@ -1122,21 +1185,29 @@
             elements.breadcrumbs.append(separator);
             appendBreadcrumb(node.label || node.name, index);
         });
-        elements.focusBack.disabled = state.focusStack.length === 0;
+        elements.focusBack.disabled = state.navigationHistory.back.length === 0;
+        elements.focusForward.disabled = state.navigationHistory.forward.length === 0;
         elements.clearFocus.disabled = state.focusStack.length === 0;
     }
 
     function appendBreadcrumb(label, index) {
         const button = makeButton(label, () => {
-            const state = viewState();
-            state.focusStack = index < 0 ? [] : state.focusStack.slice(0, index + 1);
-            state.selectedId = state.focusStack.at(-1) || null;
-            runtime.fitOnNextRender = true;
-            render();
-            persistState();
+            const result = runtime.navigation.navigateBreadcrumb(index);
+            if (result.status === 'committed') finishNavigation();
         }, 'breadcrumb');
         button.title = label;
         elements.breadcrumbs.append(button);
+    }
+
+    function renderNavigationRecovery() {
+        const recovery = viewState().navigationRecovery;
+        if (recovery?.status !== 'stale') return;
+        const ownerRecovered = recovery.reason === 'subject-missing-owner-recovered';
+        elements.revealNoticeText.textContent = ownerRecovered
+            ? `${recovery.missingIdentity} is stale after refresh. Recovered its owning instance.`
+            : `${recovery.missingIdentity || 'The previous focus'} is stale after refresh. Recovered the workspace view.`;
+        elements.revealCurrentView.hidden = true;
+        elements.revealNotice.hidden = false;
     }
 
     function renderInspector() {
@@ -1353,7 +1424,14 @@
         actions.className = 'inspector-actions';
         const location = edge.compilerLocation || edge.sourceLocation;
         if (location?.uri) actions.append(makeButton('Open evidence', () => {
-            vscode.postMessage({ type: 'openSource', location });
+            vscode.postMessage({
+                type: 'openSource',
+                nodeId: edge.source,
+                location,
+                modelRevision: runtime.revision,
+                revision: runtime.revision,
+                context: viewState().analysisContext
+            });
         }, 'primary'));
         actions.append(makeButton('Select source', () => selectNode(edge.source, true)));
         actions.append(makeButton('Select target', () => selectNode(edge.target, true)));
@@ -1552,14 +1630,14 @@
     function drillLabel(node) {
         if (node.kind === 'member-group') return node.collapsed ? 'Expand group' : 'Collapse group';
         if (node.kind === 'instance-group') return viewState().expandedAggregations[node.id] ? 'Collapse instances' : 'Expand instances';
-        return node.details?.targetId ? `Open ${node.details.targetName || 'implementation'}` : 'Focus';
+        if (node.architectureInstance) return `Enter ${node.label || node.name}`;
+        return 'Focus';
     }
 
     function drillInto(nodeId) {
         const node = runtime.graph.byId.get(nodeId) || runtime.view.indexes.nodeById.get(nodeId);
         if (!node) return;
         if (node.kind === 'member-group') {
-            selectNode(node.id, false);
             preserveNodeAnchor(node.parentId);
             runtime.view.setCollapsed(node.parentId, node.bucket, !node.collapsed);
             runtime.fitOnNextRender = false;
@@ -1569,7 +1647,6 @@
             return;
         }
         if (node.kind === 'instance-group') {
-            selectNode(node.id, false);
             preserveNodeAnchor(node.parentId);
             runtime.view.toggleAggregation(node.id);
             runtime.fitOnNextRender = false;
@@ -1578,11 +1655,24 @@
             persistState();
             return;
         }
-        const targetId = node.details?.targetId || node.id;
-        if (node.kind === 'module') runtime.view.setLevel('module');
-        else if (['rule', 'method', 'function'].includes(node.kind)) runtime.view.setLevel('behavior');
-        syncPressed(elements.levelButtons, 'level', runtime.view.state.level);
-        setFocus(targetId);
+        let result;
+        if (node.architectureInstance) result = runtime.navigation.enterInstance(node.id);
+        else if (['rule', 'method', 'function'].includes(node.kind)) {
+            result = runtime.navigation.enterBehavior(node.id);
+        } else if (['protocol-channel', 'endpoint'].includes(node.kind)) {
+            result = node.kind === 'protocol-channel'
+                ? runtime.navigation.inspectChannel(node.id)
+                : runtime.navigation.inspectEndpoint(node.id);
+        } else if (node.kind === 'module') {
+            result = runtime.navigation.setProjection({
+                level: 'module',
+                focusStack: [node.id],
+                selectedId: node.id,
+                trace: emptyTrace()
+            });
+        } else result = runtime.navigation.focusEntity(node.id);
+        if (result.status === 'committed') finishNavigation();
+        else showToast('No exact navigation target is available.', true);
     }
 
     function preserveNodeAnchor(nodeId, options = {}) {
@@ -1610,34 +1700,37 @@
     }
 
     function setFocus(nodeId) {
-        if (!runtime.view.indexes.nodeById.has(nodeId)) return;
-        viewState().focusStack = runtime.view.focusPath(nodeId);
-        clearTrace(false);
-        viewState().selectedId = nodeId;
-        runtime.selectedEdgeId = null;
-        runtime.fitOnNextRender = true;
-        render();
-        persistState();
+        if (!runtime.view) return;
+        const result = runtime.navigation.focusEntity(nodeId);
+        if (result.status === 'committed') finishNavigation();
+        else showToast('No exact focus target is available.', true);
     }
 
     function clearFocus() {
         if (!runtime.view) return;
-        viewState().focusStack = [];
-        viewState().selectedId = null;
-        runtime.selectedEdgeId = null;
-        clearTrace(false);
-        runtime.fitOnNextRender = true;
-        render();
-        persistState();
+        const result = runtime.navigation.setProjection({
+            focusStack: [],
+            selectedId: null,
+            trace: emptyTrace()
+        });
+        if (result.status === 'committed') finishNavigation();
     }
 
     function navigateBack() {
-        if (!runtime.view || viewState().focusStack.length === 0) return;
-        viewState().focusStack.pop();
-        viewState().selectedId = viewState().focusStack.at(-1) || null;
+        if (!runtime.view) return;
+        if (runtime.navigation.goBack().status === 'committed') finishNavigation(false);
+    }
+
+    function navigateForward() {
+        if (!runtime.view) return;
+        if (runtime.navigation.goForward().status === 'committed') finishNavigation(false);
+    }
+
+    function finishNavigation(fit = true) {
         runtime.selectedEdgeId = null;
-        clearTrace(false);
-        runtime.fitOnNextRender = true;
+        runtime.transform = { ...viewState().transform };
+        runtime.fitOnNextRender = fit;
+        initializeControls(viewState());
         render();
         persistState();
     }
@@ -1647,9 +1740,22 @@
         else setFocus(moduleOwnerId(nodeId) || nodeId);
     }
 
+    function restoreClickSequenceSelection() {
+        const selectedId = runtime.clickSequenceSelection;
+        if (selectedId) selectNode(selectedId, false);
+        else {
+            runtime.navigation.clearSelection();
+            runtime.selectedEdgeId = null;
+            renderInspector();
+            applySelectionHighlight();
+            persistState();
+        }
+    }
+
     function selectNode(nodeId, center) {
-        if (!runtime.graph.byId.has(nodeId) && !runtime.view.indexes.nodeById.has(nodeId)) return;
-        viewState().selectedId = nodeId;
+        if (!runtime.view) return;
+        const result = runtime.navigation.selectEntity(nodeId);
+        if (result.status !== 'committed') return;
         runtime.selectedEdgeId = null;
         renderInspector();
         applySelectionHighlight();
@@ -1680,7 +1786,8 @@
             showToast('This element has no source location.', true);
             return;
         }
-        vscode.postMessage({ type: 'openSource', nodeId });
+        const result = runtime.navigation.openSource(nodeId);
+        if (result.status === 'effect') vscode.postMessage(result.effect);
     }
 
     function revealNodeFromEditor(nodeId) {
@@ -1755,22 +1862,32 @@
         const nodeId = runtime.pendingRevealId;
         const node = runtime.view?.indexes.nodeById.get(nodeId);
         if (!node) return;
-        viewState().sourceScope = 'workspace';
-        viewState().level = ['rule', 'method', 'function', 'register', 'fifo', 'wire', 'memory'].includes(node.kind)
+        const ownerId = moduleOwnerId(nodeId);
+        const level = ['rule', 'method', 'function', 'register', 'fifo', 'wire', 'memory'].includes(node.kind)
             ? 'behavior'
             : ['module', 'endpoint', 'protocol-channel'].includes(node.kind) ? 'module' : 'system';
-        viewState().hopScope = 'all';
-        viewState().focusStack = runtime.view.focusPath(moduleOwnerId(nodeId) || nodeId);
-        if (node.primitive) viewState().filters.primitives = true;
-        if (['rule', 'method'].includes(node.kind)) viewState().filters.rules = true;
+        const filters = { ...viewState().filters };
+        if (node.primitive) filters.primitives = true;
+        if (['rule', 'method'].includes(node.kind)) filters.rules = true;
+        const result = runtime.navigation.setProjection({
+            sourceScope: 'workspace',
+            level,
+            hopScope: 'all',
+            focusStack: ownerId ? runtime.view.focusPath(ownerId) : [],
+            selectedId: nodeId,
+            filters,
+            trace: emptyTrace()
+        });
+        if (result.status !== 'committed') {
+            showToast('No exact presentation exists in the current model.', true);
+            return;
+        }
         runtime.pendingRevealId = null;
         elements.revealNotice.hidden = true;
-        runtime.fitOnNextRender = true;
-        initializeControls(viewState());
-        render();
         runtime.editorRevealId = nodeId;
-        selectNode(nodeId, true);
-        persistState();
+        finishNavigation();
+        centerNode(nodeId);
+        applyEditorReveal();
     }
 
     function applyEditorReveal() {
@@ -1858,9 +1975,8 @@
         persistState();
     }
 
-    function clearTrace(persist = true) {
-        if (!runtime.view) return;
-        viewState().trace = {
+    function emptyTrace() {
+        return {
             startId: null,
             targetId: null,
             paths: [],
@@ -1870,6 +1986,11 @@
             elapsedMs: 0,
             limitReason: null
         };
+    }
+
+    function clearTrace(persist = true) {
+        if (!runtime.view) return;
+        viewState().trace = emptyTrace();
         updateTraceUi();
         applySelectionHighlight();
         if (persist) persistState();
@@ -2151,6 +2272,7 @@
             'transform',
             `translate(${runtime.transform.x} ${runtime.transform.y}) scale(${runtime.transform.scale})`
         );
+        if (runtime.view) runtime.view.state.transform = { ...runtime.transform };
     }
 
     function onWheel(event) {
@@ -2170,7 +2292,7 @@
         };
         elements.svg.setPointerCapture(event.pointerId);
         elements.svg.classList.add('panning');
-        viewState().selectedId = null;
+        runtime.navigation.clearSelection();
         runtime.selectedEdgeId = null;
         renderInspector();
         applySelectionHighlight();
@@ -2316,7 +2438,11 @@
             filters: state.filters,
             trace: state.trace,
             transform: state.transform,
-            search: state.search
+            search: state.search,
+            navigationVersion: state.navigationVersion,
+            analysisContext: state.analysisContext,
+            navigationHistory: state.navigationHistory,
+            navigationRecovery: state.navigationRecovery
         };
         vscode.setState(value);
         vscode.postMessage({ type: 'state', revision: runtime.revision, state: value });
@@ -2342,8 +2468,11 @@
         const owner = runtime.view.indexes.nodeById.get(moduleOwnerId(focus?.id));
         const source = owner || focus;
         if (source?.relativePath === state.activeFile) return;
-        state.focusStack = [];
-        state.selectedId = null;
+        runtime.navigation.setProjection({
+            focusStack: [],
+            selectedId: null,
+            trace: emptyTrace()
+        });
         runtime.selectedEdgeId = null;
     }
 

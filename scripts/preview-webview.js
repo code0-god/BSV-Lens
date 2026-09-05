@@ -190,7 +190,10 @@ function harnessHtml(port, url) {
         window.__model = ${safeJson(pageModel)};
         window.acquireVsCodeApi = () => ({
             getState: () => window.__savedState,
-            setState: (value) => { window.__savedState = value; },
+            setState: (value) => {
+                window.__savedState = value;
+                window.dispatchEvent(new CustomEvent('bsv-webview-state', { detail: value }));
+            },
             postMessage: (message) => {
                 window.__hostMessages.push(message);
                 window.dispatchEvent(new CustomEvent('bsv-host-message', { detail: message }));

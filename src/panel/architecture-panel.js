@@ -260,6 +260,9 @@ class ArchitecturePanel {
                     await this.refresh();
                     break;
                 case 'openSource':
+                    if (message.revision !== undefined && message.revision !== this.modelRevision) {
+                        throw new Error('Source reference is stale. Refresh the analysis before opening source.');
+                    }
                     await this.openSource(message.nodeId, message.location);
                     break;
                 case 'exportSvg':
@@ -290,7 +293,11 @@ class ArchitecturePanel {
     }
 
     async openSource(nodeId, location) {
+        const revision = this.modelRevision;
         const node = nodeId ? this.model?.nodes.find((item) => item.id === nodeId) : null;
+        if (nodeId && !node) {
+            throw new Error('This architecture element no longer exists. Refresh the analysis.');
+        }
         const target = node?.location || location;
         if (!target?.uri) {
             throw new Error('This architecture element has no source location.');
@@ -304,9 +311,16 @@ class ArchitecturePanel {
             preview: false,
             viewColumn: this.vscode.ViewColumn.One
         });
+        if (revision !== this.modelRevision) {
+            throw new Error('Source reference is stale. Refresh the analysis before opening source.');
+        }
         const position = new this.vscode.Position(target.line || 0, target.column || 0);
-        editor.selection = new this.vscode.Selection(position, position);
-        editor.revealRange(new this.vscode.Range(position, position), this.vscode.TextEditorRevealType.InCenterIfOutsideViewport);
+        const end = new this.vscode.Position(
+            target.endLine ?? target.line ?? 0,
+            target.endColumn ?? target.column ?? 0
+        );
+        editor.selection = new this.vscode.Selection(end, position);
+        editor.revealRange(new this.vscode.Range(position, end), this.vscode.TextEditorRevealType.InCenterIfOutsideViewport);
     }
 
     async exportSvg(svg, suggestedName) {
@@ -434,6 +448,8 @@ function modelOwnsLocation(model, target) {
             location?.uri === target.uri
             && (location.line || 0) === (target.line || 0)
             && (location.column || 0) === (target.column || 0)
+            && (location.endLine ?? location.line ?? 0) === (target.endLine ?? target.line ?? 0)
+            && (location.endColumn ?? location.column ?? 0) === (target.endColumn ?? target.column ?? 0)
         )
     ));
 }

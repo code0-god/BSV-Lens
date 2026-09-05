@@ -205,7 +205,9 @@ test('direct source navigation accepts only locations owned by current model', a
     const modelLocation = {
         uri: 'file:///workspace/Top.bsv',
         line: 8,
-        column: 4
+        column: 4,
+        endLine: 8,
+        endColumn: 16
     };
     instance.model = {
         nodes: [{ id: 'top', location: modelLocation }],
@@ -214,7 +216,9 @@ test('direct source navigation accepts only locations owned by current model', a
             sourceLocation: {
                 uri: 'file:///workspace/Flow.bsv',
                 line: 2,
-                column: 1
+                column: 1,
+                endLine: 2,
+                endColumn: 20
             }
         }],
         diagnostics: [],
@@ -229,9 +233,13 @@ test('direct source navigation accepts only locations owned by current model', a
             }
         },
         Selection: class Selection {
-            constructor(start, end) {
-                this.start = start;
-                this.end = end;
+            constructor(anchor, active) {
+                this.anchor = anchor;
+                this.active = active;
+                const reversed = anchor.line > active.line
+                    || (anchor.line === active.line && anchor.column > active.column);
+                this.start = reversed ? active : anchor;
+                this.end = reversed ? anchor : active;
             }
         },
         Range: class Range {
@@ -264,6 +272,15 @@ test('direct source navigation accepts only locations owned by current model', a
     // Then
     assert.deepEqual(opened, ['file:///workspace/Flow.bsv']);
     assert.equal(selected.length, 1);
+    assert.deepEqual(
+        [selected[0].start.line, selected[0].start.column,
+            selected[0].end.line, selected[0].end.column],
+        [2, 1, 2, 20]
+    );
+    await assert.rejects(
+        instance.openSource(null, { ...instance.model.edges[0].sourceLocation, endColumn: 200 }),
+        /not owned by the current architecture model/
+    );
     await assert.rejects(
         instance.openSource(null, {
             uri: 'file:///outside/Injected.bsv',
@@ -273,4 +290,49 @@ test('direct source navigation accepts only locations owned by current model', a
         /not owned by the current architecture model/
     );
     assert.deepEqual(opened, ['file:///workspace/Flow.bsv']);
+});
+
+test('source navigation rejects stale revisions before opening an editor', async () => {
+    const { instance, messages } = makePanel(true);
+    instance.modelRevision = 2;
+    const opened = [];
+    instance.openSource = async (...arguments_) => opened.push(arguments_);
+    instance.reportError = () => {};
+
+    await instance.handleMessage({ type: 'openSource', nodeId: 'rule', revision: 1 });
+
+    assert.deepEqual(opened, []);
+    assert.equal(messages.at(-1).error, true);
+
+    await instance.handleMessage({ type: 'openSource', nodeId: 'rule', revision: 2 });
+    assert.equal(opened.length, 1);
+});
+
+test('missing source entity cannot fall back to a formerly borrowed location', async () => {
+    const { instance } = makePanel(true);
+    await assert.rejects(
+        instance.openSource('removed-rule', instance.model.nodes[0].location),
+        /no longer exists/
+    );
+});
+
+test('refresh during source opening cannot select an old source range', async () => {
+    const { instance } = makePanel(true);
+    const opened = Promise.withResolvers();
+    const editor = { selection: null, revealRange() {} };
+    instance.vscode.Uri = { parse: (uri) => uri };
+    instance.vscode.workspace.openTextDocument = () => opened.promise;
+    instance.vscode.window = { showTextDocument: async () => editor };
+    instance.vscode.ViewColumn = { One: 1 };
+    instance.vscode.Position = class {};
+    instance.vscode.Selection = class {};
+    instance.vscode.Range = class {};
+    instance.vscode.TextEditorRevealType = { InCenterIfOutsideViewport: 0 };
+
+    const navigation = instance.openSource('rule');
+    instance.modelRevision += 1;
+    opened.resolve({});
+
+    await assert.rejects(navigation, /stale/);
+    assert.equal(editor.selection, null);
 });

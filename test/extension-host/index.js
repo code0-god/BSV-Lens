@@ -41,7 +41,43 @@ async function run() {
     assert.ok(ArchitecturePanel.currentPanel.model.stats.nodes > 0);
     assert.match(ArchitecturePanel.currentPanel.model.activeFile, /AcceleratorController\.bsv$/);
     assert.match(ArchitecturePanel.currentPanel.panel.webview.html, /media\/webview-layout\.js/);
+    const panel = ArchitecturePanel.currentPanel;
+    const rule = panel.model.nodes.find((node) =>
+        node.kind === 'rule' && node.name === 'countAccepted' && node.semanticId
+    );
+    assert.ok(rule, 'source target is an occurrence behavior');
+    const selectionChanged = nextSelection(source, rule.location);
+    await panel.handleMessage({
+        type: 'openSource', nodeId: rule.id, revision: panel.modelRevision
+    });
+    const event = await selectionChanged;
+    const selection = event.selections[0];
+    assert.deepEqual(
+        [selection.start.line, selection.start.character, selection.end.line, selection.end.character],
+        [rule.location.line, rule.location.column, rule.location.endLine, rule.location.endColumn]
+    );
+    assert.equal(document.getText(selection), 'countAccepted');
     ArchitecturePanel.currentPanel.dispose();
+}
+
+function nextSelection(uri, location) {
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            listener.dispose();
+            reject(new Error('Timed out waiting for the source range selection event.'));
+        }, 5000);
+        const listener = vscode.window.onDidChangeTextEditorSelection((event) => {
+            const selection = event.selections[0];
+            if (event.textEditor.document.uri.toString() !== uri.toString()
+                || selection?.start.line !== location.line
+                || selection?.start.character !== location.column
+                || selection?.end.line !== location.endLine
+                || selection?.end.character !== location.endColumn) return;
+            clearTimeout(timer);
+            listener.dispose();
+            resolve(event);
+        });
+    });
 }
 
 module.exports = { run };

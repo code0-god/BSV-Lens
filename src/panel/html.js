@@ -2,6 +2,7 @@
 
 function getWebviewHtml(webview, extensionUri, vscode) {
     const graphViewUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'graph-view.js'));
+    const navigationUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'navigation.js'));
     const textMetricsUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'text-metrics.js'));
     const layoutUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'webview-layout.js'));
     const sourceResolutionUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'source-resolution.js'));
@@ -68,8 +69,11 @@ function getWebviewHtml(webview, extensionUri, vscode) {
             </fieldset>
         </div>
         <div class="focus-row">
-            <button id="focus-back" class="icon-button" type="button" title="Back to previous focus" aria-label="Back to previous focus" disabled>
+            <button id="focus-back" class="icon-button" type="button" title="Back" aria-label="Back" disabled>
                 <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.75 3.25 5 8l4.75 4.75M5.25 8h6"></path></svg>
+            </button>
+            <button id="focus-forward" class="icon-button" type="button" title="Forward" aria-label="Forward" disabled>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6.25 3.25 4.75 4.75-4.75 4.75M10.75 8h-6"></path></svg>
             </button>
             <div class="focus-context">
                 <span id="focus-summary">Focus: none</span>
@@ -178,6 +182,7 @@ function getWebviewHtml(webview, extensionUri, vscode) {
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script nonce="${nonce}" src="${graphViewUri}"></script>
+    <script nonce="${nonce}" src="${navigationUri}"></script>
     <script nonce="${nonce}" src="${textMetricsUri}"></script>
     <script nonce="${nonce}" src="${layoutUri}"></script>
     <script nonce="${nonce}" src="${sourceResolutionUri}"></script>

@@ -5,7 +5,7 @@
     if (typeof module === 'object' && module.exports) module.exports = api;
     if (root) root.BsvArchitectureGraph = api;
 }(typeof globalThis === 'undefined' ? null : globalThis, function createApi() {
-    const STATE_VERSION = 3;
+    const STATE_VERSION = 4;
     const SOURCE_SCOPES = Object.freeze({ WORKSPACE: 'workspace', CURRENT_FILE: 'current-file' });
     const LEVELS = Object.freeze({ SYSTEM: 'system', MODULE: 'module', BEHAVIOR: 'behavior' });
     const ANALYSIS_MODES = Object.freeze({
@@ -197,7 +197,18 @@
             filters: old.filters && typeof old.filters === 'object' ? { ...old.filters } : {},
             trace: normalizeTrace(old.trace),
             transform: normalizeTransform(old.transform),
-            search: typeof old.search === 'string' ? old.search : ''
+            search: typeof old.search === 'string' ? old.search : '',
+            navigationVersion: Number.isInteger(old.navigationVersion) ? old.navigationVersion : 0,
+            analysisContext: old.analysisContext && typeof old.analysisContext === 'object'
+                ? { ...old.analysisContext }
+                : null,
+            navigationHistory: {
+                back: Array.isArray(old.navigationHistory?.back) ? old.navigationHistory.back.slice() : [],
+                forward: Array.isArray(old.navigationHistory?.forward) ? old.navigationHistory.forward.slice() : []
+            },
+            navigationRecovery: old.navigationRecovery?.status === 'stale'
+                ? { ...old.navigationRecovery }
+                : null
         };
     }
 
