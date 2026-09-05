@@ -272,6 +272,7 @@
     "test:browser:semantic": "node scripts/run-browser-tests.js playwright.semantic.config.js",
     "test:browser": "npm run test:browser:general && npm run test:browser:semantic",
     "test:extension": "node scripts/run-extension-host-tests.js",
+    "test:vsix": "node scripts/run-vsix-smoke.js",
     "test:aqua:semantic": "node --test test/aqua-semantic-*.acceptance.js",
     "test:aqua:host": "node scripts/run-aqua-extension-host-tests.js",
     "test:aqua:browser": "node scripts/run-browser-tests.js playwright.aqua.config.js",

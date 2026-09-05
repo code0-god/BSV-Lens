@@ -4,5 +4,7 @@ node_modules/
 .vscode-test/
 dist/*.vsix
 dist/*.zip
+dist/SHA256SUMS.txt
 *.log
 .omo/
+media/build-metadata.js

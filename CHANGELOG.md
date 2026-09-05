@@ -1,6 +1,14 @@
 # Change Log
 
-## 0.4.1 — 2026-09-05
+## 0.4.1 — Unreleased
+
+- Remove fabricated same-name delegation calls while preserving real constructor bindings, inline delegation, and endpoint implementations.
+- Add occurrence-aware navigation contexts, atomic instance/channel/endpoint entry, independent containment breadcrumbs, and complete Back/Forward snapshots.
+- Query canonical semantic flows independently of display filters, retaining producer/consumer implementations, transfer behavior, callsites, argument mappings, and original evidence ranges.
+- Add bounded, source-linked statements and expressions for local bindings, calls, assignments, returns, branches, simple cases, and assertions, including definition-only pure functions.
+- Distinguish callable predicates, body path conditions, state effects, and unresolved readiness or scheduling; preserve unsupported syntax without invented dependencies.
+- Reject stale source coordinates, including editor content changed since analysis, and select complete canonical source ranges.
+- Generate source-commit and runtime-byte build identities during VSIX packaging, expose host/webview diagnostics, and add isolated installed-VSIX smoke coverage.
 
 - Resolve source declarations through canonical semantic definitions and contextual hierarchy occurrences instead of borrowed graph locations.
 - Distinguish visible, hidden, other-view, ambiguous, and unavailable source reveal outcomes; offer an explicit occurrence choice.

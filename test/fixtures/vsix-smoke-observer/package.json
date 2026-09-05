@@ -1,0 +1,13 @@
+{
+  "name": "bsv-lens-vsix-smoke-observer",
+  "displayName": "BSV Lens VSIX Smoke Observer",
+  "version": "0.0.1",
+  "publisher": "bsv-lens-tests",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "main": "./extension.js",
+  "activationEvents": [
+    "*"
+  ]
+}

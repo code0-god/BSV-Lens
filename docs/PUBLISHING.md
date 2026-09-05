@@ -68,6 +68,11 @@ the Azure Client ID, Principal/Object ID, Subscription ID, or Tenant ID.
 5. The tag run calls reusable CI, downloads its verified artifact, checks the
    tag/version match, verifies archive CRCs and checksums, then publishes.
 
+Build metadata and `dist/SHA256SUMS.txt` are generated artifacts, not tracked
+source. Build the final packages from a clean source commit, then keep their
+checksums with those artifacts. Committing a checksum of a package containing
+its own source commit would otherwise invalidate that package identity again.
+
 `vsce` rejects an existing Marketplace version. The workflow intentionally
 does not use `--skip-duplicate`, so a duplicate tag cannot silently succeed.
 

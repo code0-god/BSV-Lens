@@ -5,6 +5,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const zlib = require('node:zlib');
+const vm = require('node:vm');
 const { Parser } = require('xml2js');
 const { crc32 } = require('./zip');
 
@@ -19,6 +20,8 @@ const repository = readZip(path.join(dist, repositoryName));
 for (const entry of [
     'extension/package.json',
     'extension/src/extension.js',
+    'extension/src/build-info.js',
+    'extension/src/architecture/code-analysis.js',
     'extension/src/architecture/behavior-analysis.js',
     'extension/src/architecture/interface-contract-diagnostics.js',
     'extension/src/architecture/interface-contract-types.js',
@@ -47,6 +50,9 @@ for (const entry of [
     'extension/src/compiler/bsc-schedule-provider.js',
     'extension/src/security/workspace-boundary.js',
     'extension/media/graph-view.js',
+    'extension/media/navigation.js',
+    'extension/media/semantic-query.js',
+    'extension/media/build-metadata.js',
     'extension/media/source-resolution.js',
     'extension/media/text-metrics.js',
     'extension/media/webview-layout.js',
@@ -68,6 +74,26 @@ for (const entry of vsix.keys()) {
 const embedded = JSON.parse(vsix.get('extension/package.json').toString('utf8'));
 assert.equal(embedded.version, manifest.version);
 assert.equal(`${embedded.publisher}.${embedded.name}`, 'code0-god.bsv-lens');
+const buildContext = { module: { exports: {} } };
+vm.runInNewContext(vsix.get('extension/media/build-metadata.js').toString('utf8'), buildContext, {
+    timeout: 1000
+});
+const build = buildContext.module.exports;
+assert.equal(build.metadataVersion, 1);
+assert.equal(build.extensionId, 'code0-god.bsv-lens');
+assert.equal(build.version, embedded.version);
+assert.match(build.sourceCommit, /^[a-f0-9]{40}$/);
+assert.equal(typeof build.dirty, 'boolean');
+const runtimeDigest = crypto.createHash('sha256').update(`${build.sourceCommit}\0${build.dirty}\0`);
+const runtimeEntries = [...vsix.keys()].filter((entry) =>
+    entry === 'extension/package.json'
+    || ((entry.startsWith('extension/src/') || entry.startsWith('extension/media/'))
+        && entry !== 'extension/media/build-metadata.js')
+).sort();
+for (const entry of runtimeEntries) {
+    runtimeDigest.update(`${entry.slice('extension/'.length)}\0`).update(vsix.get(entry)).update('\0');
+}
+assert.equal(build.buildId, `sha256:${runtimeDigest.digest('hex')}`, 'VSIX runtime does not match its build identity');
 for (const key of [
     'defaultSourceScope',
     'defaultLevel',
