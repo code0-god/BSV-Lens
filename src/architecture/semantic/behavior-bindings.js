@@ -52,8 +52,10 @@ function buildBehaviorBindings(stateBehaviors, callableByBehaviorId, instances, 
 }
 
 function makeBinding(behavior, access, child, endpoint, index) {
+    const id = behaviorAccessBindingId(behavior.id, index);
+    const callSiteId = `callsite:${behavior.id}:${index}`;
     return {
-        id: behaviorAccessBindingId(behavior.id, index), kind: 'behavior-access',
+        id, callSiteId, kind: 'behavior-access',
         behaviorId: behavior.id, ownerInstanceId: behavior.ownerInstanceId,
         targetInstanceId: child.id, endpointId: endpoint?.id || null,
         accessKind: endpoint ? endpointAccessKind(endpoint) : access.kind,
@@ -61,7 +63,15 @@ function makeBinding(behavior, access, child, endpoint, index) {
         arguments: [...(access.arguments || [])], resultBinding: access.resultBinding || null,
         valueBinding: access.valueBinding || null,
         resolutionStatus: endpoint || child.primitiveKind ? 'exact' : 'unresolved',
-        sourceEvidence: access.sourceEvidence, evidence: access.evidence,
+        sourceEvidence: access.sourceEvidence, sourceText: access.sourceText || access.sourceEvidence,
+        sourceRange: access.sourceRange || access.location || behavior.location || null,
+        evidence: access.evidence,
+        evidenceRefs: access.sourceEvidence ? [{
+            kind: 'call-site', id: callSiteId, bindingId: id,
+            text: access.sourceText || access.sourceEvidence,
+            location: access.location || behavior.location || null,
+            sourceRange: access.sourceRange || access.location || behavior.location || null
+        }] : [],
         location: access.location || behavior.location || null, analysisOrigin: SOURCE_ORIGIN,
         confidence: endpoint || child.primitiveKind ? 'explicit' : 'unknown'
     };

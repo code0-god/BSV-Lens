@@ -4,6 +4,7 @@
     const vscode = acquireVsCodeApi();
     const Graph = globalThis.BsvArchitectureGraph;
     const Navigation = globalThis.BsvArchitectureNavigation;
+    const SemanticQuery = globalThis.BsvArchitectureSemanticQuery;
     const Text = globalThis.BsvArchitectureText;
     const Layout = globalThis.BsvArchitectureLayout;
     const SourceResolution = globalThis.SourceResolution;
@@ -82,6 +83,7 @@
         selectedEdgeId: null,
         revision: 0,
         navigation: null,
+        queries: null,
         clickSequenceSelection: null,
         anchorAfterRender: null
     };
@@ -304,6 +306,7 @@
                 transform: { x: 40, y: 40, scale: 1 }
             };
         runtime.model = model;
+        runtime.queries = SemanticQuery.createSemanticQueries(model);
         elements.restrictedMode.hidden = model?.security?.restrictedMode !== true;
         runtime.view = Graph.createViewModel(model, {
             ...base,
@@ -359,6 +362,12 @@
         try {
             const projection = Graph.createViewModel(runtime.model, candidate).visible();
             const ids = new Set(projection.nodes.map((node) => node.id));
+            if (candidate.analysisContext?.subject?.kind === 'endpoint') {
+                const endpoint = runtime.queries.resolveEndpointImplementation(
+                    candidate.analysisContext.subject.id
+                ).endpoint;
+                return Boolean(endpoint && runtime.view.indexes.nodeById.has(candidate.selectedId));
+            }
             return projection.nodes.length > 0
                 && (!candidate.selectedId || ids.has(candidate.selectedId));
         } catch (_) {
@@ -574,6 +583,7 @@
             focusId: state.focusStack.at(-1) || null,
             activeFile: state.activeFile
         });
+        result = semanticDetailProjection(result, state);
         let nodes = result.nodes.filter(nodeAllowed);
         const ids = new Set(nodes.map((node) => node.id));
         let edges = result.edges
@@ -586,6 +596,71 @@
             ? (runtime.model.groups || []).filter((group) => groupIds.has(group.id))
             : [];
         return { ...result, nodes, edges, groups };
+    }
+
+    function semanticDetailProjection(result, state) {
+        const subject = state.analysisContext?.subject;
+        if (!['protocol-channel', 'endpoint'].includes(subject?.kind)) return result;
+        const endpointId = subject.kind === 'endpoint' ? subject.id : null;
+        const endpointResult = endpointId
+            ? runtime.queries.resolveEndpointImplementation(endpointId)
+            : null;
+        const composition = endpointResult?.endpoint
+            ? runtime.queries.getInstanceComposition(endpointResult.endpoint.ownerInstanceId)
+            : null;
+        const channelId = subject.kind === 'protocol-channel'
+            ? subject.id
+            : composition?.channels.find((channel) =>
+                runtime.queries.getChannelMembers(channel.id).members
+                    ?.some((member) => member.endpoint.id === endpointId)
+            )?.id;
+        const queried = channelId && runtime.queries.getChannelMembers(channelId);
+        if (queried?.status !== 'exact') return result;
+        const channelNode = runtime.view.indexes.nodeById.get(channelId);
+        const ownerNode = runtime.view.indexes.nodeById.get(queried.channel.ownerInstanceId);
+        const members = queried.members.map((member) => ({
+            ...member,
+            node: runtime.view.indexes.nodeById.get(member.endpoint.id)
+        })).filter((member) => member.node);
+        if (!channelNode || !ownerNode) return result;
+        const groupId = `member-group:${ownerNode.id}:semantic-channel-detail`;
+        const sourceIds = [channelNode.id, ...members.map((member) => member.node.id)];
+        const group = {
+            id: groupId,
+            kind: 'member-group',
+            label: `${queried.channel.name} Channel Detail`,
+            parentId: ownerNode.id,
+            ownerId: ownerNode.id,
+            bucket: 'protocol-channels',
+            collapsed: false,
+            totalCount: sourceIds.length,
+            visibleCount: sourceIds.length,
+            sourceIds,
+            synthetic: true
+        };
+        const edges = [viewDetailEdge(ownerNode.id, groupId, 'contains')];
+        for (const id of sourceIds) edges.push(viewDetailEdge(groupId, id, 'contains'));
+        return {
+            ...result,
+            focusId: ownerNode.id,
+            nodes: [ownerNode, group, channelNode, ...members.map((member) => member.node)],
+            edges
+        };
+    }
+
+    function viewDetailEdge(source, target, kind) {
+        return {
+            id: `semantic-detail:${source}:${target}`,
+            source,
+            target,
+            kind,
+            mode: 'structure',
+            origin: 'view-model',
+            evidence: `${source} ${kind} ${target}`,
+            inferred: true,
+            layoutOnly: true,
+            suppressLabel: true
+        };
     }
 
     function nodeAllowed(node) {
@@ -1254,7 +1329,12 @@
         }));
         content.append(actions);
 
-        if (node.kind === 'module') {
+        const semanticSubject = viewState().analysisContext?.subject;
+        if (semanticSubject?.kind === 'protocol-channel' && semanticSubject.id === node.semanticId) {
+            renderSemanticChannelDetails(content, semanticSubject.id);
+        } else if (semanticSubject?.kind === 'endpoint' && semanticSubject.id === node.semanticId) {
+            renderSemanticEndpointDetails(content, semanticSubject.id);
+        } else if (node.kind === 'module') {
             renderInterfaceContract(content, node);
         }
         if (node.signature) {
@@ -1295,12 +1375,128 @@
                 boundary.rootInstanceId === node.boundaryRootId));
         } else if (node.semanticBehavior) {
             renderSemanticBehaviorDetails(content, node);
-        } else {
+        } else if (!['protocol-channel', 'endpoint'].includes(semanticSubject?.kind)) {
             const details = flattenDetails(node.details || {});
             if (details.length) content.append(detailSection('Details', details));
         }
         renderRelationInspector(content, node);
         elements.inspector.replaceChildren(content);
+    }
+
+    function renderSemanticChannelDetails(content, channelId) {
+        const result = runtime.queries.getChannelMembers(channelId);
+        if (result.status !== 'exact') {
+            content.append(paragraph('Channel detail is unresolved.', 'inspector-description'));
+            return;
+        }
+        content.append(detailSection('Channel', [
+            ['Owner', nodeLabel(result.channel.ownerInstanceId)],
+            ['Direction', result.channel.direction],
+            ['Payload Type', result.channel.payloadType || 'No payload'],
+            ['Provenance', 'Source-derived interface declarations'],
+            ['Grouping confidence', 'Heuristic'],
+            ['Inference basis', channelInferenceBasis(result.channel.evidence?.rule)]
+        ]));
+        const members = inspectorSection('Members');
+        for (const member of result.members) {
+            const row = document.createElement('div');
+            row.className = 'relation-list';
+            row.append(paragraph(`${member.role} · ${member.endpoint.name} · ${
+                member.endpoint.resultType || member.endpoint.parameters?.map((item) => item.type).join(', ') || 'control'
+            }`, 'inspector-description'));
+            row.append(makeButton(
+                `Inspect ${member.endpoint.name} endpoint`,
+                () => inspectSemanticEndpoint(member.endpoint)
+            ));
+            members.append(row);
+        }
+        content.append(members);
+        const evidence = inspectorSection('Source evidence');
+        for (const member of result.members) {
+            const declaration = member.endpoint.evidence?.declaration;
+            if (!declaration) continue;
+            const row = document.createElement('div');
+            row.className = 'relation-list';
+            row.append(paragraph(declaration, 'inspector-description'));
+            if (member.endpoint.location?.uri) {
+                row.append(makeButton(`Open ${member.endpoint.name} source`, () =>
+                    openNodeSource(member.endpoint.id)
+                ));
+            }
+            evidence.append(row);
+        }
+        content.append(evidence);
+    }
+
+    function channelInferenceBasis(rule) {
+        if (rule === 'exact-sibling-request-response') {
+            return 'Sibling request/response name and type convention';
+        }
+        return 'Method name and type convention';
+    }
+
+    function renderSemanticEndpointDetails(content, endpointId) {
+        const result = runtime.queries.resolveEndpointImplementation(endpointId, {
+            ownerInstanceId: viewState().analysisContext?.ownerInstanceId
+        });
+        const endpoint = result.endpoint;
+        if (!endpoint) {
+            content.append(paragraph('Endpoint detail is unresolved.', 'inspector-description'));
+            return;
+        }
+        const composition = runtime.queries.getInstanceComposition(endpoint.ownerInstanceId);
+        const relatedFlows = composition.status === 'exact'
+            ? [...composition.relationRoles.payload, ...composition.relationRoles.control,
+                ...composition.relationRoles.implementation]
+                .filter((flow) => flow.fromEndpointId === endpoint.id || flow.toEndpointId === endpoint.id)
+            : [];
+        const incoming = relatedFlows.filter((flow) => flow.toEndpointId === endpoint.id);
+        const outgoing = relatedFlows.filter((flow) => flow.fromEndpointId === endpoint.id);
+        content.append(detailSection('Endpoint', [
+            ['Owner', nodeLabel(endpoint.ownerInstanceId)],
+            ['Declaration', endpoint.evidence?.declaration],
+            ['Role', endpoint.category],
+            ['Payload Type', endpoint.resultType || endpoint.parameters?.map((item) => item.type).join(', ') || 'No payload'],
+            ['Provenance', endpoint.analysisOrigin || 'Source-derived'],
+            ['Implementation', result.status === 'exact'
+                ? `${result.behavior.kind} ${result.behavior.name}`
+                : 'Unresolved implementation'],
+            ['Incoming uses', incoming.length],
+            ['Outgoing uses', outgoing.length],
+            ['Source evidence', endpoint.evidence?.declaration]
+        ]));
+        if (result.status === 'exact') {
+            content.append(makeButton(
+                `Inspect ${endpoint.name} implementation`,
+                () => enterEndpointImplementation(result)
+            ));
+        } else {
+            content.append(paragraph('Unresolved implementation', 'inspector-description'));
+        }
+    }
+
+    function inspectSemanticEndpoint(endpoint) {
+        const presentation = runtime.view.indexes.nodeById.get(endpoint.id);
+        const subject = { ...endpoint, kind: 'endpoint' };
+        const result = presentation
+            ? runtime.navigation.inspectEndpoint(subject, presentation.id)
+            : { status: 'unresolved' };
+        if (result.status === 'committed') finishNavigation();
+        else showToast('No exact endpoint presentation is available.', true);
+    }
+
+    function enterEndpointImplementation(resolution) {
+        if (resolution.status !== 'exact' || !resolution.behavior) return;
+        const behavior = runtime.view.indexes.nodeById.get(resolution.behavior.id);
+        if (!behavior) {
+            showToast('No exact implementation presentation is available.', true);
+            return;
+        }
+        const result = runtime.navigation.enterBehavior(behavior.id, {
+            fromSemanticParent: true,
+            subject: resolution.behavior
+        });
+        if (result.status === 'committed') finishNavigation();
     }
 
     function rootOriginLabel(node) {
@@ -1410,29 +1606,76 @@
         header.append(title, kind);
         content.append(header);
         appendBadges(content, originLabel(edge.origin), edge.confidence);
+        const flowEvidence = edge.semanticFlowId
+            ? runtime.queries.getFlowEvidence(edge.semanticFlowId)
+            : null;
+        const causeSlice = flowEvidence?.causeBehaviorId
+            ? runtime.queries.getBehaviorSlice(flowEvidence.causeBehaviorId)
+            : null;
         content.append(detailSection('Relation', [
+            ['Semantic Flow ID', edge.semanticFlowId],
             ['Source', nodeLabel(edge.source)],
             ['Target', nodeLabel(edge.target)],
             ['Kind', edge.kind],
             ['Label', edge.label || '—'],
             ['Direction', edge.bidirectional ? 'Bidirectional' : 'Source to target'],
+            ['Producer', flowEvidence?.producer?.endpoint?.name],
+            ['Consumer', flowEvidence?.consumer?.endpoint?.name],
+            ['Consumer argument', flowEvidence?.mapping?.sourceExpression],
+            ['Parameter', flowEvidence?.mapping?.parameterName],
+            ['Cause behavior', causeSlice?.behavior?.name || flowEvidence?.causeBehaviorId],
+            ['Call site', flowEvidence?.callSiteId],
+            ['Payload type', flowEvidence?.mapping?.payloadType],
+            ['Provenance', flowEvidence?.provenance?.analysisOrigin],
+            ['Source evidence', flowEvidence?.evidenceRefs?.map((item) => item.text).join('\n')],
             ['Evidence', evidenceText(edge.evidence)],
             ['Source location', formatLocation(edge.sourceLocation)],
             ['Compiler location', formatLocation(edge.compilerLocation)]
         ]));
         const actions = document.createElement('div');
         actions.className = 'inspector-actions';
-        const location = edge.compilerLocation || edge.sourceLocation;
+        const evidenceReference = flowEvidence?.evidenceRefs?.find((item) =>
+            item.sourceRange?.uri || item.location?.uri
+        );
+        const location = evidenceReference?.sourceRange || evidenceReference?.location
+            || edge.compilerLocation || edge.sourceLocation;
+        const evidenceOwnerId = causeSlice?.behavior?.id || edge.source;
         if (location?.uri) actions.append(makeButton('Open evidence', () => {
             vscode.postMessage({
                 type: 'openSource',
-                nodeId: edge.source,
+                nodeId: evidenceOwnerId,
                 location,
                 modelRevision: runtime.revision,
                 revision: runtime.revision,
                 context: viewState().analysisContext
             });
         }, 'primary'));
+        if (flowEvidence?.producer?.endpoint) actions.append(makeButton('Inspect producer', () =>
+            inspectSemanticEndpoint(flowEvidence.producer.endpoint)
+        ));
+        if (flowEvidence?.consumer?.endpoint) actions.append(makeButton('Inspect consumer', () =>
+            inspectSemanticEndpoint(flowEvidence.consumer.endpoint)
+        ));
+        if (causeSlice?.status === 'exact') actions.append(makeButton('Inspect transfer code', () => {
+            const result = runtime.navigation.enterBehavior(causeSlice.behavior.id, {
+                subject: causeSlice.behavior,
+                entryCallSiteId: flowEvidence.callSiteId,
+                bindingEnvironmentId: flowEvidence.flow?.bindingId || null
+            });
+            if (result.status === 'committed') finishNavigation();
+        }));
+        if (evidenceReference && causeSlice?.behavior) {
+            actions.append(makeButton('Open source evidence', () => {
+                vscode.postMessage({
+                    type: 'openSource',
+                    nodeId: causeSlice.behavior.id,
+                    location: evidenceReference.sourceRange || evidenceReference.location,
+                    modelRevision: runtime.revision,
+                    revision: runtime.revision,
+                    context: viewState().analysisContext
+                });
+            }));
+        }
         actions.append(makeButton('Select source', () => selectNode(edge.source, true)));
         actions.append(makeButton('Select target', () => selectNode(edge.target, true)));
         content.append(actions);
@@ -1660,9 +1903,19 @@
         else if (['rule', 'method', 'function'].includes(node.kind)) {
             result = runtime.navigation.enterBehavior(node.id);
         } else if (['protocol-channel', 'endpoint'].includes(node.kind)) {
-            result = node.kind === 'protocol-channel'
-                ? runtime.navigation.inspectChannel(node.id)
-                : runtime.navigation.inspectEndpoint(node.id);
+            if (node.kind === 'protocol-channel') {
+                const queried = runtime.queries.getChannelMembers(node.semanticId || node.id);
+                result = queried.status === 'exact'
+                    ? runtime.navigation.inspectChannel(queried.channel, node.id)
+                    : { status: 'unresolved' };
+            } else {
+                const queried = runtime.queries.resolveEndpointImplementation(node.semanticId || node.id, {
+                    ownerInstanceId: viewState().analysisContext?.ownerInstanceId
+                });
+                result = queried.endpoint
+                    ? runtime.navigation.inspectEndpoint({ ...queried.endpoint, kind: 'endpoint' }, node.id)
+                    : { status: 'unresolved' };
+            }
         } else if (node.kind === 'module') {
             result = runtime.navigation.setProjection({
                 level: 'module',
@@ -1806,56 +2059,70 @@
 
     function revealSourceReference(sourceReference, revision) {
         if (!runtime.view || Number.isInteger(revision) && revision !== runtime.revision) return;
-        const state = viewState();
-        const resolution = SourceResolution.resolve(runtime.model, sourceReference, {
-            ...runtime.view.sourceResolutionContext(state.selectedId),
-            visibleNodeIds: runtime.graph.byId.keys()
+        const supplied = sourceReference?.references?.[0];
+        const range = supplied?.sourceRange || supplied?.location;
+        const reference = range?.uri ? {
+            uri: range.uri,
+            line: range.line,
+            column: range.column
+        } : supplied?.id || null;
+        const resolution = runtime.queries.resolveSourceReference(reference, {
+            ownerInstanceId: viewState().analysisContext?.ownerInstanceId
         });
+        const candidates = (resolution.references || []).filter((candidate) =>
+            runtime.view.indexes.nodeById.has(candidate.id)
+        );
         runtime.pendingSourceResolution = resolution;
         runtime.pendingRevealId = null;
         elements.revealNotice.querySelector('.reveal-candidates')?.remove();
         elements.revealNotice.dataset.resolutionStatus = resolution.status;
-        if (resolution.status === 'visible-exact') {
-            elements.revealNotice.hidden = true;
-            runtime.editorRevealId = resolution.presentationNodeId;
-            selectNode(resolution.presentationNodeId, true);
-            applyEditorReveal();
+        if (resolution.status === 'exact' && candidates.length === 1) {
+            revealCanonicalReference(candidates[0]);
             return;
         }
-        const name = (sourceReference.references || [])
-            .map((reference) => reference.name)
-            .join(', ') || 'Source selection';
-        const messages = {
-            'visible-multiple': `${name}: ${resolution.candidates.length} architecture matches. Choose an occurrence.`,
-            'outside-focus': `${name} is outside current focus.`,
-            'outside-view': `${name} is outside the current view.`,
-            unresolved: `${name} has no resolved source identity.`
-        };
-        elements.revealNoticeText.textContent = messages[resolution.status];
+        const name = supplied?.name || 'Source selection';
+        elements.revealNoticeText.textContent = candidates.length > 1
+            ? `${name}: ${candidates.length} semantic matches. Choose an occurrence.`
+            : `${name} has no resolved semantic presentation.`;
         elements.revealNotice.hidden = false;
-        elements.revealCurrentView.hidden = resolution.candidates.length !== 1;
-        elements.revealCurrentView.disabled = resolution.candidates.length !== 1;
-        if (resolution.candidates.length === 1) {
-            runtime.pendingRevealId = resolution.candidates[0].id;
-        } else if (resolution.candidates.length > 1) {
+        elements.revealCurrentView.hidden = true;
+        elements.revealCurrentView.disabled = true;
+        if (candidates.length > 1) {
             const choices = document.createElement('div');
             choices.className = 'reveal-candidates';
-            for (const candidate of resolution.candidates) {
-                const node = runtime.view.indexes.nodeById.get(candidate.id);
-                choices.append(makeButton(node?.details?.path || node?.label || candidate.id, () => {
-                    elements.revealNotice.hidden = true;
-                    if (runtime.graph.byId.has(candidate.id)) {
-                        runtime.editorRevealId = candidate.id;
-                        selectNode(candidate.id, true);
-                        applyEditorReveal();
-                    } else {
-                        runtime.pendingRevealId = candidate.id;
-                        revealPendingNode();
-                    }
-                }));
+            for (const candidate of candidates) {
+                const owner = runtime.view.indexes.nodeById.get(candidate.ownerInstanceId);
+                choices.append(makeButton(
+                    owner?.details?.path || candidate.ownerInstanceId || candidate.id,
+                    () => revealCanonicalReference(candidate)
+                ));
             }
             elements.revealNotice.append(choices);
         }
+    }
+
+    function revealCanonicalReference(reference) {
+        elements.revealNotice.hidden = true;
+        const node = runtime.view.indexes.nodeById.get(reference.id);
+        if (!node) return;
+        let result;
+        if (['method', 'rule', 'function'].includes(reference.kind)) {
+            result = runtime.navigation.enterBehavior(reference.id, {
+                subject: reference.entity
+            });
+        } else if (['method-endpoint', 'subinterface-endpoint', 'endpoint'].includes(reference.kind)) {
+            result = runtime.navigation.inspectEndpoint(
+                { ...reference.entity, kind: 'endpoint' },
+                reference.id
+            );
+        } else if (node.architectureInstance) {
+            result = runtime.navigation.enterInstance(reference.id);
+        } else result = runtime.navigation.inspectCode(reference.id);
+        if (result.status !== 'committed') return;
+        runtime.editorRevealId = reference.id;
+        finishNavigation();
+        centerNode(reference.id);
+        applyEditorReveal();
     }
 
     function revealPendingNode() {
@@ -1910,11 +2177,15 @@
             startId: nodeId,
             targetId: null,
             paths: [],
+            semanticPaths: [],
             index: 0,
             truncated: false,
             visitedNodes: 0,
             elapsedMs: 0,
-            limitReason: null
+            limitReason: null,
+            status: null,
+            scope: null,
+            uncertainty: null
         };
         updateTraceUi();
         applySelectionHighlight();
@@ -1924,25 +2195,67 @@
 
     function traceTo(targetId) {
         const trace = viewState().trace;
-        const result = Graph.shortestPaths(trace.startId, targetId, runtime.graph.edges, { directed: true });
+        const result = traceSemanticBetween(trace.startId, targetId);
         trace.targetId = targetId;
-        trace.paths = result.paths;
+        trace.semanticPaths = result.paths;
+        trace.paths = result.paths.map((path) => [
+            path.fromId,
+            ...path.steps.map((step) => step.toId)
+        ]);
         trace.index = 0;
         trace.truncated = result.truncated;
-        trace.visitedNodes = result.visitedNodes;
-        trace.elapsedMs = result.elapsedMs;
-        trace.limitReason = result.limitReason;
+        trace.visitedNodes = result.visitedCount;
+        trace.elapsedMs = 0;
+        trace.limitReason = null;
+        trace.status = result.status;
+        trace.scope = result.paths[0]?.scope || result.scope || null;
+        trace.uncertainty = result.uncertainty || result.paths.find((path) => path.uncertainty)?.uncertainty || null;
         updateTraceUi();
         applySelectionHighlight();
         persistState();
-        showToast(
-            result.paths.length
-                ? result.truncated
-                    ? `${result.paths.length}+ shortest paths found. Additional shortest paths were omitted.`
-                    : `${result.paths.length} shortest path${result.paths.length === 1 ? '' : 's'} found.`
-                : result.truncated ? 'Path search limit reached.' : 'No path in current view.',
-            result.paths.length === 0
-        );
+        const messages = {
+            unresolved: 'Semantic trace endpoints are unresolved.',
+            'no-path': 'No canonical semantic payload path.',
+            'search-limit': 'Canonical semantic path search limit reached.'
+        };
+        const exactMessage = `${result.paths.length} canonical semantic path${
+            result.paths.length === 1 ? '' : 's'
+        } found${trace.uncertainty ? ` with uncertainty: ${trace.uncertainty}` : '.'}`;
+        showToast(messages[result.status] || exactMessage, result.status !== 'exact');
+    }
+
+    function traceSemanticBetween(fromId, toId) {
+        const direct = runtime.queries.traceSemanticFlow({ fromId, toId });
+        if (direct.status === 'exact' || direct.status === 'search-limit') return direct;
+        const fromComposition = runtime.queries.getInstanceComposition(fromId);
+        const toComposition = runtime.queries.getInstanceComposition(toId);
+        if (fromComposition.status !== 'exact' || toComposition.status !== 'exact') return direct;
+        const results = [];
+        let visitedCount = 0;
+        let truncated = false;
+        const uncertainty = new Set();
+        for (const source of fromComposition.endpoints) {
+            for (const target of toComposition.endpoints) {
+                const result = runtime.queries.traceSemanticFlow({
+                    fromId: source.id,
+                    toId: target.id
+                });
+                visitedCount += result.visitedCount || 0;
+                truncated ||= result.truncated === true;
+                if (result.uncertainty) uncertainty.add(result.uncertainty);
+                if (result.status === 'exact') results.push(...result.paths);
+            }
+        }
+        const paths = [...new Map(results.map((path) => [
+            path.steps.map((step) => step.flowId).join('\u0000'), path
+        ])).values()];
+        return {
+            status: paths.length ? 'exact' : truncated ? 'search-limit' : 'no-path',
+            paths,
+            visitedCount,
+            truncated,
+            uncertainty: [...uncertainty].join(', ') || null
+        };
     }
 
     function traceRelations(nodeId, direction, kinds) {
@@ -1955,11 +2268,15 @@
             startId: paths[0]?.[0] || nodeId,
             targetId: paths[0]?.at(-1) || null,
             paths,
+            semanticPaths: [],
             index: 0,
             truncated: false,
             visitedNodes: 0,
             elapsedMs: 0,
-            limitReason: null
+            limitReason: null,
+            status: paths.length ? 'exact' : 'no-path',
+            scope: null,
+            uncertainty: null
         };
         updateTraceUi();
         applySelectionHighlight();
@@ -1980,11 +2297,15 @@
             startId: null,
             targetId: null,
             paths: [],
+            semanticPaths: [],
             index: 0,
             truncated: false,
             visitedNodes: 0,
             elapsedMs: 0,
-            limitReason: null
+            limitReason: null,
+            status: null,
+            scope: null,
+            uncertainty: null
         };
     }
 
@@ -2005,35 +2326,43 @@
         const activePath = trace.paths[trace.index] || [];
         const activeTarget = activePath.at(-1) || trace.targetId;
         if (count) {
-            const pathEdges = activePath.slice(0, -1).map((source, index) =>
+            const semanticSteps = trace.semanticPaths?.[trace.index]?.steps || [];
+            const pathEdges = semanticSteps.length ? semanticSteps : activePath.slice(0, -1).map((source, index) =>
                 runtime.graph.edges.find((edge) =>
                     edge.source === source && edge.target === activePath[index + 1]
                 )
             ).filter(Boolean);
             const payloads = [...new Set(pathEdges
-                .map((edge) => edge.label)
+                .map((edge) => edge.mapping?.payloadType || edge.label)
                 .filter(Boolean))];
             const payloadNotice = payloads.length
                 ? ` · Payload ${payloads.join(', ')}`
                 : '';
             const evidenceNotice = pathEdges.some((edge) =>
-                edge.sourceLocation || edge.evidence
+                edge.sourceLocation || edge.evidence || edge.evidenceRefs?.length
             ) ? ' · Source evidence' : '';
-            const limitNotice = trace.truncated
-                ? trace.limitReason === 'max-paths'
-                    ? ' · Additional shortest paths were omitted.'
-                    : ' · Path search limit reached.'
+            const limitNotice = trace.truncated ? ' · Canonical query search limit reached' : '';
+            const uncertaintyNotice = trace.uncertainty
+                ? ` · Uncertainty ${trace.uncertainty}` : '';
+            const scope = trace.semanticPaths?.[trace.index]?.scope || trace.scope;
+            const scopeNotice = scope
+                ? ` · Query scope ${scope.fromRootInstanceId || 'unresolved'} to ${
+                    scope.toRootInstanceId || 'unresolved'
+                }`
                 : '';
             elements.traceSummary.textContent = `Path ${trace.index + 1} of ${count}${
                 trace.truncated ? '+' : ''
             } · ${nodeLabel(activePath[0] || trace.startId)} to ${
                 nodeLabel(activeTarget)
-            }${payloadNotice}${evidenceNotice}${limitNotice}`;
+            }${payloadNotice}${evidenceNotice}${scopeNotice}${uncertaintyNotice}${limitNotice}`;
         } else {
+            const statusText = {
+                unresolved: 'Semantic trace endpoints are unresolved',
+                'no-path': 'No canonical semantic payload path',
+                'search-limit': 'Canonical semantic path search limit reached'
+            }[trace.status];
             elements.traceSummary.textContent = `Start: ${nodeLabel(trace.startId)}${
-                trace.targetId
-                    ? trace.truncated ? ' · Path search limit reached' : ' · No path'
-                    : ''
+                trace.targetId && statusText ? ` · ${statusText}` : ''
             }`;
         }
         elements.tracePrevious.disabled = count < 2;
@@ -2047,6 +2376,12 @@
         const tracedPairs = new Set(tracePath.slice(0, -1).map((id, index) => `${id}|${tracePath[index + 1]}`));
         const connected = new Set(selected ? [selected] : []);
         const selectedNode = runtime.view?.indexes.nodeById.get(selected);
+        const semanticDetail = ['protocol-channel', 'endpoint'].includes(
+            viewState().analysisContext?.subject?.kind
+        );
+        if (semanticDetail) {
+            for (const node of runtime.graph.nodes) connected.add(node.id);
+        }
         if (selected) {
             for (const edge of runtime.graph.edges) {
                 if (edge.source === selected) connected.add(edge.target);
@@ -2074,7 +2409,8 @@
             const ownedEdge = selectedNode?.kind === 'module'
                 && moduleOwnerId(edge?.source) === selected
                 && moduleOwnerId(edge?.target) === selected;
-            const connectedEdge = selected && (edge?.source === selected || edge?.target === selected || ownedEdge);
+            const connectedEdge = semanticDetail || selected
+                && (edge?.source === selected || edge?.target === selected || ownedEdge);
             const traced = tracedPairs.has(`${edge?.source}|${edge?.target}`)
                 || edge?.bidirectional && tracedPairs.has(`${edge?.target}|${edge?.source}`);
             group.classList.toggle('connected', Boolean(connectedEdge || selectedEdge));

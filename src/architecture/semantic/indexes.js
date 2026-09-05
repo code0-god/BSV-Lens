@@ -21,14 +21,29 @@ function buildSemanticIndexes(model) {
         endpointsByInstance: grouped(endpoints, (item) => item.ownerInstanceId),
         bindingById: mapById(bindings),
         bindingsByInstance: grouped(bindings, (item) => item.ownerInstanceId || item.targetInstanceId),
+        bindingsByBehavior: grouped(bindings, (item) => item.behaviorId),
         channelById: mapById(channels),
         channelsByInstance: grouped(channels, (item) => item.ownerInstanceId),
         flowById: mapById(flows),
+        flowsByNode: grouped(
+            flows.flatMap((flow) => [...new Set([flow.fromId, flow.toId].filter(Boolean))]
+                .map((nodeId) => ({ id: flow.id, nodeId, flow }))),
+            (entry) => entry.nodeId
+        ),
         flowsByEndpoint: grouped(
             flows.flatMap((flow) => endpointFlowEntries(flow)),
             (entry) => entry.endpointId
         ),
+        stateBehaviorById: mapById(stateBehaviors),
         stateBehaviorsByInstance: grouped(stateBehaviors, (item) => item.ownerInstanceId),
+        implementationEndpointsByBehavior: grouped(
+            endpoints.filter((item) => item.implementationMethodId).map((endpoint) => ({
+                id: endpoint.id,
+                behaviorKey: `${endpoint.ownerInstanceId}\u0000${endpoint.implementationMethodId}`,
+                endpoint
+            })),
+            (entry) => entry.behaviorKey
+        ),
         scheduleByBehavior: grouped(
             scheduleRelations.flatMap((relation) => [
                 { id: relation.id, behaviorId: relation.sourceBehaviorId, relation },
@@ -57,7 +72,7 @@ function grouped(items, key) {
         const value = key(item);
         if (value === null || value === undefined) continue;
         if (!result.has(value)) result.set(value, []);
-        result.get(value).push(item.flow || item.relation || item);
+        result.get(value).push(item.flow || item.relation || item.endpoint || item);
     }
     for (const values of result.values()) {
         values.sort((left, right) => String(left.id).localeCompare(String(right.id)));

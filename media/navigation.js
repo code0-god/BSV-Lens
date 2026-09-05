@@ -25,6 +25,7 @@
             ownerInstanceId: null,
             occurrencePath: [],
             subject: { kind: null, id: null },
+            presentationId: null,
             entryCallSiteId: null,
             bindingEnvironmentId: null,
             level: state.level || 'system',
@@ -47,6 +48,7 @@
                 kind: value.subject?.kind || null,
                 id: value.subject?.id || null
             },
+            presentationId: value.presentationId || value.subject?.id || null,
             entryCallSiteId: value.entryCallSiteId || null,
             bindingEnvironmentId: value.bindingEnvironmentId || null,
             level: state.level || value.level || 'system',
@@ -95,6 +97,7 @@
         const rootFor = options.rootFor;
         const project = typeof options.project === 'function' ? options.project : () => true;
         let modelRevision = Number.isInteger(options.modelRevision) ? options.modelRevision : 0;
+        let semanticParentSnapshot = null;
 
         function exactNode(id) {
             return typeof id === 'string' && id ? getNode(id) || null : null;
@@ -111,42 +114,49 @@
             return null;
         }
 
-        function contextFor(candidate, subjectNode) {
-            const owner = ownerInstance(subjectNode)
-                || ownerInstance(exactNode(candidate.focusStack?.at(-1)));
-            const root = owner ? rootFor(owner.id) : subjectNode ? rootFor(subjectNode.id) : null;
+        function contextFor(candidate, presentationNode, semanticSubject = presentationNode, metadata = {}) {
+            const semanticOwner = exactNode(semanticSubject?.ownerInstanceId);
+            const owner = semanticOwner?.architectureInstance ? semanticOwner
+                : ownerInstance(presentationNode)
+                    || ownerInstance(exactNode(candidate.focusStack?.at(-1)));
+            const root = owner ? rootFor(owner.id) : presentationNode ? rootFor(presentationNode.id) : null;
             const path = owner ? focusPath(owner.id) : [];
             return {
                 modelRevision,
                 rootInstanceId: root?.id || null,
-                ownerInstanceId: owner?.id || null,
+                ownerInstanceId: owner?.id || semanticSubject?.ownerInstanceId || null,
                 occurrencePath: path,
                 subject: {
-                    kind: subjectNode?.kind || null,
-                    id: subjectNode?.id || null
+                    kind: semanticSubject?.kind || presentationNode?.kind || null,
+                    id: semanticSubject?.id || presentationNode?.id || null
                 },
-                entryCallSiteId: subjectNode?.entryCallSiteId
-                    || subjectNode?.details?.entryCallSiteId || null,
-                bindingEnvironmentId: subjectNode?.bindingEnvironmentId
-                    || subjectNode?.details?.bindingEnvironmentId || null,
+                presentationId: presentationNode?.id || null,
+                entryCallSiteId: metadata.entryCallSiteId
+                    || semanticSubject?.entryCallSiteId
+                    || presentationNode?.entryCallSiteId
+                    || presentationNode?.details?.entryCallSiteId || null,
+                bindingEnvironmentId: metadata.bindingEnvironmentId
+                    || semanticSubject?.bindingEnvironmentId
+                    || presentationNode?.bindingEnvironmentId
+                    || presentationNode?.details?.bindingEnvironmentId || null,
                 level: candidate.level,
                 mode: candidate.analysisMode
             };
         }
 
-        function candidateFor(node, changes) {
+        function candidateFor(node, changes, semanticSubject = node, metadata = {}) {
             const candidate = clone(state);
             Object.assign(candidate, changes);
-            candidate.analysisContext = contextFor(candidate, node);
+            candidate.analysisContext = contextFor(candidate, node, semanticSubject, metadata);
             candidate.navigationRecovery = null;
             candidate.navigationVersion = STATE_VERSION;
             return candidate;
         }
 
-        function applyCandidate(candidate, recordHistory) {
+        function applyCandidate(candidate, recordHistory, historySource = null) {
             if (!project(candidate)) return { status: 'unresolved' };
             if (recordHistory) {
-                state.navigationHistory.back.push(snapshot(state));
+                state.navigationHistory.back.push(clone(historySource) || snapshot(state));
                 state.navigationHistory.back = state.navigationHistory.back.slice(-HISTORY_LIMIT);
                 state.navigationHistory.forward = [];
             }
@@ -194,30 +204,44 @@
             });
         }
 
-        function inspectChannel(nodeId) {
-            return transition(nodeId, { selectedId: nodeId }, {
-                accept: (node) => node.kind === 'protocol-channel'
-            });
+        function inspectChannel(subject, presentationId = subject?.id || subject) {
+            const presentation = exactNode(presentationId);
+            const semantic = typeof subject === 'object' ? subject : presentation;
+            if (!presentation || presentation.kind !== 'protocol-channel' || !semantic?.id) {
+                return { status: 'unresolved' };
+            }
+            const candidate = candidateFor(presentation, { selectedId: presentation.id }, semantic);
+            const result = applyCandidate(candidate, true);
+            if (result.status === 'committed') semanticParentSnapshot = snapshot(state);
+            return result;
         }
 
-        function inspectEndpoint(nodeId) {
-            return transition(nodeId, { selectedId: nodeId }, {
-                accept: (node) => node.kind === 'endpoint'
-            });
+        function inspectEndpoint(subject, presentationId = subject?.id || subject) {
+            const presentation = exactNode(presentationId);
+            const semantic = typeof subject === 'object' ? subject : presentation;
+            if (!presentation || presentation.kind !== 'endpoint' || !semantic?.id) {
+                return { status: 'unresolved' };
+            }
+            return applyCandidate(candidateFor(presentation, {
+                selectedId: presentation.id
+            }, semantic), false);
         }
 
-        function enterBehavior(nodeId) {
-            return transition(nodeId, (node) => {
-                const owner = ownerInstance(node);
-                return {
-                    level: 'behavior',
-                    focusStack: owner ? focusPath(owner.id) : state.focusStack,
-                    selectedId: node.id
-                };
-            }, {
-                history: true,
-                accept: (node) => ['rule', 'method', 'function'].includes(node.kind)
-            });
+        function enterBehavior(nodeId, metadata = {}) {
+            const node = exactNode(nodeId);
+            if (!node || !['rule', 'method', 'function'].includes(node.kind)) {
+                return { status: 'unresolved' };
+            }
+            const owner = ownerInstance(node);
+            const candidate = candidateFor(node, {
+                level: 'behavior',
+                focusStack: owner ? focusPath(owner.id) : state.focusStack,
+                selectedId: node.id
+            }, metadata.subject || node, metadata);
+            const historySource = metadata.fromSemanticParent ? semanticParentSnapshot : null;
+            const result = applyCandidate(candidate, true, historySource);
+            if (result.status === 'committed') semanticParentSnapshot = null;
+            return result;
         }
 
         function enterFunctionCall(nodeId) {
@@ -285,7 +309,12 @@
             const target = state.navigationHistory[from].at(-1);
             const candidate = clone(state);
             restore(candidate, target);
-            candidate.analysisContext = reconcileContext(candidate, modelRevision);
+            candidate.analysisContext = {
+                ...candidate.analysisContext,
+                modelRevision,
+                level: candidate.level,
+                mode: candidate.analysisMode
+            };
             if (!project(candidate)) return { status: 'unresolved' };
             state.navigationHistory[from].pop();
             state.navigationHistory[to].push(snapshot(state));
@@ -311,7 +340,9 @@
             const missingPathId = path.find((id) => !exactNode(id));
             if (missingPathId) return missingPathId;
             const subjectId = value.analysisContext?.subject?.id;
-            return subjectId && !exactNode(subjectId) ? subjectId : null;
+            const presentationId = value.analysisContext?.presentationId;
+            return subjectId && (!presentationId || presentationId === subjectId) && !exactNode(subjectId)
+                ? subjectId : null;
         }
 
         function reconcileValue(value) {

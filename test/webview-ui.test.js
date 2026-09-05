@@ -67,9 +67,9 @@ test('webview runtime uses indexed graph helper and actual SVG chevrons', () => 
     assert.match(source, /runtime\.view\.indexes\.nodeById/);
     assert.match(source, /class: 'group-chevron'/);
     assert.match(source, /marker-start/);
-    assert.match(source, /Graph\.shortestPaths/);
+    assert.match(source, /runtime\.queries\.traceSemanticFlow/);
     assert.match(source, /result\.truncated/);
-    assert.match(source, /result\.limitReason/);
+    assert.match(source, /result\.uncertainty/);
     assert.match(source, /function compareNodes/);
     assert.doesNotMatch(source, /\.append\(svgElement\('title'\)\)\.textContent/);
     assert.match(source, /aria-expanded/);

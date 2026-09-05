@@ -444,7 +444,12 @@ function modelOwnsLocation(model, target) {
         'semanticDiagnostics'
     ];
     return collections.some((name) => (model?.[name] || []).some((item) =>
-        [item.location, item.sourceLocation, item.compilerLocation].some((location) =>
+        [
+            item.location, item.sourceRange, item.sourceLocation, item.compilerLocation,
+            ...(item.evidenceRefs || []).flatMap((reference) => [
+                reference.sourceRange, reference.location
+            ])
+        ].some((location) =>
             location?.uri === target.uri
             && (location.line || 0) === (target.line || 0)
             && (location.column || 0) === (target.column || 0)

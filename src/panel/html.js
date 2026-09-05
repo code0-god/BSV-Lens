@@ -3,6 +3,7 @@
 function getWebviewHtml(webview, extensionUri, vscode) {
     const graphViewUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'graph-view.js'));
     const navigationUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'navigation.js'));
+    const semanticQueryUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'semantic-query.js'));
     const textMetricsUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'text-metrics.js'));
     const layoutUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'webview-layout.js'));
     const sourceResolutionUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'source-resolution.js'));
@@ -182,6 +183,7 @@ function getWebviewHtml(webview, extensionUri, vscode) {
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script nonce="${nonce}" src="${graphViewUri}"></script>
+    <script nonce="${nonce}" src="${semanticQueryUri}"></script>
     <script nonce="${nonce}" src="${navigationUri}"></script>
     <script nonce="${nonce}" src="${textMetricsUri}"></script>
     <script nonce="${nonce}" src="${layoutUri}"></script>

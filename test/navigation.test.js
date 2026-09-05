@@ -3,6 +3,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const Navigation = require('../media/navigation');
+const Graph = require('../media/graph-view');
 
 function fixture() {
     const nodes = [
@@ -50,6 +51,21 @@ function controller(saved = state(), options = {}) {
     };
 }
 
+test('aggregate presentation edges retain their original canonical semantic flow IDs', () => {
+    const indexes = Graph.buildIndexes({
+        nodes: [
+            { id: 'producer', kind: 'instance' },
+            { id: 'consumer', kind: 'instance' }
+        ],
+        semanticFlows: [{ id: 'flow:payload:exact' }],
+        edges: [{
+            id: 'aggregate', source: 'producer', target: 'consumer', kind: 'payload',
+            semanticId: 'flow:payload:exact'
+        }]
+    });
+    assert.equal(indexes.edgeById.get('aggregate').semanticFlowId, 'flow:payload:exact');
+});
+
 test('exposes the complete Gate A intent surface', () => {
     const { navigation } = controller();
     for (const intent of [
@@ -71,6 +87,7 @@ test('migrates legacy focus state into explicit versioned AnalysisContext', () =
         ownerInstanceId: 'child',
         occurrencePath: ['root', 'child'],
         subject: { kind: 'method', id: 'method' },
+        presentationId: 'method',
         entryCallSiteId: null,
         bindingEnvironmentId: null,
         level: 'behavior',
@@ -94,6 +111,7 @@ test('enterInstance retains occurrence identity instead of opening its definitio
         ownerInstanceId: 'child',
         occurrencePath: ['root', 'child'],
         subject: { kind: 'instance', id: 'child' },
+        presentationId: 'child',
         entryCallSiteId: 'call:child',
         bindingEnvironmentId: 'env:child',
         level: 'module',
@@ -134,7 +152,7 @@ test('Back captures the immediate pre-navigation selection and viewport without 
     const { navigation } = controller(saved);
     navigation.reconcileModel(7);
 
-    navigation.inspectChannel('channel');
+    navigation.selectEntity('channel');
     saved.transform = { x: 91, y: -24, scale: 1.7 };
     assert.equal(saved.navigationHistory.back.length, 0);
     navigation.enterBehavior('method');
@@ -143,6 +161,35 @@ test('Back captures the immediate pre-navigation selection and viewport without 
     assert.equal(saved.selectedId, 'channel');
     assert.deepEqual(saved.focusStack, ['root', 'child']);
     assert.deepEqual(saved.transform, { x: 91, y: -24, scale: 1.7 });
+});
+
+test('semantic channel detail keeps canonical subject separate from presentation and owns implementation Back', () => {
+    const saved = state({ level: 'module', focusStack: ['root', 'child'], selectedId: 'child' });
+    const { navigation } = controller(saved);
+    navigation.reconcileModel(7);
+    const channel = { id: 'semantic-channel', kind: 'protocol-channel', ownerInstanceId: 'child' };
+    const endpoint = { id: 'semantic-endpoint', kind: 'endpoint', ownerInstanceId: 'child' };
+
+    navigation.inspectChannel(channel, 'channel');
+    assert.deepEqual(saved.analysisContext.subject, { kind: 'protocol-channel', id: 'semantic-channel' });
+    assert.equal(saved.analysisContext.presentationId, 'channel');
+    navigation.inspectEndpoint(endpoint, 'endpoint');
+    assert.deepEqual(saved.analysisContext.subject, { kind: 'endpoint', id: 'semantic-endpoint' });
+    assert.equal(saved.navigationHistory.back.length, 1);
+
+    navigation.enterBehavior('method', {
+        fromSemanticParent: true,
+        entryCallSiteId: 'call:currentWork',
+        bindingEnvironmentId: 'binding:currentWork'
+    });
+    assert.equal(saved.analysisContext.entryCallSiteId, 'call:currentWork');
+    assert.equal(saved.analysisContext.bindingEnvironmentId, 'binding:currentWork');
+    navigation.goBack();
+    assert.deepEqual(saved.analysisContext.subject, { kind: 'protocol-channel', id: 'semantic-channel' });
+    assert.equal(saved.selectedId, 'channel');
+    navigation.goBack();
+    assert.deepEqual(saved.analysisContext.subject, { kind: 'instance', id: 'child' });
+    assert.equal(saved.selectedId, 'child');
 });
 
 test('leaf channel and endpoint inspection never replaces occurrence containment', () => {
@@ -156,7 +203,7 @@ test('leaf channel and endpoint inspection never replaces occurrence containment
     navigation.inspectEndpoint('endpoint');
     assert.deepEqual(saved.focusStack, ['root', 'child']);
     assert.equal(saved.selectedId, 'endpoint');
-    assert.equal(saved.navigationHistory.back.length, 0);
+    assert.equal(saved.navigationHistory.back.length, 1);
 });
 
 test('resolution and projection are atomic and unresolved intents preserve the valid screen', () => {

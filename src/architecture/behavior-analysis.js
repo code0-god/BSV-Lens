@@ -205,6 +205,14 @@ function invocationArguments(masked, original, memberEnd) {
 function addAccess(data, accesses, seen) {
     const absolute = data.statement.start + data.matchIndex;
     const snippet = normalizeWhitespace(data.original);
+    const leadingWhitespace = /^\s*/.exec(data.original)?.[0].length || 0;
+    const trailingWhitespace = /\s*$/.exec(data.original)?.[0].length || 0;
+    const sourceStart = data.statement.start + leadingWhitespace;
+    const sourceEnd = data.statement.end - trailingWhitespace;
+    const sourceText = data.original.slice(
+        leadingWhitespace,
+        Math.max(leadingWhitespace, data.original.length - trailingWhitespace)
+    );
     const key = [
         data.instance.name,
         data.memberPath || data.member || '',
@@ -234,6 +242,10 @@ function addAccess(data, accesses, seen) {
         analysisOrigin: 'Source-derived',
         confidence: data.operation === 'unclassified-access' ? 'unknown' : 'explicit',
         sourceEvidence: snippet,
+        sourceText,
+        sourceRange: typeof data.makeLocation === 'function'
+            ? data.makeLocation(sourceStart, sourceEnd)
+            : null,
         location,
         evidence: {
             callable: data.callable,

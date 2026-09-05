@@ -15,6 +15,12 @@ function buildSemanticFlows(options) {
     const behaviorByDefinitionOwner = new Map(behaviors.map((item) => [
         `${item.ownerInstanceId}\u0000${item.definitionId}`, item
     ]));
+    const implementationByEndpoint = new Map(endpoints.map((endpoint) => [
+        endpoint.id,
+        behaviorByDefinitionOwner.get(
+            `${endpoint.ownerInstanceId}\u0000${endpoint.implementationMethodId}`
+        ) || null
+    ]));
     const channelByEndpoint = channelIndex(channels);
 
     for (const access of accessBindings) {
@@ -22,18 +28,27 @@ function buildSemanticFlows(options) {
         if (endpoint) {
             if (endpoint.category === 'action' || endpoint.category === 'action-value') {
                 add(flows, flow('invoke', access.behaviorId, endpoint.id, access, channelByEndpoint,
-                    { fromBehaviorId: access.behaviorId, toEndpointId: endpoint.id }));
+                    { fromBehaviorId: access.behaviorId, toEndpointId: endpoint.id,
+                        causeBehaviorId: access.behaviorId, callSiteId: access.callSiteId,
+                        ownerInstanceId: access.ownerInstanceId, relationRole: 'control',
+                        evidenceRefs: access.evidenceRefs || [] }));
             }
             if (endpoint.category === 'value' || endpoint.category === 'action-value') {
                 add(flows, flow('return', endpoint.id, access.behaviorId, access, channelByEndpoint,
-                    { fromEndpointId: endpoint.id, toBehaviorId: access.behaviorId }));
+                    { fromEndpointId: endpoint.id, toBehaviorId: access.behaviorId,
+                        causeBehaviorId: access.behaviorId, callSiteId: access.callSiteId,
+                        ownerInstanceId: access.ownerInstanceId, relationRole: 'control',
+                        evidenceRefs: access.evidenceRefs || [] }));
             }
         } else if (access.resolutionStatus === 'exact') {
             const kind = access.accessKind === 'write' ? 'state-write' : 'state-read';
             const from = kind === 'state-write' ? access.behaviorId : access.targetInstanceId;
             const to = kind === 'state-write' ? access.targetInstanceId : access.behaviorId;
             add(flows, flow(kind, from, to, access, channelByEndpoint, {
-                behaviorId: access.behaviorId, stateInstanceId: access.targetInstanceId
+                behaviorId: access.behaviorId, stateInstanceId: access.targetInstanceId,
+                causeBehaviorId: access.behaviorId, callSiteId: access.callSiteId,
+                ownerInstanceId: access.ownerInstanceId, relationRole: 'control',
+                evidenceRefs: access.evidenceRefs || []
             }));
         }
     }
@@ -44,17 +59,20 @@ function buildSemanticFlows(options) {
         if (!implementation) continue;
         if (endpoint.category === 'action' || endpoint.category === 'action-value') {
             add(flows, flow('invoke', endpoint.id, implementation.id, endpoint, channelByEndpoint, {
-                fromEndpointId: endpoint.id, toBehaviorId: implementation.id, implementationLink: true
+                fromEndpointId: endpoint.id, toBehaviorId: implementation.id, implementationLink: true,
+                ownerInstanceId: endpoint.ownerInstanceId, relationRole: 'implementation'
             }));
         }
         if (endpoint.category === 'value' || endpoint.category === 'action-value') {
             add(flows, flow('return', implementation.id, endpoint.id, endpoint, channelByEndpoint, {
-                fromBehaviorId: implementation.id, toEndpointId: endpoint.id, implementationLink: true
+                fromBehaviorId: implementation.id, toEndpointId: endpoint.id, implementationLink: true,
+                ownerInstanceId: endpoint.ownerInstanceId, relationRole: 'implementation'
             }));
         }
     }
     projectStructuralBindings(bindings, flows, channelByEndpoint);
-    projectPayloads(accessBindings, behaviors, endpointById, channelByEndpoint, flows, diagnostics);
+    projectPayloads(accessBindings, behaviors, endpointById, implementationByEndpoint,
+        channelByEndpoint, flows, diagnostics);
 
     const maxEdges = positive(limits.maxEdges, 25000);
     if (flows.length > maxEdges) diagnostics.push({
@@ -69,17 +87,19 @@ function projectStructuralBindings(bindings, flows, channels) {
     for (const binding of bindings) {
         if (binding.kind === 'constructor-binding' && binding.resolutionStatus === 'exact') {
             add(flows, flow('constructor-binding', binding.sourceInstanceId, binding.targetInstanceId,
-                binding, channels, { bindingId: binding.id }));
+                binding, channels, { bindingId: binding.id, relationRole: 'binding' }));
         }
         if (binding.kind === 'interface-forward' && binding.resolutionStatus === 'exact') {
             add(flows, flow('interface-forward', binding.outerEndpointId, binding.innerEndpointId,
                 binding, channels, { bindingId: binding.id, fromEndpointId: binding.outerEndpointId,
-                    toEndpointId: binding.innerEndpointId }));
+                    toEndpointId: binding.innerEndpointId, relationRole: 'binding' }));
         }
     }
 }
 
-function projectPayloads(accesses, behaviors, endpointById, channels, flows, diagnostics) {
+function projectPayloads(
+    accesses, behaviors, endpointById, implementationByEndpoint, channels, flows, diagnostics
+) {
     const byBehavior = groupBy(accesses.filter((item) => item.endpointId), (item) => item.behaviorId);
     const behaviorById = new Map(behaviors.map((item) => [item.id, item]));
     const ownerEndpoint = new Map();
@@ -100,7 +120,10 @@ function projectPayloads(accesses, behaviors, endpointById, channels, flows, dia
                     diagnostics.push(unresolvedDiagnostic(consumer, consumer.arguments[index], candidates));
                     continue;
                 }
-                if (candidates.length === 1) addPayload(candidates[0], consumer, target, index, flows, channels);
+                if (candidates.length === 1) addPayload(
+                    candidates[0], consumer, target, index, flows, channels,
+                    implementationByEndpoint, behaviorById
+                );
             }
         }
         const behavior = behaviorById.get(behaviorId);
@@ -136,17 +159,40 @@ function bareAssignmentAlias(access) {
     return match?.[1] || null;
 }
 
-function addPayload(producer, consumer, target, index, flows, channels, suffix = '') {
+function addPayload(
+    producer, consumer, target, index, flows, channels,
+    implementationByEndpoint, behaviorById, suffix = ''
+) {
     const source = producer.endpoint;
     const parameter = target.parameters?.[index];
     if (!source || !parameter) return;
     const comparison = compareContractTypes(parameter.type, source.resultType || source.returnType);
     const evidence = `${producer.sourceEvidence} -> ${consumer.sourceEvidence}`;
+    const aliases = producerAliasNames(producer);
+    const evidenceRefs = [
+        evidenceReference('producer', producer),
+        evidenceReference('consumer-call', consumer)
+    ].filter(Boolean);
     add(flows, flow('payload', source.id, target.id, consumer, channels, {
-        fromEndpointId: source.id, toEndpointId: target.id, parameterIndex: index,
-        parameterName: parameter.name, payloadType: source.resultType || source.returnType,
-        payloadTypeStatus: comparison.status, confidence: comparison.status, evidence,
-        comparison, alias: suffix || consumer.arguments[index]
+        fromEndpointId: source.id, toEndpointId: target.id,
+        producerEndpointId: source.id, consumerEndpointId: target.id,
+        producerImplementationBehaviorId: implementationByEndpoint.get(source.id)?.id || null,
+        consumerImplementationBehaviorId: implementationByEndpoint.get(target.id)?.id || null,
+        causeBehaviorId: consumer.behaviorId, callSiteId: consumer.callSiteId,
+        ownerInstanceId: behaviorById.get(consumer.behaviorId)?.ownerInstanceId || null,
+        parameterIndex: index, parameterName: parameter.name,
+        consumerArgumentIndex: index, consumerArgumentName: parameter.name,
+        consumerArgumentExpression: consumer.arguments[index],
+        sourceExpression: endpointExpression(producer), sourceAliases: aliases,
+        payloadType: source.resultType || source.returnType,
+        payloadTypeStatus: comparison.status, resolutionStatus: 'exact',
+        confidence: comparison.status, evidence, evidenceRefs,
+        provenance: {
+            analysisOrigin: SOURCE_ORIGIN,
+            resolutionStatus: 'exact',
+            payloadTypeStatus: comparison.status
+        },
+        relationRole: 'payload', comparison, alias: suffix || consumer.arguments[index]
     }));
 }
 function addReturn(producer, target, flows, channels) {
@@ -163,10 +209,39 @@ function addReturn(producer, target, flows, channels) {
 function unresolvedDiagnostic(consumer, alias, candidates) {
     return { code: 'semantic-flow.unresolved', severity: 'info',
         message: `Payload alias ${alias} has multiple endpoint producers.`,
-        behaviorId: consumer.behaviorId, evidence: { producerEndpointIds: candidates.map((item) => item.endpointId) },
+        behaviorId: consumer.behaviorId,
+        ownerInstanceId: consumer.ownerInstanceId,
+        consumerEndpointId: consumer.endpointId,
+        callSiteId: consumer.callSiteId,
+        sourceExpression: alias,
+        resolutionStatus: 'ambiguous',
+        evidenceRefs: consumer.evidenceRefs || [],
+        evidence: { producerEndpointIds: candidates.map((item) => item.endpointId) },
         location: consumer.location || null, analysisOrigin: SOURCE_ORIGIN };
 }
 function isReturnExpression(item) { return /^\s*return\b/.test(item.sourceEvidence || ''); }
+function endpointExpression(access) {
+    const instance = access.evidence?.referencedInstance;
+    return instance && access.memberPath ? `${instance}.${access.memberPath}` : null;
+}
+function producerAliasNames(producer) {
+    return [...new Set([
+        producer.valueBinding,
+        producer.resultBinding,
+        bareAssignmentAlias(producer)
+    ].filter(Boolean))];
+}
+function evidenceReference(role, access) {
+    if (!access?.sourceEvidence) return null;
+    return {
+        kind: role,
+        id: access.callSiteId || access.id,
+        bindingId: access.id,
+        text: access.sourceText || access.sourceEvidence,
+        location: access.location || null,
+        sourceRange: access.sourceRange || access.location || null
+    };
+}
 
 function flow(kind, fromId, toId, evidence, channels, extra = {}) {
     const result = { id: semanticFlowId(kind, fromId, toId, extra.alias || evidence.id), kind,

@@ -92,9 +92,19 @@ module mkWorker(WorkerIfc#(arrayDim));
     endmethod
 endmodule
 
+interface LooseIfc;
+    method Bit#(8) orphan;
+endinterface
+
+module mkLoose(LooseIfc);
+    // Deliberately unresolved interface implementation for Gate B UI coverage.
+endmodule
+
 module mkFlowTop(Empty);
     SchedulerIfc#(16) scheduler <- mkScheduler;
+    SchedulerIfc#(16) schedulerMirror <- mkScheduler;
     WorkerIfc#(16) worker <- mkWorker;
+    LooseIfc loose <- mkLoose;
     Reg#(Bool) priorAccumulation <- mkReg(False);
 
     rule bridge(

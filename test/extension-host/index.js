@@ -57,6 +57,15 @@ async function run() {
         [rule.location.line, rule.location.column, rule.location.endLine, rule.location.endColumn]
     );
     assert.equal(document.getText(selection), 'countAccepted');
+    const reference = panel.model.semanticFlows.flatMap((flow) => flow.evidenceRefs || [])
+        .find((item) => item.sourceRange && item.text);
+    assert.ok(reference, 'semantic flow retains an original source evidence range');
+    const evidenceChanged = nextSelection(vscode.Uri.parse(reference.sourceRange.uri), reference.sourceRange);
+    await panel.handleMessage({
+        type: 'openSource', location: reference.sourceRange, revision: panel.modelRevision
+    });
+    const evidenceEvent = await evidenceChanged;
+    assert.equal(evidenceEvent.textEditor.document.getText(evidenceEvent.selections[0]), reference.text);
     ArchitecturePanel.currentPanel.dispose();
 }
 

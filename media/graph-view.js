@@ -27,6 +27,7 @@
     });
     const BUCKETS = Object.freeze([
         { kind: 'protocol-channels', collapsed: false },
+        { kind: 'endpoints', collapsed: false },
         { kind: 'interfaces', collapsed: false },
         { kind: 'methods', collapsed: true },
         { kind: 'rules', collapsed: true },
@@ -97,12 +98,21 @@
     }
 
     function buildIndexes(model) {
-        const nodes = (model?.nodes || []).filter(Boolean).slice().sort(compareNodes);
+        const projectedIds = new Set((model?.nodes || []).filter(Boolean).map((node) => node.id));
+        const instanceById = new Map((model?.instances || []).map((instance) => [instance.id, instance]));
+        const endpointPresentations = (model?.endpoints || [])
+            .filter((endpoint) => endpoint?.id && !projectedIds.has(endpoint.id))
+            .map((endpoint) => endpointPresentation(endpoint, instanceById.get(endpoint.ownerInstanceId)));
+        const nodes = [...(model?.nodes || []).filter(Boolean), ...endpointPresentations]
+            .sort(compareNodes);
         const nodeById = new Map(nodes.map((node) => [node.id, node]));
         const visibleNodes = nodes.filter((node) => !node.hidden);
+        const semanticFlowIds = new Set((model?.semanticFlows || []).map((flow) => flow.id));
         const edges = (model?.edges || [])
             .filter((edge) => edge && nodeById.has(edge.source) && nodeById.has(edge.target))
-            .slice()
+            .map((edge) => semanticFlowIds.has(edge.semanticFlowId || edge.semanticId)
+                ? { ...edge, semanticFlowId: edge.semanticFlowId || edge.semanticId }
+                : edge)
             .sort(compareEdges);
         const edgeById = new Map(edges.map((edge) => [edge.id, edge]));
         const children = mapOfArrays(nodes.map((node) => node.id));
@@ -142,6 +152,38 @@
             relationsByNode,
             edgesByMode,
             adjacencyByMode
+        };
+    }
+
+    function endpointPresentation(endpoint, owner) {
+        return {
+            id: endpoint.id,
+            semanticId: endpoint.id,
+            sourceId: endpoint.name,
+            name: endpoint.name,
+            label: endpoint.name,
+            kind: 'endpoint',
+            parentId: endpoint.ownerInstanceId,
+            ownerId: endpoint.ownerInstanceId,
+            relativePath: endpoint.relativePath || owner?.relativePath || null,
+            location: endpoint.location || null,
+            sourceRange: endpoint.sourceRange || null,
+            analysisOrigin: endpoint.analysisOrigin || 'Source-derived',
+            confidence: endpoint.contractStatus || endpoint.resolutionStatus || 'explicit',
+            sourceEvidence: endpoint.evidence?.declaration || '',
+            details: {
+                endpointKind: endpoint.kind,
+                interfacePath: endpoint.interfacePath,
+                direction: endpoint.direction,
+                category: endpoint.category,
+                parameters: endpoint.parameters,
+                resultType: endpoint.resultType,
+                implementationMethodId: endpoint.implementationMethodId
+            },
+            ports: [],
+            reads: [],
+            writes: [],
+            invocations: []
         };
     }
 
@@ -238,22 +280,30 @@
                 startId: null,
                 targetId: null,
                 paths: [],
+                semanticPaths: [],
                 index: 0,
                 truncated: false,
                 visitedNodes: 0,
                 elapsedMs: 0,
-                limitReason: null
+                limitReason: null,
+                status: null,
+                scope: null,
+                uncertainty: null
             };
         }
         return {
             startId: value.startId || null,
             targetId: value.targetId || null,
             paths: Array.isArray(value.paths) ? value.paths.map((path) => path.slice()) : [],
+            semanticPaths: Array.isArray(value.semanticPaths) ? value.semanticPaths.map((path) => ({ ...path })) : [],
             index: Number.isInteger(value.index) && value.index >= 0 ? value.index : 0,
             truncated: value.truncated === true,
             visitedNodes: Number.isInteger(value.visitedNodes) ? Math.max(0, value.visitedNodes) : 0,
             elapsedMs: Number.isFinite(value.elapsedMs) ? Math.max(0, value.elapsedMs) : 0,
-            limitReason: typeof value.limitReason === 'string' ? value.limitReason : null
+            limitReason: typeof value.limitReason === 'string' ? value.limitReason : null,
+            status: typeof value.status === 'string' ? value.status : null,
+            scope: value.scope && typeof value.scope === 'object' ? { ...value.scope } : null,
+            uncertainty: typeof value.uncertainty === 'string' ? value.uncertainty : null
         };
     }
 
@@ -270,6 +320,7 @@
 
     function bucketFor(node) {
         if (node.kind === 'protocol-channel') return 'protocol-channels';
+        if (node.kind === 'endpoint') return 'endpoints';
         if (node.kind === 'interface') return 'interfaces';
         if (node.kind === 'method') return 'methods';
         if (node.kind === 'rule') return 'rules';
@@ -942,17 +993,26 @@
                 .filter((node) => node && !node.hidden);
             const descriptors = moduleNode?.architectureInstance
                 ? BUCKETS
-                : BUCKETS.filter((descriptor) => descriptor.kind !== 'protocol-channels');
+                : BUCKETS.filter((descriptor) =>
+                    !['protocol-channels', 'endpoints'].includes(descriptor.kind)
+                );
+            const channelEndpointIds = new Set((this.model.protocolChannels || [])
+                .filter((channel) => channel.ownerInstanceId === moduleId)
+                .flatMap((channel) => Object.values(channel.methods || {})));
             return descriptors.map((descriptor) => {
                 const hiddenMethods = descriptor.kind === 'methods' && this.state.showMethodPorts === false;
                 const members = hiddenMethods
                     ? []
+                    : descriptor.kind === 'endpoints'
+                    ? children.filter((node) => node.kind === 'endpoint' && !channelEndpointIds.has(node.id))
                     : descriptor.kind === 'interfaces'
                     ? uniqueNodes([...children.filter((node) => bucketFor(node) === descriptor.kind), ...implemented])
                     : children.filter((node) => bucketFor(node) === descriptor.kind);
                 const rawMembers = descriptor.kind === 'interfaces'
                     ? uniqueNodes([...rawChildren.filter((node) => bucketFor(node) === descriptor.kind), ...implemented])
-                    : rawChildren.filter((node) => bucketFor(node) === descriptor.kind);
+                    : descriptor.kind === 'endpoints'
+                        ? rawChildren.filter((node) => node.kind === 'endpoint' && !channelEndpointIds.has(node.id))
+                        : rawChildren.filter((node) => bucketFor(node) === descriptor.kind);
                 const configured = moduleNode?.memberBuckets?.[configuredBucketName(descriptor.kind)];
                 const defaultCollapsed = this.state.collapseModuleMembers === false && descriptor.collapsed
                     ? false
@@ -1331,6 +1391,7 @@
     function bucketLabel(kind) {
         return {
             'protocol-channels': 'Protocol Channels',
+            endpoints: 'Ungrouped Endpoints',
             interfaces: 'Interfaces',
             methods: 'Methods',
             rules: 'Rules',

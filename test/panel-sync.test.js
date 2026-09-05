@@ -3,6 +3,8 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const { ArchitecturePanel } = require('../src/panel/architecture-panel');
+const { buildFlowFixture } = require('./semantic-fixture');
+const { createSemanticQueries } = require('../media/semantic-query');
 
 function makePanel(enabled = true) {
     const messages = [];
@@ -290,6 +292,23 @@ test('direct source navigation accepts only locations owned by current model', a
         /not owned by the current architecture model/
     );
     assert.deepEqual(opened, ['file:///workspace/Flow.bsv']);
+
+    instance.model = { ...buildFlowFixture(), nodes: [], edges: [] };
+    const payload = instance.model.semanticFlows.find((flow) => flow.kind === 'payload');
+    const evidence = createSemanticQueries(instance.model).getFlowEvidence(payload.id).evidenceRefs;
+    for (const reference of evidence) {
+        await instance.openSource(null, reference.sourceRange);
+        const selection = selected.at(-1);
+        assert.deepEqual(
+            [selection.start.line, selection.start.column, selection.end.line, selection.end.column],
+            [reference.sourceRange.line, reference.sourceRange.column,
+                reference.sourceRange.endLine, reference.sourceRange.endColumn]
+        );
+    }
+    await assert.rejects(
+        instance.openSource(null, { ...evidence[0].sourceRange, endColumn: 999 }),
+        /not owned by the current architecture model/
+    );
 });
 
 test('source navigation rejects stale revisions before opening an editor', async () => {

@@ -49,7 +49,7 @@ test('System Structure defaults to instance architecture and drills into channel
         'scheduler',
         'worker'
     ]);
-    await expect(page.locator('.kind-instance').filter({ hasText: 'scheduler' }))
+    await expect(exactNavigationNode(page, 'scheduler', 'instance'))
         .toContainText('mkScheduler');
     await page.locator('#fit').click();
     await expectNodesInsideCanvas(page);
@@ -97,12 +97,59 @@ test('System Data Flow renders typed instance flow and directed trace', async ({
     await page.locator('[data-analysis-mode="data-flow"]').click();
 
     // Then
-    await expect(page.locator('.kind-instance').filter({ hasText: 'scheduler' })).toBeVisible();
+    await expect(exactNavigationNode(page, 'scheduler', 'instance')).toBeVisible();
     await expect(page.locator('.kind-instance').filter({ hasText: 'worker' })).toBeVisible();
     await expect(page.locator('.edge-label')).toContainText('ArrayWork#(arrayDim)');
+    const aggregateFlow = await page.evaluate(() => {
+        const scheduler = window.__model.nodes.find((node) => node.architectureInstance && node.name === 'scheduler');
+        const worker = window.__model.nodes.find((node) => node.architectureInstance && node.name === 'worker');
+        const edge = window.__model.edges.find((candidate) =>
+            candidate.kind === 'payload' && candidate.source === scheduler.id && candidate.target === worker.id
+        );
+        const flow = window.__model.semanticFlows.find((candidate) => candidate.id === edge.semanticId);
+        return { edgeId: edge.id, behaviorId: flow.causeBehaviorId, callSiteId: flow.callSiteId,
+            ownerInstanceId: flow.ownerInstanceId,
+            evidenceRange: flow.evidenceRefs[0].sourceRange };
+    });
+    const aggregateFlowEdgeId = aggregateFlow.edgeId;
+    await page.locator(`.edge-group[data-edge-id="${aggregateFlowEdgeId}"]`).click();
+    await expect(page.locator('#inspector')).toContainText('Semantic Flow ID');
+    await expect(page.locator('#inspector')).toContainText('currentWork');
+    await expect(page.locator('#inspector')).toContainText('start');
+    await expect(page.locator('#inspector')).toContainText('Consumer argument');
+    await expect(page.locator('#inspector')).toContainText('work');
+    await expect(page.locator('#inspector')).toContainText('Cause behavior');
+    await expect(page.locator('#inspector')).toContainText('bridge');
+    await expect(page.getByRole('button', { name: 'Inspect producer', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Inspect consumer', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Inspect transfer code', exact: true })).toBeVisible();
+    await subscribeToHostMessage(page, 'openSource');
+    await page.getByRole('button', { name: 'Open source evidence', exact: true }).click();
+    expect(await nextHostMessage(page)).toMatchObject({
+        type: 'openSource',
+        nodeId: aggregateFlow.behaviorId,
+        location: aggregateFlow.evidenceRange
+    });
+    const transferState = {
+        level: 'behavior',
+        selectedId: aggregateFlow.behaviorId,
+        analysisContext: {
+            ownerInstanceId: aggregateFlow.ownerInstanceId,
+            presentationId: aggregateFlow.behaviorId,
+            subject: { kind: 'rule', id: aggregateFlow.behaviorId },
+            entryCallSiteId: aggregateFlow.callSiteId
+        }
+    };
+    await subscribeToState(page, transferState);
+    await page.getByRole('button', { name: 'Inspect transfer code', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(transferState);
+    await expect(page.locator('#inspector')).toContainText('worker.start(work, priorAccumulation);');
+    await subscribeToState(page, { level: 'system', analysisMode: 'data-flow', selectedId: null });
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    await nextState(page);
 
     // When
-    await page.locator('.kind-instance').filter({ hasText: 'scheduler' }).click();
+    await exactNavigationNode(page, 'scheduler', 'instance').click();
     await page.getByRole('button', { name: 'Trace from here' }).click();
     await page.locator('.kind-instance').filter({ hasText: 'worker' }).click();
     await page.getByRole('button', { name: 'Trace to here' }).click();
@@ -116,6 +163,16 @@ test('System Data Flow renders typed instance flow and directed trace', async ({
         path: '.build/visual-qa-v040/system-typed-flow.png',
         fullPage: true
     });
+
+    await page.getByRole('button', { name: 'Clear trace', exact: true }).click();
+    await exactNavigationNode(page, 'scheduler', 'instance').click();
+    await page.getByRole('button', { name: 'Trace from here', exact: true }).click();
+    await exactNavigationNode(page, 'schedulerMirror', 'instance').click();
+    await subscribeToState(page, { trace: { status: 'no-path' } });
+    await page.getByRole('button', { name: 'Trace to here', exact: true }).click();
+    expect(await nextState(page)).toMatchObject({ trace: { status: 'no-path' } });
+    await expect(page.locator('#tracebar')).toContainText('No canonical semantic payload path');
+    await expect(page.locator('#tracebar')).not.toContainText('current view');
     expect(errors).toEqual([]);
 });
 
@@ -215,6 +272,28 @@ async function subscribeToState(page, expected) {
 
 async function nextState(page) {
     return page.evaluate(() => window.__nextBsvState);
+}
+
+async function subscribeToHostMessage(page, type) {
+    await page.evaluate((messageType) => {
+        window.__nextBsvHostMessage = new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                window.removeEventListener('bsv-host-message', onMessage);
+                reject(new Error(`Timed out waiting for host message ${messageType}`));
+            }, 5000);
+            const onMessage = (event) => {
+                if (event.detail?.type !== messageType) return;
+                clearTimeout(timeout);
+                window.removeEventListener('bsv-host-message', onMessage);
+                resolve(event.detail);
+            };
+            window.addEventListener('bsv-host-message', onMessage);
+        });
+    }, type);
+}
+
+async function nextHostMessage(page) {
+    return page.evaluate(() => window.__nextBsvHostMessage);
 }
 
 test('Gate A double-click entry preserves occurrences with full Back and Forward snapshots', async ({ page }) => {
@@ -327,5 +406,206 @@ test('Gate A double-click entry preserves occurrences with full Back and Forward
     await expect(page.locator('#reveal-notice')).toBeVisible();
     await expect(page.locator('#reveal-notice')).toContainText('Recovered its owning instance');
 
+    expect(errors).toEqual([]);
+});
+
+test('Gate B drills Work channel through endpoint implementation and semantic Back history', async ({ page }) => {
+    const errors = browserErrors(page);
+    await page.goto('/');
+    const ids = await page.evaluate(() => {
+        const root = window.__model.nodes.find((node) =>
+            node.architectureInstance && node.details?.root && node.name === 'mkFlowTop'
+        );
+        const owner = window.__model.nodes.find((node) =>
+            node.architectureInstance && node.parentId === root.id && node.name === 'scheduler'
+        );
+        const channel = window.__model.protocolChannels.find((item) =>
+            item.ownerInstanceId === owner.id && item.name === 'Work'
+        );
+        const endpoint = window.__model.endpoints.find((item) =>
+            item.ownerInstanceId === owner.id && item.name === 'currentWork'
+        );
+        const implementation = window.__model.stateBehaviors.find((item) =>
+            item.ownerInstanceId === owner.id && item.definitionId === endpoint.implementationMethodId
+        );
+        return { root: root.id, owner: owner.id, channel: channel.id,
+            endpoint: endpoint.id, implementation: implementation.id };
+    });
+
+    await subscribeToState(page, { selectedId: ids.root, level: 'module' });
+    await exactNavigationNode(page, 'mkFlowTop', 'instance').dblclick();
+    await nextState(page);
+    await subscribeToState(page, { selectedId: ids.owner, level: 'module' });
+    await exactNavigationNode(page, 'scheduler', 'instance').dblclick();
+    await nextState(page);
+
+    const channelState = {
+        level: 'module', selectedId: ids.channel,
+        analysisContext: {
+            ownerInstanceId: ids.owner, presentationId: ids.channel,
+            subject: { kind: 'protocol-channel', id: ids.channel }
+        }
+    };
+    await subscribeToState(page, channelState);
+    await exactNavigationNode(page, 'Work', 'protocol-channel').dblclick();
+    expect(await nextState(page)).toMatchObject(channelState);
+    await expect(page.locator('#inspector')).toContainText('Owner');
+    await expect(page.locator('#inspector')).toContainText('scheduler');
+    await expect(page.locator('#inspector')).toContainText('Members');
+    await expect(page.locator('#inspector')).toContainText('payload');
+    await expect(page.locator('#inspector')).toContainText('ArrayWork#(arrayDim)');
+    await expect(page.locator('#inspector')).toContainText('Provenance');
+    await expect(page.locator('#inspector')).toContainText('Source-derived interface declarations');
+    await expect(page.locator('#inspector')).toContainText('Grouping confidence');
+    await expect(page.locator('#inspector')).toContainText('Heuristic');
+    await expect(page.locator('#inspector')).toContainText('Inference basis');
+    await expect(page.locator('#inspector')).toContainText('Method name and type convention');
+    await expect(page.locator('#inspector')).toContainText('Source evidence');
+    await expect(page.locator('#inspector')).toContainText('method ArrayWork#(arrayDim) currentWork');
+    await expect(page.locator('#inspector')).not.toContainText('exact-method-contract');
+    await expect(page.locator('#inspector')).not.toContainText('endpointIds');
+    await expect(page.getByRole('button', { name: 'Open currentWork source', exact: true })).toBeVisible();
+    expect(await page.locator('.arch-node.kind-endpoint, .arch-node.kind-instance').evaluateAll((nodes) =>
+        nodes.map((node) => ({
+            id: node.dataset.nodeId,
+            dimmed: node.classList.contains('dimmed'),
+            opacity: getComputedStyle(node).opacity
+        }))
+    )).toEqual(expect.arrayContaining([
+        expect.objectContaining({ id: ids.owner, dimmed: false, opacity: '1' }),
+        expect.objectContaining({ id: ids.endpoint, dimmed: false, opacity: '1' })
+    ]));
+    await page.screenshot({ path: '.build/system-code/gate-b-work-channel.png', fullPage: true });
+
+    const endpointState = {
+        selectedId: ids.endpoint,
+        analysisContext: {
+            ownerInstanceId: ids.owner, presentationId: ids.endpoint,
+            subject: { kind: 'endpoint', id: ids.endpoint }
+        }
+    };
+    await subscribeToState(page, endpointState);
+    await page.getByRole('button', { name: 'Inspect currentWork endpoint', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(endpointState);
+    await expect(page.locator('#inspector')).toContainText('Declaration');
+    await expect(page.locator('#inspector')).toContainText('Implementation');
+    await expect(page.locator('#inspector')).toContainText('Incoming uses');
+    await expect(page.locator('#inspector')).toContainText('Outgoing uses');
+    await expect(page.locator('#inspector')).toContainText('Source evidence');
+    await expect(page.locator('#inspector')).not.toContainText('Unresolved implementation');
+
+    const implementationState = {
+        level: 'behavior', selectedId: ids.implementation,
+        analysisContext: {
+            ownerInstanceId: ids.owner, presentationId: ids.implementation,
+            subject: { kind: 'method', id: ids.implementation }
+        }
+    };
+    await subscribeToState(page, implementationState);
+    await page.getByRole('button', { name: 'Inspect currentWork implementation', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(implementationState);
+    await expect(page.locator('#inspector')).toContainText('method ArrayWork#(arrayDim) currentWork if (active);');
+
+    await subscribeToState(page, channelState);
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(channelState);
+    await expect(page.locator('#inspector')).toContainText('Work');
+    await expect(page.locator('#inspector')).toContainText('currentWork');
+
+    const ownerState = {
+        level: 'module', selectedId: ids.owner,
+        analysisContext: {
+            ownerInstanceId: ids.owner, presentationId: ids.owner,
+            subject: { kind: 'instance', id: ids.owner }
+        }
+    };
+    await subscribeToState(page, ownerState);
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(ownerState);
+    await expect(page.locator('#focus-summary')).toContainText('scheduler');
+    expect(errors).toEqual([]);
+});
+
+test('Gate B source reveal requires an explicit occurrence choice for shared definitions', async ({ page }) => {
+    const errors = browserErrors(page);
+    await page.goto('/');
+    const reveal = await page.evaluate(() => {
+        const mirrors = window.__model.stateBehaviors.filter((behavior) =>
+            behavior.name === 'currentWork'
+        );
+        const mirror = mirrors.find((behavior) => window.__model.nodes.find((node) =>
+            node.id === behavior.ownerInstanceId
+        )?.details?.path.endsWith('schedulerMirror'));
+        return {
+            location: mirrors[0].location,
+            mirrorId: mirror.id,
+            mirrorOwnerId: mirror.ownerInstanceId
+        };
+    });
+    await page.evaluate((location) => window.dispatchEvent(new MessageEvent('message', {
+        data: {
+            type: 'revealSource',
+            sourceReference: { references: [{ name: 'currentWork', location }] },
+            revision: 0
+        }
+    })), reveal.location);
+    await expect(page.locator('#reveal-notice')).toContainText('Choose an occurrence');
+    await expect(page.getByRole('button', { name: 'mkFlowTop.scheduler', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'mkFlowTop.schedulerMirror', exact: true })).toBeVisible();
+    expect(await page.evaluate(() => window.__savedState.selectedId)).toBeNull();
+
+    const selected = {
+        level: 'behavior',
+        selectedId: reveal.mirrorId,
+        analysisContext: {
+            ownerInstanceId: reveal.mirrorOwnerId,
+            presentationId: reveal.mirrorId,
+            subject: { kind: 'method', id: reveal.mirrorId }
+        }
+    };
+    await subscribeToState(page, selected);
+    await page.getByRole('button', { name: 'mkFlowTop.schedulerMirror', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(selected);
+    expect(errors).toEqual([]);
+});
+
+test('Gate B keeps ungrouped endpoints direct and labels unresolved implementation', async ({ page }) => {
+    const errors = browserErrors(page);
+    await page.goto('/');
+    const ids = await page.evaluate(() => {
+        const root = window.__model.nodes.find((node) =>
+            node.architectureInstance && node.details?.root && node.name === 'mkFlowTop'
+        );
+        const owner = window.__model.nodes.find((node) =>
+            node.architectureInstance && node.parentId === root.id && node.name === 'loose'
+        );
+        const endpoint = window.__model.endpoints.find((item) =>
+            item.ownerInstanceId === owner.id && item.name === 'orphan'
+        );
+        return { root: root.id, owner: owner.id, endpoint: endpoint.id };
+    });
+    await subscribeToState(page, { selectedId: ids.root, level: 'module' });
+    await exactNavigationNode(page, 'mkFlowTop', 'instance').dblclick();
+    await nextState(page);
+    await subscribeToState(page, { selectedId: ids.owner, level: 'module' });
+    await exactNavigationNode(page, 'loose', 'instance').dblclick();
+    await nextState(page);
+    await expect(page.locator('.kind-member-group').filter({ hasText: 'Ungrouped Endpoints' })).toBeVisible();
+
+    const endpointState = {
+        selectedId: ids.endpoint,
+        analysisContext: {
+            ownerInstanceId: ids.owner,
+            presentationId: ids.endpoint,
+            subject: { kind: 'endpoint', id: ids.endpoint }
+        }
+    };
+    await subscribeToState(page, endpointState);
+    await exactNavigationNode(page, 'orphan', 'endpoint').dblclick();
+    expect(await nextState(page)).toMatchObject(endpointState);
+    await expect(page.locator('#inspector')).toContainText('Unresolved implementation');
+    await expect(page.locator('#inspector')).toContainText('method Bit#(8) orphan');
+    await expect(page.locator('#inspector')).toContainText('Owner');
+    await expect(page.locator('#inspector')).toContainText('loose');
     expect(errors).toEqual([]);
 });
