@@ -111,6 +111,22 @@ One logical BSV interface method represented by a Method card and Inspector meta
 
 Actual SVG path plus marker. Relation kind is encoded by label, marker/direction, stroke pattern, and color. Module Structure uses one collision-free module-to-group bus; group-to-member containment is encoded by the measured member panel rather than redundant crossing paths. Hierarchy markers use fixed diagram-space geometry so selection stroke changes never resize them. Potential scheduling dependencies are dashed. Bidirectional relations show markers at both ends.
 
+### Multiple roots and external boundaries
+
+System Structure uses one hierarchy region and one independently owned trunk per architecture
+root. Root headers expose aggregate instance, channel, unresolved, and boundary counts without
+expanding dense method lists. Source/package dependencies remain secondary. Root selection,
+focus, and Back preserve semantic context rather than treating layout connectivity as scope.
+
+Unbound public interfaces are external boundaries, not errors. System Data Flow separates
+external inputs from outputs, labels direction, and retains source evidence in Inspector.
+Structure uses summaries rather than additional external hardware cards. Boundary and inferred
+relations remain readable without color. Node cards sit above buses and labels.
+
+Source reveal feedback distinguishes hidden, other-view, ambiguous, and absent presentations.
+Ambiguous definition occurrences require explicit selection; representative source evidence
+never silently becomes the selected declaration.
+
 ### Origin badge and scheduling legend
 
 Scheduling precedence cycles use one dashed warning-token region behind their member nodes while every original relation keeps its own kind, marker, and evidence. The region label reports member count and never replaces relation semantics.

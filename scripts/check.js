@@ -14,7 +14,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'ut
 
 assert.equal(manifest.name, 'bsv-lens');
 assert.equal(manifest.displayName, 'BSV Lens');
-assert.equal(manifest.version, '0.4.0');
+assert.equal(manifest.version, '0.4.1');
 assert.equal(manifest.publisher, 'code0-god');
 assert.equal(manifest.main, './src/extension.js');
 assert.equal(manifest.engines.vscode.startsWith('^'), true);
@@ -32,6 +32,7 @@ const required = [
     'src/architecture/interface-contract-types.js',
     'src/architecture/interface-contracts.js',
     'src/architecture/semantic/behavior-bindings.js',
+    'src/architecture/semantic/boundaries.js',
     'src/architecture/semantic/constructor-bindings.js',
     'src/architecture/semantic/contracts.js',
     'src/architecture/semantic/definitions.js',
@@ -45,6 +46,7 @@ const required = [
     'src/architecture/semantic/provenance.js',
     'src/architecture/semantic/scheduling.js',
     'src/architecture/semantic/semantic-flow.js',
+    'src/architecture/semantic/source-references.js',
     'src/architecture/semantic/state-behaviors.js',
     'src/architecture/scheduling.js',
     'src/architecture/symbol-resolver.js',

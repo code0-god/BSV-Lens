@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.4.1 — 2026-09-05
+
+- Resolve source declarations through canonical semantic definitions and contextual hierarchy occurrences instead of borrowed graph locations.
+- Distinguish visible, hidden, other-view, ambiguous, and unavailable source reveal outcomes; offer an explicit occurrence choice.
+- Preserve independent architecture roots with root selection, focus/Back navigation, hierarchy depth, root-owned buses, and compact boundary summaries.
+- Add source-derived external input/output boundary presentations without connecting unrelated roots through matching payload types.
+- Correct initial render viewport fitting and retain structured dimensions through fit/resize.
+- Add deterministic source-resolution, boundary, multi-root, browser, and real Extension Host regressions, including the pinned AQuA source fixture.
+- Update source synchronization documentation and the System Structure preview.
+
 ## 0.4.0 — 2026-09-04
 
 - Add source-derived instance architecture with stable definition and occurrence identities.

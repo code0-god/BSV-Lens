@@ -1,5 +1,28 @@
 # Extension architecture
 
+## Source, semantic identity, and presentation
+
+The parser retains declaration ranges. The symbol index selects the narrowest enclosing
+source reference, while `source-references.js` indexes those references against canonical
+semantic definitions and hierarchy occurrences. Representative locations on inferred channels
+are evidence, not new declarations.
+
+`source-resolution.js` resolves a source reference using level, mode, root, focus, selection,
+and visible presentation IDs. Its outcomes are `visible-exact`, `hidden-in-current-view`,
+`available-in-other-view`, `ambiguous`, and `not-representable`. Multiple remaining occurrences
+require a choice; no first-match fallback invents certainty. The panel transports source
+references and model revision, and the Webview handles explicit view transitions.
+
+The semantic model owns boundary endpoints and direction derived from the exposed contract
+and available bindings. Projections assign independent presentation IDs. System Structure
+shows root-owned hierarchy and boundary summaries; System Data Flow adds separate external
+input/output presentations. Neither layout positions nor shared type/package dependencies
+create hardware wiring.
+
+Remaining limits are explicit: constructor provenance and forwarding resolution remain
+conservative, protocol channels inferred from method patterns remain heuristic, and
+elaborated/generated hardware outside analyzed source is not treated as proven structure.
+
 ## Pipeline
 
 ```text

@@ -247,9 +247,31 @@ Node inspector에서:
 Diagram에서 node를 선택하고 **Open source** 또는 `Enter`를 누르면 선언으로 이동합니다.
 
 `bsvArchitecture.syncWithEditor`가 `true`이면 `.bsv` editor cursor가 움직일 때 가장
-작은 enclosing architecture symbol을 찾아 열린 diagram에 highlight합니다. Node가
-현재 focus 밖에 있으면 graph를 자동 변경하지 않고 **Reveal in current view** 안내를
-표시합니다. Selection 변화는 debounce되며 source 재분석을 일으키지 않습니다.
+작은 enclosing source symbol을 canonical semantic entity와 현재 view occurrence로
+해석합니다. Module definition은 현재 root나 선택한 occurrence를 우선하며, 여러
+instantiation이 남으면 후보를 선택합니다. Instance declaration은 해당 hierarchy
+occurrence로 이동합니다. Channel이 인용한 source location은 module declaration을
+대신하지 않습니다.
+
+해석 결과는 현재 표시 중, 현재 view에서 숨김, 다른 view에서 표시 가능, 후보 여러 개,
+표현 없음으로 구분합니다. 필요한 reveal action은 root/level/mode를 명시적으로
+전환합니다. Selection 변화는 debounce되며 source 재분석을 일으키지 않습니다.
+
+## 여러 architecture root와 외부 경계
+
+`All Roots`는 여러 source-derived architecture root를 독립된 hierarchy로 보여줍니다.
+Root selector와 root header로 한 root를 focus하고, `Back`으로 전체 구조로 돌아갑니다.
+`Component`는 focus가 있을 때 semantic connected component를 뜻하며, focus가 없으면
+`All Roots`로 표시합니다. 공유 package나 payload type만으로 root를 연결하지 않습니다.
+
+Root header는 instance/descendant, exposed channel, unresolved/boundary 요약을
+제공합니다. 조밀한 external channel 목록은 기본적으로 접혀 있으며 inspector에서
+확장할 수 있습니다. System Structure의 공통 trunk는 자기 root에만 연결됩니다.
+
+분석된 hierarchy 내부에 binding되지 않은 public endpoint는 `External boundary`이며
+오류가 아닙니다. System Data Flow는 각 root의 입력과 출력을 별도 boundary endpoint와
+source-derived 방향으로 표시합니다. 동일 payload type만으로 다른 root와 wiring하지
+않습니다. Inspector의 declaration evidence와 graph entity 의미는 분리됩니다.
 
 ## 명령
 
