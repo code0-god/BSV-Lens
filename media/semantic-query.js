@@ -307,19 +307,15 @@
             if (typeof reference === 'string' || reference?.id) {
                 const id = typeof reference === 'string' ? reference : reference.id;
                 const candidate = sourceReferenceForId(id);
-                if (!candidate || !contextAllowsOwner(context, candidate.ownerInstanceId)) return unresolved();
+                if (!candidate || !contextAllowsSourceEntity(context, candidate.entity)) return unresolved();
                 return { status: 'exact', references: [candidate] };
             }
             if (!reference?.uri || !Number.isInteger(reference.line)
                 || !Number.isInteger(reference.column)) return unresolved();
             let candidates = sourceCandidates().filter((candidate) =>
                 positionInRange(reference, candidate.sourceRange || candidate.location)
+                && contextAllowsSourceEntity(context, candidate.entity)
             );
-            if (context.ownerInstanceId) {
-                candidates = candidates.filter((candidate) =>
-                    candidate.ownerInstanceId === context.ownerInstanceId
-                );
-            }
             if (!candidates.length) return unresolved();
             const minimum = Math.min(...candidates.map((candidate) =>
                 rangeWeight(candidate.sourceRange || candidate.location)
@@ -376,6 +372,24 @@
                 sourceRange: entity.sourceRange || null,
                 entity
             };
+        }
+
+        function contextAllowsSourceEntity(context, entity) {
+            if (!context?.ownerInstanceId) return true;
+            const ownerId = ownerInstanceId(entity);
+            if (ownerId !== null) return context.ownerInstanceId === ownerId;
+            if (!entity.enclosingCallableId) return false;
+            const ownerBehaviors = values(index.stateBehaviorsByInstance, context.ownerInstanceId);
+            if (ownerBehaviors.some((behavior) =>
+                behavior.definitionId === entity.enclosingCallableId
+            )) return true;
+            const entryCallSite = index.callSiteById.get(context.entryCallSiteId);
+            return Boolean(
+                entryCallSite?.calleeDefinitionId === entity.enclosingCallableId
+                && ownerBehaviors.some((behavior) =>
+                    behavior.definitionId === entryCallSite.enclosingCallableId
+                )
+            );
         }
 
         function ownerInstanceId(entity) {

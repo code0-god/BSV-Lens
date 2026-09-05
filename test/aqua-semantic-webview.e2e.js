@@ -189,6 +189,118 @@ test('AQuA Behavior shows completeWork state effects protocol and evidence', asy
     expect(errors).toEqual([]);
 });
 
+test('AQuA hardware-owned pure-function source echo retains caller context', async ({ page }) => {
+    const errors = browserErrors(page);
+    await page.goto('/');
+    await page.locator('[data-analysis-mode="data-flow"]').click();
+    const ids = await page.evaluate(() => {
+        const behavior = window.__model.stateBehaviors.find((item) => item.name === 'beginArrayWork');
+        const transferCall = window.__model.callSites.find((item) =>
+            item.enclosingCallableId === behavior.definitionId && item.calleeName === 'fragments.start'
+        );
+        const flow = window.__model.semanticFlows.find((item) =>
+            item.kind === 'payload' && item.causeBehaviorId === behavior.id
+            && item.callSiteId === transferCall.id
+        );
+        const edge = window.__model.edges.find((item) => item.semanticId === flow.id
+            && window.__model.nodes.find((node) => node.id === item.source)?.architectureInstance
+            && window.__model.nodes.find((node) => node.id === item.target)?.architectureInstance);
+        const callSite = window.__model.callSites.find((item) =>
+            item.enclosingCallableId === behavior.definitionId
+            && item.calleeName === 'accumulatorBaseValid'
+        );
+        const callee = window.__model.functionDefinitions.find((item) =>
+            item.id === callSite.calleeDefinitionId
+        );
+        const expression = window.__model.expressions.find((item) =>
+            item.id === callee.returnExpressionIds[0]
+        );
+        const sourceReference = window.__model.sourceReferences.find((item) =>
+            item.id === expression.id
+        );
+        return {
+            behavior: behavior.id,
+            owner: behavior.ownerInstanceId,
+            edge: edge.id,
+            call: callSite.expressionId,
+            callSite: callSite.id,
+            callEnvironment: callSite.bindingEnvironmentId,
+            actualToFormal: callSite.actualToFormal,
+            argumentExpressionIds: callSite.argumentExpressionIds,
+            callee: callee.id,
+            calleeRevision: callee.sourceRevision,
+            expression: expression.id,
+            expressionKind: expression.kind,
+            expressionRevision: expression.sourceRevision,
+            expressionEnvironment: expression.bindingEnvironmentId,
+            sourceReference
+        };
+    });
+
+    await page.locator(`.edge-group[data-edge-id="${ids.edge}"] .edge-label`).click();
+    await subscribeToAquaState(page, {
+        selectedId: ids.behavior,
+        analysisContext: { ownerInstanceId: ids.owner }
+    });
+    await page.getByRole('button', { name: 'Inspect transfer code', exact: true }).click();
+    await nextAquaState(page);
+    await page.getByRole('button', { name: 'Inspect original code', exact: true }).click();
+    await page.locator(`[data-code-id="${ids.call}"]`).click();
+    expect(ids.actualToFormal).toEqual([
+        expect.objectContaining({ actualExpressionId: ids.argumentExpressionIds[0], formalName: 'work' }),
+        expect.objectContaining({
+            actualExpressionId: ids.argumentExpressionIds[1], formalName: 'arrayDimension'
+        })
+    ]);
+
+    const calleeState = {
+        selectedId: ids.behavior,
+        analysisContext: {
+            ownerInstanceId: ids.owner,
+            subject: { kind: 'function-definition', id: ids.callee },
+            sourceRevision: ids.calleeRevision,
+            entryCallSiteId: ids.callSite,
+            bindingEnvironmentId: ids.callEnvironment
+        }
+    };
+    await subscribeToAquaState(page, calleeState);
+    await page.getByRole('button', { name: 'Open accumulatorBaseValid definition', exact: true }).click();
+    expect(await nextAquaState(page)).toMatchObject(calleeState);
+
+    const expressionState = {
+        selectedId: null,
+        analysisContext: {
+            ownerInstanceId: ids.owner,
+            subject: { kind: ids.expressionKind, id: ids.expression },
+            sourceRevision: ids.expressionRevision,
+            entryCallSiteId: ids.callSite,
+            bindingEnvironmentId: ids.expressionEnvironment
+        }
+    };
+    expect(ids.sourceReference).toMatchObject({ id: ids.expression, kind: 'expression' });
+    await subscribeToAquaState(page, expressionState);
+    await page.evaluate((sourceReference) => window.dispatchEvent(new MessageEvent('message', {
+        data: {
+            type: 'revealSource', revision: 0,
+            sourceReference: { status: 'exact', references: [sourceReference] }
+        }
+    })), ids.sourceReference);
+    expect(await nextAquaState(page)).toMatchObject(expressionState);
+
+    const echo = await page.evaluate((sourceReference) => {
+        const before = structuredClone(window.__savedState);
+        window.dispatchEvent(new MessageEvent('message', {
+            data: {
+                type: 'revealSource', revision: 0,
+                sourceReference: { status: 'exact', references: [sourceReference] }
+            }
+        }));
+        return { before, after: structuredClone(window.__savedState) };
+    }, ids.sourceReference);
+    expect(echo.after).toEqual(echo.before);
+    expect(errors).toEqual([]);
+});
+
 test('AQuA canonical flow enters beginArrayWork code and fragments.start implementation', async ({ page }) => {
     const errors = browserErrors(page);
     await page.goto('/');

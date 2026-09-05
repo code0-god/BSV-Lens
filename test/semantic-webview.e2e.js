@@ -432,11 +432,15 @@ test('Gate B drills Work channel through endpoint implementation and semantic Ba
             item.enclosingCallableId === implementation.definitionId && item.kind === 'return'
         );
         const returnExpression = window.__model.expressions.find((item) => item.id === returned.expressionId);
+        const sourceReference = window.__model.sourceReferences.find((item) =>
+            item.id === returnExpression.id
+        );
         const directFunction = window.__model.functionDefinitions.find((item) => item.name === 'callChoose');
         return { root: root.id, owner: owner.id, channel: channel.id,
             endpoint: endpoint.id, implementation: implementation.id,
             returnExpression: returnExpression.id, returnKind: returnExpression.kind,
             sourceRevision: returnExpression.sourceRevision, sourceRange: returnExpression.sourceRange,
+            sourceReference,
             directFunction: directFunction.id, directFunctionRevision: directFunction.sourceRevision };
     });
 
@@ -452,6 +456,13 @@ test('Gate B drills Work channel through endpoint implementation and semantic Ba
         analysisContext: {
             ownerInstanceId: ids.owner, presentationId: ids.channel,
             subject: { kind: 'protocol-channel', id: ids.channel }
+        }
+    };
+    const ownerState = {
+        level: 'module', selectedId: ids.owner,
+        analysisContext: {
+            ownerInstanceId: ids.owner, presentationId: ids.owner,
+            subject: { kind: 'instance', id: ids.owner }
         }
     };
     await subscribeToState(page, channelState);
@@ -535,6 +546,35 @@ test('Gate B drills Work channel through endpoint implementation and semantic Ba
     expect(await nextHostMessage(page)).toMatchObject({
         type: 'openSource', nodeId: null, location: ids.sourceRange
     });
+    expect(ids.sourceReference).toMatchObject({
+        id: ids.returnExpression,
+        kind: 'expression',
+        sourceRange: ids.sourceRange
+    });
+    const echo = await page.evaluate((sourceReference) => {
+        const before = structuredClone(window.__savedState);
+        window.dispatchEvent(new MessageEvent('message', {
+            data: {
+                type: 'revealSource', revision: 0,
+                sourceReference: { status: 'exact', references: [sourceReference] }
+            }
+        }));
+        return { before, after: structuredClone(window.__savedState) };
+    }, ids.sourceReference);
+    expect(echo.after).toEqual(echo.before);
+
+    await subscribeToState(page, channelState);
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(channelState);
+    await subscribeToState(page, ownerState);
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(ownerState);
+    await subscribeToState(page, channelState);
+    await page.getByRole('button', { name: 'Forward', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(channelState);
+    await subscribeToState(page, codeState);
+    await page.getByRole('button', { name: 'Forward', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(codeState);
     await page.screenshot({ path: '.build/system-code/gate-c-current-work-code.png', fullPage: true });
 
     const directFunctionState = {
@@ -572,13 +612,6 @@ test('Gate B drills Work channel through endpoint implementation and semantic Ba
     await expect(page.locator('#inspector')).toContainText('Work');
     await expect(page.locator('#inspector')).toContainText('currentWork');
 
-    const ownerState = {
-        level: 'module', selectedId: ids.owner,
-        analysisContext: {
-            ownerInstanceId: ids.owner, presentationId: ids.owner,
-            subject: { kind: 'instance', id: ids.owner }
-        }
-    };
     await subscribeToState(page, ownerState);
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     expect(await nextState(page)).toMatchObject(ownerState);

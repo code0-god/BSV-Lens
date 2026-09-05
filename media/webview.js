@@ -2415,18 +2415,19 @@
         }
         const supplied = sourceReference?.references?.[0];
         const range = supplied?.sourceRange || supplied?.location;
-        const reference = range?.uri ? {
+        const reference = supplied?.id || (range?.uri ? {
             uri: range.uri,
             line: range.line,
             column: range.column
-        } : supplied?.id || null;
+        } : null);
         const directCode = supplied?.id
-            ? runtime.queries.getExpressionDependencies(supplied.id)
+            ? runtime.queries.getExpressionDependencies(supplied.id, viewState().analysisContext)
             : null;
         const definitionOnly = Boolean(directCode?.functionDefinition);
-        const resolution = runtime.queries.resolveSourceReference(reference, definitionOnly ? {} : {
-            ownerInstanceId: viewState().analysisContext?.ownerInstanceId
-        });
+        const resolution = runtime.queries.resolveSourceReference(
+            reference,
+            definitionOnly ? {} : viewState().analysisContext
+        );
         const candidates = (resolution.references || []).filter((candidate) =>
             runtime.view.indexes.nodeById.has(candidate.id)
             || candidate.entity?.sourceRevision
@@ -2511,13 +2512,25 @@
         const node = runtime.view.indexes.nodeById.get(reference.id);
         const codeEntity = reference.entity?.sourceRevision
             ? reference.entity : resolveCodeSubject(reference.id);
+        const context = viewState().analysisContext;
+        if (!node && codeEntity?.sourceRevision
+            && context?.subject?.id === codeEntity.id
+            && context.sourceRevision === codeEntity.sourceRevision) {
+            return;
+        }
         if (!node && codeEntity?.sourceRevision) {
             const subject = { ...codeEntity, kind: reference.kind || codeEntity.kind };
+            const codeFacts = runtime.queries.getExpressionDependencies(codeEntity.id, context);
             const result = subject.kind === 'function-definition'
                 ? runtime.navigation.enterCodeDefinition(subject)
                 : runtime.navigation.inspectCode(subject, null, {
                     sourceRevision: codeEntity.sourceRevision,
-                    codeContainerId: codeEntity.statementIds ? codeEntity.id : null
+                    codeContainerId: codeEntity.statementIds
+                        ? codeEntity.id : context?.codeContainerId,
+                    entryCallSiteId: codeFacts.callSite?.id || context?.entryCallSiteId,
+                    bindingEnvironmentId: codeFacts.callSite?.bindingEnvironmentId
+                        || codeFacts.bindingEnvironment?.id
+                        || context?.bindingEnvironmentId
                 });
             if (result.status === 'committed') finishNavigation(false);
             return;

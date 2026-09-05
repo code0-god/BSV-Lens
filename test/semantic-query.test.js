@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
-const { buildSemanticSource } = require('./semantic-fixture');
+const { buildFlowFixture, buildSemanticSource } = require('./semantic-fixture');
 const { createSemanticQueries } = require('../media/semantic-query');
 
 const SOURCE = `
@@ -375,6 +375,112 @@ endpackage
     assert.equal(result.uncertainty, 'unresolved-dependency');
     assert.equal(result.paths.length, 1);
     assert.equal(result.paths[0].steps[0].uncertainty, 'unresolved');
+});
+
+test('shared code source references resolve through their callable only in compatible occurrences', () => {
+    const model = buildFlowFixture();
+    const queries = createSemanticQueries(model);
+    const expression = model.expressions.find((candidate) =>
+        candidate.text === 'makeArrayWork'
+        && candidate.enclosingCallableId === 'def:SemanticFlowFixture:mkScheduler.currentWork'
+    );
+    const owners = model.stateBehaviors
+        .filter((behavior) => behavior.definitionId === expression.enclosingCallableId)
+        .map((behavior) => behavior.ownerInstanceId);
+    const incompatibleOwner = model.instances.find((instance) =>
+        !owners.includes(instance.id) && instance.name === 'worker'
+    );
+
+    assert.equal(expression.ownerInstanceId, undefined);
+    for (const ownerInstanceId of owners) {
+        const byId = queries.resolveSourceReference(expression.id, { ownerInstanceId });
+        assert.equal(byId.status, 'exact');
+        assert.equal(byId.references[0].id, expression.id);
+        assert.equal(byId.references[0].entity, expression);
+
+        const byRange = queries.resolveSourceReference({
+            uri: expression.sourceRange.uri,
+            line: expression.sourceRange.line,
+            column: expression.sourceRange.column
+        }, { ownerInstanceId });
+        assert.equal(byRange.status, 'exact');
+        assert.equal(byRange.references[0].id, expression.id);
+    }
+
+    assert.ok(incompatibleOwner);
+    assert.equal(queries.resolveSourceReference(expression.id, {
+        ownerInstanceId: incompatibleOwner.id
+    }).status, 'unresolved');
+    assert.equal(queries.resolveSourceReference({
+        uri: expression.sourceRange.uri,
+        line: expression.sourceRange.line,
+        column: expression.sourceRange.column
+    }, { ownerInstanceId: incompatibleOwner.id }).status, 'unresolved');
+});
+
+test('pure-function code accepts only a direct callsite owned by the current hardware occurrence', () => {
+    const model = buildSemanticSource(`
+package PureOwnerQuery;
+function Bit#(8) addOne(Bit#(8) value);
+    return value + 1;
+endfunction
+function Bit#(8) nested(Bit#(8) value);
+    return addOne(value);
+endfunction
+module mkCaller(Empty);
+    rule invoke;
+        Bit#(8) result = addOne(1);
+        $display("%0d", result);
+    endrule
+endmodule
+module mkForeign(Empty);
+    rule idle;
+        noAction;
+    endrule
+endmodule
+endpackage
+`, 'PureOwnerQuery.bsv', { entrypoints: ['mkCaller', 'mkForeign'] });
+    const queries = createSemanticQueries(model);
+    const callee = model.functionDefinitions.find((item) => item.name === 'addOne');
+    const expression = model.expressions.find((item) =>
+        item.id === callee.returnExpressionIds[0]
+    );
+    const directCall = model.callSites.find((item) =>
+        item.calleeDefinitionId === callee.id
+        && item.enclosingCallableId === 'def:PureOwnerQuery:mkCaller.rule.invoke'
+    );
+    const nestedCall = model.callSites.find((item) =>
+        item.calleeDefinitionId === callee.id
+        && item.enclosingCallableId === 'def:PureOwnerQuery:nested'
+    );
+    const caller = occurrence(model, 'mkCaller');
+    const foreign = occurrence(model, 'mkForeign');
+    const context = {
+        ownerInstanceId: caller.id,
+        entryCallSiteId: directCall.id,
+        bindingEnvironmentId: expression.bindingEnvironmentId
+    };
+
+    assert.equal(queries.resolveSourceReference(expression.id, context).status, 'exact');
+    const byRange = queries.resolveSourceReference({
+        uri: expression.sourceRange.uri,
+        line: expression.sourceRange.line,
+        column: expression.sourceRange.column
+    }, context);
+    assert.equal(byRange.status, 'exact');
+    assert.equal(byRange.references[0].entity.enclosingCallableId, callee.id);
+    assert.equal(queries.resolveSourceReference(expression.id, {
+        ...context,
+        ownerInstanceId: foreign.id
+    }).status, 'unresolved');
+    assert.equal(queries.resolveSourceReference(expression.id, {
+        ...context,
+        entryCallSiteId: nestedCall.id
+    }).status, 'unresolved');
+    assert.equal(queries.resolveSourceReference(expression.id, {
+        ownerInstanceId: caller.id
+    }).status, 'unresolved');
+    assert.equal(queries.resolveSourceReference(expression.id).status, 'exact');
 });
 
 test('source reference resolution is exact by ID, contextual by occurrence, and never first-match', () => {
