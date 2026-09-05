@@ -18,7 +18,9 @@ const {
     splitTopLevel,
     truncate
 } = require('./source-utils');
-const { analyzeBehavior } = require('./behavior-analysis');
+const { analyzeBehavior, reconcileStateAssignments } = require('./behavior-analysis');
+const { analyzeCode } = require('./code-analysis');
+const { createHash } = require('node:crypto');
 
 const CONTROL_WORDS = new Set([
     'action', 'actionvalue', 'begin', 'case', 'default', 'else', 'end', 'endaction',
@@ -64,6 +66,7 @@ function parseBsvFile(text, options = {}) {
     const masked = maskCommentsAndStrings(text);
     const lineStarts = createLineStarts(text);
     const diagnostics = [];
+    const sourceRevision = createHash('sha256').update(text).digest('hex');
 
     const packageMatch = /\bpackage\s+([A-Za-z_$][\w$]*)\s*;/.exec(masked);
     const packageName = packageMatch ? packageMatch[1] : fileStem(relativePath);
@@ -86,11 +89,11 @@ function parseBsvFile(text, options = {}) {
         item: module
     }));
     const interfaces = parseInterfaces(text, masked, uri, lineStarts, moduleSpans, diagnostics);
-    const functions = parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics);
+    const functions = parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics, sourceRevision);
     const types = parseTypedefs(text, masked, uri, lineStarts, moduleSpans, diagnostics);
 
     for (const module of modules) {
-        populateModuleMembers(module, text, masked, uri, lineStarts, functions);
+        populateModuleMembers(module, text, masked, uri, lineStarts, functions, sourceRevision);
     }
 
     const imports = [];
@@ -135,7 +138,16 @@ function parseBsvFile(text, options = {}) {
         functions,
         types,
         diagnostics,
-        lineCount: lineStarts.length
+        lineCount: lineStarts.length,
+        sourceDocument: {
+            id: uri,
+            kind: 'source-document',
+            uri,
+            relativePath: normalizePath(relativePath),
+            revision: sourceRevision,
+            content: text,
+            sourceRange: makeLocation(uri, lineStarts, 0, text.length)
+        }
     };
 }
 
@@ -370,7 +382,7 @@ function parseSubinterfaceDeclarations(body, baseOffset, uri, lineStarts) {
     return result;
 }
 
-function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics) {
+function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics, sourceRevision) {
     const functions = [];
     const expression = /\bfunction\b/g;
     let match;
@@ -397,6 +409,14 @@ function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics)
         const bodyText = text.slice(bodyStart, bodyEnd);
         const parentSpan = findContainingSpan(match.index, moduleSpans);
         const analysis = analyzeCallableBody(bodyText, bodyMasked, bodyStart, callable.parameters, uri, lineStarts);
+        const callableId = `code:${uri}:function:${callable.name}:${match.index}`;
+        const codeAnalysis = analyzeCode({
+            source: text, masked, uri, revision: sourceRevision,
+            callableKind: 'function', callableName: callable.name, callableId,
+            bodyStart, bodyEnd, parameters: callable.parameters,
+            inlineReturn: inlineEquals >= 0,
+            makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
+        });
 
         functions.push({
             name: callable.name,
@@ -409,6 +429,7 @@ function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics)
             calls: analysis.calls,
             returns: analysis.returns,
             operations: analysis.operations,
+            codeAnalysis,
             location: makeLocation(uri, lineStarts, match.index + match[0].length + callable.nameOffset, match.index + match[0].length + callable.nameOffset + callable.name.length),
             sourceRange: makeLocation(uri, lineStarts, match.index, end),
             range: { start: match.index, end, bodyStart, bodyEnd }
@@ -746,7 +767,7 @@ function parseStructFields(body) {
     return { fields };
 }
 
-function populateModuleMembers(module, text, masked, uri, lineStarts, allFunctions) {
+function populateModuleMembers(module, text, masked, uri, lineStarts, allFunctions, sourceRevision) {
     const bodyStart = module.range.bodyStart;
     const bodyEnd = module.range.bodyEnd;
     const bodyMasked = masked.slice(bodyStart, bodyEnd);
@@ -760,9 +781,9 @@ function populateModuleMembers(module, text, masked, uri, lineStarts, allFunctio
             primitiveKind: null
         }))
     ];
-    module.rules = parseRules(bodyMasked, bodyText, bodyStart, uri, lineStarts, behaviorTargets, module.name);
+    module.rules = parseRules(bodyMasked, bodyText, bodyStart, uri, lineStarts, behaviorTargets, module.name, text, masked, sourceRevision);
     module.providedInterfaces = parseProvidedInterfaces(bodyMasked, bodyStart, uri, lineStarts);
-    module.methods = parseMethods(bodyMasked, bodyText, bodyStart, uri, lineStarts, behaviorTargets, module.name);
+    module.methods = parseMethods(bodyMasked, bodyText, bodyStart, uri, lineStarts, behaviorTargets, module.name, text, masked, sourceRevision);
     annotateProvidedInterfaceMethods(module.methods, module.providedInterfaces);
     module.localFunctions = allFunctions.filter((fn) => fn.parentModuleName === module.name).map((fn) => fn.name);
 }
@@ -884,7 +905,7 @@ function classifyPrimitive(type, constructor) {
     return null;
 }
 
-function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances, moduleName) {
+function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances, moduleName, source, fullMasked, sourceRevision) {
     const rules = [];
     const expression = /\brule\s+([A-Za-z_$][\w$]*)/g;
     let match;
@@ -924,6 +945,21 @@ function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances
             makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
         });
         const combined = mergeBehavior(guardBehavior, behavior);
+        const callableId = `code:${uri}:rule:${match[1]}:${baseOffset + match.index}`;
+        const predicateRange = trimOuterRange(fullMasked, baseOffset + expression.lastIndex, baseOffset + headerEnd);
+        const codeAnalysis = analyzeCode({
+            source, masked: fullMasked, uri, revision: sourceRevision,
+            callableKind: 'rule', callableName: match[1], callableId,
+            bodyStart: baseOffset + contentStart, bodyEnd: baseOffset + contentEnd,
+            stateNames: instances.filter((item) => item.primitiveKind).map((item) => item.name),
+            predicate: predicateRange,
+            makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
+        });
+        linkAccessesToCode(combined.accesses, codeAnalysis);
+        reconcileStateAssignments(
+            combined, codeAnalysis, instances, match[1],
+            (start, finish) => makeLocation(uri, lineStarts, start, finish)
+        );
         rules.push({
             name: match[1],
             guard: truncate(stripOuterParentheses(guardText), 220),
@@ -931,10 +967,13 @@ function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances
             calls: extractCalls(content),
             references: unique([...extractInstanceReferences(content, instances), ...combined.accesses.map((item) => item.instance)]),
             ...combined,
+            codeAnalysis,
+            predicateExpressionId: codeAnalysis.predicateExpressionId || null,
             signature: truncate(bodyText.slice(match.index, headerEnd + 1), 240),
             location: makeLocation(uri, lineStarts, absoluteName, absoluteName + match[1].length),
             sourceRange: makeLocation(uri, lineStarts, baseOffset + match.index, baseOffset + end),
-            range: { start: baseOffset + match.index, end: baseOffset + end }
+            range: { start: baseOffset + match.index, end: baseOffset + end,
+                bodyStart: baseOffset + contentStart, bodyEnd: baseOffset + contentEnd }
         });
         expression.lastIndex = Math.max(expression.lastIndex, end);
     }
@@ -942,7 +981,7 @@ function parseRules(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances
     return rules;
 }
 
-function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances, moduleName) {
+function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instances, moduleName, source, fullMasked, sourceRevision) {
     const methods = [];
     const expression = /\bmethod\b/g;
     let match;
@@ -991,6 +1030,24 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
             })
             : emptyBehavior();
         const combined = mergeBehavior(guardBehavior, behavior);
+        const callableId = `code:${uri}:method:${callable.name}:${baseOffset + match.index}`;
+        const predicateRange = guardOffset >= 0
+            ? trimOuterRange(fullMasked, baseOffset + match.index + match[0].length + guardOffset + 2, baseOffset + headerEnd)
+            : null;
+        const codeAnalysis = analyzeCode({
+            source, masked: fullMasked, uri, revision: sourceRevision,
+            callableKind: 'method', callableName: callable.name, callableId,
+            bodyStart: baseOffset + contentStart, bodyEnd: baseOffset + contentEnd,
+            parameters: callable.parameters,
+            stateNames: instances.filter((item) => item.primitiveKind).map((item) => item.name),
+            predicate: predicateRange,
+            makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
+        });
+        linkAccessesToCode(combined.accesses, codeAnalysis);
+        reconcileStateAssignments(
+            combined, codeAnalysis, instances, callable.name,
+            (start, finish) => makeLocation(uri, lineStarts, start, finish)
+        );
         const classification = classifyMethod(callable.returnType);
         methods.push({
             name: callable.name,
@@ -1004,10 +1061,13 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
             calls: extractCalls(content),
             references: unique([...extractInstanceReferences(content, instances), ...combined.accesses.map((item) => item.instance)]),
             ...combined,
+            codeAnalysis,
+            predicateExpressionId: codeAnalysis.predicateExpressionId || null,
             signature: truncate(bodyText.slice(match.index, headerEnd + 1), 240),
             location: makeLocation(uri, lineStarts, absoluteName, absoluteName + callable.name.length),
             sourceRange: makeLocation(uri, lineStarts, baseOffset + match.index, baseOffset + end),
-            range: { start: baseOffset + match.index, end: baseOffset + end }
+            range: { start: baseOffset + match.index, end: baseOffset + end,
+                bodyStart: baseOffset + contentStart, bodyEnd: baseOffset + contentEnd }
         });
         expression.lastIndex = Math.max(expression.lastIndex, end);
     }
@@ -1028,6 +1088,31 @@ function extractInstanceReferences(content, instances) {
 
 function emptyBehavior() {
     return { accesses: [], reads: [], writes: [], invocations: [] };
+}
+
+function linkAccessesToCode(accesses, analysis) {
+    for (const access of accesses || []) {
+        const statement = (analysis.statements || []).filter((item) =>
+            item.sourceRange && containsPosition(item.sourceRange, access.location)
+        ).sort((left, right) => left.range.end - left.range.start - (right.range.end - right.range.start))[0];
+        if (!statement) continue;
+        access.statementId = statement.id;
+        access.pathConditionExpressionIds = [...(statement.pathConditionExpressionIds || [])];
+        const calls = (analysis.callSites || []).filter((item) =>
+            item.parentStatementId === statement.id
+            && (!access.memberPath || item.calleeName.endsWith(access.memberPath))
+        );
+        if (calls.length === 1) access.codeCallSiteId = calls[0].id;
+    }
+}
+
+function containsPosition(range, location) {
+    if (!range || !location || range.uri !== location.uri) return false;
+    const afterStart = location.line > range.line
+        || location.line === range.line && location.column >= range.column;
+    const beforeEnd = location.line < range.endLine
+        || location.line === range.endLine && location.column < range.endColumn;
+    return afterStart && beforeEnd;
 }
 
 function mergeBehavior(...items) {
@@ -1161,6 +1246,18 @@ function stripOuterParentheses(value) {
     const trimmed = value.trim();
     if (trimmed.startsWith('(') && trimmed.endsWith(')')) return trimmed.slice(1, -1).trim();
     return trimmed;
+}
+
+function trimOuterRange(text, start, end) {
+    while (start < end && /\s/.test(text[start])) start += 1;
+    while (end > start && /\s/.test(text[end - 1])) end -= 1;
+    if (text[start] === '(' && findMatchingDelimiter(text, start, '(', ')') === end - 1) {
+        start += 1;
+        end -= 1;
+        while (start < end && /\s/.test(text[start])) start += 1;
+        while (end > start && /\s/.test(text[end - 1])) end -= 1;
+    }
+    return start < end ? { start, end } : null;
 }
 
 function findTopLevelCharacter(text, character) {

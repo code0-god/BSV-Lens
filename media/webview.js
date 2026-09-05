@@ -44,6 +44,9 @@
         primitivesFilter: document.getElementById('primitives-filter'),
         stats: document.getElementById('stats'),
         diagnostics: document.getElementById('diagnostic-summary'),
+        buildAbout: document.getElementById('build-about'),
+        buildSummary: document.getElementById('build-summary'),
+        codeDetail: document.getElementById('code-detail'),
         tracebar: document.getElementById('tracebar'),
         traceSummary: document.getElementById('trace-summary'),
         tracePrevious: document.getElementById('trace-previous'),
@@ -84,6 +87,7 @@
         revision: 0,
         navigation: null,
         queries: null,
+        hostBuildInfo: null,
         clickSequenceSelection: null,
         anchorAfterRender: null
     };
@@ -245,7 +249,8 @@
                     message.model,
                     message.initial || {},
                     message.revision,
-                    message.resetView === true
+                    message.resetView === true,
+                    message.buildInfo || null
                 );
                 break;
             case 'busy':
@@ -281,7 +286,7 @@
         }
     }
 
-    function receiveModel(model, initial, revision, resetView) {
+    function receiveModel(model, initial, revision, resetView, buildInfo) {
         const previous = runtime.view?.state || saved;
         const sameWorkspace = Boolean(
             previous.workspaceUri
@@ -306,6 +311,7 @@
                 transform: { x: 40, y: 40, scale: 1 }
             };
         runtime.model = model;
+        runtime.hostBuildInfo = buildInfo;
         runtime.queries = SemanticQuery.createSemanticQueries(model);
         elements.restrictedMode.hidden = model?.security?.restrictedMode !== true;
         runtime.view = Graph.createViewModel(model, {
@@ -345,7 +351,8 @@
             getNode: (id) => runtime.view.indexes.nodeById.get(id),
             focusPath: (id) => runtime.view.focusPath(id),
             rootFor: (id) => runtime.view.rootFor(id),
-            project: navigationProjectionIsValid
+            project: navigationProjectionIsValid,
+            resolveCodeSubject
         });
         runtime.navigation.reconcileModel(runtime.revision);
         syncRootSelector();
@@ -354,6 +361,7 @@
         runtime.fitOnNextRender = resetView
             || !sameWorkspace && !(saved.workspaceUri === model?.workspaceUri && saved.transform);
         initializeControls(state);
+        renderBuildInfo();
         render();
         persistState();
     }
@@ -362,6 +370,10 @@
         try {
             const projection = Graph.createViewModel(runtime.model, candidate).visible();
             const ids = new Set(projection.nodes.map((node) => node.id));
+            if (candidate.analysisContext?.sourceRevision) {
+                const subject = resolveCodeSubject(candidate.analysisContext.subject?.id);
+                return Boolean(subject && subject.sourceRevision === candidate.analysisContext.sourceRevision);
+            }
             if (candidate.analysisContext?.subject?.kind === 'endpoint') {
                 const endpoint = runtime.queries.resolveEndpointImplementation(
                     candidate.analysisContext.subject.id
@@ -373,6 +385,52 @@
         } catch (_) {
             return false;
         }
+    }
+
+    function resolveCodeSubject(id) {
+        if (!id || !runtime.queries) return null;
+        const dependencies = runtime.queries.getExpressionDependencies(id, {
+            ownerInstanceId: viewState().analysisContext?.ownerInstanceId,
+            entryCallSiteId: viewState().analysisContext?.entryCallSiteId,
+            bindingEnvironmentId: viewState().analysisContext?.bindingEnvironmentId
+        });
+        if (dependencies.expression || dependencies.functionDefinition) {
+            return dependencies.expression || dependencies.functionDefinition;
+        }
+        const reference = runtime.queries.resolveSourceReference(id);
+        return reference.status === 'exact' ? reference.references[0]?.entity || null : null;
+    }
+
+    function renderBuildInfo() {
+        const host = runtime.hostBuildInfo;
+        const webview = globalThis.BsvLensBuildInfo || null;
+        const hostVersion = host?.buildVersion || host?.version || null;
+        if (!webview) {
+            const packagedHost = host?.metadataStatus === 'packaged';
+            elements.buildAbout.dataset.status = packagedHost ? 'metadata-missing' : 'unpackaged';
+            elements.buildAbout.dataset.hostVersion = hostVersion || '';
+            elements.buildAbout.dataset.webviewBuildId = '';
+            elements.buildSummary.textContent = packagedHost
+                ? `Build metadata missing · Host ${hostVersion || 'unknown'}`
+                : hostVersion ? `Un-packaged development · Host ${hostVersion}`
+                    : 'Un-packaged development';
+            elements.buildAbout.classList.toggle('is-mismatch', packagedHost);
+            return;
+        }
+        const mismatch = Boolean(host && (
+            hostVersion !== webview.version
+            || host.buildId !== webview.buildId
+            || host.sourceCommit !== webview.sourceCommit
+        ));
+        const identity = [webview.version, webview.sourceCommit, webview.buildId]
+            .filter(Boolean).join(' · ');
+        elements.buildAbout.dataset.status = mismatch ? 'mismatch' : 'matched';
+        elements.buildAbout.dataset.hostVersion = hostVersion || '';
+        elements.buildAbout.dataset.webviewBuildId = webview.buildId || '';
+        elements.buildSummary.textContent = mismatch
+            ? `Build mismatch · Webview ${identity} · Host ${hostVersion || 'unknown'}`
+            : `${webview.extensionId || 'BSV Lens'} · ${identity}`;
+        elements.buildAbout.classList.toggle('is-mismatch', mismatch);
     }
 
     function legacySourceScope(value) {
@@ -498,6 +556,7 @@
     function render() {
         if (!runtime.view || !runtime.model) return;
         const visible = deriveVisibleGraph();
+        runtime.selectedEdgeId = viewState().selectedRelationId || runtime.selectedEdgeId;
         const visibleNodeIds = new Set(visible.nodes.map((node) => node.id));
         const visibleEdgeIds = new Set(visible.edges.map((edge) => edge.id));
         if (viewState().selectedId && !visibleNodeIds.has(viewState().selectedId)) {
@@ -506,6 +565,7 @@
         }
         if (runtime.selectedEdgeId && !visibleEdgeIds.has(runtime.selectedEdgeId)) {
             runtime.selectedEdgeId = null;
+            viewState().selectedRelationId = null;
         }
         const grouped = viewState().level === 'system'
             && viewState().analysisMode === 'structure'
@@ -513,7 +573,7 @@
         const layout = Layout.layoutGraph(visible.nodes, visible.edges, visible.groups, {
             direction: runtime.model.config?.view?.direction || 'LR',
             grouped,
-            focusId: viewState().focusStack.at(-1) || null,
+            focusId: viewState().projectionFocusId || viewState().focusStack.at(-1) || null,
             viewport: elements.svg.getBoundingClientRect(),
             viewportWidth: elements.svg.getBoundingClientRect().width,
             viewportHeight: elements.svg.getBoundingClientRect().height,
@@ -541,6 +601,7 @@
         renderBreadcrumbs();
         syncRootSelector();
         renderInspector();
+        renderCodeDetail();
         renderNavigationRecovery();
         updateHeader();
         updateLegend();
@@ -580,7 +641,7 @@
             level: state.level,
             analysisMode: state.analysisMode,
             hopScope: state.hopScope,
-            focusId: state.focusStack.at(-1) || null,
+            focusId: state.projectionFocusId || state.focusStack.at(-1) || null,
             activeFile: state.activeFile
         });
         result = semanticDetailProjection(result, state);
@@ -1274,6 +1335,251 @@
         elements.breadcrumbs.append(button);
     }
 
+    function renderCodeDetail() {
+        const context = viewState().analysisContext;
+        const codeMode = Boolean(
+            context?.sourceRevision
+            && context.subject?.id
+            && (!context.presentationId || context.presentationId !== context.subject.id)
+        );
+        elements.codeDetail.hidden = !codeMode;
+        elements.svg.toggleAttribute('hidden', codeMode);
+        elements.empty.hidden = codeMode ? true : elements.empty.hidden;
+        elements.shell.querySelector('.canvas-help').hidden = codeMode;
+        if (!codeMode) {
+            elements.codeDetail.replaceChildren();
+            return;
+        }
+        const dependencies = runtime.queries.getExpressionDependencies(context.subject.id, context);
+        const reference = runtime.queries.resolveSourceReference(context.subject.id, context);
+        const entity = dependencies.expression || dependencies.functionDefinition
+            || dependencies.callSite || dependencies.callee
+            || reference.references?.[0]?.entity;
+        const header = document.createElement('header');
+        header.className = 'code-detail-header';
+        const title = document.createElement('h2');
+        title.textContent = entity?.text || entity?.name || 'Source-linked code';
+        const status = document.createElement('span');
+        status.className = 'code-detail-status';
+        status.textContent = `${entity?.kind || context.subject.kind} · ${
+            entity?.resolutionStatus || dependencies.status
+        }`;
+        header.append(title, status);
+        const content = document.createElement('div');
+        content.className = 'code-detail-list';
+        const sourceText = canonicalSourceText(entity);
+        if (sourceText) {
+            const source = document.createElement('pre');
+            source.className = 'code-source';
+            source.textContent = sourceText;
+            content.append(source);
+        }
+        if (['exact', 'unresolved', 'unsupported'].includes(dependencies.status)) {
+            content.append(codeDetails(dependencies));
+            const callSite = dependencies.callSite;
+            if (callSite) {
+                content.append(codeDetails({
+                    expression: { kind: 'callsite', type: null },
+                    definitions: dependencies.callee ? [dependencies.callee] : [],
+                    uses: [],
+                    pathConditions: dependencies.pathConditions,
+                    actualToFormal: dependencies.actualToFormal,
+                    bindingEnvironment: dependencies.bindingEnvironment
+                }));
+            }
+        }
+        const behavior = context.presentationId
+            ? runtime.queries.getBehaviorSlice(context.presentationId, context)
+            : null;
+        const codeContainer = context.codeContainerId
+            ? runtime.queries.getExpressionDependencies(context.codeContainerId, context)
+            : null;
+        const definition = codeContainer?.functionDefinition || entity?.statementIds && entity;
+        const siblings = behavior?.status === 'exact'
+            ? [...(behavior.statements || []), ...(behavior.expressions || []), ...(behavior.callSites || [])]
+            : [
+                ...(definition?.statementIds?.map((id) =>
+                    runtime.queries.resolveSourceReference(id, context).references?.[0]?.entity
+                ).filter(Boolean) || []),
+                ...(codeContainer?.returns || dependencies.returns || [])
+            ];
+        siblings.sort((left, right) => (left.range?.start || 0) - (right.range?.start || 0)
+            || String(left.id).localeCompare(String(right.id)));
+        for (const sibling of siblings) content.append(codeItem(sibling));
+        if (entity?.sourceRange) {
+            const open = makeButton('Open selected source', () => openCodeSource(entity));
+            content.append(open);
+        }
+        elements.codeDetail.replaceChildren(header, content);
+    }
+
+    function canonicalSourceText(entity) {
+        if (entity?.text) return entity.text;
+        const range = entity?.range;
+        const document = runtime.model.sourceDocuments?.find((item) =>
+            item.id === entity?.sourceDocumentId
+            && item.revision === entity?.sourceRevision
+        );
+        if (!document || !Number.isInteger(range?.start) || !Number.isInteger(range?.end)
+            || range.start < 0 || range.end < range.start || range.end > document.content.length) {
+            return '';
+        }
+        return document.content.slice(range.start, range.end);
+    }
+
+    function codeDetails(result) {
+        const section = document.createElement('section');
+        section.className = 'inspector-section';
+        const expression = result.expression || {};
+        const methodCall = resolveMethodCall(result);
+        const actualToFormal = result.actualToFormal?.length
+            ? result.actualToFormal : methodCall?.actualToFormal || [];
+        section.append(detailSection('Code facts', [
+            ['Type', expression.type || result.functionDefinition?.returnType || 'Unresolved'],
+            ['Resolution', expression.resolutionStatus || result.status],
+            ['Definitions', (result.definitions || []).map((item) => item.name || item.text || item.id).join(', ') || 'None'],
+            ['Uses', (result.uses || []).map((item) =>
+                typeof item === 'string' ? item : item.name || item.id
+            ).join(', ') || 'None'],
+            ['Path conditions', (result.pathConditions || []).map((item) => item.text || item.id).join('\n') || 'None'],
+            ['Actual / formal map', actualToFormal.map((item) =>
+                `${item.actualText || item.actualExpressionId || 'unresolved'} -> ${item.formalName || item.formalId || 'unresolved'}`
+            ).join('\n') || 'None'],
+            ['Binding environment', result.bindingEnvironment?.id || 'None'],
+            ['State effects', (result.stateEffects || []).map((item) => item.effect || item.kind || item.id).join(', ') || 'None'],
+            ['Returns', (result.returns || []).map((item) => item.text || item.id).join('\n') || 'None']
+        ]));
+        for (const definition of result.definitions || []) {
+            section.append(makeButton(
+                `Inspect ${expression.text || definition.name || 'value'} definition`,
+                () => inspectCodeEntity(definition)
+            ));
+        }
+        for (const [index, argument] of (methodCall?.arguments || []).entries()) {
+            section.append(makeButton(
+                `Inspect argument ${index}: ${argument.text}`,
+                () => inspectCodeEntity(argument, runtime.queries.getExpressionDependencies(argument.id, viewState().analysisContext))
+            ));
+        }
+        if (result.callee) {
+            section.append(makeButton(`Open ${result.callee.name || 'function'} definition`, () =>
+                inspectCodeEntity(result.callee, result)
+            ));
+        }
+        if (methodCall?.implementation?.status === 'exact') {
+            section.append(makeButton(
+                `Inspect ${result.callSite.calleeName} implementation`,
+                () => enterCodeImplementation(methodCall.implementation, result)
+            ));
+        }
+        return section;
+    }
+
+    function resolveMethodCall(result) {
+        const callSite = result.callSite;
+        const split = /^(.*?)\.([^.]+)$/.exec(callSite?.calleeName || '');
+        const ownerId = viewState().analysisContext?.ownerInstanceId;
+        if (!split || !ownerId) return null;
+        const owner = runtime.queries.getInstanceComposition(ownerId);
+        if (owner.status !== 'exact') return null;
+        const children = owner.children.filter((item) => item.name === split[1]);
+        if (children.length !== 1) return null;
+        const child = runtime.queries.getInstanceComposition(children[0].id);
+        if (child.status !== 'exact') return null;
+        const endpoints = child.endpoints.filter((item) =>
+            item.kind === 'method-endpoint' && item.interfacePath?.join('.') === split[2]
+        );
+        if (endpoints.length !== 1) return null;
+        const implementation = runtime.queries.resolveEndpointImplementation(endpoints[0].id, {
+            ownerInstanceId: children[0].id
+        });
+        const arguments_ = (callSite.argumentExpressionIds || []).map((id) =>
+            runtime.queries.getExpressionDependencies(id, viewState().analysisContext).expression
+        ).filter(Boolean);
+        return {
+            endpoint: endpoints[0],
+            implementation,
+            arguments: arguments_,
+            actualToFormal: arguments_.map((argument, index) => ({
+                actualExpressionId: argument.id,
+                actualText: argument.text,
+                formalName: endpoints[0].parameters?.[index]?.name || `arg${index}`
+            }))
+        };
+    }
+
+    function enterCodeImplementation(resolution, codeFacts) {
+        const behavior = resolution.behavior;
+        if (!behavior) return;
+        const result = runtime.navigation.enterBehavior(behavior.id, {
+            replaceCurrent: true,
+            subject: behavior,
+            entryCallSiteId: codeFacts.callSite?.id,
+            bindingEnvironmentId: codeFacts.callSite?.bindingEnvironmentId
+        });
+        if (result.status === 'committed') finishNavigation();
+    }
+
+    function codeItem(entity) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'code-detail-item';
+        button.dataset.codeId = entity.id;
+        button.setAttribute('aria-label', `Inspect ${codeKindLabel(entity.kind)} ${entity.text || entity.name || ''}`.trim());
+        const kind = document.createElement('span');
+        kind.className = 'code-detail-kind';
+        kind.textContent = codeKindLabel(entity.kind);
+        const code = document.createElement('code');
+        code.textContent = entity.text || entity.name || entity.id;
+        const status = document.createElement('span');
+        status.className = 'code-detail-status';
+        status.textContent = entity.resolutionStatus || 'exact';
+        button.append(kind, code, status);
+        button.addEventListener('click', () => inspectCodeEntity(entity));
+        return button;
+    }
+
+    function codeKindLabel(kind) {
+        return String(kind || 'code').replace(/-/g, ' ');
+    }
+
+    function inspectCodeEntity(entity, dependencies = null) {
+        if (!entity?.id) return;
+        const facts = dependencies || runtime.queries.getExpressionDependencies(entity.id, viewState().analysisContext);
+        const callSite = facts.status === 'exact' ? facts.callSite : null;
+        const subject = entity.kind ? entity : {
+            ...entity,
+            kind: entity.statementIds ? 'function-definition' : 'code'
+        };
+        const result = runtime.navigation.inspectCode(
+            subject,
+            viewState().analysisContext?.presentationId || null,
+            {
+                sourceRevision: entity.sourceRevision,
+                codeContainerId: entity.statementIds
+                    ? entity.id : viewState().analysisContext?.codeContainerId,
+                entryCallSiteId: callSite?.id || viewState().analysisContext?.entryCallSiteId,
+                bindingEnvironmentId: callSite?.bindingEnvironmentId
+                    || facts.bindingEnvironment?.id
+                    || viewState().analysisContext?.bindingEnvironmentId
+            }
+        );
+        if (result.status === 'committed') finishNavigation(false);
+    }
+
+    function openCodeSource(entity) {
+        const location = entity.sourceRange || entity.location;
+        if (!location?.uri) return;
+        vscode.postMessage({
+            type: 'openSource',
+            nodeId: null,
+            location,
+            modelRevision: runtime.revision,
+            revision: runtime.revision,
+            context: viewState().analysisContext
+        });
+    }
+
     function renderNavigationRecovery() {
         const recovery = viewState().navigationRecovery;
         if (recovery?.status !== 'stale') return;
@@ -1550,6 +1856,14 @@
 
     function renderSemanticBehaviorDetails(container, node) {
         const details = node.details || {};
+        const slice = runtime.queries.getBehaviorSlice(node.semanticId || node.id, {
+            ownerInstanceId: viewState().analysisContext?.ownerInstanceId
+        });
+        const expressions = new Map((slice.expressions || []).map((item) => [item.id, item]));
+        const bodyConditions = [...new Set((slice.statements || [])
+            .flatMap((statement) => statement.pathConditionExpressionIds || [])
+            .map((id) => expressions.get(id)?.text || id))];
+        const assertions = (slice.statements || []).filter((statement) => statement.kind === 'assertion');
         const relations = runtime.view.relations(node.id);
         const incoming = relations
             .filter((relation) => relation.direction === 'in')
@@ -1559,7 +1873,12 @@
             .map((relation) => relation.edge);
         const sections = [
             ['Summary', details.summary || node.description],
-            ['Guard', details.guard || 'Always eligible'],
+            ['Callable predicate', slice.predicateExpression?.text || 'No explicit predicate'],
+            ['Body path conditions', bodyConditions.join('\n') || 'None'],
+            ['Implicit readiness', 'Not inferred from source'],
+            ['Scheduling constraints', slice.scheduleRelations?.length
+                ? `${slice.scheduleRelations.length} explicit relations` : 'None'],
+            ['Assertions', assertions.map((item) => item.text).join('\n') || 'None'],
             ['Category', details.category],
             ['Return Type', details.returnType],
             ['Inputs', semanticList(details.inputs)],
@@ -1576,6 +1895,21 @@
             const section = inspectorSection(label);
             section.append(paragraph(value || 'None', 'inspector-description'));
             container.append(section);
+        }
+        if (slice.status === 'exact' && (slice.statements?.length || slice.expressions?.length)) {
+            const code = inspectorSection('Original code');
+            const firstCodeEntity = slice.statements?.[0] || slice.expressions?.[0];
+            if (firstCodeEntity) {
+                code.append(makeButton('Inspect original code', () => inspectCodeEntity(firstCodeEntity)));
+            }
+            for (const statement of slice.statements || []) {
+                if (statement.kind === 'return' && statement.expressionId && expressions.has(statement.expressionId)) {
+                    const expression = expressions.get(statement.expressionId);
+                    code.append(makeButton('Inspect return expression', () => inspectCodeEntity(expression)));
+                }
+                code.append(codeItem(statement));
+            }
+            container.append(code);
         }
     }
 
@@ -1963,6 +2297,7 @@
         if (!runtime.view) return;
         const result = runtime.navigation.setProjection({
             focusStack: [],
+            projectionFocusId: null,
             selectedId: null,
             trace: emptyTrace()
         });
@@ -1980,7 +2315,7 @@
     }
 
     function finishNavigation(fit = true) {
-        runtime.selectedEdgeId = null;
+        runtime.selectedEdgeId = viewState().selectedRelationId || null;
         runtime.transform = { ...viewState().transform };
         runtime.fitOnNextRender = fit;
         initializeControls(viewState());
@@ -2017,15 +2352,30 @@
     }
 
     function selectEdge(edgeId) {
+        const edge = runtime.graph.edgeById.get(edgeId);
+        const evidence = edge?.semanticFlowId
+            ? runtime.queries.getFlowEvidence(edge.semanticFlowId)
+            : null;
+        if (evidence?.status === 'exact') {
+            const result = runtime.navigation.inspectFlow(
+                { ...evidence.flow, kind: 'semantic-flow' },
+                edgeId
+            );
+            if (result.status !== 'committed') return;
+        } else {
+            viewState().selectedId = null;
+            viewState().selectedRelationId = edgeId;
+        }
         runtime.selectedEdgeId = edgeId;
-        viewState().selectedId = null;
         renderInspector();
         applySelectionHighlight();
+        persistState();
     }
 
     function selectedNode() {
         return runtime.graph.byId.get(viewState().selectedId)
             || runtime.view?.indexes.nodeById.get(viewState().selectedId)
+            || runtime.view?.indexes.nodeById.get(viewState().projectionFocusId)
             || null;
     }
 
@@ -2059,6 +2409,10 @@
 
     function revealSourceReference(sourceReference, revision) {
         if (!runtime.view || Number.isInteger(revision) && revision !== runtime.revision) return;
+        if (sourceReference?.references?.some((reference) => reference.presentations?.length)) {
+            revealPresentationReference(sourceReference);
+            return;
+        }
         const supplied = sourceReference?.references?.[0];
         const range = supplied?.sourceRange || supplied?.location;
         const reference = range?.uri ? {
@@ -2066,11 +2420,17 @@
             line: range.line,
             column: range.column
         } : supplied?.id || null;
-        const resolution = runtime.queries.resolveSourceReference(reference, {
+        const directCode = supplied?.id
+            ? runtime.queries.getExpressionDependencies(supplied.id)
+            : null;
+        const definitionOnly = Boolean(directCode?.functionDefinition);
+        const resolution = runtime.queries.resolveSourceReference(reference, definitionOnly ? {} : {
             ownerInstanceId: viewState().analysisContext?.ownerInstanceId
         });
         const candidates = (resolution.references || []).filter((candidate) =>
             runtime.view.indexes.nodeById.has(candidate.id)
+            || candidate.entity?.sourceRevision
+            || resolveCodeSubject(candidate.id)?.sourceRevision
         );
         runtime.pendingSourceResolution = resolution;
         runtime.pendingRevealId = null;
@@ -2101,9 +2461,67 @@
         }
     }
 
+    function revealPresentationReference(sourceReference) {
+        const state = viewState();
+        const resolution = SourceResolution.resolve(runtime.model, sourceReference, {
+            ...runtime.view.sourceResolutionContext(state.selectedId),
+            visibleNodeIds: runtime.graph.byId.keys()
+        });
+        runtime.pendingSourceResolution = resolution;
+        runtime.pendingRevealId = null;
+        elements.revealNotice.querySelector('.reveal-candidates')?.remove();
+        elements.revealNotice.dataset.resolutionStatus = resolution.status;
+        if (resolution.status === 'visible-exact') {
+            elements.revealNotice.hidden = true;
+            runtime.editorRevealId = resolution.presentationNodeId;
+            selectNode(resolution.presentationNodeId, true);
+            applyEditorReveal();
+            return;
+        }
+        const name = sourceReference.references.map((reference) => reference.name).join(', ') || 'Source selection';
+        elements.revealNoticeText.textContent = resolution.candidates.length > 1
+            ? `${name}: ${resolution.candidates.length} architecture matches. Choose an occurrence.`
+            : `${name} is outside the current presentation.`;
+        elements.revealNotice.hidden = false;
+        elements.revealCurrentView.hidden = resolution.candidates.length !== 1;
+        elements.revealCurrentView.disabled = resolution.candidates.length !== 1;
+        if (resolution.candidates.length === 1) {
+            runtime.pendingRevealId = resolution.candidates[0].id;
+        } else {
+            const choices = document.createElement('div');
+            choices.className = 'reveal-candidates';
+            for (const candidate of resolution.candidates) {
+                const node = runtime.view.indexes.nodeById.get(candidate.id);
+                const ownerId = candidate.ownerId || candidate.parentId || node?.parentId;
+                const owner = runtime.view.indexes.nodeById.get(ownerId);
+                const ownerPath = owner?.details?.path || node?.details?.path;
+                const choiceLabel = [ownerPath, node?.label].filter(Boolean).join(' · ') || candidate.id;
+                choices.append(makeButton(choiceLabel, () => {
+                    elements.revealNotice.hidden = true;
+                    runtime.pendingRevealId = candidate.id;
+                    revealPendingNode();
+                }));
+            }
+            elements.revealNotice.append(choices);
+        }
+    }
+
     function revealCanonicalReference(reference) {
         elements.revealNotice.hidden = true;
         const node = runtime.view.indexes.nodeById.get(reference.id);
+        const codeEntity = reference.entity?.sourceRevision
+            ? reference.entity : resolveCodeSubject(reference.id);
+        if (!node && codeEntity?.sourceRevision) {
+            const subject = { ...codeEntity, kind: reference.kind || codeEntity.kind };
+            const result = subject.kind === 'function-definition'
+                ? runtime.navigation.enterCodeDefinition(subject)
+                : runtime.navigation.inspectCode(subject, null, {
+                    sourceRevision: codeEntity.sourceRevision,
+                    codeContainerId: codeEntity.statementIds ? codeEntity.id : null
+                });
+            if (result.status === 'committed') finishNavigation(false);
+            return;
+        }
         if (!node) return;
         let result;
         if (['method', 'rule', 'function'].includes(reference.kind)) {
@@ -2136,15 +2554,38 @@
         const filters = { ...viewState().filters };
         if (node.primitive) filters.primitives = true;
         if (['rule', 'method'].includes(node.kind)) filters.rules = true;
-        const result = runtime.navigation.setProjection({
-            sourceScope: 'workspace',
-            level,
-            hopScope: 'all',
-            focusStack: ownerId ? runtime.view.focusPath(ownerId) : [],
-            selectedId: nodeId,
-            filters,
-            trace: emptyTrace()
-        });
+        let result;
+        if (['rule', 'method', 'function'].includes(node.kind)) {
+            const slice = runtime.queries.getBehaviorSlice(node.semanticId || node.id, {
+                ownerInstanceId: ownerId
+            });
+            result = runtime.navigation.enterBehavior(node.id, {
+                subject: slice.status === 'exact' ? slice.behavior : node
+            });
+        } else if (node.architectureInstance) {
+            result = runtime.navigation.enterInstance(node.id);
+        } else {
+            result = runtime.navigation.setProjection({
+                sourceScope: 'workspace',
+                level,
+                hopScope: 'all',
+                focusStack: ownerId ? runtime.view.focusPath(ownerId) : [],
+                selectedId: ['protocol-channel', 'endpoint'].includes(node.kind) ? ownerId : nodeId,
+                filters,
+                trace: emptyTrace()
+            });
+            if (result.status === 'committed' && node.kind === 'protocol-channel') {
+                const channel = runtime.queries.getChannelMembers(node.semanticId || node.id);
+                result = channel.status === 'exact'
+                    ? runtime.navigation.inspectChannel(channel.channel, node.id)
+                    : { status: 'unresolved' };
+            } else if (result.status === 'committed' && node.kind === 'endpoint') {
+                const endpoint = runtime.queries.resolveEndpointImplementation(node.semanticId || node.id).endpoint;
+                result = endpoint
+                    ? runtime.navigation.inspectEndpoint({ ...endpoint, kind: 'endpoint' }, node.id)
+                    : { status: 'unresolved' };
+            }
+        }
         if (result.status !== 'committed') {
             showToast('No exact presentation exists in the current model.', true);
             return;
@@ -2768,7 +3209,9 @@
             analysisMode: state.analysisMode,
             hopScope: state.hopScope,
             focusStack: state.focusStack,
+            projectionFocusId: state.projectionFocusId,
             selectedId: state.selectedId,
+            selectedRelationId: state.selectedRelationId,
             collapsedGroups: state.collapsedGroups,
             expandedAggregations: state.expandedAggregations,
             filters: state.filters,
@@ -2806,6 +3249,7 @@
         if (source?.relativePath === state.activeFile) return;
         runtime.navigation.setProjection({
             focusStack: [],
+            projectionFocusId: null,
             selectedId: null,
             trace: emptyTrace()
         });

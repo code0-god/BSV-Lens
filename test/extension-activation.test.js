@@ -132,6 +132,8 @@ test('extension activates and registers its architecture commands and BSV provid
         const extension = require(extensionPath);
         const context = {
             extensionUri: Uri.parse('file:///extension'),
+            extensionPath: path.resolve(__dirname, '..'),
+            extensionMode: 3,
             subscriptions: []
         };
         extension.activate(context);

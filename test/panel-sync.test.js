@@ -255,7 +255,12 @@ test('direct source navigation accepts only locations owned by current model', a
         workspace: {
             async openTextDocument(uri) {
                 opened.push(uri.uri);
-                return { uri };
+                return {
+                    uri,
+                    getText() {
+                        return instance.model.sourceDocuments?.find((source) => source.uri === uri.uri)?.content || '';
+                    }
+                };
             }
         },
         window: {

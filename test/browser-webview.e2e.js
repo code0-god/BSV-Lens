@@ -70,6 +70,53 @@ test('real browser drives webview controls inspector refresh and exports', async
     await page.screenshot({ path: '.build/visual-qa/webview-desktop.png', fullPage: true });
 });
 
+test('About deterministically compares metadata at the post-load renderer boundary', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('.arch-node').first()).toBeVisible();
+
+    await page.evaluate(() => {
+        delete globalThis.BsvLensBuildInfo;
+        window.dispatchEvent(new MessageEvent('message', {
+            data: {
+                type: 'model', model: window.__model, initial: window.__initial, revision: 1,
+                buildInfo: {
+                    extensionId: 'bsv-lens', buildVersion: '1.0.0', sourceCommit: null,
+                    buildId: 'unpackaged', extensionMode: 'test', extensionPath: '/extension',
+                    metadataStatus: 'unpackaged'
+                }
+            }
+        }));
+    });
+    await expect(page.locator('#build-about')).toHaveAttribute('data-status', 'unpackaged');
+    await expect(page.locator('#build-about')).toHaveAttribute('data-webview-build-id', '');
+    await expect(page.locator('#build-about')).not.toHaveClass(/is-mismatch/);
+
+    await page.evaluate(() => {
+        globalThis.BsvLensBuildInfo = {
+            metadataVersion: 1,
+            extensionId: 'bsv-lens',
+            version: '9.9.9',
+            sourceCommit: 'webview-commit',
+            buildId: 'webview-build',
+            dirty: false
+        };
+        window.dispatchEvent(new MessageEvent('message', {
+            data: {
+                type: 'model', model: window.__model, initial: window.__initial, revision: 2,
+                buildInfo: {
+                    extensionId: 'bsv-lens', buildVersion: '1.0.0', sourceCommit: 'host-commit',
+                    buildId: 'host-build', extensionMode: 'test', extensionPath: '/extension',
+                    metadataStatus: 'packaged'
+                }
+            }
+        }));
+    });
+    await expect(page.locator('#build-about')).toHaveAttribute('data-status', 'mismatch');
+    await expect(page.locator('#build-about')).toHaveAttribute('data-webview-build-id', 'webview-build');
+    await expect(page.locator('#build-about')).toHaveAttribute('data-host-version', '1.0.0');
+    await expect(page.locator('#build-about')).toHaveClass(/is-mismatch/);
+});
+
 test('narrow browser viewport remains usable without page overflow', async ({ page }) => {
     const errors = collectBrowserErrors(page);
     await page.setViewportSize({ width: 375, height: 812 });

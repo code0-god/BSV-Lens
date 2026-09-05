@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const { test, expect } = require('@playwright/test');
 
 fs.mkdirSync('.build/visual-qa-v040', { recursive: true });
+fs.mkdirSync('.build/system-code', { recursive: true });
 
 function browserErrors(page) {
     const errors = [];
@@ -12,6 +13,33 @@ function browserErrors(page) {
         if (message.type() === 'error') errors.push(message.text());
     });
     return errors;
+}
+
+async function subscribeToAquaState(page, expected) {
+    await page.evaluate((match) => {
+        const matches = (actual, wanted) => Object.entries(wanted).every(([key, value]) =>
+            value && typeof value === 'object' && !Array.isArray(value)
+                ? matches(actual?.[key], value)
+                : JSON.stringify(actual?.[key]) === JSON.stringify(value)
+        );
+        window.__nextAquaState = new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                window.removeEventListener('bsv-webview-state', onState);
+                reject(new Error(`Timed out waiting for state ${JSON.stringify(match)}`));
+            }, 5000);
+            const onState = (event) => {
+                if (!matches(event.detail, match)) return;
+                clearTimeout(timeout);
+                window.removeEventListener('bsv-webview-state', onState);
+                resolve(event.detail);
+            };
+            window.addEventListener('bsv-webview-state', onState);
+        });
+    }, expected);
+}
+
+async function nextAquaState(page) {
+    return page.evaluate(() => window.__nextAquaState);
 }
 
 async function focusInstanceByTarget(page, targetName) {
@@ -158,5 +186,110 @@ test('AQuA Behavior shows completeWork state effects protocol and evidence', asy
         path: '.build/visual-qa-v040/aqua-complete-work.png',
         fullPage: true
     });
+    expect(errors).toEqual([]);
+});
+
+test('AQuA canonical flow enters beginArrayWork code and fragments.start implementation', async ({ page }) => {
+    const errors = browserErrors(page);
+    await page.goto('/');
+    await page.locator('[data-analysis-mode="data-flow"]').click();
+    const ids = await page.evaluate(() => {
+        const behavior = window.__model.stateBehaviors.find((item) => item.name === 'beginArrayWork');
+        const callSite = window.__model.callSites.find((item) =>
+            item.enclosingCallableId === behavior.definitionId && item.calleeName === 'fragments.start'
+        );
+        const flow = window.__model.semanticFlows.find((item) =>
+            item.kind === 'payload' && item.causeBehaviorId === behavior.id && item.callSiteId === callSite.id
+        );
+        const edge = window.__model.edges.find((item) => item.semanticId === flow.id
+            && window.__model.nodes.find((node) => node.id === item.source)?.architectureInstance
+            && window.__model.nodes.find((node) => node.id === item.target)?.architectureInstance);
+        const workUse = window.__model.expressions.find((item) => item.id === callSite.argumentExpressionIds[0]);
+        const arg1 = window.__model.expressions.find((item) => item.id === callSite.argumentExpressionIds[1]);
+        const workFacts = window.BsvArchitectureSemanticQuery.createSemanticQueries(window.__model)
+            .getExpressionDependencies(workUse.id, { ownerInstanceId: behavior.ownerInstanceId });
+        const workDefinition = workFacts.definitions[0];
+        const owner = window.__model.instances.find((item) => item.id === behavior.ownerInstanceId);
+        const fragments = window.__model.instances.find((item) =>
+            item.parentInstanceId === owner.id && item.name === 'fragments'
+        );
+        const startEndpoint = window.__model.endpoints.find((item) =>
+            item.ownerInstanceId === fragments.id && item.interfacePath.join('.') === 'start'
+        );
+        const implementation = window.__model.stateBehaviors.find((item) =>
+            item.ownerInstanceId === fragments.id && item.definitionId === startEndpoint.implementationMethodId
+        );
+        return { behavior: behavior.id, owner: behavior.ownerInstanceId, flow: flow.id,
+            edge: edge.id, call: callSite.expressionId, callSite: callSite.id,
+            environment: callSite.bindingEnvironmentId, workUse: workUse.id,
+            workKind: workUse.kind, workRevision: workUse.sourceRevision,
+            workDefinition: workDefinition.id, arg1: arg1.id,
+            implementation: implementation.id, fragments: fragments.id };
+    });
+
+    await page.locator(`.edge-group[data-edge-id="${ids.edge}"] .edge-label`).click();
+    await expect(page.locator('#inspector')).toContainText('beginArrayWork');
+    const behaviorState = {
+        level: 'behavior', selectedId: ids.behavior,
+        analysisContext: { subject: { kind: 'rule', id: ids.behavior }, ownerInstanceId: ids.owner }
+    };
+    await subscribeToAquaState(page, behaviorState);
+    await page.getByRole('button', { name: 'Inspect transfer code', exact: true }).click();
+    expect(await nextAquaState(page)).toMatchObject(behaviorState);
+    await expect(page.locator('#inspector')).toContainText('Callable predicate');
+    await expect(page.locator('#inspector')).toContainText('Body path conditions');
+    await expect(page.locator('#inspector')).toContainText('Assertions');
+
+    await page.getByRole('button', { name: 'Inspect original code', exact: true }).click();
+    await expect(page.locator('#code-detail')).toBeVisible();
+    const workState = {
+        analysisContext: {
+            subject: { kind: ids.workKind, id: ids.workUse },
+            sourceRevision: ids.workRevision,
+            entryCallSiteId: ids.callSite,
+            bindingEnvironmentId: ids.environment
+        }
+    };
+    await subscribeToAquaState(page, workState);
+    await page.locator(`[data-code-id="${ids.workUse}"]`).click();
+    expect(await nextAquaState(page)).toMatchObject(workState);
+    await expect(page.getByRole('button', { name: 'Inspect work definition', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Inspect work definition', exact: true }).click();
+    await expect(page.locator('#code-detail')).toContainText('matmul.currentWork');
+
+    await page.locator(`[data-code-id="${ids.call}"]`).click();
+    await expect(page.getByRole('button', { name: 'Inspect argument 0: work', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Inspect argument 1: work.kTileStart != 0', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Inspect argument 0: work', exact: true }).click();
+    await expect(page.locator('#code-detail')).toContainText('Binding environment');
+    await page.locator(`[data-code-id="${ids.call}"]`).click();
+    await page.getByRole('button', { name: 'Inspect argument 1: work.kTileStart != 0', exact: true }).click();
+    await expect(page.locator('#code-detail')).toContainText('Path conditions');
+    await page.locator(`[data-code-id="${ids.call}"]`).click();
+
+    const implementationState = {
+        level: 'behavior', selectedId: ids.implementation,
+        analysisContext: {
+            subject: { kind: 'method', id: ids.implementation },
+            ownerInstanceId: ids.fragments,
+            entryCallSiteId: ids.callSite,
+            bindingEnvironmentId: ids.environment
+        }
+    };
+    await subscribeToAquaState(page, implementationState);
+    await page.getByRole('button', { name: 'Inspect fragments.start implementation', exact: true }).click();
+    expect(await nextAquaState(page)).toMatchObject(implementationState);
+    await expect(page.locator('#inspector')).toContainText('start');
+
+    const flowState = {
+        level: 'system', selectedRelationId: ids.edge,
+        analysisContext: { subject: { kind: 'semantic-flow', id: ids.flow }, presentationId: ids.edge }
+    };
+    await subscribeToAquaState(page, flowState);
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    expect(await nextAquaState(page)).toMatchObject(flowState);
+    await expect(page.locator('#inspector')).toContainText('Semantic Flow ID');
+    await page.screenshot({ path: '.build/system-code/gate-c-aqua-flow-code.png', fullPage: true });
+    fs.writeFileSync('.build/system-code/gate-c-aqua-context.json', JSON.stringify({ ids, flowState }, null, 2));
     expect(errors).toEqual([]);
 });

@@ -53,7 +53,7 @@ function buildBehaviorBindings(stateBehaviors, callableByBehaviorId, instances, 
 
 function makeBinding(behavior, access, child, endpoint, index) {
     const id = behaviorAccessBindingId(behavior.id, index);
-    const callSiteId = `callsite:${behavior.id}:${index}`;
+    const callSiteId = access.codeCallSiteId || `callsite:${behavior.id}:${index}`;
     return {
         id, callSiteId, kind: 'behavior-access',
         behaviorId: behavior.id, ownerInstanceId: behavior.ownerInstanceId,
@@ -62,6 +62,8 @@ function makeBinding(behavior, access, child, endpoint, index) {
         operation: access.operation, memberPath: access.memberPath,
         arguments: [...(access.arguments || [])], resultBinding: access.resultBinding || null,
         valueBinding: access.valueBinding || null,
+        statementId: access.statementId || null,
+        pathConditionExpressionIds: [...(access.pathConditionExpressionIds || [])],
         resolutionStatus: endpoint || child.primitiveKind ? 'exact' : 'unresolved',
         sourceEvidence: access.sourceEvidence, sourceText: access.sourceText || access.sourceEvidence,
         sourceRange: access.sourceRange || access.location || behavior.location || null,

@@ -71,7 +71,7 @@ test('exposes the complete Gate A intent surface', () => {
     for (const intent of [
         'selectEntity', 'focusEntity', 'enterInstance', 'inspectChannel',
         'inspectEndpoint', 'enterBehavior', 'enterFunctionCall', 'inspectCode',
-        'openDefinition', 'openSource', 'goBack', 'goForward'
+        'inspectFlow', 'enterCodeDefinition', 'openDefinition', 'openSource', 'goBack', 'goForward'
     ]) assert.equal(typeof navigation[intent], 'function', intent);
 });
 
@@ -88,6 +88,8 @@ test('migrates legacy focus state into explicit versioned AnalysisContext', () =
         occurrencePath: ['root', 'child'],
         subject: { kind: 'method', id: 'method' },
         presentationId: 'method',
+        sourceRevision: null,
+        codeContainerId: null,
         entryCallSiteId: null,
         bindingEnvironmentId: null,
         level: 'behavior',
@@ -112,6 +114,8 @@ test('enterInstance retains occurrence identity instead of opening its definitio
         occurrencePath: ['root', 'child'],
         subject: { kind: 'instance', id: 'child' },
         presentationId: 'child',
+        sourceRevision: null,
+        codeContainerId: null,
         entryCallSiteId: 'call:child',
         bindingEnvironmentId: 'env:child',
         level: 'module',
@@ -190,6 +194,133 @@ test('semantic channel detail keeps canonical subject separate from presentation
     navigation.goBack();
     assert.deepEqual(saved.analysisContext.subject, { kind: 'instance', id: 'child' });
     assert.equal(saved.selectedId, 'child');
+});
+
+test('flow-to-code Back and Forward restore relation detail, filters, and viewport', () => {
+    const saved = state({
+        level: 'system', focusStack: ['root'], selectedId: null,
+        filters: { rules: true, primitives: false },
+        transform: { x: 17, y: 29, scale: 1.4 }
+    });
+    const model = fixture();
+    const codeSubjects = new Map();
+    const navigation = Navigation.createIntentController({
+        state: saved, modelRevision: 7,
+        getNode: (id) => model.byId.get(id), focusPath: model.focusPath, rootFor: model.rootFor,
+        project: () => true, resolveCodeSubject: (id) => codeSubjects.get(id) || null
+    });
+    navigation.reconcileModel(7);
+    navigation.inspectFlow({
+        id: 'flow:work', kind: 'semantic-flow', ownerInstanceId: 'root'
+    }, 'edge:work');
+    navigation.enterBehavior('method', {
+        entryCallSiteId: 'call:work', bindingEnvironmentId: 'env:work'
+    });
+    const expression = {
+        id: 'expr:work', kind: 'identifier', sourceRevision: 'source:r1'
+    };
+    codeSubjects.set(expression.id, expression);
+    navigation.inspectCode(expression, 'method');
+    saved.transform = { x: 99, y: 101, scale: 2 };
+
+    navigation.goBack();
+    assert.equal(saved.selectedRelationId, 'edge:work');
+    assert.deepEqual(saved.analysisContext.subject, { kind: 'semantic-flow', id: 'flow:work' });
+    assert.deepEqual(saved.filters, { rules: true, primitives: false });
+    assert.deepEqual(saved.transform, { x: 17, y: 29, scale: 1.4 });
+    navigation.goForward();
+    assert.deepEqual(saved.analysisContext.subject, { kind: 'identifier', id: 'expr:work' });
+    assert.deepEqual(saved.transform, { x: 99, y: 101, scale: 2 });
+});
+
+test('code subjects retain caller occurrence, source revision, callsite, and parent semantic history', () => {
+    const saved = state({ level: 'module', focusStack: ['root', 'child'], selectedId: 'child' });
+    const model = fixture();
+    const codeSubjects = new Map();
+    const navigation = Navigation.createIntentController({
+        state: saved,
+        modelRevision: 7,
+        getNode: (id) => model.byId.get(id),
+        focusPath: model.focusPath,
+        rootFor: model.rootFor,
+        project: () => true,
+        resolveCodeSubject: (id) => codeSubjects.get(id) || null
+    });
+    navigation.reconcileModel(7);
+    navigation.inspectChannel({ id: 'channel', kind: 'protocol-channel', ownerInstanceId: 'child' }, 'channel');
+    navigation.enterBehavior('method', { fromSemanticParent: true });
+    const expression = {
+        id: 'expr:return', kind: 'return-expression', ownerInstanceId: 'child',
+        sourceRevision: 'source:r1'
+    };
+    codeSubjects.set(expression.id, expression);
+
+    navigation.inspectCode(expression, 'method', {
+        entryCallSiteId: 'call:work', bindingEnvironmentId: 'env:work'
+    });
+    assert.deepEqual(saved.analysisContext.subject, {
+        kind: 'return-expression', id: 'expr:return'
+    });
+    assert.equal(saved.analysisContext.presentationId, 'method');
+    assert.equal(saved.analysisContext.sourceRevision, 'source:r1');
+    assert.equal(saved.analysisContext.ownerInstanceId, 'child');
+    assert.equal(saved.analysisContext.entryCallSiteId, 'call:work');
+    assert.equal(saved.analysisContext.bindingEnvironmentId, 'env:work');
+
+    codeSubjects.set(expression.id, { ...expression, sourceRevision: 'source:r2' });
+    navigation.reconcileModel(8);
+    assert.equal(saved.selectedId, 'method');
+    assert.deepEqual(saved.analysisContext.subject, { kind: 'method', id: 'method' });
+    assert.equal(saved.navigationRecovery.reason, 'code-source-revision-stale');
+    navigation.goBack();
+    assert.deepEqual(saved.analysisContext.subject, { kind: 'protocol-channel', id: 'channel' });
+});
+
+test('direct code definition entry clears occurrence context and Back restores prior Code snapshot', () => {
+    const saved = state({
+        level: 'behavior', focusStack: ['root', 'child'], selectedId: 'method',
+        filters: { rules: true }, transform: { x: 23, y: 31, scale: 1.6 }
+    });
+    const model = fixture();
+    const codeSubjects = new Map();
+    const navigation = Navigation.createIntentController({
+        state: saved, modelRevision: 7,
+        getNode: (id) => model.byId.get(id), focusPath: model.focusPath, rootFor: model.rootFor,
+        project: () => true, resolveCodeSubject: (id) => codeSubjects.get(id) || null
+    });
+    navigation.reconcileModel(7);
+    const expression = { id: 'expr:return', kind: 'identifier', sourceRevision: 'source:r1' };
+    codeSubjects.set(expression.id, expression);
+    navigation.inspectCode(expression, 'method', {
+        entryCallSiteId: 'call:method', bindingEnvironmentId: 'env:method'
+    });
+    const before = structuredClone(saved);
+    const fn = {
+        id: 'def:Pure:callChoose', kind: 'function-definition', name: 'callChoose',
+        sourceRevision: 'source:pure', statementIds: ['statement:return']
+    };
+    codeSubjects.set(fn.id, fn);
+
+    assert.equal(navigation.enterCodeDefinition(fn).status, 'committed');
+    assert.deepEqual(saved.focusStack, []);
+    assert.equal(saved.selectedId, null);
+    assert.equal(saved.analysisContext.rootInstanceId, null);
+    assert.equal(saved.analysisContext.ownerInstanceId, null);
+    assert.deepEqual(saved.analysisContext.occurrencePath, []);
+    assert.deepEqual(saved.analysisContext.subject, {
+        kind: 'function-definition', id: fn.id
+    });
+    assert.equal(saved.analysisContext.presentationId, null);
+    assert.equal(saved.analysisContext.entryCallSiteId, null);
+    assert.equal(saved.analysisContext.bindingEnvironmentId, null);
+    assert.equal(saved.analysisContext.sourceRevision, 'source:pure');
+
+    navigation.goBack();
+    assert.deepEqual(saved.analysisContext, before.analysisContext);
+    assert.deepEqual(saved.focusStack, before.focusStack);
+    assert.equal(saved.selectedId, before.selectedId);
+    assert.deepEqual(saved.filters, before.filters);
+    assert.deepEqual(saved.transform, before.transform);
 });
 
 test('leaf channel and endpoint inspection never replaces occurrence containment', () => {

@@ -4,11 +4,14 @@ const vscode = require('vscode');
 const { WorkspaceAnalyzer } = require('./architecture/analyzer');
 const { parseBsvFile } = require('./architecture/parser');
 const { ArchitecturePanel, VIEW_TYPE } = require('./panel/architecture-panel');
+const { getBuildInfo } = require('./build-info');
 
 function activate(context) {
     const output = vscode.window.createOutputChannel('BSV Lens');
+    const buildInfo = getBuildInfo(context);
+    output.appendLine(`BSV Lens build: ${JSON.stringify(buildInfo)}`);
     const analyzer = new WorkspaceAnalyzer(vscode, { output });
-    const runtime = { vscode, extensionUri: context.extensionUri };
+    const runtime = { vscode, extensionUri: context.extensionUri, buildInfo };
     const codeLensProvider = new BsvArchitectureCodeLensProvider(vscode);
 
     context.subscriptions.push(output);

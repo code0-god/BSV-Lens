@@ -42,6 +42,11 @@ async function run() {
     assert.match(ArchitecturePanel.currentPanel.model.activeFile, /AcceleratorController\.bsv$/);
     assert.match(ArchitecturePanel.currentPanel.panel.webview.html, /media\/webview-layout\.js/);
     const panel = ArchitecturePanel.currentPanel;
+    assert.equal(panel.context.buildInfo.extensionId, extension.id);
+    assert.equal(panel.context.buildInfo.version, extension.packageJSON.version);
+    assert.equal(panel.context.buildInfo.extensionPath, extension.extensionPath);
+    assert.equal(panel.context.buildInfo.extensionMode, 'test');
+    assert.ok(panel.context.buildInfo.buildId);
     const rule = panel.model.nodes.find((node) =>
         node.kind === 'rule' && node.name === 'countAccepted' && node.semanticId
     );

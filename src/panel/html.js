@@ -4,6 +4,7 @@ function getWebviewHtml(webview, extensionUri, vscode) {
     const graphViewUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'graph-view.js'));
     const navigationUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'navigation.js'));
     const semanticQueryUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'semantic-query.js'));
+    const buildMetadataUri = optionalMediaUri(webview, extensionUri, vscode, 'build-metadata.js');
     const textMetricsUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'text-metrics.js'));
     const layoutUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'webview-layout.js'));
     const sourceResolutionUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'source-resolution.js'));
@@ -111,6 +112,10 @@ function getWebviewHtml(webview, extensionUri, vscode) {
         <label id="primitives-filter"><input id="show-primitives" type="checkbox"> State primitives</label>
         <span id="stats" class="stats" aria-live="polite"></span>
         <span id="diagnostic-summary" class="diagnostic-summary" role="status"></span>
+        <details id="build-about" class="build-about">
+            <summary>About</summary>
+            <span id="build-summary">Un-packaged development</span>
+        </details>
     </section>
 
     <section id="tracebar" class="tracebar" aria-label="Path trace controls" hidden>
@@ -170,7 +175,8 @@ function getWebviewHtml(webview, extensionUri, vscode) {
                 <span id="reveal-notice-text"></span>
                 <button id="reveal-current-view" type="button">Reveal in current view</button>
             </div>
-            <div class="canvas-help">Drag to pan · Wheel to zoom · Click group to expand or collapse · Double-click block to focus</div>
+            <section id="code-detail" class="code-detail" aria-label="Source-linked code detail" hidden></section>
+            <div class="canvas-help">Drag to pan · Wheel to zoom · Click group to expand or collapse · Double-click block to enter details</div>
         </main>
 
         <aside id="inspector" class="inspector" aria-label="Selected architecture element">
@@ -184,6 +190,7 @@ function getWebviewHtml(webview, extensionUri, vscode) {
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script nonce="${nonce}" src="${graphViewUri}"></script>
     <script nonce="${nonce}" src="${semanticQueryUri}"></script>
+    ${buildMetadataUri ? `<script nonce="${nonce}" src="${buildMetadataUri}"></script>` : ''}
     <script nonce="${nonce}" src="${navigationUri}"></script>
     <script nonce="${nonce}" src="${textMetricsUri}"></script>
     <script nonce="${nonce}" src="${layoutUri}"></script>
@@ -191,6 +198,16 @@ function getWebviewHtml(webview, extensionUri, vscode) {
     <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
 </html>`;
+}
+
+function optionalMediaUri(webview, extensionUri, vscode, name) {
+    const uri = vscode.Uri.joinPath(extensionUri, 'media', name);
+    try {
+        if (!uri.fsPath || !require('node:fs').existsSync(uri.fsPath)) return null;
+        return webview.asWebviewUri(uri);
+    } catch (_) {
+        return null;
+    }
 }
 
 function createNonce() {

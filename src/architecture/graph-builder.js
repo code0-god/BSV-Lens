@@ -491,6 +491,7 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
 
     const model = {
         schemaVersion: 3,
+        codeAnalysisVersion: semanticModel.codeAnalysisVersion,
         title: config.title,
         generatedAt: new Date().toISOString(),
         workspaceName: context.workspaceName || '',
@@ -506,6 +507,12 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
             nodes.some((node) => node.id === id)
         ),
         definitions: semanticModel.definitions,
+        sourceDocuments: semanticModel.sourceDocuments,
+        statements: semanticModel.statements,
+        expressions: semanticModel.expressions,
+        callSites: semanticModel.callSites,
+        bindingEnvironments: semanticModel.bindingEnvironments,
+        functionDefinitions: semanticModel.functionDefinitions,
         instances: semanticModel.instances,
         endpoints: semanticModel.endpoints,
         bindings: semanticModel.bindings,

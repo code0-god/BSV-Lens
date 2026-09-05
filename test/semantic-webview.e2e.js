@@ -194,7 +194,7 @@ test('Behavior view exposes deterministic semantic evidence and source navigatio
 
     // Then
     await expect(page.locator('#inspector')).toContainText('Summary');
-    await expect(page.locator('#inspector')).toContainText('Guard');
+    await expect(page.locator('#inspector')).toContainText('Callable predicate');
     await expect(page.locator('#inspector')).toContainText('Inputs');
     await expect(page.locator('#inspector')).toContainText('Outputs');
     await expect(page.locator('#inspector')).toContainText('State reads');
@@ -428,8 +428,16 @@ test('Gate B drills Work channel through endpoint implementation and semantic Ba
         const implementation = window.__model.stateBehaviors.find((item) =>
             item.ownerInstanceId === owner.id && item.definitionId === endpoint.implementationMethodId
         );
+        const returned = window.__model.statements.find((item) =>
+            item.enclosingCallableId === implementation.definitionId && item.kind === 'return'
+        );
+        const returnExpression = window.__model.expressions.find((item) => item.id === returned.expressionId);
+        const directFunction = window.__model.functionDefinitions.find((item) => item.name === 'callChoose');
         return { root: root.id, owner: owner.id, channel: channel.id,
-            endpoint: endpoint.id, implementation: implementation.id };
+            endpoint: endpoint.id, implementation: implementation.id,
+            returnExpression: returnExpression.id, returnKind: returnExpression.kind,
+            sourceRevision: returnExpression.sourceRevision, sourceRange: returnExpression.sourceRange,
+            directFunction: directFunction.id, directFunctionRevision: directFunction.sourceRevision };
     });
 
     await subscribeToState(page, { selectedId: ids.root, level: 'module' });
@@ -505,7 +513,59 @@ test('Gate B drills Work channel through endpoint implementation and semantic Ba
     await page.getByRole('button', { name: 'Inspect currentWork implementation', exact: true }).click();
     expect(await nextState(page)).toMatchObject(implementationState);
     await expect(page.locator('#inspector')).toContainText('method ArrayWork#(arrayDim) currentWork if (active);');
+    await expect(page.locator('#inspector')).toContainText('Callable predicate');
+    await expect(page.locator('#inspector')).not.toContainText('Always eligible');
 
+    const codeState = {
+        level: 'behavior', selectedId: ids.implementation,
+        analysisContext: {
+            ownerInstanceId: ids.owner, presentationId: ids.implementation,
+            subject: { kind: ids.returnKind, id: ids.returnExpression },
+            sourceRevision: ids.sourceRevision
+        }
+    };
+    await subscribeToState(page, codeState);
+    await page.getByRole('button', { name: 'Inspect return expression', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(codeState);
+    await expect(page.locator('#code-detail')).toBeVisible();
+    await expect(page.locator('#code-detail')).toContainText('makeArrayWork');
+    await expect(page.locator('#architecture-canvas')).toBeHidden();
+    await subscribeToHostMessage(page, 'openSource');
+    await page.getByRole('button', { name: 'Open selected source', exact: true }).click();
+    expect(await nextHostMessage(page)).toMatchObject({
+        type: 'openSource', nodeId: null, location: ids.sourceRange
+    });
+    await page.screenshot({ path: '.build/system-code/gate-c-current-work-code.png', fullPage: true });
+
+    const directFunctionState = {
+        level: 'behavior', selectedId: null,
+        analysisContext: {
+            rootInstanceId: null, ownerInstanceId: null, occurrencePath: [],
+            subject: { kind: 'function-definition', id: ids.directFunction },
+            presentationId: null, sourceRevision: ids.directFunctionRevision,
+            entryCallSiteId: null, bindingEnvironmentId: null
+        }
+    };
+    await subscribeToState(page, directFunctionState);
+    await page.evaluate((id) => window.dispatchEvent(new MessageEvent('message', {
+        data: {
+            type: 'revealSource', revision: 0,
+            sourceReference: { references: [{ id, name: 'callChoose' }] }
+        }
+    })), ids.directFunction);
+    expect(await nextState(page)).toMatchObject(directFunctionState);
+    await expect(page.locator('#code-detail')).toContainText('callChoose');
+    await subscribeToState(page, codeState);
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(codeState);
+    await page.screenshot({ path: '.build/system-code/gate-c-cross-context-function.png', fullPage: true });
+
+    await subscribeToState(page, channelState);
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(channelState);
+    await subscribeToState(page, codeState);
+    await page.getByRole('button', { name: 'Forward', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(codeState);
     await subscribeToState(page, channelState);
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     expect(await nextState(page)).toMatchObject(channelState);
@@ -533,39 +593,160 @@ test('Gate B source reveal requires an explicit occurrence choice for shared def
         const mirrors = window.__model.stateBehaviors.filter((behavior) =>
             behavior.name === 'currentWork'
         );
-        const mirror = mirrors.find((behavior) => window.__model.nodes.find((node) =>
-            node.id === behavior.ownerInstanceId
-        )?.details?.path.endsWith('schedulerMirror'));
+        const selectedOwner = window.__model.nodes.find((node) =>
+            node.architectureInstance && node.details?.path.endsWith('.scheduler')
+        );
+        const selectedEndpoint = window.__model.endpoints.find((endpoint) =>
+            endpoint.ownerInstanceId === selectedOwner.id && endpoint.name === 'currentWork'
+        );
+        const reference = window.__model.sourceReferences.find((item) =>
+            item.kind === 'implementation-method' && item.name === 'currentWork'
+        );
         return {
-            location: mirrors[0].location,
-            mirrorId: mirror.id,
-            mirrorOwnerId: mirror.ownerInstanceId
+            sourceReference: { status: 'exact', references: [reference] },
+            selectedId: selectedEndpoint.id,
+            selectedOwnerId: selectedEndpoint.ownerInstanceId
         };
     });
-    await page.evaluate((location) => window.dispatchEvent(new MessageEvent('message', {
-        data: {
-            type: 'revealSource',
-            sourceReference: { references: [{ name: 'currentWork', location }] },
-            revision: 0
-        }
-    })), reveal.location);
+    await page.evaluate((sourceReference) => window.dispatchEvent(new MessageEvent('message', {
+        data: { type: 'revealSource', sourceReference, revision: 0 }
+    })), reveal.sourceReference);
     await expect(page.locator('#reveal-notice')).toContainText('Choose an occurrence');
-    await expect(page.getByRole('button', { name: 'mkFlowTop.scheduler', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'mkFlowTop.schedulerMirror', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'mkFlowTop.schedulerMirror · Work', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'mkFlowTop.scheduler · currentWork', exact: true })).toBeVisible();
     expect(await page.evaluate(() => window.__savedState.selectedId)).toBeNull();
 
     const selected = {
-        level: 'behavior',
-        selectedId: reveal.mirrorId,
+        level: 'module',
+        selectedId: reveal.selectedId,
         analysisContext: {
-            ownerInstanceId: reveal.mirrorOwnerId,
-            presentationId: reveal.mirrorId,
-            subject: { kind: 'method', id: reveal.mirrorId }
+            ownerInstanceId: reveal.selectedOwnerId,
+            presentationId: reveal.selectedId,
+            subject: { kind: 'endpoint', id: reveal.selectedId }
         }
     };
     await subscribeToState(page, selected);
-    await page.getByRole('button', { name: 'mkFlowTop.schedulerMirror', exact: true }).click();
+    await page.getByRole('button', { name: 'mkFlowTop.scheduler · currentWork', exact: true }).click();
     expect(await nextState(page)).toMatchObject(selected);
+    expect(errors).toEqual([]);
+});
+
+test('Gate C enters pure functions directly with callsite mappings and distinct shadow contexts', async ({ page }) => {
+    const errors = browserErrors(page);
+    await page.goto('/');
+    const code = await page.evaluate(() => {
+        const direct = window.__model.functionDefinitions.find((item) => item.name === 'callChoose');
+        const callee = window.__model.functionDefinitions.find((item) => item.name === 'chooseValue');
+        const callSite = window.__model.callSites.find((item) => item.calleeDefinitionId === callee.id);
+        const callExpression = window.__model.expressions.find((item) => item.id === callSite.expressionId);
+        const returns = callee.returnExpressionIds.map((id) => window.__model.expressions.find((item) => item.id === id));
+        const markup = window.__model.functionDefinitions.find((item) => item.name === 'sourceMarkup');
+        const markupReturn = window.__model.expressions.find((item) => item.id === markup.returnExpressionIds[0]);
+        const query = window.BsvArchitectureSemanticQuery.createSemanticQueries(window.__model);
+        const directDocument = window.__model.sourceDocuments.find((item) =>
+            item.id === direct.sourceDocumentId && item.revision === direct.sourceRevision
+        );
+        return {
+            direct, directSource: directDocument.content.slice(direct.range.start, direct.range.end),
+            callee, callSite, callExpression, returns, markup, markupReturn,
+            returnBindings: returns.map((item) => query.getExpressionDependencies(item.id).bindingEnvironment?.id || null),
+            fakeRoots: window.__model.instances.filter((item) =>
+                [direct.id, callee.id].includes(item.targetDefinitionId)
+            ).map((item) => item.id),
+            fakeEndpoints: window.__model.endpoints.filter((item) =>
+                [direct.id, callee.id].includes(item.implementationMethodId)
+            ).map((item) => item.id)
+        };
+    });
+    expect(code.fakeRoots).toEqual([]);
+    expect(code.fakeEndpoints).toEqual([]);
+    expect(code.returnBindings[0]).not.toBe(code.returnBindings[1]);
+
+    const directState = {
+        level: 'behavior', selectedId: null,
+        analysisContext: {
+            rootInstanceId: null, ownerInstanceId: null, occurrencePath: [],
+            presentationId: null,
+            subject: { kind: 'function-definition', id: code.direct.id },
+            sourceRevision: code.direct.sourceRevision,
+            entryCallSiteId: null,
+            bindingEnvironmentId: null
+        }
+    };
+    await subscribeToState(page, directState);
+    await page.evaluate((id) => window.dispatchEvent(new MessageEvent('message', {
+        data: { type: 'revealSource', sourceReference: { references: [{ id, name: 'callChoose' }] }, revision: 0 }
+    })), code.direct.id);
+    expect(await nextState(page)).toMatchObject(directState);
+    await expect(page.locator('#code-detail')).toContainText('callChoose');
+    await expect(page.locator('#code-detail')).toContainText(code.direct.returnType);
+    await expect(page.locator('#code-detail')).toContainText(code.directSource);
+
+    const callState = {
+        analysisContext: {
+            subject: { kind: code.callExpression.kind, id: code.callExpression.id },
+            sourceRevision: code.callExpression.sourceRevision,
+            entryCallSiteId: code.callSite.id,
+            bindingEnvironmentId: code.callSite.bindingEnvironmentId
+        }
+    };
+    await subscribeToState(page, callState);
+    await page.locator(`[data-code-id="${code.callExpression.id}"]`).click();
+    expect(await nextState(page)).toMatchObject(callState);
+    await expect(page.locator('#code-detail')).toContainText('Actual / formal map');
+    await expect(page.locator('#code-detail')).toContainText('inputValue');
+    await expect(page.locator('#code-detail')).toContainText('value');
+
+    const calleeState = {
+        selectedId: null,
+        analysisContext: {
+            subject: { kind: 'function-definition', id: code.callee.id },
+            sourceRevision: code.callee.sourceRevision,
+            entryCallSiteId: code.callSite.id,
+            bindingEnvironmentId: code.callSite.bindingEnvironmentId
+        }
+    };
+    await subscribeToState(page, calleeState);
+    await page.getByRole('button', { name: 'Open chooseValue definition', exact: true }).click();
+    expect(await nextState(page)).toMatchObject(calleeState);
+
+    for (let index = 0; index < code.returns.length; index += 1) {
+        const returned = code.returns[index];
+        const expected = {
+            analysisContext: {
+                subject: { kind: returned.kind, id: returned.id },
+                sourceRevision: returned.sourceRevision,
+                bindingEnvironmentId: code.returnBindings[index]
+            }
+        };
+        await subscribeToState(page, expected);
+        await page.locator(`[data-code-id="${returned.id}"]`).click();
+        expect(await nextState(page)).toMatchObject(expected);
+    }
+    const markupState = {
+        analysisContext: {
+            subject: { kind: 'function-definition', id: code.markup.id },
+            sourceRevision: code.markup.sourceRevision
+        }
+    };
+    await subscribeToState(page, markupState);
+    await page.evaluate((id) => window.dispatchEvent(new MessageEvent('message', {
+        data: { type: 'revealSource', sourceReference: { references: [{ id, name: 'sourceMarkup' }] }, revision: 0 }
+    })), code.markup.id);
+    expect(await nextState(page)).toMatchObject(markupState);
+    const markupExpressionState = {
+        analysisContext: {
+            subject: { kind: code.markupReturn.kind, id: code.markupReturn.id },
+            sourceRevision: code.markupReturn.sourceRevision
+        }
+    };
+    await subscribeToState(page, markupExpressionState);
+    await page.locator(`[data-code-id="${code.markupReturn.id}"]`).click();
+    expect(await nextState(page)).toMatchObject(markupExpressionState);
+    await expect(page.locator('#code-detail')).toContainText('<img src=x onerror=globalThis.__sourceInjected=True></script>');
+    await expect(page.locator('#code-detail img')).toHaveCount(0);
+    expect(await page.evaluate(() => globalThis.__sourceInjected)).toBeUndefined();
+    await page.screenshot({ path: '.build/system-code/gate-c-pure-function.png', fullPage: true });
     expect(errors).toEqual([]);
 });
 

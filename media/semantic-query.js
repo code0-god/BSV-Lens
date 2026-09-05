@@ -124,6 +124,9 @@
             );
             const scheduleRelations = values(index.scheduleByBehavior, behavior.id);
             const implementationEndpoints = values(index.implementationEndpointsByBehavior, key);
+            const statements = values(index.statementsByCallable, behavior.definitionId);
+            const expressions = values(index.expressionsByCallable, behavior.definitionId);
+            const callSites = values(index.callSitesByCallable, behavior.definitionId);
             return {
                 status: 'exact',
                 behavior,
@@ -132,16 +135,69 @@
                 flows,
                 scheduleRelations,
                 implementationEndpoints,
-                evidenceRefs: behaviorEvidenceRefs(behavior, bindings)
+                evidenceRefs: behaviorEvidenceRefs(behavior, bindings),
+                statements,
+                expressions,
+                callSites,
+                predicateExpression: index.expressionById.get(behavior.predicateExpressionId) || null
             };
         }
 
-        function getExpressionDependencies(expressionId) {
-            return {
+        function getExpressionDependencies(expressionId, context = {}) {
+            const directFunction = index.functionDefinitionById.get(expressionId);
+            if (directFunction) return {
+                status: directFunction.resolutionStatus || 'unresolved',
+                expression: null, functionDefinition: directFunction,
+                definitions: [directFunction], uses: [], operands: [], callSite: null,
+                callee: directFunction, actualToFormal: [], assignment: null,
+                stateEffects: [], pathConditions: [], returns: functionReturns(directFunction.id),
+                publicEndpoints: [], bindingEnvironment: null
+            };
+            const expression = index.expressionById.get(expressionId);
+            if (!expression) return {
                 status: 'unsupported',
                 reason: 'expression-ir-pending-gate-c',
                 expressionId
             };
+            if (!contextAllowsCallable(context, expression.enclosingCallableId)) return unresolved();
+            const statement = expression.parentStatementId
+                ? index.statementById.get(expression.parentStatementId) || null : null;
+            const callSite = expression.callSiteId
+                ? index.callSiteById.get(expression.callSiteId) || null : null;
+            const callee = callSite?.calleeDefinitionId
+                ? index.functionDefinitionById.get(callSite.calleeDefinitionId) || null : null;
+            return {
+                status: expression.resolutionStatus === 'unsupported' ? 'unsupported'
+                    : expression.resolutionStatus === 'exact' ? 'exact' : 'unresolved',
+                expression,
+                definitions: (expression.definitionIds || []).map((id) =>
+                    index.expressionById.get(id) || index.functionDefinitionById.get(id)
+                ).filter(Boolean),
+                uses: [...(expression.useSymbolIds || [])],
+                operands: (expression.operandIds || []).map((id) => index.expressionById.get(id)).filter(Boolean),
+                callSite,
+                callee,
+                actualToFormal: [...(callSite?.actualToFormal || [])],
+                assignment: statement && ['local-assignment', 'local-declaration', 'result-binding', 'state-assignment'].includes(statement.kind)
+                    ? statement : null,
+                stateEffects: statement?.stateEffect ? [statement.stateEffect] : [],
+                pathConditions: (statement?.pathConditionExpressionIds || []).map((id) =>
+                    index.expressionById.get(String(id).replace(/^!/, ''))
+                ).filter(Boolean),
+                returns: callee ? functionReturns(callee.id) : [],
+                publicEndpoints: behaviorEndpoints(expression.enclosingCallableId),
+                bindingEnvironment: index.bindingEnvironmentById.get(expression.bindingEnvironmentId) || null
+            };
+        }
+
+        function functionReturns(callableId) {
+            return values(index.statementsByCallable, callableId)
+                .filter((item) => item.kind === 'return')
+                .map((item) => item.expressionId ? index.expressionById.get(item.expressionId) : null)
+                .filter(Boolean);
+        }
+        function behaviorEndpoints(definitionId) {
+            return (model.endpoints || []).filter((endpoint) => endpoint.implementationMethodId === definitionId);
         }
 
         function traceSemanticFlow(query = {}) {
@@ -281,7 +337,9 @@
             return index.instanceById.get(id) || index.endpointById.get(id)
                 || index.stateBehaviorById.get(id) || index.flowById.get(id)
                 || index.bindingById.get(id) || index.channelById.get(id)
-                || index.definitionById.get(id) || null;
+                || index.definitionById.get(id) || index.statementById.get(id)
+                || index.expressionById.get(id) || index.callSiteById.get(id)
+                || index.functionDefinitionById.get(id) || index.sourceDocumentById.get(id) || null;
         }
 
         function sourceReferenceForId(id) {
@@ -300,7 +358,10 @@
                 ...(model.semanticFlows || []),
                 ...(model.stateBehaviors || []),
                 ...(model.protocolChannels || []),
-                ...(model.scheduleRelations || [])
+                ...(model.scheduleRelations || []),
+                ...(model.statements || []),
+                ...(model.expressions || []),
+                ...(model.callSites || [])
             ].filter((entity) => entity.id && (entity.sourceRange || entity.location))
                 .map(sourceReference);
             return cachedSourceCandidates;
@@ -394,6 +455,12 @@
         const flows = model.semanticFlows || [];
         const behaviors = model.stateBehaviors || [];
         const schedules = model.scheduleRelations || [];
+        const statements = model.statements || [];
+        const expressions = model.expressions || [];
+        const callSites = model.callSites || [];
+        const environments = model.bindingEnvironments || [];
+        const functions = model.functionDefinitions || [];
+        const sourceDocuments = model.sourceDocuments || [];
         return {
             definitionById: supplied.definitionById || mapById(definitions),
             instanceById: supplied.instanceById || mapById(instances),
@@ -411,6 +478,15 @@
             implementationEndpointsByBehavior: supplied.implementationEndpointsByBehavior
                 || grouped(endpoints.filter((item) => item.implementationMethodId),
                     (item) => `${item.ownerInstanceId}\u0000${item.implementationMethodId}`),
+            statementById: supplied.statementById || mapById(statements),
+            statementsByCallable: supplied.statementsByCallable || grouped(statements, (item) => item.enclosingCallableId),
+            expressionById: supplied.expressionById || mapById(expressions),
+            expressionsByCallable: supplied.expressionsByCallable || grouped(expressions, (item) => item.enclosingCallableId),
+            callSiteById: supplied.callSiteById || mapById(callSites),
+            callSitesByCallable: supplied.callSitesByCallable || grouped(callSites, (item) => item.enclosingCallableId),
+            bindingEnvironmentById: supplied.bindingEnvironmentById || mapById(environments),
+            functionDefinitionById: supplied.functionDefinitionById || mapById(functions),
+            sourceDocumentById: supplied.sourceDocumentById || mapById(sourceDocuments),
             scheduleByBehavior: supplied.scheduleByBehavior || grouped(
                 schedules.flatMap((relation) => [
                     { ...relation, behaviorId: relation.sourceBehaviorId },
@@ -474,6 +550,9 @@
     function contextAllowsOwner(context, ownerId) {
         return !context?.ownerInstanceId || context.ownerInstanceId === ownerId;
     }
+    function contextAllowsCallable(context, callableId) {
+        return !context?.callableId || context.callableId === callableId;
+    }
     function positionInRange(position, range) {
         if (!range || position.uri !== range.uri) return false;
         const afterStart = position.line > range.line
@@ -482,7 +561,7 @@
         const endColumn = Number.isInteger(range.endColumn)
             ? range.endColumn : (range.column || 0) + 1;
         return afterStart && (position.line < endLine
-            || position.line === endLine && position.column <= endColumn);
+            || position.line === endLine && position.column < endColumn);
     }
     function rangeWeight(range) {
         const lines = Math.max(0, (range.endLine ?? range.line) - range.line);

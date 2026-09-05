@@ -84,7 +84,11 @@ function analyzeBehavior(options) {
 }
 
 function collectAssignments(instance, statement, original, callable, makeLocation, accesses, seen) {
-    const expression = new RegExp(`\\b${escapeRegExp(instance.name)}\\s*<=`, 'g');
+    // State assignment is a statement form, not every `name <=` token. Require a
+    // statement/block boundary so comparisons in typed initializers are not writes.
+    const expression = new RegExp(
+        `(?:^|\\bbegin|:|\\bif\\s*\\([^;]*\\))\\s*${escapeRegExp(instance.name)}\\s*<=`, 'g'
+    );
     let match;
     while ((match = expression.exec(statement.text)) !== null) {
         addAccess({
@@ -96,7 +100,7 @@ function collectAssignments(instance, statement, original, callable, makeLocatio
             stateEffect: 'write',
             statement,
             original,
-            matchIndex: match.index,
+            matchIndex: match.index + match[0].indexOf(instance.name),
             callable,
             makeLocation
         }, accesses, seen);
@@ -258,6 +262,52 @@ function addAccess(data, accesses, seen) {
     });
 }
 
+function reconcileStateAssignments(behavior, codeAnalysis, instances, callable, makeLocation) {
+    const stateByName = new Map(instances
+        .filter((instance) => instance.primitiveKind)
+        .map((instance) => [instance.name, instance]));
+    for (const statement of codeAnalysis?.statements || []) {
+        if (statement.kind !== 'state-assignment') continue;
+        const instance = stateByName.get(statement.targetSymbol?.name);
+        if (!instance || behavior.accesses.some((access) =>
+            access.kind === 'write' && access.instance === instance.name
+                && access.statementId === statement.id
+        )) continue;
+        const before = behavior.accesses.length;
+        const sourceStatement = {
+            start: statement.range.start,
+            end: statement.range.end,
+            text: statement.text
+        };
+        addAccess({
+            instance,
+            member: null,
+            kind: 'write',
+            operation: instance.primitiveKind === 'register' ? 'register-write' : 'state-write',
+            dataFlow: 'write',
+            stateEffect: 'write',
+            statement: sourceStatement,
+            original: statement.text,
+            matchIndex: statement.text.indexOf(instance.name),
+            callable,
+            makeLocation
+        }, behavior.accesses, new Set());
+        const access = behavior.accesses[before];
+        if (access) {
+            access.statementId = statement.id;
+            access.pathConditionExpressionIds = [...(statement.pathConditionExpressionIds || [])];
+        }
+    }
+    behavior.reads = uniqueNames(behavior.accesses
+        .filter((item) => item.kind === 'read').map((item) => item.instance));
+    behavior.writes = uniqueNames(behavior.accesses
+        .filter((item) => item.kind === 'write').map((item) => item.instance));
+    behavior.invocations = uniqueNames(behavior.accesses
+        .filter((item) => ['invoke', 'return', 'access'].includes(item.kind))
+        .map((item) => `${item.instance}.${item.member || ''}`.replace(/\.$/, '')));
+    return behavior;
+}
+
 function uniqueNames(values) {
     return [...new Set(values)];
 }
@@ -269,5 +319,6 @@ function escapeRegExp(value) {
 module.exports = {
     PRIMITIVE_OPERATIONS,
     analyzeBehavior,
-    classifyMemberOperation
+    classifyMemberOperation,
+    reconcileStateAssignments
 };

@@ -47,6 +47,59 @@ body > * {
     min-width: 0;
 }
 
+#architecture-canvas[hidden],
+.code-detail[hidden] {
+    display: none;
+}
+
+.code-detail {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    overflow: auto;
+    padding: var(--space-5);
+    background: var(--surface);
+}
+
+.code-detail-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.code-detail-list {
+    display: grid;
+    gap: var(--space-2);
+    max-width: 960px;
+}
+
+.code-detail-item {
+    display: grid;
+    grid-template-columns: minmax(90px, 140px) minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-control);
+    background: var(--surface-raised);
+    text-align: left;
+}
+
+.code-detail-item code,
+.code-source {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-family: var(--vscode-editor-font-family, monospace);
+}
+
+.code-detail-kind,
+.code-detail-status {
+    color: var(--muted);
+    font-size: 10px;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;
@@ -154,6 +207,20 @@ input:focus-visible {
     max-width: 330px;
     color: var(--muted);
     font-size: 11px;
+}
+
+.build-about {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.build-about summary {
+    cursor: pointer;
+}
+
+.build-about.is-mismatch {
+    color: var(--vscode-errorForeground, #f48771);
 }
 
 .toolbar-group {
@@ -945,6 +1012,7 @@ body.busy::after {
 
 .edge {
     fill: none;
+    pointer-events: none;
     stroke: color-mix(in srgb, var(--vscode-foreground, #cccccc) 42%, transparent);
     stroke-width: 1.35;
     vector-effect: non-scaling-stroke;

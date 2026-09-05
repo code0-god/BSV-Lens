@@ -243,8 +243,9 @@ class ArchitecturePanel {
                 case 'ready':
                     if (this.model) {
                         this.panel.webview.postMessage({
-                            type: 'model',
-                            model: this.model,
+            type: 'model',
+            model: this.model,
+            buildInfo: this.context?.buildInfo || null,
                             initial: {
                                 mode: this.request.initialMode || this.defaultView(),
                                 ...this.defaultViewState(),
@@ -313,6 +314,10 @@ class ArchitecturePanel {
         });
         if (revision !== this.modelRevision) {
             throw new Error('Source reference is stale. Refresh the analysis before opening source.');
+        }
+        const source = this.model?.sourceDocuments?.find((item) => item.uri === target.uri);
+        if (source && document.getText() !== source.content) {
+            throw new Error('Source has changed since this analysis. Refresh before opening the source range.');
         }
         const position = new this.vscode.Position(target.line || 0, target.column || 0);
         const end = new this.vscode.Position(
@@ -438,6 +443,10 @@ function modelOwnsLocation(model, target) {
         'protocolChannels',
         'semanticFlows',
         'stateBehaviors',
+        'statements',
+        'expressions',
+        'callSites',
+        'functionDefinitions',
         'scheduleRelations',
         'interfaceContracts',
         'diagnostics',

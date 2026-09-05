@@ -66,6 +66,8 @@ function makeBehavior(
         state: access.instance,
         effect: access.stateEffect,
         operation: access.operation,
+        statementId: access.statementId || null,
+        pathConditionExpressionIds: [...(access.pathConditionExpressionIds || [])],
         evidence: access.sourceEvidence,
         location: access.location || null
     }));
@@ -103,6 +105,10 @@ function makeBehavior(
             ? []
             : [{ type: callable.returnType }],
         invocations: [...(callable.invocations || [])],
+        predicateExpressionId: callable.predicateExpressionId || null,
+        statementIds: (callable.codeAnalysis?.statements || []).map((item) => item.id),
+        expressionIds: (callable.codeAnalysis?.expressions || []).map((item) => item.id),
+        callSiteIds: (callable.codeAnalysis?.callSites || []).map((item) => item.id),
         transitions,
         summary: summarizeTransitions(transitions, callable, kind),
         protocolMembership: [],
@@ -110,7 +116,8 @@ function makeBehavior(
         origin: SOURCE_ORIGIN,
         analysisOrigin: SOURCE_ORIGIN,
         confidence: 'explicit',
-        location: callable.location || instance.location || null
+        location: callable.location || instance.location || null,
+        sourceRange: callable.sourceRange || callable.location || instance.location || null
     };
 }
 

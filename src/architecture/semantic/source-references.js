@@ -37,6 +37,20 @@ function buildSourceReferenceIndex(model = {}) {
         }
     }
 
+    for (const [kind, entities] of [
+        ['statement', model.statements],
+        ['expression', model.expressions],
+        ['call-site', model.callSites]
+    ]) for (const entity of entities || []) addReference(references, {
+        id: entity.id,
+        kind,
+        name: entity.name || entity.calleeName || entity.kind || entity.relativePath || entity.id,
+        definitionId: entity.enclosingCallableId || entity.id,
+        location: entity.location || entity.sourceRange,
+        sourceRange: entity.sourceRange,
+        presentations: []
+    });
+
     const byUri = new Map();
     for (const reference of references) {
         const uri = ownershipRange(reference)?.uri;
@@ -336,7 +350,7 @@ function positionInRange(line, column, range) {
     const afterStart = line > range.line || line === range.line && column >= (range.column || 0);
     const endLine = Number.isInteger(range.endLine) ? range.endLine : range.line;
     const endColumn = Number.isInteger(range.endColumn) ? range.endColumn : (range.column || 0) + 1;
-    return afterStart && (line < endLine || line === endLine && column <= endColumn);
+    return afterStart && (line < endLine || line === endLine && column < endColumn);
 }
 
 function rangeWeight(range) {

@@ -10,6 +10,12 @@ function buildSemanticIndexes(model) {
     const stateBehaviors = model.stateBehaviors || [];
     const scheduleRelations = model.scheduleRelations || [];
     const diagnostics = model.diagnostics || [];
+    const statements = model.statements || [];
+    const expressions = model.expressions || [];
+    const callSites = model.callSites || [];
+    const environments = model.bindingEnvironments || [];
+    const functionDefinitions = model.functionDefinitions || [];
+    const sourceDocuments = model.sourceDocuments || [];
     return {
         definitionById: mapById(definitions),
         definitionsByName: grouped(definitions, (item) => item.name),
@@ -51,7 +57,16 @@ function buildSemanticIndexes(model) {
             ]),
             (entry) => entry.behaviorId
         ),
-        diagnosticById: mapById(diagnostics.filter((item) => item.id))
+        diagnosticById: mapById(diagnostics.filter((item) => item.id)),
+        statementById: mapById(statements),
+        statementsByCallable: grouped(statements, (item) => item.enclosingCallableId),
+        expressionById: mapById(expressions),
+        expressionsByCallable: grouped(expressions, (item) => item.enclosingCallableId),
+        callSiteById: mapById(callSites),
+        callSitesByCallable: grouped(callSites, (item) => item.enclosingCallableId),
+        bindingEnvironmentById: mapById(environments),
+        functionDefinitionById: mapById(functionDefinitions),
+        sourceDocumentById: mapById(sourceDocuments)
     };
 }
 

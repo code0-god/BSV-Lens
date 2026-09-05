@@ -21,7 +21,9 @@ function offsetToPosition(lineStarts, offset) {
 }
 
 function maskCommentsAndStrings(text) {
-    const chars = [...text];
+    // String indexing is UTF-16 throughout the parser. Array.from/the spread operator
+    // indexes Unicode code points and shifts every range after an astral character.
+    const chars = text.split('');
     let state = 'normal';
     let escaped = false;
 

@@ -119,6 +119,7 @@ test('AQuA system graph supports analysis modes focus navigation and exports', a
     await page.locator('#search').press('Enter');
     await expect(page.locator('#inspector')).toContainText('beginArrayWork');
     await page.getByRole('button', { name: 'Set as focus' }).click();
+    expect(await page.evaluate(() => window.__savedState.projectionFocusId)).toContain('beginArrayWork');
     await page.locator('#search').press('Escape');
     await page.locator('[data-hop="1"]').click();
     const focusedScheduling = await page.evaluate(() => {
@@ -241,7 +242,7 @@ test('AQuA two-root forest preserves hierarchy and root focus navigation', async
     await expect(page.locator('#breadcrumbs')).toContainText('matmul');
 
     const backed = nextFocusState(page, loopRoot.id);
-    await page.getByRole('button', { name: 'Back to previous focus' }).click();
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
     await backed;
     await expect(page.locator('#root-select')).toHaveValue(loopRoot.id);
 

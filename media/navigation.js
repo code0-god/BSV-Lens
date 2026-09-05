@@ -5,11 +5,11 @@
     if (typeof module === 'object' && module.exports) module.exports = api;
     if (root) root.BsvArchitectureNavigation = api;
 }(typeof globalThis === 'undefined' ? null : globalThis, function createApi() {
-    const STATE_VERSION = 1;
+    const STATE_VERSION = 2;
     const HISTORY_LIMIT = 100;
     const SNAPSHOT_KEYS = Object.freeze([
         'analysisContext', 'sourceScope', 'level', 'analysisMode', 'hopScope',
-        'focusStack', 'selectedId', 'filters', 'collapsedGroups',
+        'focusStack', 'projectionFocusId', 'selectedId', 'selectedRelationId', 'filters', 'collapsedGroups',
         'expandedAggregations', 'trace', 'transform', 'search', 'navigationRecovery'
     ]);
 
@@ -26,6 +26,8 @@
             occurrencePath: [],
             subject: { kind: null, id: null },
             presentationId: null,
+            sourceRevision: null,
+            codeContainerId: null,
             entryCallSiteId: null,
             bindingEnvironmentId: null,
             level: state.level || 'system',
@@ -49,6 +51,8 @@
                 id: value.subject?.id || null
             },
             presentationId: value.presentationId || value.subject?.id || null,
+            sourceRevision: value.sourceRevision || null,
+            codeContainerId: value.codeContainerId || null,
             entryCallSiteId: value.entryCallSiteId || null,
             bindingEnvironmentId: value.bindingEnvironmentId || null,
             level: state.level || value.level || 'system',
@@ -96,6 +100,8 @@
         const focusPath = options.focusPath;
         const rootFor = options.rootFor;
         const project = typeof options.project === 'function' ? options.project : () => true;
+        const resolveCodeSubject = typeof options.resolveCodeSubject === 'function'
+            ? options.resolveCodeSubject : () => null;
         let modelRevision = Number.isInteger(options.modelRevision) ? options.modelRevision : 0;
         let semanticParentSnapshot = null;
 
@@ -116,10 +122,12 @@
 
         function contextFor(candidate, presentationNode, semanticSubject = presentationNode, metadata = {}) {
             const semanticOwner = exactNode(semanticSubject?.ownerInstanceId);
-            const owner = semanticOwner?.architectureInstance ? semanticOwner
-                : ownerInstance(presentationNode)
-                    || ownerInstance(exactNode(candidate.focusStack?.at(-1)));
-            const root = owner ? rootFor(owner.id) : presentationNode ? rootFor(presentationNode.id) : null;
+            const owner = metadata.definitionOnly ? null
+                : semanticOwner?.architectureInstance ? semanticOwner
+                    : ownerInstance(presentationNode)
+                        || ownerInstance(exactNode(candidate.focusStack?.at(-1)));
+            const root = metadata.definitionOnly ? null
+                : owner ? rootFor(owner.id) : presentationNode ? rootFor(presentationNode.id) : null;
             const path = owner ? focusPath(owner.id) : [];
             return {
                 modelRevision,
@@ -130,7 +138,9 @@
                     kind: semanticSubject?.kind || presentationNode?.kind || null,
                     id: semanticSubject?.id || presentationNode?.id || null
                 },
-                presentationId: presentationNode?.id || null,
+                presentationId: metadata.presentationId || presentationNode?.id || null,
+                sourceRevision: metadata.sourceRevision || semanticSubject?.sourceRevision || null,
+                codeContainerId: metadata.codeContainerId || candidate.analysisContext?.codeContainerId || null,
                 entryCallSiteId: metadata.entryCallSiteId
                     || semanticSubject?.entryCallSiteId
                     || presentationNode?.entryCallSiteId
@@ -147,6 +157,9 @@
         function candidateFor(node, changes, semanticSubject = node, metadata = {}) {
             const candidate = clone(state);
             Object.assign(candidate, changes);
+            if (Object.prototype.hasOwnProperty.call(changes, 'selectedId')) {
+                candidate.selectedRelationId = null;
+            }
             candidate.analysisContext = contextFor(candidate, node, semanticSubject, metadata);
             candidate.navigationRecovery = null;
             candidate.navigationVersion = STATE_VERSION;
@@ -188,6 +201,7 @@
                 const owner = ownerInstance(node);
                 return {
                     focusStack: owner ? focusPath(owner.id) : [node.id],
+                    projectionFocusId: node.architectureInstance ? null : node.id,
                     selectedId: node.id
                 };
             }, { history: true });
@@ -197,6 +211,7 @@
             return transition(nodeId, (node) => ({
                 level: 'module',
                 focusStack: focusPath(node.id),
+                projectionFocusId: null,
                 selectedId: node.id
             }), {
                 history: true,
@@ -236,10 +251,11 @@
             const candidate = candidateFor(node, {
                 level: 'behavior',
                 focusStack: owner ? focusPath(owner.id) : state.focusStack,
+                projectionFocusId: null,
                 selectedId: node.id
             }, metadata.subject || node, metadata);
             const historySource = metadata.fromSemanticParent ? semanticParentSnapshot : null;
-            const result = applyCandidate(candidate, true, historySource);
+            const result = applyCandidate(candidate, metadata.replaceCurrent !== true, historySource);
             if (result.status === 'committed') semanticParentSnapshot = null;
             return result;
         }
@@ -258,8 +274,42 @@
             });
         }
 
-        function inspectCode(nodeId) {
-            return selectEntity(nodeId);
+        function inspectFlow(subject, presentationId) {
+            if (!subject?.id || !presentationId) return { status: 'unresolved' };
+            const candidate = candidateFor(null, {
+                selectedId: null,
+                selectedRelationId: presentationId
+            }, subject, { presentationId });
+            candidate.selectedRelationId = presentationId;
+            return applyCandidate(candidate, false);
+        }
+
+        function enterCodeDefinition(subject) {
+            if (!subject?.id || !subject.sourceRevision) return { status: 'unresolved' };
+            const candidate = candidateFor(null, {
+                level: 'behavior',
+                focusStack: [],
+                projectionFocusId: null,
+                selectedId: null
+            }, subject, {
+                definitionOnly: true,
+                sourceRevision: subject.sourceRevision,
+                codeContainerId: subject.id,
+                entryCallSiteId: null,
+                bindingEnvironmentId: null
+            });
+            return applyCandidate(candidate, true);
+        }
+
+        function inspectCode(subject, presentationId = subject?.id || subject, metadata = {}) {
+            const semantic = typeof subject === 'object' ? subject : resolveCodeSubject(subject);
+            const presentation = exactNode(presentationId);
+            if (!semantic?.id || presentationId && !presentation) return { status: 'unresolved' };
+            const candidate = candidateFor(presentation, {
+                level: 'behavior',
+                selectedId: presentation?.id || null
+            }, semantic, metadata);
+            return applyCandidate(candidate, false);
         }
 
         function effect(type, nodeId) {
@@ -334,7 +384,18 @@
             return valid;
         }
 
+        function staleCodeSubject(value) {
+            const subjectId = value.analysisContext?.subject?.id;
+            const presentationId = value.analysisContext?.presentationId;
+            if (!subjectId || subjectId === presentationId || !value.analysisContext?.sourceRevision) return null;
+            const current = resolveCodeSubject(subjectId);
+            return !current || current.sourceRevision !== value.analysisContext.sourceRevision
+                ? subjectId : null;
+        }
+
         function staleIdentity(value) {
+            const staleCodeId = staleCodeSubject(value);
+            if (staleCodeId) return staleCodeId;
             if (value.selectedId && !exactNode(value.selectedId)) return value.selectedId;
             const path = Array.isArray(value.focusStack) ? value.focusStack : [];
             const missingPathId = path.find((id) => !exactNode(id));
@@ -349,6 +410,23 @@
             const original = clone(value || {});
             const missingIdentity = staleIdentity(original);
             const validPath = reconcilePath(original.focusStack);
+            const staleCodeId = staleCodeSubject(original);
+            if (staleCodeId) {
+                const presentation = exactNode(original.analysisContext?.presentationId);
+                if (presentation) {
+                    const candidate = {
+                        ...original,
+                        selectedId: presentation.id,
+                        navigationRecovery: {
+                            status: 'stale',
+                            missingIdentity: staleCodeId,
+                            reason: 'code-source-revision-stale'
+                        }
+                    };
+                    candidate.analysisContext = contextFor(candidate, presentation);
+                    if (project(candidate)) return candidate;
+                }
+            }
             if (!missingIdentity) {
                 const candidate = { ...original, focusStack: validPath, navigationRecovery: null };
                 candidate.analysisContext = reconcileContext(candidate);
@@ -431,6 +509,8 @@
             inspectEndpoint,
             enterBehavior,
             enterFunctionCall,
+            inspectFlow,
+            enterCodeDefinition,
             inspectCode,
             openDefinition,
             openSource,
