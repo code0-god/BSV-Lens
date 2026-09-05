@@ -4,6 +4,7 @@ function getWebviewHtml(webview, extensionUri, vscode) {
     const graphViewUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'graph-view.js'));
     const textMetricsUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'text-metrics.js'));
     const layoutUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'webview-layout.js'));
+    const sourceResolutionUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'source-resolution.js'));
     const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'webview.js'));
     const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'webview.css'));
     const nonce = createNonce();
@@ -32,6 +33,12 @@ function getWebviewHtml(webview, extensionUri, vscode) {
                 <select id="source-scope" aria-label="Source scope" title="Choose analyzed source scope">
                     <option value="workspace">Workspace</option>
                     <option value="current-file">Current File</option>
+                </select>
+            </div>
+            <div id="root-field" class="control-field root-field" hidden>
+                <label id="root-label" for="root-select">Architecture Roots</label>
+                <select id="root-select" aria-label="Architecture root" title="Choose an architecture root">
+                    <option value="">All Roots</option>
                 </select>
             </div>
             <fieldset class="control-field segmented-field">
@@ -173,6 +180,7 @@ function getWebviewHtml(webview, extensionUri, vscode) {
     <script nonce="${nonce}" src="${graphViewUri}"></script>
     <script nonce="${nonce}" src="${textMetricsUri}"></script>
     <script nonce="${nonce}" src="${layoutUri}"></script>
+    <script nonce="${nonce}" src="${sourceResolutionUri}"></script>
     <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
 </html>`;

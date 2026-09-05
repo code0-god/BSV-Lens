@@ -5,6 +5,7 @@
     const Graph = globalThis.BsvArchitectureGraph;
     const Text = globalThis.BsvArchitectureText;
     const Layout = globalThis.BsvArchitectureLayout;
+    const SourceResolution = globalThis.SourceResolution;
     const NS = 'http://www.w3.org/2000/svg';
     const saved = Graph.migrateState(vscode.getState() || {});
 
@@ -13,6 +14,9 @@
         title: document.getElementById('architecture-title'),
         subtitle: document.getElementById('architecture-subtitle'),
         sourceScope: document.getElementById('source-scope'),
+        rootField: document.getElementById('root-field'),
+        rootLabel: document.getElementById('root-label'),
+        rootSelect: document.getElementById('root-select'),
         levelButtons: [...document.querySelectorAll('[data-level]')],
         modeButtons: [...document.querySelectorAll('[data-analysis-mode]')],
         hopButtons: [...document.querySelectorAll('[data-hop]')],
@@ -70,6 +74,7 @@
         pointer: null,
         toastTimer: null,
         pendingRevealId: null,
+        pendingSourceResolution: null,
         editorRevealId: null,
         editorRevealTimer: null,
         selectedEdgeId: null,
@@ -95,6 +100,32 @@
         syncFilterControls(state.filters);
     }
 
+    function syncRootSelector() {
+        if (!runtime.view) return;
+        const roots = runtime.view.architectureRoots();
+        elements.rootField.hidden = roots.length < 2;
+        elements.rootLabel.textContent = `Architecture Roots: ${roots.length}`;
+        elements.rootSelect.replaceChildren();
+        const all = document.createElement('option');
+        all.value = '';
+        all.textContent = 'All Roots';
+        elements.rootSelect.append(all);
+        for (const root of roots) {
+            const option = document.createElement('option');
+            option.value = root.id;
+            option.textContent = root.label || root.name;
+            elements.rootSelect.append(option);
+        }
+        const focusId = viewState().focusStack.at(-1);
+        elements.rootSelect.value = runtime.view.rootFor(moduleOwnerId(focusId) || focusId)?.id || '';
+        const component = elements.hopButtons.find((button) => button.dataset.hop === 'all');
+        const allRoots = !focusId && roots.length > 0;
+        component.textContent = allRoots ? 'All Roots' : 'Component';
+        component.title = allRoots
+            ? 'Show all architecture roots'
+            : 'Show the focused semantic component';
+    }
+
     function installEventHandlers() {
         window.addEventListener('message', (event) => handleHostMessage(event.data));
         window.addEventListener('resize', debounce(() => {
@@ -115,6 +146,12 @@
             runtime.fitOnNextRender = true;
             render();
             persistState();
+        });
+        elements.rootSelect.addEventListener('change', () => {
+            if (!runtime.view) return;
+            const rootId = elements.rootSelect.value;
+            if (rootId) setFocus(rootId);
+            else clearFocus();
         });
         for (const button of elements.levelButtons) {
             button.addEventListener('click', () => setLevel(button.dataset.level));
@@ -141,6 +178,7 @@
                     .filter((node) => nodeMatchesSearch(node, query))
                     .sort((left, right) =>
                         nodeSearchScore(left, query) - nodeSearchScore(right, query)
+                        || compareNodes(left, right)
                     )[0];
                 if (first) selectNode(first.id, true);
             } else if (event.key === 'Escape') {
@@ -210,6 +248,9 @@
             case 'revealNode':
                 revealNodeFromEditor(message.nodeId);
                 break;
+            case 'revealSource':
+                revealSourceReference(message.sourceReference, message.revision);
+                break;
             case 'toast':
                 showToast(message.message, Boolean(message.error));
                 break;
@@ -266,17 +307,18 @@
             state.trace = null;
         }
         if (initial.focusId && runtime.view.indexes.nodeById.has(initial.focusId)) {
-            state.focusStack = [initial.focusId];
+            state.focusStack = runtime.view.focusPath(initial.focusId);
             state.selectedId = initial.focusId;
         } else if (state.level !== 'system' && state.focusStack.length === 0) {
-            const initialModule = runtime.view.indexes.visibleNodes.find((node) =>
-                node.kind === 'module'
-                && (!state.activeFile || node.relativePath === state.activeFile)
-            ) || runtime.view.indexes.visibleNodes.find((node) =>
-                node.kind === 'module' && model.roots?.includes(node.id)
-            );
-            if (initialModule) state.focusStack = [initialModule.id];
+            const contextual = runtime.view.indexes.nodeById.get(state.selectedId);
+            const initialModule = contextual
+                ? runtime.view.indexes.nodeById.get(moduleOwnerId(contextual.id))
+                : runtime.view.architectureRoots().length === 1
+                    ? runtime.view.architectureRoots()[0]
+                    : null;
+            if (initialModule) state.focusStack = runtime.view.focusPath(initialModule.id);
         }
+        syncRootSelector();
         runtime.transform = state.transform;
         runtime.firstModel = false;
         runtime.fitOnNextRender = resetView
@@ -310,10 +352,14 @@
         const state = runtime.view.state;
         if (level !== 'system' && state.focusStack.length === 0) {
             const candidate = selectedModelNode();
-            const moduleId = moduleOwnerId(candidate?.id)
-                || runtime.model.roots?.[0]
-                || runtime.view.indexes.visibleNodes.find((node) => node.kind === 'module')?.id;
-            if (moduleId) state.focusStack = [moduleId];
+            const moduleId = moduleOwnerId(candidate?.id);
+            if (moduleId) state.focusStack = runtime.view.focusPath(moduleId);
+            else if (runtime.view.architectureRoots().length > 1) {
+                showToast('Choose an architecture root before opening this level.');
+                runtime.view.setLevel('system');
+            } else if (runtime.view.architectureRoots().length === 1) {
+                state.focusStack = runtime.view.focusPath(runtime.view.architectureRoots()[0].id);
+            }
         }
         clearTrace(false);
         runtime.fitOnNextRender = true;
@@ -405,8 +451,10 @@
             focusId: viewState().focusStack.at(-1) || null,
             viewport: elements.svg.getBoundingClientRect(),
             viewportWidth: elements.svg.getBoundingClientRect().width,
+            viewportHeight: elements.svg.getBoundingClientRect().height,
             level: viewState().level,
             analysisMode: viewState().analysisMode,
+            topology: visible.topology,
             layoutModuleHierarchy: Graph.layoutModuleHierarchy
         });
         runtime.graph = {
@@ -426,6 +474,7 @@
         renderNodes(visible.nodes, layout.positions);
         renderEmptyState();
         renderBreadcrumbs();
+        syncRootSelector();
         renderInspector();
         updateHeader();
         updateLegend();
@@ -473,14 +522,6 @@
         let edges = result.edges
             .filter((edge) => ids.has(edge.source) && ids.has(edge.target))
             .filter(edgeAllowed);
-        if (state.focusStack.length === 0 && state.level === 'system') {
-            const connected = new Set(edges.flatMap((edge) => [edge.source, edge.target]));
-            nodes = nodes.filter((node) =>
-                ['module', 'package', 'interface'].includes(node.kind)
-                || node.virtual
-                || connected.has(node.id)
-            );
-        }
         const finalIds = new Set(nodes.map((node) => node.id));
         edges = edges.filter((edge) => finalIds.has(edge.source) && finalIds.has(edge.target));
         const groupIds = new Set(nodes.map((node) => node.group || 'root'));
@@ -527,7 +568,8 @@
     function renderGroups(groups) {
         for (const group of groups) {
             const wrapper = svgElement('g', {
-                class: `architecture-group${group.kind ? ` kind-${cssKind(group.kind)}` : ''}`
+                class: `architecture-group${group.kind ? ` kind-${cssKind(group.kind)}` : ''}`,
+                'data-owner-id': group.ownerId || ''
             });
             wrapper.append(svgElement('rect', {
                 class: 'group-box',
@@ -625,17 +667,26 @@
                     edge.kind === 'interface-forward' ? 72 : 34
                 );
                 const width = Math.max(34, Text.displayWidth(label) * 5.5 + 10);
-                const labelX = route.labelOutside === 'right'
+                const proposedLabelX = route.labelOutside === 'right'
                     ? route.labelBoundary + 8 + width / 2
                     : route.labelX;
-                const initialLabelY = route.labelOutside === 'bottom'
+                const labelX = route.bounds
+                    ? Math.max(route.bounds.x + width / 2 + 4,
+                        Math.min(route.bounds.x + route.bounds.width - width / 2 - 4, proposedLabelX))
+                    : proposedLabelX;
+                const proposedLabelY = route.labelOutside === 'bottom'
                     ? route.labelBoundary + 17
                     : route.labelY;
+                const initialLabelY = route.bounds
+                    ? Math.max(route.bounds.y + 10,
+                        Math.min(route.bounds.y + route.bounds.height - 10, proposedLabelY))
+                    : proposedLabelY;
                 const labelY = reserveLabelLane(
                     labelX,
                     initialLabelY,
                     width,
-                    occupiedLabels
+                    occupiedLabels,
+                    route.bounds
                 );
                 group.append(
                     svgElement('rect', {
@@ -663,7 +714,7 @@
         }
     }
 
-    function reserveLabelLane(x, y, width, occupied) {
+    function reserveLabelLane(x, y, width, occupied, bounds) {
         for (let attempt = 0; attempt < 64; attempt += 1) {
             const offset = attempt === 0
                 ? 0
@@ -675,6 +726,7 @@
                 top: candidateY - 10,
                 bottom: candidateY + 9
             };
+            if (bounds && (box.top < bounds.y || box.bottom > bounds.y + bounds.height)) continue;
             if (occupied.every((other) =>
                 box.right <= other.left
                 || box.left >= other.right
@@ -1039,6 +1091,10 @@
     }
 
     function nodeDetail(node) {
+        if (node.architectureInstance && node.details?.root) {
+            return `External channels ${node.details.externalChannelCount || 0}`;
+        }
+        if (node.rootBoundary) return 'Unbound in analyzed source';
         if (node.kind === 'package') {
             const details = node.details || {};
             return `${details.modules || 0} modules · ${details.functions || 0} functions · ${details.types || 0} types`;
@@ -1138,7 +1194,35 @@
             section.append(code);
             content.append(section);
         }
-        if (node.semanticBehavior) {
+        if (node.architectureInstance) {
+            const details = node.details || {};
+            const children = (runtime.view.indexes.children.get(node.id) || [])
+                .filter((child) => child.architectureInstance);
+            content.append(detailSection('Instance hierarchy', [
+                ['Target definition', details.targetName],
+                ['Path', details.path],
+                ['Parent', node.parentId ? nodeLabel(node.parentId) : null],
+                ['Constructor', details.constructor || details.targetName],
+                ['Children', children.length],
+                ['Analysis', 'Source-derived'],
+                ['Source evidence', node.sourceEvidence]
+            ]));
+            if (details.root) {
+                content.append(detailSection('Root origin', [
+                    ['Root status', rootOriginLabel(node)],
+                    ['Reason', details.rootReason === 'configured'
+                        ? 'Selected by an analyzed entrypoint configuration.'
+                        : details.rootReason === 'uninstantiated'
+                            ? 'No analyzed module instantiates this definition.'
+                            : 'Source hierarchy cycle prevents a natural root selection.']
+                ]));
+                renderBoundaryDetails(content, runtime.model.semanticBoundaries?.find((boundary) =>
+                    boundary.rootInstanceId === node.id));
+            }
+        } else if (node.rootBoundary) {
+            renderBoundaryDetails(content, runtime.model.semanticBoundaries?.find((boundary) =>
+                boundary.rootInstanceId === node.boundaryRootId));
+        } else if (node.semanticBehavior) {
             renderSemanticBehaviorDetails(content, node);
         } else {
             const details = flattenDetails(node.details || {});
@@ -1146,6 +1230,55 @@
         }
         renderRelationInspector(content, node);
         elements.inspector.replaceChildren(content);
+    }
+
+    function rootOriginLabel(node) {
+        if (node.details?.rootReason === 'configured') return 'Configured Architecture Root';
+        if (node.details?.rootReason === 'uninstantiated') return 'Natural Root Candidate';
+        return 'Architecture Root Candidate';
+    }
+
+    function renderBoundaryDetails(content, boundary) {
+        if (!boundary) return;
+        const disclosure = document.createElement('details');
+        disclosure.className = 'boundary-disclosure';
+        const summary = document.createElement('summary');
+        const channels = boundary.channels || [];
+        summary.textContent = `External channels ${channels.length}`;
+        disclosure.append(summary);
+        disclosure.append(paragraph('External / workspace boundary. No source-derived parent binding found.'));
+        for (const channel of channels) {
+            const legs = [...new Set(channel.legs.map((leg) =>
+                `${leg.direction === 'inbound' ? 'IN' : 'OUT'} ${leg.payloadType || 'unspecified type'}`))];
+            const section = detailSection(channel.name, [
+                ['Protocol', channel.direction],
+                ['Payload', channel.payloadType],
+                ['Boundary transfers', legs.join('; ') || 'Unresolved protocol transfers'],
+                ['Status', 'Unbound in analyzed source']
+            ]);
+            if (runtime.view.indexes.nodeById.has(channel.channelId)) {
+                section.append(makeButton('Open source', () => openNodeSource(channel.channelId)));
+            }
+            disclosure.append(section);
+        }
+        content.append(disclosure);
+        const unmatchedEndpoints = boundary.unmatchedEndpoints || [];
+        if (unmatchedEndpoints.length) {
+            const unmatched = document.createElement('details');
+            unmatched.className = 'boundary-disclosure';
+            const heading = document.createElement('summary');
+            heading.textContent = `Ungrouped public endpoints ${unmatchedEndpoints.length}`;
+            unmatched.append(heading);
+            unmatched.append(paragraph('Public endpoints not assigned to an inferred protocol channel.'));
+            for (const endpoint of unmatchedEndpoints) {
+                unmatched.append(detailSection(endpoint.interfacePath.join('.'), [
+                    ['Category', endpoint.category],
+                    ['Transfers', endpoint.legs.map((leg) =>
+                        `${leg.direction === 'inbound' ? 'IN' : 'OUT'} ${leg.payloadType || 'unspecified type'}`).join('; ')]
+                ]));
+            }
+            content.append(unmatched);
+        }
     }
 
     function renderSemanticBehaviorDetails(container, node) {
@@ -1465,7 +1598,7 @@
 
     function clampNodeToViewport(position) {
         const rect = elements.svg.getBoundingClientRect();
-        const padding = 12;
+        const padding = 16;
         const left = runtime.transform.x + position.x * runtime.transform.scale;
         const top = runtime.transform.y + position.y * runtime.transform.scale;
         const right = left + position.width * runtime.transform.scale;
@@ -1478,8 +1611,7 @@
 
     function setFocus(nodeId) {
         if (!runtime.view.indexes.nodeById.has(nodeId)) return;
-        const stack = viewState().focusStack;
-        if (stack.at(-1) !== nodeId) stack.push(nodeId);
+        viewState().focusStack = runtime.view.focusPath(nodeId);
         clearTrace(false);
         viewState().selectedId = nodeId;
         runtime.selectedEdgeId = null;
@@ -1565,6 +1697,60 @@
         elements.revealNotice.hidden = false;
     }
 
+    function revealSourceReference(sourceReference, revision) {
+        if (!runtime.view || Number.isInteger(revision) && revision !== runtime.revision) return;
+        const state = viewState();
+        const resolution = SourceResolution.resolve(runtime.model, sourceReference, {
+            ...runtime.view.sourceResolutionContext(state.selectedId),
+            visibleNodeIds: runtime.graph.byId.keys()
+        });
+        runtime.pendingSourceResolution = resolution;
+        runtime.pendingRevealId = null;
+        elements.revealNotice.querySelector('.reveal-candidates')?.remove();
+        elements.revealNotice.dataset.resolutionStatus = resolution.status;
+        if (resolution.status === 'visible-exact') {
+            elements.revealNotice.hidden = true;
+            runtime.editorRevealId = resolution.presentationNodeId;
+            selectNode(resolution.presentationNodeId, true);
+            applyEditorReveal();
+            return;
+        }
+        const name = (sourceReference.references || [])
+            .map((reference) => reference.name)
+            .join(', ') || 'Source selection';
+        const messages = {
+            'visible-multiple': `${name}: ${resolution.candidates.length} architecture matches. Choose an occurrence.`,
+            'outside-focus': `${name} is outside current focus.`,
+            'outside-view': `${name} is outside the current view.`,
+            unresolved: `${name} has no resolved source identity.`
+        };
+        elements.revealNoticeText.textContent = messages[resolution.status];
+        elements.revealNotice.hidden = false;
+        elements.revealCurrentView.hidden = resolution.candidates.length !== 1;
+        elements.revealCurrentView.disabled = resolution.candidates.length !== 1;
+        if (resolution.candidates.length === 1) {
+            runtime.pendingRevealId = resolution.candidates[0].id;
+        } else if (resolution.candidates.length > 1) {
+            const choices = document.createElement('div');
+            choices.className = 'reveal-candidates';
+            for (const candidate of resolution.candidates) {
+                const node = runtime.view.indexes.nodeById.get(candidate.id);
+                choices.append(makeButton(node?.details?.path || node?.label || candidate.id, () => {
+                    elements.revealNotice.hidden = true;
+                    if (runtime.graph.byId.has(candidate.id)) {
+                        runtime.editorRevealId = candidate.id;
+                        selectNode(candidate.id, true);
+                        applyEditorReveal();
+                    } else {
+                        runtime.pendingRevealId = candidate.id;
+                        revealPendingNode();
+                    }
+                }));
+            }
+            elements.revealNotice.append(choices);
+        }
+    }
+
     function revealPendingNode() {
         const nodeId = runtime.pendingRevealId;
         const node = runtime.view?.indexes.nodeById.get(nodeId);
@@ -1572,9 +1758,11 @@
         viewState().sourceScope = 'workspace';
         viewState().level = ['rule', 'method', 'function', 'register', 'fifo', 'wire', 'memory'].includes(node.kind)
             ? 'behavior'
-            : node.kind === 'module' ? 'module' : 'system';
+            : ['module', 'endpoint', 'protocol-channel'].includes(node.kind) ? 'module' : 'system';
         viewState().hopScope = 'all';
-        viewState().focusStack = [moduleOwnerId(nodeId) || nodeId];
+        viewState().focusStack = runtime.view.focusPath(moduleOwnerId(nodeId) || nodeId);
+        if (node.primitive) viewState().filters.primitives = true;
+        if (['rule', 'method'].includes(node.kind)) viewState().filters.rules = true;
         runtime.pendingRevealId = null;
         elements.revealNotice.hidden = true;
         runtime.fitOnNextRender = true;
@@ -1811,7 +1999,7 @@
         return [
             node.label, node.name, node.kind, node.packageName, node.relativePath,
             node.description, node.signature, node.details?.targetName,
-            node.details?.targetDefinitionId, node.details?.path,
+            node.details?.constructor, node.details?.targetDefinitionId, node.details?.path,
             JSON.stringify(node.ports || [])
         ].filter(Boolean).some((value) => String(value).toLowerCase().includes(query));
     }
@@ -1836,9 +2024,30 @@
                 ? state.activeFile || 'Current BSV file'
                 : `${runtime.model.workspaceName || 'Workspace'} · generated ${formatTimestamp(runtime.model.generatedAt)}`;
         const focusName = focus?.label || focus?.name || 'none';
-        const hops = state.hopScope === 'all' ? 'Component' : `${state.hopScope} hop${state.hopScope === 1 ? '' : 's'}`;
-        elements.focusSummary.textContent = `Focus: ${focusName} · ${titleCase(state.analysisMode)} · ${hops} · ${runtime.graph.nodes.length}/${runtime.model.stats.nodes} nodes · ${runtime.graph.edges.length} edges`;
-        elements.stats.textContent = `${runtime.graph.nodes.length}/${runtime.model.stats.nodes} nodes · ${runtime.graph.edges.length} edges · ${runtime.model.stats.files} files`;
+        const roots = runtime.view.architectureRoots();
+        const hops = state.hopScope === 'all'
+            ? focus || roots.length === 0 ? 'Component' : 'All Roots'
+            : `${state.hopScope} hop${state.hopScope === 1 ? '' : 's'}`;
+        const instances = runtime.graph.nodes.filter((node) => node.architectureInstance).length;
+        const rootCount = runtime.graph.topology?.roots?.length
+            || runtime.graph.nodes.filter((node) => node.architectureInstance && node.details?.root).length;
+        let counts;
+        if (state.analysisMode === 'scheduling') {
+            const behaviors = runtime.graph.nodes.filter((node) => node.semanticBehavior
+                || ['rule', 'method'].includes(node.kind)).length;
+            counts = `${behaviors} behaviors · ${runtime.graph.edges.length} scheduling relations`;
+        } else if (state.level === 'system' && roots.length) {
+            const relations = runtime.graph.edges.filter((edge) => state.analysisMode !== 'structure'
+                || edge.kind === 'instance-child').length;
+            counts = `${rootCount} root${rootCount === 1 ? '' : 's'} · ${instances} instances · ${relations} ${state.analysisMode === 'structure' ? 'structural' : 'flow'} relations`;
+        } else {
+            const channels = runtime.graph.nodes.filter((node) => node.kind === 'protocol-channel').length;
+            const behaviors = runtime.graph.nodes.filter((node) => ['rule', 'method'].includes(node.kind)).length;
+            const stateCount = runtime.graph.nodes.filter((node) => node.primitive).length;
+            counts = `${instances} instances · ${channels} channels · ${behaviors} behaviors · ${stateCount} state instances`;
+        }
+        elements.focusSummary.textContent = `Focus: ${focusName} · ${titleCase(state.analysisMode)} · ${hops}`;
+        elements.stats.textContent = `${counts} · ${runtime.model.stats.files} files`;
         const diagnostics = [...new Map([
             ...(runtime.model.diagnostics || []),
             ...(runtime.model.semanticDiagnostics || []).filter((item) =>
@@ -1852,7 +2061,7 @@
         const warnings = diagnostics.filter((item) => item.severity === 'warning').length;
         elements.diagnostics.textContent = errors || warnings
             ? `${errors} errors · ${warnings} warnings`
-            : 'No diagnostics';
+            : 'No analysis diagnostics';
         elements.diagnostics.classList.toggle('has-issues', Boolean(errors || warnings));
         elements.diagnostics.title = diagnostics.slice(0, 10).map((item) => item.message).join('\n');
     }
@@ -2116,11 +2325,12 @@
     function moduleOwnerId(id) {
         let node = runtime.view?.indexes.nodeById.get(id);
         if (!node) return null;
+        if (node.architectureInstance) return node.id;
         if (node.kind === 'module') return node.id;
         if (node.kind === 'instance' && node.details?.targetId) return node.details.targetId;
         while (node?.parentId) {
             node = runtime.view.indexes.nodeById.get(node.parentId);
-            if (node?.kind === 'module') return node.id;
+            if (node?.architectureInstance || node?.kind === 'module') return node.id;
         }
         return null;
     }

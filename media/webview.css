@@ -43,6 +43,10 @@ body {
     grid-template-rows: auto auto auto auto auto minmax(0, 1fr);
 }
 
+body > * {
+    min-width: 0;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;
@@ -545,6 +549,7 @@ button svg {
     z-index: 4;
     max-width: min(560px, calc(100% - 32px));
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-2) var(--space-3);
@@ -556,6 +561,26 @@ button svg {
 }
 
 .reveal-notice[hidden] {
+    display: none;
+}
+
+.reveal-candidates {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-height: 240px;
+    overflow: auto;
+    width: 100%;
+}
+
+.reveal-candidates button {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+#root-field[hidden],
+#reveal-current-view[hidden] {
     display: none;
 }
 
@@ -694,6 +719,23 @@ button svg {
     margin-top: 14px;
     padding-top: 11px;
     border-top: 1px solid var(--panel-border);
+}
+
+.boundary-disclosure {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--panel-border);
+}
+
+.boundary-disclosure summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding-block: var(--space-2);
+}
+
+.boundary-disclosure summary:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
 }
 
 .inspector-section h3 {
@@ -871,6 +913,23 @@ body.busy::after {
     fill: color-mix(in srgb, var(--surface-raised) 42%, transparent);
     stroke: color-mix(in srgb, var(--vscode-foreground, #cccccc) 26%, transparent);
     stroke-dasharray: none;
+}
+
+.kind-root-boundary .group-box {
+    stroke: var(--panel-border);
+    stroke-width: 2;
+    stroke-dasharray: none;
+}
+
+.edge.constructor-binding {
+    stroke: var(--vscode-symbolIcon-parameterForeground, var(--muted));
+    stroke-dasharray: 5 4;
+}
+
+.edge.boundary-input,
+.edge.boundary-output {
+    stroke: var(--vscode-symbolIcon-interfaceForeground, var(--muted));
+    stroke-dasharray: 3 3;
 }
 
 .group-title {
@@ -1166,9 +1225,9 @@ body.busy::after {
     .canvas-help {
         position: static;
         grid-row: 2;
-        width: fit-content;
-        max-width: calc(100% - 24px);
-        margin: 4px 12px 8px;
+        width: calc(100% - 2 * var(--space-4));
+        min-width: 0;
+        margin: var(--space-1) var(--space-4) var(--space-3);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -1241,6 +1300,10 @@ body.busy::after {
     .workspace {
         grid-template-columns: 1fr;
         grid-template-rows: minmax(150px, 1fr) 160px;
+    }
+
+    .workspace:has(.inspector .inspector-empty) {
+        grid-template-rows: minmax(150px, 1fr) 0;
     }
 
     .inspector {

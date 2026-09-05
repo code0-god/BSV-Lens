@@ -6,6 +6,14 @@ const vscode = require('vscode');
 const {
     assertAquaSemanticArchitecture
 } = require('./aqua-semantic-assertions');
+const {
+    buildSourceReferenceIndex,
+    findSourceReferenceAtPosition
+} = require('../../src/architecture/semantic/source-references');
+const Graph = require('../../media/graph-view');
+const SourceResolution = require('../../media/source-resolution');
+
+const SELECTION_TIMEOUT_MS = 5000;
 
 const MATMUL_SCHEDULER_METHODS = [
     'startReady',
@@ -21,6 +29,75 @@ const MATMUL_SCHEDULER_METHODS = [
     'completion',
     'consumeCompletion'
 ];
+
+function withTimeout(promise, label) {
+    let timer;
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error(`Timed out waiting for ${label}.`)), SELECTION_TIMEOUT_MS);
+        })
+    ]).finally(() => clearTimeout(timer));
+}
+
+function capturePanelMessages(panel) {
+    const messages = [];
+    const waiters = [];
+    const original = panel.panel.webview.postMessage.bind(panel.panel.webview);
+    panel.panel.webview.postMessage = (message) => {
+        messages.push(message);
+        for (const waiter of [...waiters]) {
+            if (!waiter.predicate(message)) continue;
+            waiters.splice(waiters.indexOf(waiter), 1);
+            waiter.resolve(message);
+        }
+        return original(message);
+    };
+    return {
+        messages,
+        next(predicate, label) {
+            return withTimeout(new Promise((resolve) => waiters.push({ predicate, resolve })), label);
+        },
+        restore() {
+            panel.panel.webview.postMessage = original;
+        }
+    };
+}
+
+function nextExactSelection(uri, line, character) {
+    return withTimeout(new Promise((resolve) => {
+        const disposable = vscode.window.onDidChangeTextEditorSelection((event) => {
+            const active = event.selections[0]?.active;
+            if (event.textEditor.document.uri.toString() !== uri.toString()
+                || active?.line !== line || active?.character !== character) return;
+            disposable.dispose();
+            resolve(event);
+        });
+    }), `editor selection ${line}:${character}`);
+}
+
+async function selectAndCaptureReveal(editor, capture, line, character) {
+    const selectionChanged = nextExactSelection(editor.document.uri, line, character);
+    const revealed = capture.next(
+        (message) => message.type === 'revealSource',
+        `diagram source reveal for ${line}:${character}`
+    );
+    const position = new vscode.Position(line, character);
+    editor.selection = new vscode.Selection(position, position);
+    await selectionChanged;
+    return revealed;
+}
+
+function canonicalReferenceAt(index, uri, line, column) {
+    const match = findSourceReferenceAtPosition(index, {
+        uri: uri.toString(),
+        line,
+        column
+    });
+    assert.equal(match.status, 'exact');
+    assert.equal(match.references.length, 1);
+    return match.references[0];
+}
 
 async function run() {
     const extensionRoot = path.resolve(__dirname, '..', '..');
@@ -50,6 +127,18 @@ async function run() {
     assert.equal(panel.model.security.bscExecutionEnabled, vscode.workspace.isTrusted);
     assert.equal(panel.model.scheduling.provider, 'source');
     assert.ok(panel.model.scheduling.relationCount >= 300);
+
+    const sourceIndex = buildSourceReferenceIndex(panel.model);
+    const loopDefinitionReference = canonicalReferenceAt(sourceIndex, activeUri, 209, 11);
+    const matmulDeclarationReference = canonicalReferenceAt(sourceIndex, activeUri, 217, 37);
+    assert.equal(loopDefinitionReference.kind, 'definition');
+    assert.equal(loopDefinitionReference.name, 'mkAquaLoopMatmul');
+    assert.equal(matmulDeclarationReference.kind, 'instance-declaration');
+    assert.equal(matmulDeclarationReference.name, 'matmul');
+    for (const reference of [loopDefinitionReference, matmulDeclarationReference]) {
+        assert.equal(reference.presentations.some((item) => item.role === 'channel'), false);
+        assert.equal(reference.presentations.some((item) => item.id.startsWith('channel:')), false);
+    }
 
     for (const name of [
         'mkAquaLoopMatmul',
@@ -111,6 +200,59 @@ async function run() {
     );
 
     const loop = panel.model.nodes.find((node) => node.name === 'mkAquaLoopMatmul');
+    const loopRoot = panel.model.nodes.find((node) =>
+        node.name === 'mkAquaLoopMatmul' && node.architectureInstance && node.details?.root
+    );
+    const matmul = panel.model.nodes.find((node) =>
+        node.name === 'matmul' && node.architectureInstance && node.parentId === loopRoot.id
+    );
+    assert.ok(loopRoot, 'AQuA loop root occurrence is modeled');
+    assert.ok(matmul, 'matmul child occurrence is modeled beneath the AQuA loop root');
+
+    const capture = capturePanelMessages(panel);
+    const sourceEditor = await vscode.window.showTextDocument(document, {
+        preview: false,
+        viewColumn: vscode.ViewColumn.One
+    });
+    const view = Graph.createViewModel(panel.model, {
+        sourceScope: 'workspace',
+        level: 'system',
+        analysisMode: 'structure',
+        hopScope: 'all',
+        focusStack: [],
+        selectedId: null,
+        filters: { packages: false, imports: false, rules: true, primitives: false }
+    });
+    const visible = view.visible();
+    const sourceContext = {
+        focusInstanceId: null,
+        selectedNodeId: null,
+        visibleNodeIds: visible.nodes.map((node) => node.id),
+        viewNodeIds: visible.nodes.map((node) => node.id)
+    };
+    const rootReveal = await selectAndCaptureReveal(sourceEditor, capture, 209, 11);
+    assert.equal(rootReveal.revision, panel.modelRevision);
+    assert.deepEqual(rootReveal.sourceReference, {
+        status: 'exact',
+        references: [loopDefinitionReference]
+    });
+    const rootResolution = SourceResolution.resolve(panel.model, rootReveal.sourceReference, sourceContext);
+    assert.equal(rootResolution.status, 'visible-exact');
+    assert.equal(rootResolution.presentationNodeId, loopRoot.id);
+    assert.equal(rootResolution.candidates.some((item) => item.role === 'channel'), false);
+
+    const childReveal = await selectAndCaptureReveal(sourceEditor, capture, 217, 37);
+    assert.equal(childReveal.revision, panel.modelRevision);
+    assert.deepEqual(childReveal.sourceReference, {
+        status: 'exact',
+        references: [matmulDeclarationReference]
+    });
+    const childResolution = SourceResolution.resolve(panel.model, childReveal.sourceReference, sourceContext);
+    assert.equal(childResolution.status, 'visible-exact');
+    assert.equal(childResolution.presentationNodeId, matmul.id);
+    assert.equal(childResolution.candidates.some((item) => item.role === 'channel'), false);
+    capture.restore();
+
     assert.deepEqual(
         {
             methods: loop.details.methodCount,
@@ -151,9 +293,35 @@ async function run() {
         false
     );
 
-    await panel.handleMessage({ type: 'openSource', nodeId: loop.id });
-    assert.equal(vscode.window.activeTextEditor.document.uri.fsPath, activePath);
-    assert.equal(vscode.window.activeTextEditor.selection.active.line, loop.location.line);
+    const sourceTargets = [
+        ['root target definition', loopRoot],
+        ['child declaration', matmul],
+        ['channel representative source', panel.model.nodes.find((node) =>
+            node.kind === 'protocol-channel' && node.parentId === loopRoot.id && node.location?.uri
+        )],
+        ['endpoint', panel.model.nodes.find((node) =>
+            node.kind === 'endpoint' && node.parentId === loopRoot.id && node.location?.uri
+        )],
+        ['behavior', panel.model.nodes.find((node) =>
+            ['rule', 'method'].includes(node.kind) && node.parentId === loopRoot.id && node.location?.uri
+        )],
+        ['state', panel.model.nodes.find((node) =>
+            node.primitive && node.parentId === loopRoot.id && node.location?.uri
+        )]
+    ];
+    for (const [label, target] of sourceTargets) {
+        assert.ok(target, `${label} has a diagram presentation with source`);
+        await panel.handleMessage({ type: 'openSource', nodeId: target.id });
+        assert.equal(vscode.window.activeTextEditor.document.uri.toString(), target.location.uri, `${label} URI`);
+        assert.deepEqual(
+            [
+                vscode.window.activeTextEditor.selection.active.line,
+                vscode.window.activeTextEditor.selection.active.character
+            ],
+            [target.location.line, target.location.column || 0],
+            `${label} selection`
+        );
+    }
 
     const jsonUri = vscode.Uri.file(path.join(extensionRoot, '.build', 'aqua-architecture.json'));
     const svgUri = vscode.Uri.file(path.join(extensionRoot, '.build', 'aqua-diagram.svg'));

@@ -7,6 +7,7 @@ const { pathToFileURL } = require('node:url');
 const { normalizeConfig, parseJsonc } = require('../src/architecture/config');
 const { buildArchitectureModel } = require('../src/architecture/graph-builder');
 const { parseBsvFile } = require('../src/architecture/parser');
+const { buildSourceReferenceIndex } = require('../src/architecture/semantic/source-references');
 const { simpleGlobToRegExp } = require('../src/architecture/source-utils');
 const { getWebviewHtml } = require('../src/panel/html');
 
@@ -90,6 +91,7 @@ function buildModel() {
         activeFile,
         scheduleProvider: 'source'
     });
+    result.sourceReferences = buildSourceReferenceIndex(result).references;
     result.viewDefaults = {
         sourceScope: 'workspace',
         level: 'system',
@@ -191,6 +193,7 @@ function harnessHtml(port, url) {
             setState: (value) => { window.__savedState = value; },
             postMessage: (message) => {
                 window.__hostMessages.push(message);
+                window.dispatchEvent(new CustomEvent('bsv-host-message', { detail: message }));
                 if (message.type === 'ready') {
                     queueMicrotask(() => window.dispatchEvent(new MessageEvent('message', {
                         data: { type: 'model', model: window.__model, initial: window.__initial }

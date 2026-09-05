@@ -206,3 +206,50 @@ test('layer ordering removes simple crossings without mutating edge semantics', 
     assert.ok(layout.positions.get('target-d').y < layout.positions.get('target-c').y);
     assert.deepEqual(edges, originalEdges);
 });
+
+test('system data-flow routes stay inside their own root including feedback', () => {
+    const nodes = ['a', 'b'].flatMap((root) => [
+        { id: root, kind: 'instance', architectureInstance: true },
+        { id: `${root}-input`, kind: 'root-boundary', presentationRole: 'external-input' },
+        { id: `${root}-channel`, kind: 'protocol-channel' },
+        { id: `${root}-output`, kind: 'root-boundary', presentationRole: 'external-output' }
+    ].map((node) => ({ ...node, name: node.id, label: node.id })));
+    const edges = ['a', 'b'].flatMap((root) => [
+        { id: `${root}-in`, source: `${root}-input`, target: `${root}-channel`, kind: 'boundary-input' },
+        { id: `${root}-out`, source: `${root}-channel`, target: `${root}-output`, kind: 'boundary-output' },
+        { id: `${root}-read`, source: `${root}-channel`, target: root, kind: 'read' },
+        { id: `${root}-write`, source: root, target: `${root}-channel`, kind: 'write' }
+    ]);
+    const originalEdges = structuredClone(edges);
+    const roots = ['a', 'b'].map((id) => ({
+        id, label: id, reason: 'uninstantiated',
+        nodeIds: nodes.filter((node) => node.id === id || node.id.startsWith(`${id}-`)).map((node) => node.id)
+    }));
+    const topology = {
+        roots,
+        rootById: new Map(roots.flatMap((root) => root.nodeIds.map((id) => [id, root.id])))
+    };
+    for (const direction of ['LR', 'TB']) {
+        const layout = Layout.layoutGraph(nodes, edges, [], {
+            level: 'system', analysisMode: 'data-flow', direction, topology,
+            viewportWidth: 1600, viewportHeight: 1000
+        });
+        for (const edge of edges) {
+            const route = layout.edgeRoutes.get(edge.id);
+            assert.ok(route, `${edge.id} requires a root-local route`);
+            const group = layout.groups.find((item) => item.ownerId === topology.rootById.get(edge.source));
+            let x;
+            let y;
+            for (const segment of route.path.matchAll(/([MHV])\s+(-?[\d.]+)(?:\s+(-?[\d.]+))?/g)) {
+                if (segment[1] === 'M') [x, y] = [Number(segment[2]), Number(segment[3])];
+                else if (segment[1] === 'H') x = Number(segment[2]);
+                else y = Number(segment[2]);
+                assert.ok(x >= group.x && x <= group.x + group.width, `${edge.id} leaves its root horizontally`);
+                assert.ok(y >= group.y && y <= group.y + group.height, `${edge.id} leaves its root vertically`);
+            }
+            assert.ok(route.labelX >= group.x && route.labelX <= group.x + group.width);
+            assert.ok(route.labelY >= group.y && route.labelY <= group.y + group.height);
+        }
+    }
+    assert.deepEqual(edges, originalEdges);
+});

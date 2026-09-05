@@ -92,6 +92,40 @@ test('pinned AquaMemorySubsystem resolves structural constructor bindings only',
     ]);
 });
 
+test('pinned AquaMemorySubsystem boundary preserves directional request-response legs', () => {
+    const { model } = buildAquaSemanticModel();
+    const boundary = model.semanticBoundaries.find((candidate) =>
+        candidate.path === 'mkAquaMemorySubsystem'
+    );
+    const activation = boundary.channels.find((channel) =>
+        channel.name === 'ActivationPort'
+    );
+    const output = boundary.channels.find((channel) =>
+        channel.name === 'OutputPort'
+    );
+
+    assert.equal(boundary.rootStatus, 'unbound');
+    assert.equal(boundary.channels.length, 7);
+    assert.ok(activation.legs.some((leg) =>
+        leg.role === 'request.first'
+        && leg.direction === 'outbound'
+        && leg.payloadType === 'AquaMemoryReadRequest'
+    ));
+    assert.ok(activation.legs.some((leg) =>
+        leg.role === 'response.put'
+        && leg.direction === 'inbound'
+        && leg.payloadType === 'response_t'
+    ));
+    assert.ok(output.legs.some((leg) =>
+        leg.role === 'response.put'
+        && leg.direction === 'inbound'
+        && leg.payloadType === 'AquaMemoryWriteAck'
+    ));
+    assert.deepEqual(boundary.unmatchedEndpoints.slice(0, 4).map((endpoint) =>
+        endpoint.interfacePath.join('.')
+    ), ['loadReady', 'scheduleLoad', 'storeReady', 'scheduleStore']);
+});
+
 test('pinned AquaMemorySubsystem resolves required nested interface forwarding paths', () => {
     // Given
     const { model } = buildAquaSemanticModel();

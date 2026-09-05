@@ -74,7 +74,8 @@ test('narrow browser viewport remains usable without page overflow', async ({ pa
     const errors = collectBrowserErrors(page);
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/?level=module');
-    const moduleNode = page.locator('.kind-module').first();
+    const rootId = await page.evaluate(() => window.__model.architectureRoots[0]);
+    const moduleNode = page.locator(`.arch-node[data-node-id="${rootId}"]`);
     await expect(moduleNode).toBeVisible();
     await expect(page.locator('#viewport')).not.toHaveAttribute('transform', 'translate(40 40) scale(1)');
     await expect(page.locator('#inspector')).toBeHidden();
@@ -167,7 +168,8 @@ test('showMethodPorts host setting hides method cards without changing model IR'
 
 test('member expansion and responsive resize preserve selected module anchor', async ({ page }) => {
     await page.goto('/?level=module');
-    const moduleNode = page.locator('.kind-module').first();
+    const rootId = await page.evaluate(() => window.__model.architectureRoots[0]);
+    const moduleNode = page.locator(`.arch-node[data-node-id="${rootId}"]`);
     await expect(moduleNode).toBeVisible();
     const beforeExpansion = await moduleNode.boundingBox();
 
@@ -226,8 +228,9 @@ test('disclosure controls retain stable controlled member regions', async ({ pag
 });
 
 test('CJK graph labels stay inside SVG cards without broken graphemes', async ({ page }) => {
-    await page.goto('/?level=module&cjk=true');
-    const moduleNode = page.locator('.kind-module').first();
+    await page.goto('/?cjk=true');
+    await page.locator('#show-packages').check();
+    const moduleNode = page.locator('.kind-module').filter({ hasText: '행렬 가속기 제어' });
     await expect(moduleNode).toBeVisible();
     const title = moduleNode.locator('.node-title');
     await expect(title).toContainText('가속기');
@@ -249,7 +252,12 @@ test('CJK graph labels stay inside SVG cards without broken graphemes', async ({
 });
 
 test('scheduling cycles render bounded overlays without changing relation kinds', async ({ page }) => {
-    await page.goto('/?level=behavior&mode=scheduling&cycle=true');
+    await page.goto('/?cycle=true');
+    await page.locator('#show-packages').check();
+    await page.locator('.kind-module').filter({ hasText: 'mkAcceleratorController' }).click();
+    await page.getByRole('button', { name: 'Set as focus' }).click();
+    await page.locator('[data-level="behavior"]').click();
+    await page.locator('[data-analysis-mode="scheduling"]').click();
     const overlay = page.locator('.cycle-overlay');
     await expect(overlay).toHaveCount(1);
     await expect(overlay.locator('.cycle-label')).toContainText('Scheduling cycle');

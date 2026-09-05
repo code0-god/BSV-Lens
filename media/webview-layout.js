@@ -12,6 +12,9 @@
         if (options.level === 'module' && options.analysisMode === 'structure') {
             return options.layoutModuleHierarchy(nodes, edges, sizes, options);
         }
+        if (options.level === 'system' && ['structure', 'data-flow'].includes(options.analysisMode) && options.topology?.roots?.length) {
+            return layoutHierarchyForest(nodes, edges, sizes, options);
+        }
         if (options.analysisMode === 'data-flow') {
             return layoutByRanks(nodes, edges, sizes, options.direction, options.focusId);
         }
@@ -24,6 +27,202 @@
         return options.grouped && groups.length > 1
             ? layoutByGroups(nodes, groups, sizes, options.direction)
             : layoutByRanks(nodes, edges, sizes, options.direction, options.focusId);
+    }
+
+    function layoutHierarchyForest(nodes, edges, sizes, options) {
+        const direction = options.direction === 'TB' ? 'TB' : 'LR';
+        const topology = options.topology;
+        const visibleIds = new Set(nodes.map((node) => node.id));
+        const nodeById = new Map(nodes.map((node) => [node.id, node]));
+        const spacing = { outer: 40, header: 54, inset: 22, rank: 92, sibling: 24, component: 54 };
+        const positions = new Map();
+        const groups = [];
+        const edgeRoutes = new Map();
+        const components = topology.roots
+            .map((root) => options.analysisMode === 'data-flow'
+                ? rankedComponent(root, root.nodeIds.filter((id) => visibleIds.has(id)), nodeById, edges, sizes, options, spacing)
+                : hierarchyComponent(root, topology, visibleIds, nodeById, sizes, direction, spacing))
+            .filter((component) => component.nodeIds.length)
+            .sort((left, right) => compareText(left.root.label, right.root.label) || compareText(left.root.id, right.root.id));
+        for (const component of components) {
+            const origin = component.root.reason === 'configured' ? 'Configured Architecture Root'
+                : component.root.reason === 'uninstantiated' ? 'Natural Root Candidate' : 'Architecture Root';
+            component.label = `${origin}: ${component.root.label}`;
+            component.width = Math.max(component.width, Text.displayWidth(component.label) * 7 + spacing.inset * 2);
+        }
+        let packVertical = direction === 'TB';
+        if (components.length > 1 && options.viewportWidth && options.viewportHeight) {
+            const gap = spacing.component * (components.length - 1);
+            const horizontalScale = Math.min(
+                options.viewportWidth / (components.reduce((sum, item) => sum + item.width, gap)),
+                options.viewportHeight / Math.max(...components.map((item) => item.height))
+            );
+            const verticalScale = Math.min(
+                options.viewportWidth / Math.max(...components.map((item) => item.width)),
+                options.viewportHeight / (components.reduce((sum, item) => sum + item.height, gap))
+            );
+            if (horizontalScale !== verticalScale) packVertical = verticalScale > horizontalScale;
+        }
+        let cursor = spacing.outer;
+        for (const component of components) {
+            const origin = packVertical
+                ? { x: spacing.outer, y: cursor }
+                : { x: cursor, y: spacing.outer };
+            const rootNode = nodeById.get(component.root.id);
+            const instanceCount = component.nodeIds.filter((id) => nodeById.get(id).architectureInstance).length;
+            const boundary = {
+                id: `root-boundary:${component.root.id}`,
+                kind: 'root-boundary',
+                ownerId: component.root.id,
+                nodeIds: component.nodeIds,
+                label: component.label,
+                description: `${instanceCount} instances · External channels ${rootNode?.details?.externalChannelCount || 0}`,
+                x: origin.x,
+                y: origin.y,
+                width: component.width,
+                height: component.height
+            };
+            groups.push(boundary);
+            for (const [id, rect] of component.positions) {
+                positions.set(id, { ...rect, x: rect.x + origin.x, y: rect.y + origin.y });
+            }
+            cursor += (packVertical ? component.height : component.width) + spacing.component;
+        }
+        const secondaryIds = nodes.filter((node) => !positions.has(node.id)).map((node) => node.id);
+        if (secondaryIds.length) {
+            const source = rankedComponent({ id: 'source-map', label: 'Source Map' }, secondaryIds, nodeById, edges, sizes, options, spacing);
+            const hardwareBounds = computeBounds([...positions.values()], groups);
+            const origin = { x: spacing.outer, y: hardwareBounds.y + hardwareBounds.height + spacing.component };
+            groups.push({
+                id: 'source-map', kind: 'source-map', label: 'Source Map',
+                description: 'Secondary source projection', nodeIds: secondaryIds,
+                ...origin, width: source.width, height: source.height
+            });
+            for (const [id, rect] of source.positions) {
+                positions.set(id, { ...rect, x: rect.x + origin.x, y: rect.y + origin.y });
+            }
+        }
+        for (const edge of edges) {
+            if (options.analysisMode === 'structure' && edge.kind !== 'instance-child') continue;
+            const source = positions.get(edge.source);
+            const target = positions.get(edge.target);
+            const rootId = topology.rootById.get(edge.source);
+            if (!source || !target || !rootId || rootId !== topology.rootById.get(edge.target)) continue;
+            const route = hierarchyRoute(source, target, direction);
+            if (options.analysisMode === 'data-flow') {
+                const group = groups.find((item) => item.ownerId === rootId);
+                if (direction === 'TB' && target.y < source.y + source.height) {
+                    const lane = group.y + group.height - spacing.inset / 2;
+                    const sx = source.x + source.width / 2;
+                    const tx = target.x + target.width / 2;
+                    route.path = `M ${sx} ${source.y + source.height} V ${lane} H ${tx} V ${target.y + target.height}`;
+                    route.labelX = (sx + tx) / 2;
+                    route.labelY = lane - 3;
+                } else if (direction === 'LR' && target.x < source.x + source.width) {
+                    const lane = group.x + group.width - spacing.inset / 2;
+                    const sy = source.y + source.height / 2;
+                    const ty = target.y + target.height / 2;
+                    route.path = `M ${source.x + source.width} ${sy} H ${lane} V ${ty} H ${target.x + target.width}`;
+                    route.labelX = lane;
+                    route.labelY = (sy + ty) / 2 - 3;
+                }
+                route.bounds = {
+                    x: group.x, y: group.y + spacing.header,
+                    width: group.width, height: group.height - spacing.header
+                };
+            }
+            edgeRoutes.set(edge.id, route);
+        }
+        return {
+            positions,
+            groups,
+            bounds: computeBounds([...positions.values()], groups),
+            direction,
+            edgeRoutes
+        };
+    }
+
+    function rankedComponent(root, nodeIds, nodeById, edges, sizes, options, spacing) {
+        const ids = new Set(nodeIds);
+        const localEdges = edges.filter((edge) => ids.has(edge.source) && ids.has(edge.target));
+        const rankGap = options.analysisMode === 'data-flow'
+            ? Math.max(110, ...localEdges.map((edge) =>
+                Math.min(34, Text.displayWidth(edge.label || edge.kind)) * 5.5 + 26))
+            : 110;
+        const ranked = layoutByRanks(nodeIds.map((id) => nodeById.get(id)),
+            localEdges, sizes, options.direction, options.focusId, rankGap);
+        const positions = new Map([...ranked.positions].map(([id, rect]) => [id, {
+            ...rect,
+            x: rect.x - ranked.bounds.x + spacing.inset,
+            y: rect.y - ranked.bounds.y + spacing.header + spacing.inset
+        }]));
+        return {
+            root, nodeIds, positions,
+            width: Math.max(280, ranked.bounds.width + spacing.inset * 2),
+            height: Math.max(180, ranked.bounds.height + spacing.header + spacing.inset * 2)
+        };
+    }
+
+    function hierarchyComponent(root, topology, visibleIds, nodeById, sizes, direction, spacing) {
+        const nodeIds = root.nodeIds.filter((id) => visibleIds.has(id));
+        const byDepth = new Map();
+        for (const id of nodeIds) {
+            const depth = topology.depthById.get(id) || 0;
+            if (!byDepth.has(depth)) byDepth.set(depth, []);
+            byDepth.get(depth).push(nodeById.get(id));
+        }
+        for (const layer of byDepth.values()) layer.sort(compareNodes);
+        const depths = [...byDepth.keys()].sort((left, right) => left - right);
+        const primarySizes = new Map(depths.map((depth) => [depth, Math.max(...byDepth.get(depth).map((node) =>
+            direction === 'TB' ? sizes.get(node.id).height : sizes.get(node.id).width
+        ))]));
+        const layerCross = new Map(depths.map((depth) => [depth, byDepth.get(depth).reduce((sum, node) =>
+            sum + (direction === 'TB' ? sizes.get(node.id).width : sizes.get(node.id).height), 0
+        ) + Math.max(0, byDepth.get(depth).length - 1) * spacing.sibling]));
+        const maxCross = Math.max(1, ...layerCross.values());
+        const primaryOffsets = new Map();
+        let primary = spacing.inset;
+        for (const depth of depths) {
+            primaryOffsets.set(depth, primary);
+            primary += primarySizes.get(depth) + spacing.rank;
+        }
+        const positions = new Map();
+        for (const depth of depths) {
+            let cross = spacing.inset + (maxCross - layerCross.get(depth)) / 2;
+            for (const node of byDepth.get(depth)) {
+                const size = sizes.get(node.id);
+                const rect = direction === 'TB'
+                    ? { x: cross, y: spacing.header + primaryOffsets.get(depth), ...size }
+                    : { x: primaryOffsets.get(depth), y: spacing.header + cross, ...size };
+                positions.set(node.id, rect);
+                cross += (direction === 'TB' ? size.width : size.height) + spacing.sibling;
+            }
+        }
+        const content = computeBounds([...positions.values()], []);
+        return {
+            root,
+            nodeIds,
+            positions,
+            width: Math.max(280, content.x + content.width + spacing.inset),
+            height: Math.max(180, content.y + content.height + spacing.inset)
+        };
+    }
+
+    function hierarchyRoute(source, target, direction) {
+        if (direction === 'TB') {
+            const sx = source.x + source.width / 2;
+            const sy = source.y + source.height;
+            const tx = target.x + target.width / 2;
+            const ty = target.y;
+            const mid = (sy + ty) / 2;
+            return { path: `M ${sx} ${sy} V ${mid} H ${tx} V ${ty}`, labelX: (sx + tx) / 2, labelY: mid - 3 };
+        }
+        const sx = source.x + source.width;
+        const sy = source.y + source.height / 2;
+        const tx = target.x;
+        const ty = target.y + target.height / 2;
+        const mid = (sx + tx) / 2;
+        return { path: `M ${sx} ${sy} H ${mid} V ${ty} H ${tx}`, labelX: mid, labelY: (sy + ty) / 2 - 3 };
     }
 
     function layoutCompactGrid(nodes, sizes, options) {
@@ -106,7 +305,7 @@
         return { positions, groups: layouts, bounds: computeBounds([...positions.values()], layouts), direction };
     }
 
-    function layoutByRanks(nodes, edges, sizes, direction, focusId) {
+    function layoutByRanks(nodes, edges, sizes, direction, focusId, rankGap = 110) {
         const ids = new Set(nodes.map((node) => node.id));
         const rank = new Map(nodes.map((node) => [node.id, initialRank(node, focusId)]));
         const relevant = edges.filter((edge) => ids.has(edge.source) && ids.has(edge.target) && edge.kind !== 'import');
@@ -122,7 +321,7 @@
             }
             if (!changed) break;
         }
-        return positionByRanks(nodes, sizes, direction, rank, relevant);
+        return positionByRanks(nodes, sizes, direction, rank, relevant, 28, rankGap);
     }
 
     function layoutScheduling(nodes, edges, sizes, options) {
@@ -262,7 +461,7 @@
         return components.sort((left, right) => compareText(left.join('|'), right.join('|')));
     }
 
-    function positionByRanks(nodes, sizes, direction, rank, edges = [], crossGap = 28) {
+    function positionByRanks(nodes, sizes, direction, rank, edges = [], crossGap = 28, rankGap = 110) {
         const positions = new Map();
         const layers = new Map();
         for (const node of nodes) {
@@ -286,7 +485,7 @@
                 sum + (direction === 'TB' ? sizes.get(node.id).width : sizes.get(node.id).height), 0
             ) + Math.max(0, layer.length - 1) * crossGap;
             dimensions.push({ value, layer, primary, primarySize, crossSize });
-            primary += primarySize + 110;
+            primary += primarySize + rankGap;
             maxCross = Math.max(maxCross, crossSize);
         }
         for (const layer of dimensions) {

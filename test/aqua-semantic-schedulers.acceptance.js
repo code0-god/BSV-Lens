@@ -2,6 +2,7 @@
 
 const assert = require('node:assert/strict');
 const test = require('node:test');
+const { buildInstances } = require('../src/architecture/semantic/instances');
 const { buildAquaSemanticModel } = require('./aqua-semantic-fixture');
 
 const MATMUL_METHODS = [
@@ -137,6 +138,46 @@ test('pinned AQuA WorkScheduler retains typed input fragment and completion chan
     );
     assert.equal(channels.get('Lookahead').payloadType, 'KFragment');
     assert.equal(channels.get('Done').direction, 'ack');
+});
+
+test('pinned AQuA roots retain configured unbound boundary metadata', () => {
+    const { model } = buildAquaSemanticModel();
+
+    assert.deepEqual(model.roots.map((root) => ({
+        name: root.name,
+        reason: root.reason,
+        status: root.rootStatus,
+        parent: root.parentInstanceId
+    })), [
+        { name: 'mkAquaLoopMatmul', reason: 'configured', status: 'unbound', parent: null },
+        { name: 'mkAquaMemorySubsystem', reason: 'configured', status: 'unbound', parent: null }
+    ]);
+    const natural = buildInstances(model.definitions, [], {}, {
+        limits: { maxNodes: 10000 }
+    });
+    assert.deepEqual(natural.roots.map((root) => [
+        root.name,
+        root.reason,
+        root.rootStatus
+    ]), [
+        ['mkAquaLoopMatmul', 'uninstantiated', 'unbound'],
+        ['mkAquaMemorySubsystem', 'uninstantiated', 'unbound']
+    ]);
+    const loop = model.semanticBoundaries.find((boundary) =>
+        boundary.path === 'mkAquaLoopMatmul'
+    );
+    assert.equal(loop.channels.length, 6);
+    assert.deepEqual(loop.unmatchedEndpoints.map((endpoint) =>
+        endpoint.interfacePath.join('.')
+    ), [
+        'loadCompletionReady',
+        'putLoadCompletion',
+        'executeCompletionReady',
+        'putExecuteCompletion',
+        'storeCompletionReady',
+        'putStoreCompletion',
+        'debugPhase'
+    ]);
 });
 
 test('pinned AQuA exposes real Matmul to WorkScheduler typed semantic flow', () => {

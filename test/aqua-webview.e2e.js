@@ -1,6 +1,10 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
+const fs = require('node:fs');
+
+const EVENT_TIMEOUT_MS = 5000;
+fs.mkdirSync('.build/visual-qa', { recursive: true });
 
 function browserErrors(page) {
     const errors = [];
@@ -9,6 +13,42 @@ function browserErrors(page) {
         if (message.type() === 'error') errors.push(message.text());
     });
     return errors;
+}
+
+function nextSelectedState(page, expectedNodeId) {
+    return page.evaluate(({ nodeId, timeout }) => new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            window.removeEventListener('bsv-host-message', listener);
+            reject(new Error(`Timed out waiting for selected node ${nodeId}`));
+        }, timeout);
+        function listener(event) {
+            const message = event.detail;
+            if (message?.type !== 'state' || message.state?.selectedId !== nodeId) return;
+            clearTimeout(timer);
+            window.removeEventListener('bsv-host-message', listener);
+            resolve(message);
+        }
+        window.addEventListener('bsv-host-message', listener);
+    }), { nodeId: expectedNodeId, timeout: EVENT_TIMEOUT_MS });
+}
+
+function nextFocusState(page, expectedFocusId) {
+    return page.evaluate(({ focusId, timeout }) => new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            window.removeEventListener('bsv-host-message', listener);
+            reject(new Error(`Timed out waiting for focus ${focusId || 'All Roots'}`));
+        }, timeout);
+        function listener(event) {
+            const message = event.detail;
+            if (message?.type !== 'state') return;
+            const actual = message.state?.focusStack?.at(-1) || null;
+            if (actual !== focusId) return;
+            clearTimeout(timer);
+            window.removeEventListener('bsv-host-message', listener);
+            resolve(message);
+        }
+        window.addEventListener('bsv-host-message', listener);
+    }), { focusId: expectedFocusId, timeout: EVENT_TIMEOUT_MS });
 }
 
 test('AQuA system graph supports analysis modes focus navigation and exports', async ({ page }) => {
@@ -135,6 +175,228 @@ test('AQuA system graph supports analysis modes focus navigation and exports', a
     expect(errors).toEqual([]);
 });
 
+test('AQuA two-root forest preserves hierarchy and root focus navigation', async ({ page }) => {
+    const errors = browserErrors(page);
+    await page.goto('/');
+
+    const forest = await page.evaluate(() => {
+        const view = window.BsvArchitectureGraph.createViewModel(window.__model, window.__savedState);
+        const visible = view.visible();
+        return {
+            roots: view.architectureRoots().map((node) => ({ id: node.id, name: node.name })),
+            topologyRoots: visible.topology.roots.map((root) => root.id),
+            crossRootHierarchy: visible.edges.filter((edge) =>
+                edge.kind === 'instance-child'
+                && visible.topology.rootById.get(edge.source) !== visible.topology.rootById.get(edge.target)
+            ).map((edge) => edge.id)
+        };
+    });
+    expect(forest.roots.map((root) => root.name)).toEqual([
+        'mkAquaLoopMatmul',
+        'mkAquaMemorySubsystem'
+    ]);
+    expect(forest.topologyRoots).toEqual(forest.roots.map((root) => root.id));
+    expect(forest.crossRootHierarchy).toEqual([]);
+    await expect(page.locator('#root-field')).toBeVisible();
+    await expect(page.locator('#root-select option')).toHaveText([
+        'All Roots',
+        'mkAquaLoopMatmul',
+        'mkAquaMemorySubsystem'
+    ]);
+    const rootBoundaries = page.locator('.architecture-group.kind-root-boundary');
+    await expect(rootBoundaries).toHaveCount(2);
+    expect(await rootBoundaries.evaluateAll((groups) => {
+        const boxes = groups.map((group) => group.querySelector('.group-box').getBoundingClientRect());
+        const titles = groups.map((group) => group.querySelector('.group-title').getBoundingClientRect());
+        const overlaps = boxes[0].left < boxes[1].right && boxes[0].right > boxes[1].left
+            && boxes[0].top < boxes[1].bottom && boxes[0].bottom > boxes[1].top;
+        return {
+            overlaps,
+            titlesContained: titles.every((title, index) =>
+                title.left >= boxes[index].left && title.right <= boxes[index].right
+            )
+        };
+    })).toEqual({ overlaps: false, titlesContained: true });
+    await page.locator('.kind-instance').filter({ hasText: 'mkAquaLoopMatmul' }).hover();
+    await page.screenshot({ path: '.build/visual-qa/aqua-all-roots-dark.png', fullPage: true });
+
+    const loopRoot = forest.roots.find((root) => root.name === 'mkAquaLoopMatmul');
+    const memoryRoot = forest.roots.find((root) => root.name === 'mkAquaMemorySubsystem');
+    const loopFocused = nextFocusState(page, loopRoot.id);
+    await page.locator('#root-select').selectOption(loopRoot.id);
+    await loopFocused;
+    await expect(page.locator('.architecture-group.kind-root-boundary')).toHaveCount(1);
+    await expect(page.locator('[data-hop="all"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('#focus-summary')).toContainText('mkAquaLoopMatmul');
+    await page.screenshot({ path: '.build/visual-qa/aqua-loop-root-focus-dark.png', fullPage: true });
+
+    const matmul = page.locator('.kind-instance').filter({ hasText: 'matmul' }).first();
+    await matmul.click();
+    await expect(page.locator('#inspector')).toContainText('mkMatmulScheduler');
+    const matmulId = await matmul.getAttribute('data-node-id');
+    const childFocused = nextFocusState(page, matmulId);
+    await page.getByRole('button', { name: 'Set as focus' }).click();
+    await childFocused;
+    await expect(page.locator('#breadcrumbs')).toContainText('mkAquaLoopMatmul');
+    await expect(page.locator('#breadcrumbs')).toContainText('matmul');
+
+    const backed = nextFocusState(page, loopRoot.id);
+    await page.getByRole('button', { name: 'Back to previous focus' }).click();
+    await backed;
+    await expect(page.locator('#root-select')).toHaveValue(loopRoot.id);
+
+    const allRoots = nextFocusState(page, null);
+    await page.locator('#root-select').selectOption('');
+    await allRoots;
+    await expect(page.locator('.architecture-group.kind-root-boundary')).toHaveCount(2);
+    await expect(page.locator('.kind-instance').filter({ hasText: 'mkAquaMemorySubsystem' })).toBeVisible();
+    expect(memoryRoot.id).not.toEqual(loopRoot.id);
+
+    await page.evaluate(() => {
+        const style = document.documentElement.style;
+        style.setProperty('--vscode-editor-background', '#ffffff');
+        style.setProperty('--vscode-sideBar-background', '#f3f3f3');
+        style.setProperty('--vscode-editorWidget-background', '#f8f8f8');
+        style.setProperty('--vscode-foreground', '#1f1f1f');
+        style.setProperty('--vscode-descriptionForeground', '#616161');
+        style.setProperty('--vscode-panel-border', '#d4d4d4');
+    });
+    await page.screenshot({ path: '.build/visual-qa/aqua-all-roots-light.png', fullPage: true });
+
+    await page.setViewportSize({ width: 680, height: 900 });
+    await expect(page.locator('#root-select')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(680);
+    await page.screenshot({ path: '.build/visual-qa/aqua-all-roots-compact-light.png', fullPage: true });
+    expect(errors).toEqual([]);
+});
+
+test('AQuA System Data Flow keeps external channels within their root boundaries', async ({ page }) => {
+    const errors = browserErrors(page);
+    await page.goto('/');
+    await page.locator('[data-analysis-mode="data-flow"]').click();
+
+    const boundaries = await page.evaluate(() => {
+        const model = window.__model;
+        const roots = new Set(model.architectureRoots);
+        const rootByNode = new Map();
+        for (const node of model.nodes) {
+            if (node.boundaryRootId) {
+                rootByNode.set(node.id, node.boundaryRootId);
+                continue;
+            }
+            let current = node;
+            const seen = new Set();
+            while (current?.parentId && !seen.has(current.id)) {
+                seen.add(current.id);
+                current = model.nodes.find((candidate) => candidate.id === current.parentId);
+            }
+            if (current && roots.has(current.id)) rootByNode.set(node.id, current.id);
+        }
+        const boundaryEdges = model.edges.filter((edge) => edge.boundary === true);
+        const rootBoxes = new Map([...document.querySelectorAll('.architecture-group.kind-root-boundary')]
+            .map((element) => [element.dataset.ownerId, element.querySelector('.group-box').getBBox()]));
+        const escapedGeometry = [];
+        for (const element of document.querySelectorAll('.edge-group[data-edge-id]')) {
+            const edge = model.edges.find((item) => item.id === element.dataset.edgeId);
+            const box = rootBoxes.get(rootByNode.get(edge.source));
+            if (!box) continue;
+            for (const shape of element.querySelectorAll('path.edge, .edge-label-bg')) {
+                const rect = shape.getBBox();
+                if (rect.x < box.x - 0.5 || rect.y < box.y - 0.5
+                    || rect.x + rect.width > box.x + box.width + 0.5
+                    || rect.y + rect.height > box.y + box.height + 0.5) {
+                    escapedGeometry.push({ edgeId: edge.id, shape: shape.getAttribute('class') });
+                }
+            }
+        }
+        return {
+            escapedGeometry,
+            semanticBoundaryCount: model.semanticBoundaries.length,
+            externalChannelCount: model.nodes.filter((node) => node.externalChannel).length,
+            boundaryEdgeCount: boundaryEdges.length,
+            renderedBoundaryEdges: [...document.querySelectorAll('.edge-group[data-edge-id]')]
+                .map((element) => element.dataset.edgeId)
+                .filter((id) => boundaryEdges.some((edge) => edge.id === id)),
+            kinds: [...new Set(boundaryEdges.map((edge) => edge.kind))].sort(),
+            crossRoot: model.edges.filter((edge) => {
+                const sourceRoot = rootByNode.get(edge.source);
+                const targetRoot = rootByNode.get(edge.target);
+                return sourceRoot && targetRoot && sourceRoot !== targetRoot;
+            }).map((edge) => edge.id)
+        };
+    });
+    expect(boundaries.semanticBoundaryCount).toBe(2);
+    expect(boundaries.externalChannelCount).toBe(13);
+    expect(boundaries.boundaryEdgeCount).toBeGreaterThan(boundaries.externalChannelCount);
+    expect(boundaries.kinds).toEqual(['boundary-input', 'boundary-output']);
+    expect(boundaries.renderedBoundaryEdges).toHaveLength(boundaries.boundaryEdgeCount);
+    expect(boundaries.crossRoot).toEqual([]);
+    expect(boundaries.escapedGeometry).toEqual([]);
+    await expect(page.locator('.architecture-group.kind-root-boundary')).toHaveCount(2);
+    await expect(page.locator('.arch-node.kind-root-boundary')).toHaveCount(4);
+    await page.screenshot({ path: '.build/visual-qa/aqua-system-data-flow-dark.png', fullPage: true });
+    expect(errors).toEqual([]);
+});
+
+test('AQuA canonical source reveals resolve visible multiple and hidden presentations', async ({ page }) => {
+    const errors = browserErrors(page);
+    await page.goto('/');
+
+    const source = await page.evaluate(() => {
+        function exact(kind, name) {
+            const reference = window.__model.sourceReferences.find((item) =>
+                item.kind === kind && item.name === name
+            );
+            if (!reference) throw new Error(`Missing ${kind} source reference ${name}`);
+            return { status: 'exact', references: [reference] };
+        }
+        const roots = window.BsvArchitectureGraph
+            .createViewModel(window.__model, window.__savedState)
+            .architectureRoots();
+        return {
+            loopRootId: roots.find((node) => node.name === 'mkAquaLoopMatmul').id,
+            memoryRootId: roots.find((node) => node.name === 'mkAquaMemorySubsystem').id,
+            loop: exact('definition', 'mkAquaLoopMatmul'),
+            repeatedScratchpad: exact('definition', 'mkBankedScratchpad'),
+            completeWork: exact('implementation-method', 'completeWork')
+        };
+    });
+
+    const selected = nextSelectedState(page, source.loopRootId);
+    await page.evaluate((sourceReference) => window.dispatchEvent(new MessageEvent('message', {
+        data: { type: 'revealSource', sourceReference, revision: 0 }
+    })), source.loop);
+    await selected;
+    await expect(page.locator('#inspector')).toContainText('mkAquaLoopMatmul');
+    await expect(page.locator('#reveal-notice')).toBeHidden();
+
+    const beforeMultiple = await page.evaluate(() => window.__savedState.selectedId);
+    await page.evaluate((sourceReference) => window.dispatchEvent(new MessageEvent('message', {
+        data: { type: 'revealSource', sourceReference, revision: 0 }
+    })), source.repeatedScratchpad);
+    await expect(page.locator('#reveal-notice')).toBeVisible();
+    expect(await page.evaluate(() => window.__savedState.selectedId)).toBe(beforeMultiple);
+    expect(await page.locator('#reveal-notice button').count()).toBeGreaterThan(1);
+
+    const memoryFocused = nextFocusState(page, source.memoryRootId);
+    await page.locator('#root-select').selectOption(source.memoryRootId);
+    await memoryFocused;
+    await page.evaluate((sourceReference) => window.dispatchEvent(new MessageEvent('message', {
+        data: { type: 'revealSource', sourceReference, revision: 0 }
+    })), source.loop);
+    await expect(page.locator('#reveal-notice')).toBeVisible();
+    await expect(page.locator('#reveal-current-view')).toBeEnabled();
+
+    await page.locator('#root-select').selectOption('');
+    await page.locator('[data-level="system"]').click();
+    await page.evaluate((sourceReference) => window.dispatchEvent(new MessageEvent('message', {
+        data: { type: 'revealSource', sourceReference, revision: 0 }
+    })), source.completeWork);
+    await expect(page.locator('#reveal-notice')).toBeVisible();
+    await expect(page.locator('#reveal-current-view')).toBeEnabled();
+    expect(errors).toEqual([]);
+});
+
 test('AQuA current-file scope and state filters remain usable', async ({ page }) => {
     const errors = browserErrors(page);
     await page.goto('/?scope=current-file&level=behavior');
@@ -165,8 +427,12 @@ test('AQuA current-file scope and state filters remain usable', async ({ page })
 
 test('AQuA CJK labels and populated inspector remain contained', async ({ page }) => {
     const errors = browserErrors(page);
-    await page.goto('/?cjk=true&level=module');
-    const moduleNode = page.locator('.kind-module').first();
+    await page.goto('/?cjk=true');
+    const rootId = await page.evaluate(() => window.__model.instances
+        .find((instance) => instance.name === 'mkAquaLoopMatmul' && !instance.parentInstanceId).id);
+    await page.locator('#root-select').selectOption(rootId);
+    await page.locator('[data-level="module"]').click();
+    const moduleNode = page.locator(`.arch-node[data-node-id="${rootId}"]`);
     await expect(moduleNode).toContainText('행렬 가속기 제어');
     await moduleNode.click();
     await expect(page.locator('#inspector')).toContainText('행렬 가속기 제어');

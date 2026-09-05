@@ -7,29 +7,35 @@ const { ArchitecturePanel } = require('../src/panel/architecture-panel');
 function makePanel(enabled = true) {
     const messages = [];
     const instance = Object.create(ArchitecturePanel.prototype);
+    const moduleRange = {
+        uri: 'file:///Top.bsv', line: 0, column: 0, endLine: 20, endColumn: 9
+    };
+    const ruleRange = {
+        uri: 'file:///Top.bsv', line: 5, column: 4, endLine: 9, endColumn: 11
+    };
     instance.model = {
+        definitions: [{
+            id: 'def:Top:mkTop', kind: 'module-definition', packageName: 'Top', name: 'mkTop',
+            location: { ...moduleRange, endLine: 0, endColumn: 5 }, sourceRange: moduleRange,
+            methods: [],
+            rules: [{
+                name: 'tick',
+                location: { ...ruleRange, endLine: 5, endColumn: 8 },
+                sourceRange: ruleRange
+            }],
+            childInstanceDeclarations: []
+        }],
+        instances: [],
+        endpoints: [],
+        stateBehaviors: [],
         nodes: [
             {
-                id: 'module',
-                kind: 'module',
-                sourceRange: {
-                    uri: 'file:///Top.bsv',
-                    line: 0,
-                    column: 0,
-                    endLine: 20,
-                    endColumn: 9
-                }
+                id: 'module', kind: 'module', name: 'mkTop',
+                location: { ...moduleRange, endLine: 0, endColumn: 5 }, sourceRange: moduleRange
             },
             {
-                id: 'rule',
-                kind: 'rule',
-                sourceRange: {
-                    uri: 'file:///Top.bsv',
-                    line: 5,
-                    column: 4,
-                    endLine: 9,
-                    endColumn: 11
-                }
+                id: 'rule', kind: 'rule', name: 'tick',
+                location: { ...ruleRange, endLine: 5, endColumn: 8 }, sourceRange: ruleRange
             }
         ]
     };
@@ -48,7 +54,8 @@ function makePanel(enabled = true) {
             }
         }
     };
-    instance.lastRevealedNodeId = null;
+    instance.sourceReferenceIndex = null;
+    instance.modelRevision = 1;
     return { instance, messages };
 }
 
@@ -66,13 +73,32 @@ function selection(line, character) {
     };
 }
 
-test('editor selection reveals smallest matching architecture node', () => {
+test('editor selection sends canonical source references without host first-match suppression', () => {
     const { instance, messages } = makePanel(true);
     instance.revealEditorSelection(selection(6, 8));
 
-    assert.deepEqual(messages, [{ type: 'revealNode', nodeId: 'rule' }]);
+    assert.equal(messages[0].type, 'revealSource');
+    assert.equal(messages[0].revision, 1);
+    assert.equal(messages[0].sourceReference.status, 'exact');
+    assert.equal(messages[0].sourceReference.references[0].kind, 'rule');
+    assert.deepEqual(
+        messages[0].sourceReference.references[0].presentations.map((item) => item.id),
+        ['rule']
+    );
     instance.revealEditorSelection(selection(6, 8));
-    assert.equal(messages.length, 1);
+    assert.equal(messages.length, 2);
+});
+
+test('initial name focus does not choose among duplicate presentations', () => {
+    const { instance } = makePanel(true);
+    instance.request = { focusName: 'duplicate', focusKind: 'method' };
+    instance.model.nodes.push(
+        { id: 'left', name: 'duplicate', kind: 'method', relativePath: 'Top.bsv' },
+        { id: 'right', name: 'duplicate', kind: 'method', relativePath: 'Top.bsv' }
+    );
+    instance.model.activeFile = 'Top.bsv';
+
+    assert.equal(instance.resolveInitialFocus(instance.model), null);
 });
 
 test('editor synchronization respects setting and BSV files', () => {

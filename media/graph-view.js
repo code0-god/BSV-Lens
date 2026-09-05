@@ -820,10 +820,104 @@
         setLevel(value) { this.state.level = normalizeLevel(value); return this.state.level; }
         setAnalysisMode(value) { this.state.analysisMode = normalizeAnalysisMode(value); return this.state.analysisMode; }
         setHopScope(value) { this.state.hopScope = normalizeHopScope(value); return this.state.hopScope; }
-        setFocus(value) { this.state.focusStack = restoreFocus(value, this.indexes); return this.breadcrumbs(); }
+        setFocus(value) {
+            const id = Array.isArray(value) ? value.at(-1) : value;
+            this.state.focusStack = id && this.indexes.nodeById.get(id)?.architectureInstance
+                ? this.focusPath(id)
+                : restoreFocus(value, this.indexes);
+            return this.breadcrumbs();
+        }
         breadcrumbs() { return this.state.focusStack.map((id) => this.indexes.nodeById.get(id)).filter(Boolean); }
         activeEdges(mode = this.state.analysisMode) { return this.indexes.edgesByMode.get(normalizeAnalysisMode(mode)) || []; }
         relations(nodeId) { return this.indexes.relationsByNode.get(nodeId) || []; }
+
+        architectureRoots() {
+            return (this.model.architectureRoots || [])
+                .map((id) => this.indexes.nodeById.get(id))
+                .filter((node) => node?.architectureInstance)
+                .sort(compareNodes);
+        }
+
+        focusPath(nodeId) {
+            let node = this.indexes.nodeById.get(nodeId);
+            if (!node?.architectureInstance) return node ? [node.id] : [];
+            const path = [];
+            const seen = new Set();
+            while (node?.architectureInstance && !seen.has(node.id)) {
+                seen.add(node.id);
+                path.unshift(node.id);
+                node = node.parentId ? this.indexes.nodeById.get(node.parentId) : null;
+            }
+            const roots = new Set(this.architectureRoots().map((root) => root.id));
+            return roots.has(path[0]) ? path : [nodeId];
+        }
+
+        rootFor(nodeId) {
+            const node = this.indexes.nodeById.get(nodeId);
+            if (!node) return null;
+            if (node.architectureInstance) {
+                const path = this.focusPath(nodeId);
+                const root = path.length ? this.indexes.nodeById.get(path[0]) : null;
+                return root?.architectureInstance ? root : null;
+            }
+            if (node.boundaryRootId) return this.rootFor(node.boundaryRootId);
+            let owner = node.parentId ? this.indexes.nodeById.get(node.parentId) : null;
+            while (owner && !owner.architectureInstance) {
+                owner = owner.parentId ? this.indexes.nodeById.get(owner.parentId) : null;
+            }
+            return owner ? this.rootFor(owner.id) : null;
+        }
+
+        semanticTopology(visibleNodes = this.indexes.visibleNodes) {
+            const visibleIds = new Set((visibleNodes || []).map((node) => node.id));
+            const architectureIds = new Set(this.indexes.nodes
+                .filter((node) => node.architectureInstance)
+                .map((node) => node.id));
+            const parentById = new Map();
+            const childrenById = mapOfArrays(architectureIds);
+            for (const id of architectureIds) {
+                const parentId = this.indexes.nodeById.get(id)?.parentId;
+                if (!parentId || !architectureIds.has(parentId)) continue;
+                parentById.set(id, parentId);
+                childrenById.get(parentId).push(id);
+            }
+            for (const children of childrenById.values()) children.sort(compareText);
+            const rootById = new Map();
+            const depthById = new Map();
+            const roots = [];
+            for (const rootNode of this.architectureRoots()) {
+                const nodeIds = [];
+                const queue = [{ id: rootNode.id, depth: 0 }];
+                while (queue.length) {
+                    const current = queue.shift();
+                    if (rootById.has(current.id)) continue;
+                    rootById.set(current.id, rootNode.id);
+                    depthById.set(current.id, current.depth);
+                    if (visibleIds.has(current.id)) nodeIds.push(current.id);
+                    for (const childId of childrenById.get(current.id) || []) {
+                        queue.push({ id: childId, depth: current.depth + 1 });
+                    }
+                }
+                if (nodeIds.length) roots.push({
+                    id: rootNode.id,
+                    label: rootNode.label || rootNode.name,
+                    nodeIds,
+                    reason: (this.model.semanticRoots || []).find((root) => root.instanceId === rootNode.id)?.reason || null
+                });
+            }
+            const rootRecord = new Map(roots.map((root) => [root.id, root]));
+            for (const node of visibleNodes || []) {
+                if (!node.boundaryRootId || node.architectureInstance) continue;
+                const ownerRoot = this.rootFor(node.boundaryRootId);
+                const record = ownerRoot && rootRecord.get(ownerRoot.id);
+                if (!record) continue;
+                rootById.set(node.id, ownerRoot.id);
+                depthById.set(node.id, 0);
+                if (!record.nodeIds.includes(node.id)) record.nodeIds.push(node.id);
+            }
+            for (const root of roots) root.nodeIds.sort(compareText);
+            return { roots, parentById, childrenById, rootById, depthById };
+        }
 
         memberBuckets(moduleId) {
             const moduleNode = this.indexes.nodeById.get(moduleId);
@@ -911,21 +1005,60 @@
             return createPathNavigator(this.shortestPaths(sourceId, targetId, options));
         }
 
+        projectionContext() {
+            const focusId = this.state.focusStack.at(-1) || null;
+            const focused = focusId && this.indexes.nodeById.get(focusId);
+            const focusInstanceId = focused?.architectureInstance
+                ? focused.id
+                : focused?.boundaryRootId || ownerArchitectureInstanceId(focusId, this.indexes);
+            return {
+                sourceScope: this.state.sourceScope,
+                level: this.state.level,
+                analysisMode: this.state.analysisMode,
+                focusInstanceId: focusInstanceId || null,
+                rootSelection: this.rootFor(focusId)?.id || null,
+                hopScope: this.state.hopScope,
+                filters: { ...this.state.filters }
+            };
+        }
+
+        sourceResolutionContext(selectedNodeId) {
+            const selected = selectedNodeId === undefined ? this.state.selectedId : selectedNodeId;
+            const visible = this.visible();
+            const view = this.visible({ focusId: null, hopScope: 'all' });
+            return {
+                focusInstanceId: this.projectionContext().focusInstanceId,
+                selectedNodeId: selected || null,
+                visibleNodeIds: visible.nodes.map((node) => node.id),
+                viewNodeIds: view.nodes.map((node) => node.id)
+            };
+        }
+
         visible(options = {}) {
             const sourceScope = normalizeSourceScope(options.sourceScope || this.state.sourceScope);
             const level = normalizeLevel(options.level || this.state.level);
             const analysisMode = normalizeAnalysisMode(options.analysisMode || this.state.analysisMode);
             const hopScope = normalizeHopScope(options.hopScope ?? this.state.hopScope);
-            const focusId = options.focusId || this.state.focusStack.at(-1) || null;
+            const hasExplicitFocus = Object.prototype.hasOwnProperty.call(options, 'focusId');
+            const savedFocusId = this.state.focusStack.at(-1) || null;
+            const focusId = hasExplicitFocus ? options.focusId : savedFocusId;
+            const ownerFocusId = focusId || (hasExplicitFocus && focusId === null
+                && level !== LEVELS.SYSTEM ? savedFocusId : null);
             const activeFile = options.activeFile || this.state.activeFile || this.model.activeFile;
             const scoped = this.indexes.visibleNodes.filter((node) =>
                 sourceScope === SOURCE_SCOPES.WORKSPACE || !activeFile || node.relativePath === activeFile
             );
             const scopedIds = new Set(scoped.map((node) => node.id));
-            let nodes = this.levelNodes(level, analysisMode, focusId, scoped, scopedIds);
+            let nodes = this.levelNodes(level, analysisMode, ownerFocusId, scoped, scopedIds);
 
             if (focusId) {
-                const allowed = this.focusNeighborhood(focusId, hopScope, analysisMode, nodes);
+                let allowed = this.focusNeighborhood(focusId, hopScope, analysisMode, nodes);
+                const focusedRoot = this.rootFor(focusId);
+                if (focusedRoot && level === LEVELS.SYSTEM && hopScope === 'all') {
+                    const topology = this.semanticTopology(nodes);
+                    allowed = new Set(topology.roots
+                        .find((root) => root.id === focusedRoot.id)?.nodeIds || []);
+                }
                 nodes = nodes.filter((node) =>
                     node.synthetic
                     || allowed.has(node.id)
@@ -950,11 +1083,14 @@
                 edges = edges.filter((edge) => edge.source === focusId || edge.target === focusId);
             }
             if (level === LEVELS.MODULE && analysisMode === ANALYSIS_MODES.STRUCTURE) {
-                const moduleId = ownerModuleId(focusId, this.indexes)
+                const moduleId = ownerModuleId(ownerFocusId, this.indexes)
                     || nodes.find((node) => node.kind === 'module')?.id;
                 edges = this.moduleStructureEdges(moduleId, nodes);
             }
-            return { sourceScope, level, analysisMode, hopScope, focusId, nodes, edges, indexes: this.indexes };
+            const topology = level === LEVELS.SYSTEM
+                ? this.semanticTopology(nodes)
+                : null;
+            return { sourceScope, level, analysisMode, hopScope, focusId, nodes, edges, topology, indexes: this.indexes };
         }
 
         levelNodes(level, analysisMode, focusId, scoped, scopedIds) {
@@ -969,15 +1105,20 @@
                 return members.filter((node) => scopedIds.has(node.id));
             }
             if (level === LEVELS.SYSTEM) {
+                const boundaryVisible = (node) => analysisMode === ANALYSIS_MODES.DATA_FLOW
+                    && (node.rootBoundary || node.externalChannel);
                 const hasArchitecture = scoped.some((node) => node.architectureInstance);
                 if (hasArchitecture) return scoped.filter((node) =>
-                    node.virtual
-                    || node.architectureInstance
+                    node.architectureInstance
+                    || node.virtual && !node.rootBoundary
+                    || boundaryVisible(node)
                     || this.state.filters.packages === true
                         && ['module', 'interface', 'package'].includes(node.kind)
                 );
                 return scoped.filter((node) =>
-                    node.virtual || ['module', 'interface', 'package'].includes(node.kind)
+                    node.virtual && !node.rootBoundary
+                    || boundaryVisible(node)
+                    || ['module', 'interface', 'package'].includes(node.kind)
                 ).filter((node) => this.state.filters.packages !== false || node.kind !== 'package');
             }
             const moduleId = ownerModuleId(focusId, this.indexes)
@@ -1141,6 +1282,17 @@
             }
             return allowed;
         }
+    }
+
+    function ownerArchitectureInstanceId(id, indexes) {
+        let node = indexes.nodeById.get(id);
+        while (node) {
+            if (node.architectureInstance) return node.id;
+            if (node.boundaryRootId) return indexes.nodeById.get(node.boundaryRootId)?.architectureInstance
+                ? node.boundaryRootId : null;
+            node = node.parentId ? indexes.nodeById.get(node.parentId) : null;
+        }
+        return null;
     }
 
     function ownerModuleId(id, indexes) {

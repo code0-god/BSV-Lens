@@ -2,7 +2,10 @@
 
 const { TextEncoder } = require('util');
 const { getWebviewHtml } = require('./html');
-const { findSmallestNodeAtPosition } = require('../architecture/symbol-index');
+const {
+    buildSourceReferenceIndex,
+    findSourceReferenceAtPosition
+} = require('../architecture/symbol-index');
 const { resolveDefaultSourceScope } = require('../architecture/analyzer');
 
 const VIEW_TYPE = 'bsvArchitecture.explorer';
@@ -67,12 +70,12 @@ class ArchitecturePanel {
         this.disposables = [];
         this.watcherDisposables = [];
         this.model = null;
+        this.sourceReferenceIndex = null;
         this.refreshToken = 0;
         this.modelRevision = 0;
         this.analysisCancellation = null;
         this.refreshTimer = null;
         this.selectionTimer = null;
-        this.lastRevealedNodeId = null;
         this.request = {};
         this.updateRequest(request, false);
 
@@ -176,6 +179,7 @@ class ArchitecturePanel {
             });
             if (token !== this.refreshToken) return;
             this.model = model;
+            this.sourceReferenceIndex = buildSourceReferenceIndex(model);
             this.modelRevision = token;
             this.panel.title = model.title || 'BSV Lens';
             const initialFocus = this.resolveInitialFocus(model);
@@ -207,16 +211,15 @@ class ArchitecturePanel {
     resolveInitialFocus(model) {
         if (this.request.focusId && model.nodes.some((node) => node.id === this.request.focusId)) return this.request.focusId;
         if (!this.request.focusName) return null;
-        const sameFile = model.nodes.find((node) =>
+        const matches = model.nodes.filter((node) =>
             node.name === this.request.focusName
             && (!this.request.focusKind || node.kind === this.request.focusKind)
-            && (!model.activeFile || node.relativePath === model.activeFile)
         );
-        if (sameFile) return sameFile.id;
-        return model.nodes.find((node) =>
-            node.name === this.request.focusName
-            && (!this.request.focusKind || node.kind === this.request.focusKind)
-        )?.id || null;
+        const sameFile = matches.filter((node) =>
+            !model.activeFile || node.relativePath === model.activeFile
+        );
+        if (sameFile.length === 1) return sameFile[0].id;
+        return matches.length === 1 ? matches[0].id : null;
     }
 
     defaultView() {
@@ -366,15 +369,19 @@ class ArchitecturePanel {
             .getConfiguration('bsvArchitecture', uri)
             .get('syncWithEditor', true);
         if (!enabled) return;
-        const node = findSmallestNodeAtPosition(
-            this.model.nodes,
-            uri.toString(),
-            position.line,
-            position.character
-        );
-        if (!node || node.id === this.lastRevealedNodeId) return;
-        this.lastRevealedNodeId = node.id;
-        this.panel.webview.postMessage({ type: 'revealNode', nodeId: node.id });
+        if (!this.sourceReferenceIndex) {
+            this.sourceReferenceIndex = buildSourceReferenceIndex(this.model);
+        }
+        const sourceReference = findSourceReferenceAtPosition(this.sourceReferenceIndex, {
+            uri: uri.toString(),
+            line: position.line,
+            column: position.character
+        });
+        this.panel.webview.postMessage({
+            type: 'revealSource',
+            sourceReference,
+            revision: this.modelRevision
+        });
     }
 
     reportError(error) {
