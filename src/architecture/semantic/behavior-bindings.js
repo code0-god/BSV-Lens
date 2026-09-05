@@ -15,8 +15,6 @@ function buildBehaviorBindings(stateBehaviors, callableByBehaviorId, instances, 
     const endpointByOwnerPath = new Map(endpoints.map((endpoint) => [
         endpointKey(endpoint.ownerInstanceId, endpoint.interfacePath), endpoint
     ]));
-    const methodEndpoints = endpoints.filter((endpoint) => endpoint.kind === 'method-endpoint');
-
     for (const behavior of stateBehaviors) {
         const callable = callableByBehaviorId.get(behavior.id);
         const children = childrenByParent.get(behavior.ownerInstanceId) || [];
@@ -36,23 +34,6 @@ function buildBehaviorBindings(stateBehaviors, callableByBehaviorId, instances, 
         }
         const explicit = new Set(accesses.map((access) => `${access.kind}\u0000${access.instance}`));
         let syntheticIndex = accesses.length;
-        if (behavior.kind === 'method' && accesses.length === 0) {
-            const delegates = (parametersByTarget.get(behavior.ownerInstanceId) || []).flatMap((binding) =>
-                methodEndpoints.filter((endpoint) => endpoint.ownerInstanceId === binding.sourceInstanceId
-                    && endpoint.name === behavior.name).map((endpoint) => ({ binding, endpoint })));
-            if (delegates.length === 1) {
-                const { binding, endpoint } = delegates[0];
-                const source = instanceById.get(binding.sourceInstanceId);
-                const path = endpoint.interfacePath.join('.');
-                bindings.push(makeBinding(behavior, {
-                    instance: binding.formalParameter.name, kind: 'return', operation: 'method-return',
-                    memberPath: path, arguments: [], sourceEvidence: `return ${binding.formalParameter.name}.${path};`,
-                    evidence: { callable: behavior.name, referencedInstance: binding.formalParameter.name },
-                    location: behavior.location
-                }, source, endpoint, syntheticIndex));
-                syntheticIndex += 1;
-            }
-        }
         for (const [kind, names] of [['read', behavior.reads], ['write', behavior.writes]]) {
             for (const name of names) {
                 const child = childByName.get(name);

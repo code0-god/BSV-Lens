@@ -753,9 +753,16 @@ function populateModuleMembers(module, text, masked, uri, lineStarts, allFunctio
     const bodyText = text.slice(bodyStart, bodyEnd);
 
     module.instances = parseInstances(bodyMasked, bodyText, bodyStart, uri, lineStarts);
-    module.rules = parseRules(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances, module.name);
+    const behaviorTargets = [
+        ...module.instances,
+        ...(module.constructorParameters || []).map((parameter) => ({
+            name: parameter.name,
+            primitiveKind: null
+        }))
+    ];
+    module.rules = parseRules(bodyMasked, bodyText, bodyStart, uri, lineStarts, behaviorTargets, module.name);
     module.providedInterfaces = parseProvidedInterfaces(bodyMasked, bodyStart, uri, lineStarts);
-    module.methods = parseMethods(bodyMasked, bodyText, bodyStart, uri, lineStarts, module.instances, module.name);
+    module.methods = parseMethods(bodyMasked, bodyText, bodyStart, uri, lineStarts, behaviorTargets, module.name);
     annotateProvidedInterfaceMethods(module.methods, module.providedInterfaces);
     module.localFunctions = allFunctions.filter((fn) => fn.parentModuleName === module.name).map((fn) => fn.name);
 }
@@ -953,7 +960,7 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
         const contentStart = inline
             ? match.index + match[0].length + findTopLevelCharacter(header, '=') + 1
             : headerEnd + 1;
-        const contentEnd = inline ? headerEnd : (endKeyword >= 0 ? endKeyword : headerEnd);
+        const contentEnd = inline ? headerEnd + 1 : (endKeyword >= 0 ? endKeyword : headerEnd);
         const content = bodyMasked.slice(contentStart, contentEnd);
         const contentText = bodyText.slice(contentStart, contentEnd);
         const absoluteName = baseOffset + match.index + match[0].length + callable.nameOffset;
