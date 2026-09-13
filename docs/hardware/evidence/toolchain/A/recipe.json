@@ -1,0 +1,69 @@
+{
+  "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+  "compileArgv": [
+    "/opt/homebrew/bin/bsc",
+    "-u",
+    "-verilog",
+    "-elab",
+    "-g",
+    "mkConnected",
+    "-bdir",
+    ".build/hardware/toolchain/A/bdir",
+    "-vdir",
+    "docs/hardware/evidence/toolchain/A/rtl",
+    "-info-dir",
+    ".build/hardware/toolchain/A/info",
+    "-show-schedule",
+    "-show-module-use",
+    "-show-elab-progress",
+    "experiments/hardware/fixtures/Connected.bsv"
+  ],
+  "passes": [
+    "read_verilog docs/hardware/evidence/toolchain/A/rtl/mkConnected.v docs/hardware/evidence/toolchain/A/rtl/mkStage.v",
+    "hierarchy -check -top mkConnected",
+    "write_rtlil docs/hardware/evidence/toolchain/A/pre-proc.il",
+    "proc -noopt",
+    "write_json docs/hardware/evidence/toolchain/A/design.json",
+    "write_rtlil docs/hardware/evidence/toolchain/A/design.il"
+  ],
+  "procExpansion": [
+    "proc_clean",
+    "proc_rmdead",
+    "proc_prune",
+    "proc_init",
+    "proc_arst",
+    "proc_rom",
+    "proc_mux",
+    "proc_dlatch",
+    "proc_dff",
+    "proc_memwr",
+    "proc_clean"
+  ],
+  "externalRtlLibraryInputs": [],
+  "macros": "Yosys read_verilog default SYNTHESIS; BSC reset macros from emitted RTL; translate_off initial blocks omitted",
+  "bscDirectPackageDependencies": [
+    "Prelude",
+    "PreludeBSV"
+  ],
+  "compiledMetadataArtifacts": [
+    {
+      "path": ".build/hardware/toolchain/A/bdir/Connected.bo",
+      "sha256": "f141a5f463d72e08f710a048c19254189083703766e7b155ee7fe70d2b762c8d",
+      "bytes": 13273
+    },
+    {
+      "path": ".build/hardware/toolchain/A/bdir/mkConnected.ba",
+      "sha256": "ee648f7dd121e3ff0fb45401030f9b604de4c4a59770c06f91f541d30dccbf36",
+      "bytes": 3796
+    },
+    {
+      "path": ".build/hardware/toolchain/A/bdir/mkStage.ba",
+      "sha256": "c0b29aab70d4a2466f79b319badf32c410c89ed4323ae89e8151d877c38a7583",
+      "bytes": 3339
+    }
+  ],
+  "source": {
+    "path": "experiments/hardware/fixtures/Connected.bsv",
+    "sha256": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+  }
+}

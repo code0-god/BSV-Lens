@@ -1,0 +1,541 @@
+{
+  "schema": "g6-usability-acceptance-summary-v1",
+  "scope": "Completed native and core usability gates before final archive replay; packaging/fresh results are external receipts.",
+  "evidenceIndex": "../evidence/g6-usability/run-2a6Mmm/index.json",
+  "evidenceIndexSha256": "46ab95d0ae6ee2b5b1fe0641ab7a80cb77455c3c41043c1e7023be91e2eb79ff",
+  "vsix": {
+    "file": "../evidence/g6-usability/run-2a6Mmm/bindings/current/bsv-lens-0.4.1-e600679639f90e1f.vsix",
+    "sha256": "fbedafa9fbf4435c305da01e0fb2279ad5288049f439bec6200d266d96800bbf",
+    "bytes": 708341,
+    "buildId": "g6:e600679639f90e1f070bd44f969ea8fe3cbac8ae67c7109eeffffad22964fe74"
+  },
+  "featureFingerprint": "70e25382999765718a6d285ba8c2871f75dfb8bbccc495889cdb6eaad7aba1e7",
+  "counts": {
+    "required": 45,
+    "passed": 45,
+    "installedVsix": 44,
+    "core": 1
+  },
+  "gates": [
+    {
+      "id": "A01",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A01-automatic-start"
+      ]
+    },
+    {
+      "id": "A02",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A02-memory-overview"
+      ]
+    },
+    {
+      "id": "A03",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A03-load",
+        "A03-staging",
+        "A03-accumulators",
+        "A03-store"
+      ]
+    },
+    {
+      "id": "A04",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A04-loop-root-and-child"
+      ]
+    },
+    {
+      "id": "A05",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A05-actual-editor-range",
+        "A05-source-back-forward",
+        "A05-selected-fit"
+      ]
+    },
+    {
+      "id": "A06",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A06-source-only"
+      ]
+    },
+    {
+      "id": "F01",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/fault/routing-fault-report.json",
+      "caseIds": [
+        "F01-F03"
+      ]
+    },
+    {
+      "id": "F02",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/fault/routing-fault-report.json",
+      "caseIds": [
+        "F01-F03"
+      ]
+    },
+    {
+      "id": "F03",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/fault/routing-fault-report.json",
+      "caseIds": [
+        "F01-F03"
+      ]
+    },
+    {
+      "id": "F04",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "F04-authority-envelope"
+      ]
+    },
+    {
+      "id": "F05",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "F05-stale-design"
+      ]
+    },
+    {
+      "id": "F06",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "F06-rapid-back"
+      ]
+    },
+    {
+      "id": "F07",
+      "status": "PASS",
+      "executed": true,
+      "scope": "core",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/core/core.json",
+      "caseIds": [
+        "ok 181 - scope/source/input/budget and physical or RTL routing failures cannot become a partial BSV scene"
+      ]
+    },
+    {
+      "id": "F08",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "F08-RTL-F1-F2"
+      ]
+    },
+    {
+      "id": "D01",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D01-D03-R01"
+      ]
+    },
+    {
+      "id": "D02",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D02-multi-root"
+      ]
+    },
+    {
+      "id": "D03",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D01-D03-R01"
+      ]
+    },
+    {
+      "id": "D04",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D04-no-bsv",
+        "D04-function-only"
+      ]
+    },
+    {
+      "id": "D05",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D05-external-save",
+        "D05-create-rename-delete"
+      ]
+    },
+    {
+      "id": "D06",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D06-exclude-include"
+      ]
+    },
+    {
+      "id": "D07",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D07-library-testbench"
+      ]
+    },
+    {
+      "id": "D08",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D08-symlink"
+      ]
+    },
+    {
+      "id": "D09",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D09-partial-limit"
+      ]
+    },
+    {
+      "id": "D10",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D10-dispose"
+      ]
+    },
+    {
+      "id": "D11",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/restart/restarted/g6/process-restart.validation.json",
+      "caseIds": [
+        "actual-process-restart"
+      ],
+      "additionalReceipts": [
+        "../evidence/g6-usability/run-2a6Mmm/restart/process-restart-report.json"
+      ]
+    },
+    {
+      "id": "D12",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D12-dirty-source"
+      ]
+    },
+    {
+      "id": "R01",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "D01-D03-R01"
+      ]
+    },
+    {
+      "id": "R02",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "R02-R03-R04"
+      ]
+    },
+    {
+      "id": "R03",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "R02-R03-R04"
+      ]
+    },
+    {
+      "id": "R04",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "R02-R03-R04"
+      ]
+    },
+    {
+      "id": "R05",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "R05-R06",
+        "R06-artifact-back-source"
+      ]
+    },
+    {
+      "id": "R06",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "R05-R06",
+        "R06-artifact-back-source"
+      ]
+    },
+    {
+      "id": "R07",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "R07-no-execution"
+      ]
+    },
+    {
+      "id": "U01",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A01-automatic-start"
+      ]
+    },
+    {
+      "id": "U02",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A03-load",
+        "A03-staging",
+        "A03-accumulators",
+        "A03-store"
+      ]
+    },
+    {
+      "id": "U03",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "U03-module-information",
+        "U03-relation-selection",
+        "U03-original-relation"
+      ]
+    },
+    {
+      "id": "U04",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "U04-interface-members"
+      ]
+    },
+    {
+      "id": "U05",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A02-memory-overview"
+      ]
+    },
+    {
+      "id": "U06",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "F05-stale-design"
+      ]
+    },
+    {
+      "id": "U07",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A06-source-only"
+      ]
+    },
+    {
+      "id": "U08",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/responsive-en/responsive-report.json",
+      "caseIds": [
+        "U08-narrow-source",
+        "U08-regular-overview"
+      ]
+    },
+    {
+      "id": "U09",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json",
+      "caseIds": [
+        "U09-delayed-source"
+      ],
+      "additionalReceipts": [
+        "../evidence/g6-usability/run-2a6Mmm/responsive-en/responsive-report.json",
+        "../evidence/g6-usability/run-2a6Mmm/responsive-ko/responsive-report.json",
+        "../evidence/g6-usability/run-2a6Mmm/happy/U09-summary-disclosure-back.json"
+      ]
+    },
+    {
+      "id": "U10",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/happy/acceptance-report.json",
+      "caseIds": [
+        "A05-source-back-forward"
+      ],
+      "additionalReceipts": [
+        "../evidence/g6-usability/run-2a6Mmm/lifecycle/lifecycle-report.json"
+      ],
+      "additionalCaseIds": [
+        "F08-RTL-F1-F2"
+      ]
+    },
+    {
+      "id": "U11",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/responsive-ko/responsive-report.json",
+      "caseIds": [
+        "U11-high-contrast",
+        "U11-keyboard-selection"
+      ],
+      "additionalReceipts": [
+        "../evidence/g6-usability/run-2a6Mmm/happy/U11-load-storage-keyboard.json"
+      ]
+    },
+    {
+      "id": "U12",
+      "status": "PASS",
+      "executed": true,
+      "scope": "installed-vsix",
+      "receipt": "../evidence/g6-usability/run-2a6Mmm/fault/routing-fault-report.json",
+      "caseIds": [
+        "F01-F03"
+      ]
+    }
+  ],
+  "authorCore": {
+    "receipt": "../evidence/g6-usability/run-4uFBPL/final-validation/core/core.json",
+    "tests": 841,
+    "pass": 838,
+    "fail": 0,
+    "skipped": 3,
+    "cancelled": 0,
+    "testFiles": 119,
+    "separateLaneReceipt": "../evidence/g6-usability/run-2a6Mmm/separate-eight/completion.json",
+    "testedFeatureFingerprint": "9d692a7ac7b8d6d2cc117be434195d126934f28dfe730bce09f9ca981d247c70",
+    "scope": "Last complete repository suite before the fresh-replay helper-only delta; no claim that the 841-test suite ran again afterward."
+  },
+  "freshArchiveReplay": {
+    "status": "PENDING",
+    "authority": "Final source/review ZIP.validation.json outside each archive; distinct shipped/core replay scope, not the author 841-test suite."
+  },
+  "userVisualDesignAcceptance": "PENDING",
+  "supplementaryEvidenceIndex": {
+    "path": "../evidence/g6-usability/run-4uFBPL/index.json",
+    "sha256": "a49bd264cbc4b83db4700a730a5a85d4c41946dbed2b3c730768b81854ba790f",
+    "scope": "Final source identity and author core validation only; no new native or acceptance claims. Main gate index remains immutable."
+  },
+  "freshReplayHelperUpdate": {
+    "evidenceIndex": "../evidence/g6-usability/run-6Gfu5Q/index.json",
+    "evidenceIndexSha256": "380b491d80fd65db7d9ea708769c069ef311293604dcac72c6af79f7886b6733",
+    "identity": "../evidence/g6-usability/run-6Gfu5Q/fresh-helper/identity.json",
+    "targeted": {
+      "receipt": "../evidence/g6-usability/run-6Gfu5Q/fresh-helper/helper-receipt.json",
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    "nativePreflightReceipt": "../evidence/g6-usability/run-6Gfu5Q/fresh-helper/native-preflight-receipt.json",
+    "scope": "Copied snapshot installed-native preflight after a verifier-only fix; not final review/source archive replay. Product VSIX unchanged."
+  }
+}

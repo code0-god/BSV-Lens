@@ -1,0 +1,983 @@
+{
+  "creator": "Yosys 0.68 (git sha1 38e001a6f, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)",
+  "modules": {
+    "mkControl": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "B/rtl/mkControl.v:34.1-143.10"
+      },
+      "ports": {
+        "CLK": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "RST_N": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "inject_value": {
+          "direction": "input",
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11 ]
+        },
+        "EN_inject": {
+          "direction": "input",
+          "bits": [ 12 ]
+        },
+        "RDY_inject": {
+          "direction": "output",
+          "bits": [ 13 ]
+        },
+        "read": {
+          "direction": "output",
+          "bits": [ 14, 15, 16, 17, 18, 19, 20, 21 ]
+        },
+        "RDY_read": {
+          "direction": "output",
+          "bits": [ "1" ]
+        }
+      },
+      "cells": {
+        "$add$B/rtl/mkControl.v:90$11": {
+          "hide_name": 1,
+          "type": "$add",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "g3_emit_id": "operator:06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b:/input/fixtures/Control.bsv:rhs-binary:21:16:21:25",
+            "g3_origin_ref": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b:/input/fixtures/Control.bsv:rhs-binary:21:16:21:25",
+            "src": "B/rtl/mkControl.v:90.7-91.292"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 14, 15, 16, 17, 18, 19, 20, 21 ],
+            "B": [ "0", "1", "0", "0", "0", "0", "0", "0" ],
+            "Y": [ 22, 23, 24, 25, 26, 27, 28, 29 ]
+          }
+        },
+        "$eq$B/rtl/mkControl.v:121$20": {
+          "hide_name": 1,
+          "type": "$eq",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:121.9-121.22"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ "0" ],
+            "Y": [ 30 ]
+          }
+        },
+        "$logic_and$B/rtl/mkControl.v:82$3": {
+          "hide_name": 1,
+          "type": "$logic_and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:82.35-82.57"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 31 ],
+            "B": [ 32 ],
+            "Y": [ 33 ]
+          }
+        },
+        "$logic_and$B/rtl/mkControl.v:82$5": {
+          "hide_name": 1,
+          "type": "$logic_and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:82.35-82.71"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 33 ],
+            "B": [ 34 ],
+            "Y": [ 35 ]
+          }
+        },
+        "$logic_and$B/rtl/mkControl.v:86$10": {
+          "hide_name": 1,
+          "type": "$logic_and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.7-86.60"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 36 ],
+            "B": [ 37 ],
+            "Y": [ 38 ]
+          }
+        },
+        "$logic_and$B/rtl/mkControl.v:86$8": {
+          "hide_name": 1,
+          "type": "$logic_and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.7-86.46"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 39 ],
+            "B": [ 40 ],
+            "Y": [ 36 ]
+          }
+        },
+        "$logic_not$B/rtl/mkControl.v:114$18": {
+          "hide_name": 1,
+          "type": "$logic_not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:114.23-114.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 32 ],
+            "Y": [ 41 ]
+          }
+        },
+        "$logic_not$B/rtl/mkControl.v:82$4": {
+          "hide_name": 1,
+          "type": "$logic_not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:82.61-82.71"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 12 ],
+            "Y": [ 34 ]
+          }
+        },
+        "$logic_not$B/rtl/mkControl.v:86$7": {
+          "hide_name": 1,
+          "type": "$logic_not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.23-86.46"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 35 ],
+            "Y": [ 40 ]
+          }
+        },
+        "$logic_not$B/rtl/mkControl.v:86$9": {
+          "hide_name": 1,
+          "type": "$logic_not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.50-86.60"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 12 ],
+            "Y": [ 37 ]
+          }
+        },
+        "$logic_or$B/rtl/mkControl.v:111$16": {
+          "hide_name": 1,
+          "type": "$logic_or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:111.7-111.42"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 12 ],
+            "B": [ 38 ],
+            "Y": [ 42 ]
+          }
+        },
+        "$logic_or$B/rtl/mkControl.v:111$17": {
+          "hide_name": 1,
+          "type": "$logic_or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:111.7-111.68"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 35 ],
+            "Y": [ 43 ]
+          }
+        },
+        "$lt$B/rtl/mkControl.v:75$1": {
+          "hide_name": 1,
+          "type": "$lt",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:75.23-75.35"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 14, 15, 16, 17, 18, 19, 20, 21 ],
+            "B": [ "0", "0", "1", "0", "0", "0", "0", "0" ],
+            "Y": [ 13 ]
+          }
+        },
+        "$lt$B/rtl/mkControl.v:86$6": {
+          "hide_name": 1,
+          "type": "$lt",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.7-86.19"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 14, 15, 16, 17, 18, 19, 20, 21 ],
+            "B": [ "0", "0", "0", "1", "0", "0", "0", "0" ],
+            "Y": [ 39 ]
+          }
+        },
+        "$ne$B/rtl/mkControl.v:82$2": {
+          "hide_name": 1,
+          "type": "$ne",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:82.35-82.48"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 14, 15, 16, 17, 18, 19, 20, 21 ],
+            "B": [ "0", "0", "0", "0", "0", "0", "0", "0" ],
+            "Y": [ 31 ]
+          }
+        },
+        "$procdff$36": {
+          "hide_name": 1,
+          "type": "$dff",
+          "parameters": {
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:119.3-131.6"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 44, 45, 46, 47, 48, 49, 50, 51 ],
+            "Q": [ 14, 15, 16, 17, 18, 19, 20, 21 ]
+          }
+        },
+        "$procdff$37": {
+          "hide_name": 1,
+          "type": "$dff",
+          "parameters": {
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:119.3-131.6"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 52 ],
+            "Q": [ 32 ]
+          }
+        },
+        "$procmux$21": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:129.6-129.14|B/rtl/mkControl.v:129.2-129.37"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 32 ],
+            "B": [ 41 ],
+            "S": [ "1" ],
+            "Y": [ 53 ]
+          }
+        },
+        "$procmux$24": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "full_case": "00000000000000000000000000000001",
+            "src": "B/rtl/mkControl.v:121.9-121.22|B/rtl/mkControl.v:121.5-130.10"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 53 ],
+            "B": [ "0" ],
+            "S": [ 30 ],
+            "Y": [ 52 ]
+          }
+        },
+        "$procmux$26": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "B/rtl/mkControl.v:128.13-128.21|B/rtl/mkControl.v:128.9-128.44"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 14, 15, 16, 17, 18, 19, 20, 21 ],
+            "B": [ 54, 55, 56, 57, 58, 59, 60, 61 ],
+            "S": [ 43 ],
+            "Y": [ 62, 63, 64, 65, 66, 67, 68, 69 ]
+          }
+        },
+        "$procmux$29": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "full_case": "00000000000000000000000000000001",
+            "src": "B/rtl/mkControl.v:121.9-121.22|B/rtl/mkControl.v:121.5-130.10"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 62, 63, 64, 65, 66, 67, 68, 69 ],
+            "B": [ "0", "0", "0", "0", "0", "0", "0", "0" ],
+            "S": [ 30 ],
+            "Y": [ 44, 45, 46, 47, 48, 49, 50, 51 ]
+          }
+        },
+        "$procmux$32": {
+          "hide_name": 1,
+          "type": "$pmux",
+          "parameters": {
+            "S_WIDTH": "00000000000000000000000000000011",
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "full_case": "00000000000000000000000000000001",
+            "parallel_case": "00000000000000000000000000000001",
+            "src": "B/rtl/mkControl.v:105.69-105.69|B/rtl/mkControl.v:103.5-108.12"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1", "0", "1", "0", "1", "0", "1" ],
+            "B": [ 70, 71, 72, 73, 74, 75, 76, 77, 22, 23, 24, 25, 26, 27, 28, 29, 4, 5, 6, 7, 8, 9, 10, 11 ],
+            "S": [ 78, 79, 80 ],
+            "Y": [ 54, 55, 56, 57, 58, 59, 60, 61 ]
+          }
+        },
+        "$procmux$33_CMP0": {
+          "hide_name": 1,
+          "type": "$eq",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "full_case": "00000000000000000000000000000001",
+            "parallel_case": "00000000000000000000000000000001",
+            "src": "B/rtl/mkControl.v:105.69-105.69|B/rtl/mkControl.v:103.5-108.12"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "1" ],
+            "B": [ 35 ],
+            "Y": [ 78 ]
+          }
+        },
+        "$procmux$34_CMP0": {
+          "hide_name": 1,
+          "type": "$eq",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "full_case": "00000000000000000000000000000001",
+            "parallel_case": "00000000000000000000000000000001",
+            "src": "B/rtl/mkControl.v:104.44-104.44|B/rtl/mkControl.v:103.5-108.12"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "1" ],
+            "B": [ 38 ],
+            "Y": [ 79 ]
+          }
+        },
+        "$procmux$35_CMP0": {
+          "hide_name": 1,
+          "type": "$eq",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "full_case": "00000000000000000000000000000001",
+            "parallel_case": "00000000000000000000000000000001",
+            "src": "B/rtl/mkControl.v:103.42-103.42|B/rtl/mkControl.v:103.5-108.12"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "1" ],
+            "B": [ 12 ],
+            "Y": [ 80 ]
+          }
+        },
+        "$sub$B/rtl/mkControl.v:93$12": {
+          "hide_name": 1,
+          "type": "$sub",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "g3_emit_id": "operator:06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b:/input/fixtures/Control.bsv:rhs-binary:18:16:18:25",
+            "g3_origin_ref": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b:/input/fixtures/Control.bsv:rhs-binary:18:16:18:25",
+            "src": "B/rtl/mkControl.v:93.7-94.292"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 14, 15, 16, 17, 18, 19, 20, 21 ],
+            "B": [ "1", "0", "0", "0", "0", "0", "0", "0" ],
+            "Y": [ 70, 71, 72, 73, 74, 75, 76, 77 ]
+          }
+        }
+      },
+      "netnames": {
+        "$0\\count$D_IN[7:0]$14": {
+          "hide_name": 1,
+          "bits": [ 54, 55, 56, 57, 58, 59, 60, 61 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:97.3-109.6"
+          }
+        },
+        "$0\\count[7:0]": {
+          "hide_name": 1,
+          "bits": [ 44, 45, 46, 47, 48, 49, 50, 51 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:119.3-131.6"
+          }
+        },
+        "$0\\phase[0:0]": {
+          "hide_name": 1,
+          "bits": [ 52 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:119.3-131.6"
+          }
+        },
+        "$1\\count$D_IN[7:0]$15": {
+          "hide_name": 1,
+          "bits": [ 54, 55, 56, 57, 58, 59, 60, 61 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:97.3-109.6"
+          }
+        },
+        "$add$B/rtl/mkControl.v:90$11_Y": {
+          "hide_name": 1,
+          "bits": [ 22, 23, 24, 25, 26, 27, 28, 29 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:90.7-91.292"
+          }
+        },
+        "$eq$B/rtl/mkControl.v:121$20_Y": {
+          "hide_name": 1,
+          "bits": [ 30 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:121.9-121.22"
+          }
+        },
+        "$logic_and$B/rtl/mkControl.v:82$3_Y": {
+          "hide_name": 1,
+          "bits": [ 33 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:82.35-82.57"
+          }
+        },
+        "$logic_and$B/rtl/mkControl.v:82$5_Y": {
+          "hide_name": 1,
+          "bits": [ 35 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:82.35-82.71"
+          }
+        },
+        "$logic_and$B/rtl/mkControl.v:86$10_Y": {
+          "hide_name": 1,
+          "bits": [ 38 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.7-86.60"
+          }
+        },
+        "$logic_and$B/rtl/mkControl.v:86$8_Y": {
+          "hide_name": 1,
+          "bits": [ 36 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.7-86.46"
+          }
+        },
+        "$logic_not$B/rtl/mkControl.v:114$18_Y": {
+          "hide_name": 1,
+          "bits": [ 41 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:114.23-114.29"
+          }
+        },
+        "$logic_not$B/rtl/mkControl.v:82$4_Y": {
+          "hide_name": 1,
+          "bits": [ 34 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:82.61-82.71"
+          }
+        },
+        "$logic_not$B/rtl/mkControl.v:86$7_Y": {
+          "hide_name": 1,
+          "bits": [ 40 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.23-86.46"
+          }
+        },
+        "$logic_not$B/rtl/mkControl.v:86$9_Y": {
+          "hide_name": 1,
+          "bits": [ 37 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.50-86.60"
+          }
+        },
+        "$logic_or$B/rtl/mkControl.v:111$16_Y": {
+          "hide_name": 1,
+          "bits": [ 42 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:111.7-111.42"
+          }
+        },
+        "$logic_or$B/rtl/mkControl.v:111$17_Y": {
+          "hide_name": 1,
+          "bits": [ 43 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:111.7-111.68"
+          }
+        },
+        "$lt$B/rtl/mkControl.v:75$1_Y": {
+          "hide_name": 1,
+          "bits": [ 13 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:75.23-75.35"
+          }
+        },
+        "$lt$B/rtl/mkControl.v:86$6_Y": {
+          "hide_name": 1,
+          "bits": [ 39 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:86.7-86.19"
+          }
+        },
+        "$ne$B/rtl/mkControl.v:82$2_Y": {
+          "hide_name": 1,
+          "bits": [ 31 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:82.35-82.48"
+          }
+        },
+        "$procmux$21_Y": {
+          "hide_name": 1,
+          "bits": [ 53 ],
+          "attributes": {
+          }
+        },
+        "$procmux$22_CMP": {
+          "hide_name": 1,
+          "bits": [ "1" ],
+          "attributes": {
+          }
+        },
+        "$procmux$24_Y": {
+          "hide_name": 1,
+          "bits": [ 52 ],
+          "attributes": {
+          }
+        },
+        "$procmux$25_CMP": {
+          "hide_name": 1,
+          "bits": [ 30 ],
+          "attributes": {
+          }
+        },
+        "$procmux$26_Y": {
+          "hide_name": 1,
+          "bits": [ 62, 63, 64, 65, 66, 67, 68, 69 ],
+          "attributes": {
+          }
+        },
+        "$procmux$27_CMP": {
+          "hide_name": 1,
+          "bits": [ 43 ],
+          "attributes": {
+          }
+        },
+        "$procmux$29_Y": {
+          "hide_name": 1,
+          "bits": [ 44, 45, 46, 47, 48, 49, 50, 51 ],
+          "attributes": {
+          }
+        },
+        "$procmux$30_CMP": {
+          "hide_name": 1,
+          "bits": [ 30 ],
+          "attributes": {
+          }
+        },
+        "$procmux$32_Y": {
+          "hide_name": 1,
+          "bits": [ 54, 55, 56, 57, 58, 59, 60, 61 ],
+          "attributes": {
+          }
+        },
+        "$procmux$33_CMP": {
+          "hide_name": 1,
+          "bits": [ 78 ],
+          "attributes": {
+          }
+        },
+        "$procmux$34_CMP": {
+          "hide_name": 1,
+          "bits": [ 79 ],
+          "attributes": {
+          }
+        },
+        "$procmux$35_CMP": {
+          "hide_name": 1,
+          "bits": [ 80 ],
+          "attributes": {
+          }
+        },
+        "$sub$B/rtl/mkControl.v:93$12_Y": {
+          "hide_name": 1,
+          "bits": [ 70, 71, 72, 73, 74, 75, 76, 77 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:93.7-94.292"
+          }
+        },
+        "CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:43.10-43.13"
+          }
+        },
+        "EN_inject": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:48.10-48.19"
+          }
+        },
+        "MUX_count$write_1__VAL_2": {
+          "hide_name": 0,
+          "bits": [ 22, 23, 24, 25, 26, 27, 28, 29 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:72.16-72.40"
+          }
+        },
+        "MUX_count$write_1__VAL_3": {
+          "hide_name": 0,
+          "bits": [ 70, 71, 72, 73, 74, 75, 76, 77 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:72.42-72.66"
+          }
+        },
+        "RDY_inject": {
+          "hide_name": 0,
+          "bits": [ 13 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:49.10-49.20"
+          }
+        },
+        "RDY_read": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:53.10-53.18"
+          }
+        },
+        "RST_N": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:44.10-44.15"
+          }
+        },
+        "WILL_FIRE_RL_decrement": {
+          "hide_name": 0,
+          "bits": [ 35 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:69.8-69.30"
+          }
+        },
+        "WILL_FIRE_RL_increment": {
+          "hide_name": 0,
+          "bits": [ 38 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:69.32-69.54"
+          }
+        },
+        "count": {
+          "hide_name": 0,
+          "bits": [ 14, 15, 16, 17, 18, 19, 20, 21 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:60.15-60.20"
+          }
+        },
+        "count$D_IN": {
+          "hide_name": 0,
+          "bits": [ 54, 55, 56, 57, 58, 59, 60, 61 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:61.15-61.25"
+          }
+        },
+        "count$EN": {
+          "hide_name": 0,
+          "bits": [ 43 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:62.8-62.16"
+          }
+        },
+        "inject_value": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:47.18-47.30"
+          }
+        },
+        "phase": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:65.7-65.12"
+          }
+        },
+        "phase$D_IN": {
+          "hide_name": 0,
+          "bits": [ 41 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:66.8-66.18"
+          }
+        },
+        "phase$EN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:66.20-66.28"
+          }
+        },
+        "read": {
+          "hide_name": 0,
+          "bits": [ 14, 15, 16, 17, 18, 19, 20, 21 ],
+          "attributes": {
+            "src": "B/rtl/mkControl.v:52.18-52.22"
+          }
+        }
+      }
+    }
+  }
+}

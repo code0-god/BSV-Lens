@@ -1,0 +1,2606 @@
+{
+  "kind": "historical-display-scene-fixture",
+  "provenance": {
+    "description": "Historical Scene presentation generated with product core extracted from the prior installed VSIX and the preserved hash-checked A/B captured input; not new compiler evidence.",
+    "archive": "bsv-lens-0.4.1-568cd5d7de13990a.vsix",
+    "archiveSha256": "f9d7a845aab91e366e85e5d73ec8cc04cf0e1f78586f3ef6c0ee8ad9d5b851d7",
+    "runtime": [
+      {
+        "path": "src/hardware/scene.js",
+        "sha256": "fec0790c3f8405ccb55519d76a9596f8cfeb5f0b836bbb5f3187a035e6f62311"
+      },
+      {
+        "path": "src/hardware/architecture.js",
+        "sha256": "ebbf594ccd949aca4b37517830144702c1019d7c468c337886d6d07701d6d6c7"
+      }
+    ],
+    "helper": {
+      "path": "experiments/hardware/g3/query.js",
+      "sha256": "fad470e259b74c20d30efa3fccd47c0959b547384dcee17c6788bbac511a550d"
+    }
+  },
+  "scenes": {
+    "A": {
+      "sha256": "08c80558727a4eb5f4a57ade22f8cb36903f6d9db951286a3367c80a009b12ca",
+      "scene": {
+        "sceneKind": "bsv",
+        "shell": {
+          "id": "instance:def:Connected:mkConnected:mkConnected",
+          "kind": "module-occurrence",
+          "label": "mkConnected",
+          "secondaryLabel": "mkConnected",
+          "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+          "definitionId": "def:Connected:mkConnected",
+          "sourceRefs": [
+            {
+              "id": "scene-source-4761c49ef701546a21be9dd080feba0eb10eed37610d3b2a5644749c56e1b216",
+              "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+              "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+              "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+              "semanticId": "instance:def:Connected:mkConnected:mkConnected",
+              "sourceKind": "module-occurrence",
+              "range": {
+                "start": 389,
+                "end": 621
+              },
+              "text": "module mkConnected(Stage);\n   Stage left <- mkStage;\n   Stage right <- mkStage;\n   method Action put(Bit#(8) value);\n      left.put(value);\n      right.put(left.get + value);\n   endmethod\n   method Bit#(8) get = right.get;\nendmodule",
+              "sliceHash": "2ca864dfb0c774cdd9b91321af44c495d0268d3e04f78a9cec53dbc65f344a52"
+            }
+          ],
+          "semanticRefs": [
+            "instance:def:Connected:mkConnected:mkConnected"
+          ],
+          "interaction": {
+            "kind": "enter",
+            "entityId": "instance:def:Connected:mkConnected:mkConnected"
+          },
+          "status": "source-derived",
+          "path": "mkConnected",
+          "parentInstanceId": null,
+          "declaredType": "Stage",
+          "constructor": null,
+          "defaultExpressions": [],
+          "parameterBindings": [],
+          "children": [
+            "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+            "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right"
+          ],
+          "storages": [],
+          "contacts": [
+            "endpoint:instance:def:Connected:mkConnected:mkConnected:$interface",
+            "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+            "endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+          ],
+          "behaviorIds": [
+            "behavior:instance:def:Connected:mkConnected:mkConnected:method:put",
+            "behavior:instance:def:Connected:mkConnected:mkConnected:method:get"
+          ],
+          "detail": "mkConnected",
+          "expanded": true
+        },
+        "children": [
+          {
+            "id": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+            "kind": "module-occurrence",
+            "label": "left",
+            "secondaryLabel": "mkStage",
+            "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+            "definitionId": "def:Connected:mkStage",
+            "sourceRefs": [
+              {
+                "id": "scene-source-9eb1dded452c5692080a34fe04baa5205273949820c62d7225d727213ee787af",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+                "sourceKind": "module-occurrence",
+                "range": {
+                  "start": 415,
+                  "end": 441
+                },
+                "text": "\n   Stage left <- mkStage;",
+                "sliceHash": "4e20bbb0237a1a442c07f41e91ab7999ee393ed051ba7d11db0cb6cfe75afef4"
+              }
+            ],
+            "semanticRefs": [
+              "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left"
+            ],
+            "interaction": {
+              "kind": "enter",
+              "entityId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left"
+            },
+            "status": "source-derived",
+            "path": "mkConnected.left",
+            "parentInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+            "declaredType": "Stage",
+            "constructor": "mkStage",
+            "defaultExpressions": [],
+            "parameterBindings": [],
+            "children": [],
+            "storages": [
+              "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state"
+            ],
+            "contacts": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:$interface",
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put",
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get"
+            ],
+            "behaviorIds": [
+              "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+              "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get"
+            ],
+            "detail": "mkStage",
+            "expanded": false
+          },
+          {
+            "id": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+            "kind": "module-occurrence",
+            "label": "right",
+            "secondaryLabel": "mkStage",
+            "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+            "definitionId": "def:Connected:mkStage",
+            "sourceRefs": [
+              {
+                "id": "scene-source-aa8ad7522a246fb34b232ed0cddf3d77b0523e324893445d8618ae7f0fe120d7",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+                "sourceKind": "module-occurrence",
+                "range": {
+                  "start": 441,
+                  "end": 468
+                },
+                "text": "\n   Stage right <- mkStage;",
+                "sliceHash": "3e36461b71924af8d5c85adf65fff0afedd7b9fbba1d84bcadec8a8591687244"
+              }
+            ],
+            "semanticRefs": [
+              "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right"
+            ],
+            "interaction": {
+              "kind": "enter",
+              "entityId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right"
+            },
+            "status": "source-derived",
+            "path": "mkConnected.right",
+            "parentInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+            "declaredType": "Stage",
+            "constructor": "mkStage",
+            "defaultExpressions": [],
+            "parameterBindings": [],
+            "children": [],
+            "storages": [
+              "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:mkConnected.right.state"
+            ],
+            "contacts": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:$interface",
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put",
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get"
+            ],
+            "behaviorIds": [
+              "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:method:put",
+              "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:method:get"
+            ],
+            "detail": "mkStage",
+            "expanded": false
+          }
+        ],
+        "storages": [],
+        "contacts": [
+          {
+            "id": "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+            "kind": "method-contact",
+            "label": "put",
+            "secondaryLabel": "Action (Bit#(8) value)",
+            "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+            "definitionId": "def:Connected:Stage.interface-method.put",
+            "sourceRefs": [
+              {
+                "id": "scene-source-12bb9eb000140d7c9d366877cfb65e1aedf7ec46917582c82113e59f41fc6e1b",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage.interface-method.put",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 40,
+                  "end": 73
+                },
+                "text": "method Action put(Bit#(8) value);",
+                "sliceHash": "8c7e973e95338bf5ae83c9c3c2218ccf6b9fb7a59885b8c3439882fe12c1b64c"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:def:Connected:mkConnected:mkConnected:put"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:def:Connected:mkConnected:mkConnected:put"
+            },
+            "status": "compiler-confirmed-method-port",
+            "ownerId": "instance:def:Connected:mkConnected:mkConnected",
+            "direction": "input",
+            "category": "Action",
+            "declaredType": "Action",
+            "concreteType": null,
+            "arguments": [
+              {
+                "name": "value",
+                "type": "Bit#(8)",
+                "declaredType": "Bit#(8)"
+              }
+            ],
+            "result": {
+              "status": "none",
+              "type": null
+            },
+            "interfaceDefinitionId": "def:Connected:Stage",
+            "interfacePath": [
+              "put"
+            ],
+            "signalDetails": [],
+            "behaviorIds": [
+              "behavior:instance:def:Connected:mkConnected:mkConnected:method:put"
+            ],
+            "detail": "Action (Bit#(8) value)"
+          },
+          {
+            "id": "endpoint:instance:def:Connected:mkConnected:mkConnected:get",
+            "kind": "method-contact",
+            "label": "get",
+            "secondaryLabel": "Value : Bit#(8)",
+            "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+            "definitionId": "def:Connected:Stage.interface-method.get",
+            "sourceRefs": [
+              {
+                "id": "scene-source-c0d84494ac49c27f17118a3b976aea8fb607ff23eefd91d2f94ef25c38cf8019",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage.interface-method.get",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 77,
+                  "end": 96
+                },
+                "text": "method Bit#(8) get;",
+                "sliceHash": "5ca50f1d65356acb0a21fd1643cde38b7991a796cb054e4131fe54ef118ddcc3"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+            },
+            "status": "compiler-confirmed-method-port",
+            "ownerId": "instance:def:Connected:mkConnected:mkConnected",
+            "direction": "output",
+            "category": "Value",
+            "declaredType": "Bit#(8)",
+            "concreteType": "Bit#(8)",
+            "arguments": [],
+            "result": {
+              "status": "typed",
+              "type": "Bit#(8)"
+            },
+            "interfaceDefinitionId": "def:Connected:Stage",
+            "interfacePath": [
+              "get"
+            ],
+            "signalDetails": [],
+            "behaviorIds": [
+              "behavior:instance:def:Connected:mkConnected:mkConnected:method:get"
+            ],
+            "detail": "Value : Bit#(8)"
+          },
+          {
+            "id": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put",
+            "kind": "method-contact",
+            "label": "put",
+            "secondaryLabel": "Action (Bit#(8) value)",
+            "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+            "definitionId": "def:Connected:Stage.interface-method.put",
+            "sourceRefs": [
+              {
+                "id": "scene-source-12bb9eb000140d7c9d366877cfb65e1aedf7ec46917582c82113e59f41fc6e1b",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage.interface-method.put",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 40,
+                  "end": 73
+                },
+                "text": "method Action put(Bit#(8) value);",
+                "sliceHash": "8c7e973e95338bf5ae83c9c3c2218ccf6b9fb7a59885b8c3439882fe12c1b64c"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put"
+            },
+            "status": "compiler-confirmed-method-port",
+            "ownerId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+            "direction": "input",
+            "category": "Action",
+            "declaredType": "Action",
+            "concreteType": null,
+            "arguments": [
+              {
+                "name": "value",
+                "type": "Bit#(8)",
+                "declaredType": "Bit#(8)"
+              }
+            ],
+            "result": {
+              "status": "none",
+              "type": null
+            },
+            "interfaceDefinitionId": "def:Connected:Stage",
+            "interfacePath": [
+              "put"
+            ],
+            "signalDetails": [],
+            "behaviorIds": [
+              "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put"
+            ],
+            "detail": "Action (Bit#(8) value)"
+          },
+          {
+            "id": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get",
+            "kind": "method-contact",
+            "label": "get",
+            "secondaryLabel": "Value : Bit#(8)",
+            "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+            "definitionId": "def:Connected:Stage.interface-method.get",
+            "sourceRefs": [
+              {
+                "id": "scene-source-c0d84494ac49c27f17118a3b976aea8fb607ff23eefd91d2f94ef25c38cf8019",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage.interface-method.get",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 77,
+                  "end": 96
+                },
+                "text": "method Bit#(8) get;",
+                "sliceHash": "5ca50f1d65356acb0a21fd1643cde38b7991a796cb054e4131fe54ef118ddcc3"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get"
+            },
+            "status": "compiler-confirmed-method-port",
+            "ownerId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+            "direction": "output",
+            "category": "Value",
+            "declaredType": "Bit#(8)",
+            "concreteType": "Bit#(8)",
+            "arguments": [],
+            "result": {
+              "status": "typed",
+              "type": "Bit#(8)"
+            },
+            "interfaceDefinitionId": "def:Connected:Stage",
+            "interfacePath": [
+              "get"
+            ],
+            "signalDetails": [],
+            "behaviorIds": [
+              "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get"
+            ],
+            "detail": "Value : Bit#(8)"
+          },
+          {
+            "id": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put",
+            "kind": "method-contact",
+            "label": "put",
+            "secondaryLabel": "Action (Bit#(8) value)",
+            "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+            "definitionId": "def:Connected:Stage.interface-method.put",
+            "sourceRefs": [
+              {
+                "id": "scene-source-12bb9eb000140d7c9d366877cfb65e1aedf7ec46917582c82113e59f41fc6e1b",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage.interface-method.put",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 40,
+                  "end": 73
+                },
+                "text": "method Action put(Bit#(8) value);",
+                "sliceHash": "8c7e973e95338bf5ae83c9c3c2218ccf6b9fb7a59885b8c3439882fe12c1b64c"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put"
+            },
+            "status": "compiler-confirmed-method-port",
+            "ownerId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+            "direction": "input",
+            "category": "Action",
+            "declaredType": "Action",
+            "concreteType": null,
+            "arguments": [
+              {
+                "name": "value",
+                "type": "Bit#(8)",
+                "declaredType": "Bit#(8)"
+              }
+            ],
+            "result": {
+              "status": "none",
+              "type": null
+            },
+            "interfaceDefinitionId": "def:Connected:Stage",
+            "interfacePath": [
+              "put"
+            ],
+            "signalDetails": [],
+            "behaviorIds": [
+              "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:method:put"
+            ],
+            "detail": "Action (Bit#(8) value)"
+          },
+          {
+            "id": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get",
+            "kind": "method-contact",
+            "label": "get",
+            "secondaryLabel": "Value : Bit#(8)",
+            "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+            "definitionId": "def:Connected:Stage.interface-method.get",
+            "sourceRefs": [
+              {
+                "id": "scene-source-c0d84494ac49c27f17118a3b976aea8fb607ff23eefd91d2f94ef25c38cf8019",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage.interface-method.get",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 77,
+                  "end": 96
+                },
+                "text": "method Bit#(8) get;",
+                "sliceHash": "5ca50f1d65356acb0a21fd1643cde38b7991a796cb054e4131fe54ef118ddcc3"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get"
+            },
+            "status": "compiler-confirmed-method-port",
+            "ownerId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+            "direction": "output",
+            "category": "Value",
+            "declaredType": "Bit#(8)",
+            "concreteType": "Bit#(8)",
+            "arguments": [],
+            "result": {
+              "status": "typed",
+              "type": "Bit#(8)"
+            },
+            "interfaceDefinitionId": "def:Connected:Stage",
+            "interfacePath": [
+              "get"
+            ],
+            "signalDetails": [],
+            "behaviorIds": [
+              "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:method:get"
+            ],
+            "detail": "Value : Bit#(8)"
+          }
+        ],
+        "interfaceGroups": [
+          {
+            "id": "endpoint:instance:def:Connected:mkConnected:mkConnected:$interface",
+            "kind": "interface-group",
+            "label": "Stage",
+            "secondaryLabel": "Stage",
+            "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+            "definitionId": "def:Connected:Stage",
+            "sourceRefs": [
+              {
+                "id": "scene-source-948a342e14cd280bc6cd42937f46c0a9e3f8c23c8db3b42ee2fd769a01d5fa5f",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage",
+                "sourceKind": "definition",
+                "range": {
+                  "start": 20,
+                  "end": 109
+                },
+                "text": "interface Stage;\n   method Action put(Bit#(8) value);\n   method Bit#(8) get;\nendinterface",
+                "sliceHash": "84e7404038f42421e224c6c17c60c47b1374147886eb1aec5d9a8ae31f27cb0e"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:def:Connected:mkConnected:mkConnected:$interface"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:def:Connected:mkConnected:mkConnected:$interface"
+            },
+            "status": "source-derived",
+            "ownerId": "instance:def:Connected:mkConnected:mkConnected",
+            "direction": "unknown",
+            "category": "Interface",
+            "declaredType": "Stage",
+            "concreteType": null,
+            "arguments": [],
+            "result": {
+              "status": "unknown",
+              "type": null
+            },
+            "interfaceDefinitionId": "def:Connected:Stage",
+            "interfacePath": [],
+            "signalDetails": [],
+            "behaviorIds": [],
+            "detail": "Stage",
+            "memberContactIds": [
+              "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+              "endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+            ],
+            "membershipStatus": "resolved"
+          },
+          {
+            "id": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:$interface",
+            "kind": "interface-group",
+            "label": "Stage",
+            "secondaryLabel": "Connected::Stage",
+            "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+            "definitionId": "def:Connected:Stage",
+            "sourceRefs": [
+              {
+                "id": "scene-source-948a342e14cd280bc6cd42937f46c0a9e3f8c23c8db3b42ee2fd769a01d5fa5f",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage",
+                "sourceKind": "definition",
+                "range": {
+                  "start": 20,
+                  "end": 109
+                },
+                "text": "interface Stage;\n   method Action put(Bit#(8) value);\n   method Bit#(8) get;\nendinterface",
+                "sliceHash": "84e7404038f42421e224c6c17c60c47b1374147886eb1aec5d9a8ae31f27cb0e"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:$interface"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:$interface"
+            },
+            "status": "source-derived",
+            "ownerId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+            "direction": "unknown",
+            "category": "Interface",
+            "declaredType": "Stage",
+            "concreteType": null,
+            "arguments": [],
+            "result": {
+              "status": "unknown",
+              "type": null
+            },
+            "interfaceDefinitionId": "def:Connected:Stage",
+            "interfacePath": [],
+            "signalDetails": [],
+            "behaviorIds": [],
+            "detail": "Connected::Stage",
+            "memberContactIds": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put",
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get"
+            ],
+            "membershipStatus": "resolved"
+          },
+          {
+            "id": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:$interface",
+            "kind": "interface-group",
+            "label": "Stage",
+            "secondaryLabel": "Connected::Stage",
+            "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+            "definitionId": "def:Connected:Stage",
+            "sourceRefs": [
+              {
+                "id": "scene-source-948a342e14cd280bc6cd42937f46c0a9e3f8c23c8db3b42ee2fd769a01d5fa5f",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage",
+                "sourceKind": "definition",
+                "range": {
+                  "start": 20,
+                  "end": 109
+                },
+                "text": "interface Stage;\n   method Action put(Bit#(8) value);\n   method Bit#(8) get;\nendinterface",
+                "sliceHash": "84e7404038f42421e224c6c17c60c47b1374147886eb1aec5d9a8ae31f27cb0e"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:$interface"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:$interface"
+            },
+            "status": "source-derived",
+            "ownerId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+            "direction": "unknown",
+            "category": "Interface",
+            "declaredType": "Stage",
+            "concreteType": null,
+            "arguments": [],
+            "result": {
+              "status": "unknown",
+              "type": null
+            },
+            "interfaceDefinitionId": "def:Connected:Stage",
+            "interfacePath": [],
+            "signalDetails": [],
+            "behaviorIds": [],
+            "detail": "Connected::Stage",
+            "memberContactIds": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put",
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get"
+            ],
+            "membershipStatus": "resolved"
+          }
+        ],
+        "connections": [
+          {
+            "id": "semantic-summary-919b8c9beb57a2784522f3e9db979037283e9b9fa9249017264b5be1537a3b7a",
+            "kind": "semantic-connection",
+            "label": "left.put(value)",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+            "fromId": "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+            "toId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put",
+            "endpointIds": [
+              "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:0",
+              "flow:invoke:endpoint:instance:def:Connected:mkConnected:mkConnected:put:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:def:Connected:mkConnected:mkConnected:put"
+            ],
+            "members": [
+              {
+                "id": "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:0",
+                "kind": "invoke",
+                "label": "invoke",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-ebc1ea797a9c1aaebed00fd03a66322af81d9bd3106d1ea66dc662f614cd85b8",
+                    "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                    "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "semanticId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:0",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 512,
+                      "end": 528
+                    },
+                    "text": "left.put(value);",
+                    "sliceHash": "39aefcf36c20d9f4ba4e11991b1ad1d13187f99d0ba7bda919ad38239fdfad79"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:0",
+                  "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:0"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:0"
+                },
+                "status": "source-derived",
+                "fromId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:put",
+                "toId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:0"
+                ],
+                "bindingId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:0",
+                "behaviorId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:put",
+                "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:statement:512",
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              },
+              {
+                "id": "flow:invoke:endpoint:instance:def:Connected:mkConnected:mkConnected:put:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+                "kind": "invoke",
+                "label": "invoke",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-12bb9eb000140d7c9d366877cfb65e1aedf7ec46917582c82113e59f41fc6e1b",
+                    "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                    "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "semanticId": "def:Connected:Stage.interface-method.put",
+                    "sourceKind": "interface-method",
+                    "range": {
+                      "start": 40,
+                      "end": 73
+                    },
+                    "text": "method Action put(Bit#(8) value);",
+                    "sliceHash": "8c7e973e95338bf5ae83c9c3c2218ccf6b9fb7a59885b8c3439882fe12c1b64c"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:invoke:endpoint:instance:def:Connected:mkConnected:mkConnected:put:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:def:Connected:mkConnected:mkConnected:put"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:invoke:endpoint:instance:def:Connected:mkConnected:mkConnected:put:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:def:Connected:mkConnected:mkConnected:put"
+                },
+                "status": "source-derived",
+                "fromId": "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+                "toId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:put",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:invoke:endpoint:instance:def:Connected:mkConnected:mkConnected:put:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:def:Connected:mkConnected:mkConnected:put"
+                ],
+                "bindingId": null,
+                "behaviorId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:put",
+                "statementId": null,
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-ebc1ea797a9c1aaebed00fd03a66322af81d9bd3106d1ea66dc662f614cd85b8",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:0",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 512,
+                  "end": 528
+                },
+                "text": "left.put(value);",
+                "sliceHash": "39aefcf36c20d9f4ba4e11991b1ad1d13187f99d0ba7bda919ad38239fdfad79"
+              },
+              {
+                "id": "scene-source-12bb9eb000140d7c9d366877cfb65e1aedf7ec46917582c82113e59f41fc6e1b",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:Stage.interface-method.put",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 40,
+                  "end": 73
+                },
+                "text": "method Action put(Bit#(8) value);",
+                "sliceHash": "8c7e973e95338bf5ae83c9c3c2218ccf6b9fb7a59885b8c3439882fe12c1b64c"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+                "members": []
+              },
+              {
+                "contactId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-919b8c9beb57a2784522f3e9db979037283e9b9fa9249017264b5be1537a3b7a",
+              "relationId": "semantic-summary-919b8c9beb57a2784522f3e9db979037283e9b9fa9249017264b5be1537a3b7a"
+            }
+          },
+          {
+            "id": "semantic-summary-c02ad894e6042e5f08a1e97deade69dd2ca3846be868b5bd8a5335d7c45a735a",
+            "kind": "semantic-connection",
+            "label": "right.put(left.get + value)",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+            "fromId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get",
+            "toId": "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+            "endpointIds": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get",
+              "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:1",
+              "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:2"
+            ],
+            "members": [
+              {
+                "id": "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:1",
+                "kind": "return",
+                "label": "return",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-bb6f8992b1442ccccdf85e15c46f3e37a9e4b6be0ebcb83e81a66513fac2bec6",
+                    "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                    "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "semanticId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:1",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 535,
+                      "end": 563
+                    },
+                    "text": "right.put(left.get + value);",
+                    "sliceHash": "049f5952ad63d34ad1770257f8f1934a6ebae4f22b60e094b799c9ade14ce7a1"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:1",
+                  "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:1"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:1"
+                },
+                "status": "source-derived",
+                "fromId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get",
+                "toId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:put",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:1"
+                ],
+                "bindingId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:1",
+                "behaviorId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:put",
+                "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:statement:535",
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              },
+              {
+                "id": "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:2",
+                "kind": "invoke",
+                "label": "invoke",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-c98ca849e37e82a5e5414457413e17be53dedd5dac17b6fd73d4c099f12844c7",
+                    "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                    "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "semanticId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:2",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 535,
+                      "end": 563
+                    },
+                    "text": "right.put(left.get + value);",
+                    "sliceHash": "049f5952ad63d34ad1770257f8f1934a6ebae4f22b60e094b799c9ade14ce7a1"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:2",
+                  "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:2"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:2"
+                },
+                "status": "source-derived",
+                "fromId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:put",
+                "toId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:invoke:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:2"
+                ],
+                "bindingId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:2",
+                "behaviorId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:put",
+                "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:statement:535",
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-bb6f8992b1442ccccdf85e15c46f3e37a9e4b6be0ebcb83e81a66513fac2bec6",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:1",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 535,
+                  "end": 563
+                },
+                "text": "right.put(left.get + value);",
+                "sliceHash": "049f5952ad63d34ad1770257f8f1934a6ebae4f22b60e094b799c9ade14ce7a1"
+              },
+              {
+                "id": "scene-source-c98ca849e37e82a5e5414457413e17be53dedd5dac17b6fd73d4c099f12844c7",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:put:access:2",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 535,
+                  "end": 563
+                },
+                "text": "right.put(left.get + value);",
+                "sliceHash": "049f5952ad63d34ad1770257f8f1934a6ebae4f22b60e094b799c9ade14ce7a1"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get",
+                "members": []
+              },
+              {
+                "contactId": "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+                "members": []
+              },
+              {
+                "contactId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-c02ad894e6042e5f08a1e97deade69dd2ca3846be868b5bd8a5335d7c45a735a",
+              "relationId": "semantic-summary-c02ad894e6042e5f08a1e97deade69dd2ca3846be868b5bd8a5335d7c45a735a"
+            }
+          },
+          {
+            "id": "semantic-summary-bac41d614815a7dd9c2d4e8010c1fbb7b38afabe9575fee51a3632b0b4a7a369",
+            "kind": "semantic-connection",
+            "label": "right.get",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+            "fromId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get",
+            "toId": "endpoint:instance:def:Connected:mkConnected:mkConnected:get",
+            "endpointIds": [
+              "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get",
+              "endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:access:0",
+              "flow:return:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+            ],
+            "members": [
+              {
+                "id": "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:access:0",
+                "kind": "return",
+                "label": "return",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-21309163256ef6e6e7dc3f80a454207948e4c66c6dcfc1ae95897a1e5a0c73bf",
+                    "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                    "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "semanticId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:access:0",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 601,
+                      "end": 611
+                    },
+                    "text": "right.get;",
+                    "sliceHash": "1b27d8915cba8e4dbd28382ad577fb514f9d0749ae2523ec0c0ccfebf2359779"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:access:0",
+                  "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:access:0"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:access:0"
+                },
+                "status": "source-derived",
+                "fromId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get",
+                "toId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:get",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:return:endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:access:0"
+                ],
+                "bindingId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:access:0",
+                "behaviorId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:get",
+                "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:580:statement:601",
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              },
+              {
+                "id": "flow:return:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get",
+                "kind": "return",
+                "label": "return",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-ebf82b089ad81d87dc6e3d72f0d7872be63811769b57f0bdca1a095fe9e4c51c",
+                    "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                    "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                    "semanticId": "def:Connected:mkConnected.get",
+                    "sourceKind": "method",
+                    "range": {
+                      "start": 580,
+                      "end": 611
+                    },
+                    "text": "method Bit#(8) get = right.get;",
+                    "sliceHash": "6792482a2ad00471c1cf45f877c7ac562e2c94e8131d7a1952551f8a409e4c95"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:return:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:return:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+                },
+                "status": "source-derived",
+                "fromId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:get",
+                "toId": "endpoint:instance:def:Connected:mkConnected:mkConnected:get",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:return:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get:endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+                ],
+                "bindingId": null,
+                "behaviorId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:get",
+                "statementId": null,
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-21309163256ef6e6e7dc3f80a454207948e4c66c6dcfc1ae95897a1e5a0c73bf",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "binding:behavior:instance:def:Connected:mkConnected:mkConnected:method:get:access:0",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 601,
+                  "end": 611
+                },
+                "text": "right.get;",
+                "sliceHash": "1b27d8915cba8e4dbd28382ad577fb514f9d0749ae2523ec0c0ccfebf2359779"
+              },
+              {
+                "id": "scene-source-ebf82b089ad81d87dc6e3d72f0d7872be63811769b57f0bdca1a095fe9e4c51c",
+                "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+                "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+                "semanticId": "def:Connected:mkConnected.get",
+                "sourceKind": "method",
+                "range": {
+                  "start": 580,
+                  "end": 611
+                },
+                "text": "method Bit#(8) get = right.get;",
+                "sliceHash": "6792482a2ad00471c1cf45f877c7ac562e2c94e8131d7a1952551f8a409e4c95"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get",
+                "members": []
+              },
+              {
+                "contactId": "endpoint:instance:def:Connected:mkConnected:mkConnected:get",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-bac41d614815a7dd9c2d4e8010c1fbb7b38afabe9575fee51a3632b0b4a7a369",
+              "relationId": "semantic-summary-bac41d614815a7dd9c2d4e8010c1fbb7b38afabe9575fee51a3632b0b4a7a369"
+            }
+          }
+        ],
+        "aliases": []
+      }
+    },
+    "B": {
+      "sha256": "6f0b8455cebc87e5426a4f6d99a0a00149c66f9c1d3f0179cb88026a70ac1818",
+      "scene": {
+        "sceneKind": "bsv",
+        "shell": {
+          "id": "instance:def:Control:mkControl:mkControl",
+          "kind": "module-occurrence",
+          "label": "mkControl",
+          "secondaryLabel": "mkControl",
+          "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+          "definitionId": "def:Control:mkControl",
+          "sourceRefs": [
+            {
+              "id": "scene-source-569d5e9696b37f04396a6bd27d9570d1724c7bfbc99149d486bee415070d8e8f",
+              "pathRef": "experiments/hardware/fixtures/Control.bsv",
+              "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+              "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+              "semanticId": "instance:def:Control:mkControl:mkControl",
+              "sourceKind": "module-occurrence",
+              "range": {
+                "start": 132,
+                "end": 611
+              },
+              "text": "module mkControl(Control);\n   Reg#(Bit#(8)) count <- mkReg(0);\n   Reg#(Bool) phase <- mkReg(False);\n\n   rule tick;\n      phase <= !phase;\n   endrule\n   (* descending_urgency = \"decrement, increment\" *)\n   rule decrement (count > 0 && phase);\n      count <= count - 1;\n   endrule\n   rule increment (count < 8);\n      count <= count + 2;\n   endrule\n\n   method Action inject(Bit#(8) value) if (count < 4);\n      count <= value;\n   endmethod\n   method Bit#(8) read = count;\nendmodule",
+              "sliceHash": "1086fbd269939a3d6d56fb3779b62869c8fcd78e7d074f557b94d8a0989496c9"
+            }
+          ],
+          "semanticRefs": [
+            "instance:def:Control:mkControl:mkControl"
+          ],
+          "interaction": {
+            "kind": "enter",
+            "entityId": "instance:def:Control:mkControl:mkControl"
+          },
+          "status": "source-derived",
+          "path": "mkControl",
+          "parentInstanceId": null,
+          "declaredType": "Control",
+          "constructor": null,
+          "defaultExpressions": [],
+          "parameterBindings": [],
+          "children": [],
+          "storages": [
+            "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+            "instance:instance:def:Control:mkControl:mkControl:mkControl.phase"
+          ],
+          "contacts": [
+            "endpoint:instance:def:Control:mkControl:mkControl:$interface",
+            "endpoint:instance:def:Control:mkControl:mkControl:inject",
+            "endpoint:instance:def:Control:mkControl:mkControl:read"
+          ],
+          "behaviorIds": [
+            "behavior:instance:def:Control:mkControl:mkControl:rule:tick",
+            "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+            "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+            "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+            "behavior:instance:def:Control:mkControl:mkControl:method:read"
+          ],
+          "detail": "mkControl",
+          "expanded": true
+        },
+        "children": [],
+        "storages": [
+          {
+            "id": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+            "kind": "storage",
+            "label": "count",
+            "secondaryLabel": "Reg#(Bit#(8))",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "definitionId": "def:Control:mkControl.state-declaration.count",
+            "sourceRefs": [
+              {
+                "id": "scene-source-31a351e3079d5ea77c8cacafb77a93217af8a62d0ccc603f218e0a45c55e2a2a",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "def:Control:mkControl.state-declaration.count",
+                "sourceKind": "state-declaration",
+                "range": {
+                  "start": 158,
+                  "end": 194
+                },
+                "text": "\n   Reg#(Bit#(8)) count <- mkReg(0);",
+                "sliceHash": "eeba7ac3566bc57cdd077e23317e06814ca1876b917ef57900ff19bc19c34347"
+              }
+            ],
+            "semanticRefs": [
+              "instance:instance:def:Control:mkControl:mkControl:mkControl.count"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count"
+            },
+            "status": "source-derived",
+            "path": "mkControl.count",
+            "parentInstanceId": "instance:def:Control:mkControl:mkControl",
+            "declaredType": "Reg#(Bit#(8))",
+            "constructor": "mkReg",
+            "defaultExpressions": [
+              "0"
+            ],
+            "parameterBindings": [],
+            "primitiveKind": "register",
+            "readers": [
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+                "label": "decrement",
+                "kind": "rule"
+              },
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+                "label": "increment",
+                "kind": "rule"
+              },
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+                "label": "inject",
+                "kind": "method"
+              },
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+                "label": "read",
+                "kind": "method"
+              }
+            ],
+            "writers": [
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+                "label": "decrement",
+                "kind": "rule"
+              },
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+                "label": "increment",
+                "kind": "rule"
+              },
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+                "label": "inject",
+                "kind": "method"
+              }
+            ],
+            "detail": "Reg#(Bit#(8))"
+          },
+          {
+            "id": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase",
+            "kind": "storage",
+            "label": "phase",
+            "secondaryLabel": "Reg#(Bool)",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "definitionId": "def:Control:mkControl.state-declaration.phase",
+            "sourceRefs": [
+              {
+                "id": "scene-source-72696c6dde17914ea2164dc12dea8f0cb49a2dbbb87ef083e4c03d62f633e026",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "def:Control:mkControl.state-declaration.phase",
+                "sourceKind": "state-declaration",
+                "range": {
+                  "start": 194,
+                  "end": 231
+                },
+                "text": "\n   Reg#(Bool) phase <- mkReg(False);",
+                "sliceHash": "d32c7122c4c8efc46329ab36e2aea8b1fa134bdf7d0ff49946beed276be627f6"
+              }
+            ],
+            "semanticRefs": [
+              "instance:instance:def:Control:mkControl:mkControl:mkControl.phase"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase"
+            },
+            "status": "source-derived",
+            "path": "mkControl.phase",
+            "parentInstanceId": "instance:def:Control:mkControl:mkControl",
+            "declaredType": "Reg#(Bool)",
+            "constructor": "mkReg",
+            "defaultExpressions": [
+              "False"
+            ],
+            "parameterBindings": [],
+            "primitiveKind": "register",
+            "readers": [
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:rule:tick",
+                "label": "tick",
+                "kind": "rule"
+              },
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+                "label": "decrement",
+                "kind": "rule"
+              }
+            ],
+            "writers": [
+              {
+                "id": "behavior:instance:def:Control:mkControl:mkControl:rule:tick",
+                "label": "tick",
+                "kind": "rule"
+              }
+            ],
+            "detail": "Reg#(Bool)"
+          }
+        ],
+        "contacts": [
+          {
+            "id": "endpoint:instance:def:Control:mkControl:mkControl:inject",
+            "kind": "method-contact",
+            "label": "inject",
+            "secondaryLabel": "Action (Bit#(8) value)",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "definitionId": "def:Control:Control.interface-method.inject",
+            "sourceRefs": [
+              {
+                "id": "scene-source-d93cd094fe733ac890c6775b116a0000695309b175f20f0029c520246c3b520c",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "def:Control:Control.interface-method.inject",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 40,
+                  "end": 76
+                },
+                "text": "method Action inject(Bit#(8) value);",
+                "sliceHash": "4407cff6f7bb695b4fe590323dd0f76b2ec7dff3271e08b047c1b9c2baefeb37"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:def:Control:mkControl:mkControl:inject"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:def:Control:mkControl:mkControl:inject"
+            },
+            "status": "compiler-confirmed-method-port",
+            "ownerId": "instance:def:Control:mkControl:mkControl",
+            "direction": "input",
+            "category": "Action",
+            "declaredType": "Action",
+            "concreteType": null,
+            "arguments": [
+              {
+                "name": "value",
+                "type": "Bit#(8)",
+                "declaredType": "Bit#(8)"
+              }
+            ],
+            "result": {
+              "status": "none",
+              "type": null
+            },
+            "interfaceDefinitionId": "def:Control:Control",
+            "interfacePath": [
+              "inject"
+            ],
+            "signalDetails": [],
+            "behaviorIds": [
+              "behavior:instance:def:Control:mkControl:mkControl:method:inject"
+            ],
+            "detail": "Action (Bit#(8) value)"
+          },
+          {
+            "id": "endpoint:instance:def:Control:mkControl:mkControl:read",
+            "kind": "method-contact",
+            "label": "read",
+            "secondaryLabel": "Value : Bit#(8)",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "definitionId": "def:Control:Control.interface-method.read",
+            "sourceRefs": [
+              {
+                "id": "scene-source-a42f40eaa36bd9d7ee7364221769c5a259538cfa28d6f79603c539728764b075",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "def:Control:Control.interface-method.read",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 80,
+                  "end": 100
+                },
+                "text": "method Bit#(8) read;",
+                "sliceHash": "3624ddb901c5747b2d18aa05266247f98a4e8e8853995177df6dc863b90a0a4e"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:def:Control:mkControl:mkControl:read"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:def:Control:mkControl:mkControl:read"
+            },
+            "status": "compiler-confirmed-method-port",
+            "ownerId": "instance:def:Control:mkControl:mkControl",
+            "direction": "output",
+            "category": "Value",
+            "declaredType": "Bit#(8)",
+            "concreteType": "Bit#(8)",
+            "arguments": [],
+            "result": {
+              "status": "typed",
+              "type": "Bit#(8)"
+            },
+            "interfaceDefinitionId": "def:Control:Control",
+            "interfacePath": [
+              "read"
+            ],
+            "signalDetails": [],
+            "behaviorIds": [
+              "behavior:instance:def:Control:mkControl:mkControl:method:read"
+            ],
+            "detail": "Value : Bit#(8)"
+          }
+        ],
+        "interfaceGroups": [
+          {
+            "id": "endpoint:instance:def:Control:mkControl:mkControl:$interface",
+            "kind": "interface-group",
+            "label": "Control",
+            "secondaryLabel": "Control",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "definitionId": "def:Control:Control",
+            "sourceRefs": [
+              {
+                "id": "scene-source-c8a360da2cf4940df6cc62a24e907ab484eabbcfbfc12df4d2747c4ecd776b80",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "def:Control:Control",
+                "sourceKind": "definition",
+                "range": {
+                  "start": 18,
+                  "end": 113
+                },
+                "text": "interface Control;\n   method Action inject(Bit#(8) value);\n   method Bit#(8) read;\nendinterface",
+                "sliceHash": "271447c67e223ef8e5dcc4457124c1ea9d2e6cd4d30ea2d2aefe286455de8c17"
+              }
+            ],
+            "semanticRefs": [
+              "endpoint:instance:def:Control:mkControl:mkControl:$interface"
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "endpoint:instance:def:Control:mkControl:mkControl:$interface"
+            },
+            "status": "source-derived",
+            "ownerId": "instance:def:Control:mkControl:mkControl",
+            "direction": "unknown",
+            "category": "Interface",
+            "declaredType": "Control",
+            "concreteType": null,
+            "arguments": [],
+            "result": {
+              "status": "unknown",
+              "type": null
+            },
+            "interfaceDefinitionId": "def:Control:Control",
+            "interfacePath": [],
+            "signalDetails": [],
+            "behaviorIds": [],
+            "detail": "Control",
+            "memberContactIds": [
+              "endpoint:instance:def:Control:mkControl:mkControl:inject",
+              "endpoint:instance:def:Control:mkControl:mkControl:read"
+            ],
+            "membershipStatus": "resolved"
+          }
+        ],
+        "connections": [
+          {
+            "id": "semantic-summary-6673f1dcd26f7b930bafb5c1f5357c1d81b002d968d6d2b1549ef00668cc2102",
+            "kind": "semantic-connection",
+            "label": "tick",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "fromId": "instance:def:Control:mkControl:mkControl",
+            "toId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase",
+            "endpointIds": [
+              "instance:def:Control:mkControl:mkControl",
+              "instance:instance:def:Control:mkControl:mkControl:mkControl.phase"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:tick:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:0",
+              "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:tick:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:1"
+            ],
+            "members": [
+              {
+                "id": "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:tick:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:0",
+                "kind": "state-write",
+                "label": "state-write",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-714282d6ac7e50542f5fb5f51ae2543b4d91c0833f2a16291487a0956ca140c9",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:0",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 253,
+                      "end": 269
+                    },
+                    "text": "phase <= !phase;",
+                    "sliceHash": "0acaea5c4066104b72727b9bbb228395b356dccf7419809605188c79d7bdaa11"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:tick:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:0",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:0"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:tick:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:0"
+                },
+                "status": "source-derived",
+                "fromId": "behavior:instance:def:Control:mkControl:mkControl:rule:tick",
+                "toId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:tick:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:0"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:0",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:tick",
+                "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:tick:236:statement:253",
+                "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:tick:236:expression:262:268",
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              },
+              {
+                "id": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:tick:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:1",
+                "kind": "state-read",
+                "label": "state-read",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-f447ad2967bc2e7cdb138a80ada83840c9a51ddd260bb896fe74a76dfab4d4fd",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:1",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 253,
+                      "end": 269
+                    },
+                    "text": "phase <= !phase;",
+                    "sliceHash": "0acaea5c4066104b72727b9bbb228395b356dccf7419809605188c79d7bdaa11"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:tick:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:1",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:1"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:tick:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:1"
+                },
+                "status": "source-derived",
+                "fromId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase",
+                "toId": "behavior:instance:def:Control:mkControl:mkControl:rule:tick",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:tick:binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:1"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:1",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:tick",
+                "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:tick:236:statement:253",
+                "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:tick:236:expression:262:268",
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-714282d6ac7e50542f5fb5f51ae2543b4d91c0833f2a16291487a0956ca140c9",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:0",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 253,
+                  "end": 269
+                },
+                "text": "phase <= !phase;",
+                "sliceHash": "0acaea5c4066104b72727b9bbb228395b356dccf7419809605188c79d7bdaa11"
+              },
+              {
+                "id": "scene-source-f447ad2967bc2e7cdb138a80ada83840c9a51ddd260bb896fe74a76dfab4d4fd",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:tick:access:1",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 253,
+                  "end": 269
+                },
+                "text": "phase <= !phase;",
+                "sliceHash": "0acaea5c4066104b72727b9bbb228395b356dccf7419809605188c79d7bdaa11"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "instance:def:Control:mkControl:mkControl",
+                "members": []
+              },
+              {
+                "contactId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-6673f1dcd26f7b930bafb5c1f5357c1d81b002d968d6d2b1549ef00668cc2102",
+              "relationId": "semantic-summary-6673f1dcd26f7b930bafb5c1f5357c1d81b002d968d6d2b1549ef00668cc2102"
+            }
+          },
+          {
+            "id": "semantic-summary-b82f8451f2564d76def904f9c32ef665eef1ac3fbeb7ad956014e7c1a2fcc468",
+            "kind": "semantic-connection",
+            "label": "decrement",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "fromId": "instance:def:Control:mkControl:mkControl",
+            "toId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+            "endpointIds": [
+              "instance:def:Control:mkControl:mkControl",
+              "instance:instance:def:Control:mkControl:mkControl:mkControl.count"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+              "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1"
+            ],
+            "members": [
+              {
+                "id": "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+                "kind": "state-write",
+                "label": "state-write",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-b4dd75fee999230c3865340777b409899666b17001d819a340580f850c4256bb",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 380,
+                      "end": 399
+                    },
+                    "text": "count <= count - 1;",
+                    "sliceHash": "16bfa98c3aecf662692579a547cd24c02267919dddd616538b92bd40433f5131"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0"
+                },
+                "status": "source-derived",
+                "fromId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+                "toId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+                "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+                "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:398",
+                "payloadType": null,
+                "conditions": {
+                  "predicate": {
+                    "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+                    "text": "count > 0 && phase",
+                    "evaluated": false
+                  },
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              },
+              {
+                "id": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+                "kind": "state-read",
+                "label": "state-read",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-082f6055f5c57c8317987dc18fa3caca3cc02b3197c0866df38e064ba21e8447",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 380,
+                      "end": 399
+                    },
+                    "text": "count <= count - 1;",
+                    "sliceHash": "16bfa98c3aecf662692579a547cd24c02267919dddd616538b92bd40433f5131"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1"
+                },
+                "status": "source-derived",
+                "fromId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "toId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+                "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+                "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:398",
+                "payloadType": null,
+                "conditions": {
+                  "predicate": {
+                    "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+                    "text": "count > 0 && phase",
+                    "evaluated": false
+                  },
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-b4dd75fee999230c3865340777b409899666b17001d819a340580f850c4256bb",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 380,
+                  "end": 399
+                },
+                "text": "count <= count - 1;",
+                "sliceHash": "16bfa98c3aecf662692579a547cd24c02267919dddd616538b92bd40433f5131"
+              },
+              {
+                "id": "scene-source-082f6055f5c57c8317987dc18fa3caca3cc02b3197c0866df38e064ba21e8447",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 380,
+                  "end": 399
+                },
+                "text": "count <= count - 1;",
+                "sliceHash": "16bfa98c3aecf662692579a547cd24c02267919dddd616538b92bd40433f5131"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "instance:def:Control:mkControl:mkControl",
+                "members": []
+              },
+              {
+                "contactId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-b82f8451f2564d76def904f9c32ef665eef1ac3fbeb7ad956014e7c1a2fcc468",
+              "relationId": "semantic-summary-b82f8451f2564d76def904f9c32ef665eef1ac3fbeb7ad956014e7c1a2fcc468"
+            }
+          },
+          {
+            "id": "semantic-summary-d55e932a8caa22d42cea7a799f1bb81dccdd557439e5dbb891ddcb83dbfeb0d3",
+            "kind": "semantic-connection",
+            "label": "decrement",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "fromId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase",
+            "toId": "instance:def:Control:mkControl:mkControl",
+            "endpointIds": [
+              "instance:instance:def:Control:mkControl:mkControl:mkControl.phase",
+              "instance:def:Control:mkControl:mkControl"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:2"
+            ],
+            "members": [
+              {
+                "id": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:2",
+                "kind": "state-read",
+                "label": "state-read",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-9a16e848d739b230fee741c424cd62bea00b75a78a7e954dd3bb066e7256614b",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:2",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 342,
+                      "end": 351
+                    },
+                    "text": "decrement",
+                    "sliceHash": "230735e5011976aced5d58b79235c365b729dfa8ad18d67a75d7d2c34d5b5be8"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:2",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:2"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:2"
+                },
+                "status": "source-derived",
+                "fromId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase",
+                "toId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.phase:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:2"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:2",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+                "statementId": null,
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": {
+                    "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+                    "text": "count > 0 && phase",
+                    "evaluated": false
+                  },
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-9a16e848d739b230fee741c424cd62bea00b75a78a7e954dd3bb066e7256614b",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:2",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 342,
+                  "end": 351
+                },
+                "text": "decrement",
+                "sliceHash": "230735e5011976aced5d58b79235c365b729dfa8ad18d67a75d7d2c34d5b5be8"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase",
+                "members": []
+              },
+              {
+                "contactId": "instance:def:Control:mkControl:mkControl",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-d55e932a8caa22d42cea7a799f1bb81dccdd557439e5dbb891ddcb83dbfeb0d3",
+              "relationId": "semantic-summary-d55e932a8caa22d42cea7a799f1bb81dccdd557439e5dbb891ddcb83dbfeb0d3"
+            }
+          },
+          {
+            "id": "semantic-summary-38ef64e7c80a93731c524151c6c4385992d357d943879a589944d15691217881",
+            "kind": "semantic-connection",
+            "label": "increment",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "fromId": "instance:def:Control:mkControl:mkControl",
+            "toId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+            "endpointIds": [
+              "instance:def:Control:mkControl:mkControl",
+              "instance:instance:def:Control:mkControl:mkControl:mkControl.count"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:increment:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+              "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:increment:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1"
+            ],
+            "members": [
+              {
+                "id": "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:increment:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+                "kind": "state-write",
+                "label": "state-write",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-fde6de53e5015470bbfba1264df69fab74862b580938f762519e66d3f87b067b",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 448,
+                      "end": 467
+                    },
+                    "text": "count <= count + 2;",
+                    "sliceHash": "aa0cea14441cadc1ea4e5c5a046f857ac5e36a1d201d4c59113b8e2b6ef0a880"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:increment:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:increment:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0"
+                },
+                "status": "source-derived",
+                "fromId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+                "toId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:rule:increment:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+                "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+                "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:466",
+                "payloadType": null,
+                "conditions": {
+                  "predicate": {
+                    "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+                    "text": "count < 8",
+                    "evaluated": false
+                  },
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              },
+              {
+                "id": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:increment:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+                "kind": "state-read",
+                "label": "state-read",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-727c581bb59a7f168781537b3ae940408bc887f5c07a5620dff04a526fb6632d",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 448,
+                      "end": 467
+                    },
+                    "text": "count <= count + 2;",
+                    "sliceHash": "aa0cea14441cadc1ea4e5c5a046f857ac5e36a1d201d4c59113b8e2b6ef0a880"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:increment:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:increment:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1"
+                },
+                "status": "source-derived",
+                "fromId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "toId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:rule:increment:binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+                "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+                "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:466",
+                "payloadType": null,
+                "conditions": {
+                  "predicate": {
+                    "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+                    "text": "count < 8",
+                    "evaluated": false
+                  },
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-fde6de53e5015470bbfba1264df69fab74862b580938f762519e66d3f87b067b",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 448,
+                  "end": 467
+                },
+                "text": "count <= count + 2;",
+                "sliceHash": "aa0cea14441cadc1ea4e5c5a046f857ac5e36a1d201d4c59113b8e2b6ef0a880"
+              },
+              {
+                "id": "scene-source-727c581bb59a7f168781537b3ae940408bc887f5c07a5620dff04a526fb6632d",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 448,
+                  "end": 467
+                },
+                "text": "count <= count + 2;",
+                "sliceHash": "aa0cea14441cadc1ea4e5c5a046f857ac5e36a1d201d4c59113b8e2b6ef0a880"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "instance:def:Control:mkControl:mkControl",
+                "members": []
+              },
+              {
+                "contactId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-38ef64e7c80a93731c524151c6c4385992d357d943879a589944d15691217881",
+              "relationId": "semantic-summary-38ef64e7c80a93731c524151c6c4385992d357d943879a589944d15691217881"
+            }
+          },
+          {
+            "id": "semantic-summary-6ce101b240aa5680f5552601d922d34b1ebe3e6b58898c026e98ed5ade2db12e",
+            "kind": "semantic-connection",
+            "label": "inject",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "fromId": "endpoint:instance:def:Control:mkControl:mkControl:inject",
+            "toId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+            "endpointIds": [
+              "endpoint:instance:def:Control:mkControl:mkControl:inject",
+              "instance:instance:def:Control:mkControl:mkControl:mkControl.count"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:method:inject:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+              "flow:invoke:endpoint:instance:def:Control:mkControl:mkControl:inject:behavior:instance:def:Control:mkControl:mkControl:method:inject:endpoint:instance:def:Control:mkControl:mkControl:inject"
+            ],
+            "members": [
+              {
+                "id": "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:method:inject:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+                "kind": "state-write",
+                "label": "state-write",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-4238254088f6c19e50837190d84e33da5b74dd8604921df553dad1b98b47013a",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 541,
+                      "end": 556
+                    },
+                    "text": "count <= value;",
+                    "sliceHash": "a5ce7912b5a92818a1bb6474f03bdfe74aca25513f69403f8cd25f5ce4ca08cc"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:method:inject:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:method:inject:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0"
+                },
+                "status": "source-derived",
+                "fromId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+                "toId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-write:behavior:instance:def:Control:mkControl:mkControl:method:inject:instance:instance:def:Control:mkControl:mkControl:mkControl.count:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+                "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+                "expressionId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:550:555",
+                "payloadType": null,
+                "conditions": {
+                  "predicate": {
+                    "expressionId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+                    "text": "count < 4",
+                    "evaluated": false
+                  },
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              },
+              {
+                "id": "flow:invoke:endpoint:instance:def:Control:mkControl:mkControl:inject:behavior:instance:def:Control:mkControl:mkControl:method:inject:endpoint:instance:def:Control:mkControl:mkControl:inject",
+                "kind": "invoke",
+                "label": "invoke",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-d93cd094fe733ac890c6775b116a0000695309b175f20f0029c520246c3b520c",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "def:Control:Control.interface-method.inject",
+                    "sourceKind": "interface-method",
+                    "range": {
+                      "start": 40,
+                      "end": 76
+                    },
+                    "text": "method Action inject(Bit#(8) value);",
+                    "sliceHash": "4407cff6f7bb695b4fe590323dd0f76b2ec7dff3271e08b047c1b9c2baefeb37"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:invoke:endpoint:instance:def:Control:mkControl:mkControl:inject:behavior:instance:def:Control:mkControl:mkControl:method:inject:endpoint:instance:def:Control:mkControl:mkControl:inject"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:invoke:endpoint:instance:def:Control:mkControl:mkControl:inject:behavior:instance:def:Control:mkControl:mkControl:method:inject:endpoint:instance:def:Control:mkControl:mkControl:inject"
+                },
+                "status": "source-derived",
+                "fromId": "endpoint:instance:def:Control:mkControl:mkControl:inject",
+                "toId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:invoke:endpoint:instance:def:Control:mkControl:mkControl:inject:behavior:instance:def:Control:mkControl:mkControl:method:inject:endpoint:instance:def:Control:mkControl:mkControl:inject"
+                ],
+                "bindingId": null,
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+                "statementId": null,
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-4238254088f6c19e50837190d84e33da5b74dd8604921df553dad1b98b47013a",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 541,
+                  "end": 556
+                },
+                "text": "count <= value;",
+                "sliceHash": "a5ce7912b5a92818a1bb6474f03bdfe74aca25513f69403f8cd25f5ce4ca08cc"
+              },
+              {
+                "id": "scene-source-d93cd094fe733ac890c6775b116a0000695309b175f20f0029c520246c3b520c",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "def:Control:Control.interface-method.inject",
+                "sourceKind": "interface-method",
+                "range": {
+                  "start": 40,
+                  "end": 76
+                },
+                "text": "method Action inject(Bit#(8) value);",
+                "sliceHash": "4407cff6f7bb695b4fe590323dd0f76b2ec7dff3271e08b047c1b9c2baefeb37"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "endpoint:instance:def:Control:mkControl:mkControl:inject",
+                "members": []
+              },
+              {
+                "contactId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-6ce101b240aa5680f5552601d922d34b1ebe3e6b58898c026e98ed5ade2db12e",
+              "relationId": "semantic-summary-6ce101b240aa5680f5552601d922d34b1ebe3e6b58898c026e98ed5ade2db12e"
+            }
+          },
+          {
+            "id": "semantic-summary-b08cda6c0496cb621373f6469166534355cc2063bae0084eff3f867abdf93256",
+            "kind": "semantic-connection",
+            "label": "inject",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "fromId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+            "toId": "endpoint:instance:def:Control:mkControl:mkControl:inject",
+            "endpointIds": [
+              "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+              "endpoint:instance:def:Control:mkControl:mkControl:inject"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:inject:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1"
+            ],
+            "members": [
+              {
+                "id": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:inject:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+                "kind": "state-read",
+                "label": "state-read",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-be1e72a71b2bc8a3c79b3b31430cd72c06b60480b45a979c6dbb0eb1a9264abc",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 497,
+                      "end": 503
+                    },
+                    "text": "inject",
+                    "sliceHash": "e6f2ad814692e3f553d63a5535bfef46c030a680e6c3e79ee850dfcf5ae7798a"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:inject:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:inject:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1"
+                },
+                "status": "source-derived",
+                "fromId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "toId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:inject:binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+                "statementId": null,
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": {
+                    "expressionId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+                    "text": "count < 4",
+                    "evaluated": false
+                  },
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-be1e72a71b2bc8a3c79b3b31430cd72c06b60480b45a979c6dbb0eb1a9264abc",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 497,
+                  "end": 503
+                },
+                "text": "inject",
+                "sliceHash": "e6f2ad814692e3f553d63a5535bfef46c030a680e6c3e79ee850dfcf5ae7798a"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "members": []
+              },
+              {
+                "contactId": "endpoint:instance:def:Control:mkControl:mkControl:inject",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-b08cda6c0496cb621373f6469166534355cc2063bae0084eff3f867abdf93256",
+              "relationId": "semantic-summary-b08cda6c0496cb621373f6469166534355cc2063bae0084eff3f867abdf93256"
+            }
+          },
+          {
+            "id": "semantic-summary-1e9ca64e14a01c3f7b589c269c25f2c0cbfe4c08463faa076c34c464b9927840",
+            "kind": "semantic-connection",
+            "label": "read",
+            "detail": "BSV relation; source-derived, not a physical net",
+            "style": "semantic",
+            "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+            "fromId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+            "toId": "endpoint:instance:def:Control:mkControl:mkControl:read",
+            "endpointIds": [
+              "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+              "endpoint:instance:def:Control:mkControl:mkControl:read"
+            ],
+            "direction": "forward",
+            "memberRelationIds": [
+              "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:read:binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+              "flow:return:behavior:instance:def:Control:mkControl:mkControl:method:read:endpoint:instance:def:Control:mkControl:mkControl:read:endpoint:instance:def:Control:mkControl:mkControl:read"
+            ],
+            "members": [
+              {
+                "id": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:read:binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+                "kind": "state-read",
+                "label": "state-read",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-501bd683c81b23808a1ab3a8eec8d66173fd48396d61e81f0365868221090a87",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+                    "sourceKind": "semantic-relation",
+                    "range": {
+                      "start": 595,
+                      "end": 601
+                    },
+                    "text": "count;",
+                    "sliceHash": "141f7b78978cdc50bc3633b981a8367de1ac271cac91eaf518224f1cdf4b7608"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:read:binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+                  "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:read:binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0"
+                },
+                "status": "source-derived",
+                "fromId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "toId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:state-read:instance:instance:def:Control:mkControl:mkControl:mkControl.count:behavior:instance:def:Control:mkControl:mkControl:method:read:binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0"
+                ],
+                "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+                "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              },
+              {
+                "id": "flow:return:behavior:instance:def:Control:mkControl:mkControl:method:read:endpoint:instance:def:Control:mkControl:mkControl:read:endpoint:instance:def:Control:mkControl:mkControl:read",
+                "kind": "return",
+                "label": "return",
+                "secondaryLabel": "",
+                "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+                "definitionId": null,
+                "sourceRefs": [
+                  {
+                    "id": "scene-source-72a7ea87f6bef08b5b094c266f7ee10b40d075e9dd9ceae245779a1bac4e67c5",
+                    "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                    "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                    "semanticId": "def:Control:mkControl.read",
+                    "sourceKind": "method",
+                    "range": {
+                      "start": 573,
+                      "end": 601
+                    },
+                    "text": "method Bit#(8) read = count;",
+                    "sliceHash": "d1fd809e354596c43187e531256d4d570cfde419f66316ebdebfbff1826dfe75"
+                  }
+                ],
+                "semanticRefs": [
+                  "flow:return:behavior:instance:def:Control:mkControl:mkControl:method:read:endpoint:instance:def:Control:mkControl:mkControl:read:endpoint:instance:def:Control:mkControl:mkControl:read"
+                ],
+                "interaction": {
+                  "kind": "inspect",
+                  "entityId": "flow:return:behavior:instance:def:Control:mkControl:mkControl:method:read:endpoint:instance:def:Control:mkControl:mkControl:read:endpoint:instance:def:Control:mkControl:mkControl:read"
+                },
+                "status": "source-derived",
+                "fromId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+                "toId": "endpoint:instance:def:Control:mkControl:mkControl:read",
+                "direction": "forward",
+                "memberRelationIds": [
+                  "flow:return:behavior:instance:def:Control:mkControl:mkControl:method:read:endpoint:instance:def:Control:mkControl:mkControl:read:endpoint:instance:def:Control:mkControl:mkControl:read"
+                ],
+                "bindingId": null,
+                "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+                "statementId": null,
+                "expressionId": null,
+                "payloadType": null,
+                "conditions": {
+                  "predicate": null,
+                  "body": []
+                },
+                "confirmationScope": "source-derived"
+              }
+            ],
+            "sourceRefs": [
+              {
+                "id": "scene-source-501bd683c81b23808a1ab3a8eec8d66173fd48396d61e81f0365868221090a87",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+                "sourceKind": "semantic-relation",
+                "range": {
+                  "start": 595,
+                  "end": 601
+                },
+                "text": "count;",
+                "sliceHash": "141f7b78978cdc50bc3633b981a8367de1ac271cac91eaf518224f1cdf4b7608"
+              },
+              {
+                "id": "scene-source-72a7ea87f6bef08b5b094c266f7ee10b40d075e9dd9ceae245779a1bac4e67c5",
+                "pathRef": "experiments/hardware/fixtures/Control.bsv",
+                "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+                "semanticId": "def:Control:mkControl.read",
+                "sourceKind": "method",
+                "range": {
+                  "start": 573,
+                  "end": 601
+                },
+                "text": "method Bit#(8) read = count;",
+                "sliceHash": "d1fd809e354596c43187e531256d4d570cfde419f66316ebdebfbff1826dfe75"
+              }
+            ],
+            "status": "source-derived",
+            "incidences": [
+              {
+                "contactId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+                "members": []
+              },
+              {
+                "contactId": "endpoint:instance:def:Control:mkControl:mkControl:read",
+                "members": []
+              }
+            ],
+            "interaction": {
+              "kind": "inspect",
+              "entityId": "semantic-summary-1e9ca64e14a01c3f7b589c269c25f2c0cbfe4c08463faa076c34c464b9927840",
+              "relationId": "semantic-summary-1e9ca64e14a01c3f7b589c269c25f2c0cbfe4c08463faa076c34c464b9927840"
+            }
+          }
+        ],
+        "aliases": []
+      }
+    }
+  }
+}

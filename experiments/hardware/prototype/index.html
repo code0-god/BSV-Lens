@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BSV Lens - Hardware experiment</title><link rel="stylesheet" href="/style.css"><script src="/importer.js" defer></script><script src="/navigation.js" defer></script><script src="/layout.js" defer></script><script src="/bsv-layout.js" defer></script><script src="/bsv-renderer.js" defer></script><script src="/app.js" defer></script></head>
+<body>
+<!-- THESIS: A compiled circuit is the work surface, not a source-derived card dashboard.
+OWN-WORLD: Existing VS Code-native neutrals, outlined hardware boundaries and explicit pin labels.
+STORY: Choose a real build, expand the same shell, inspect actual wiring and hashed source evidence.
+FIRST VIEWPORT: Compact wrapping build controls above a dominant canvas; details and source appear on demand.
+FORM: User-pinned hardware canvas contract; no replacement identity or concept tournament.
+FINISH: Runnable actual-artifact journeys, visual review and documented G1 limits. -->
+<header><strong>BSV Lens</strong><span class="muted">BSV Architecture / G1-BSV</span><label>Build <select id="build"><option value="">Choose compiled artifact</option></select></label><button id="load" disabled>Import build</button><label>Theme <select id="theme"><option value="dark">Dark</option><option value="light">Light</option><option value="hc">High contrast</option></select></label></header>
+<nav aria-label="Circuit navigation"><button id="back" disabled>Back</button><button id="forward" disabled>Forward</button><button id="up" disabled>Up</button><button id="return-bsv" hidden>Return to BSV</button><div id="breadcrumbs"><span>Overall</span></div><button id="hierarchy-toggle" aria-expanded="false">Hierarchy</button><button id="fit" disabled>Fit</button><button id="detail-zoom" disabled>Detail zoom</button></nav>
+<div id="build-status" role="status">Select a build for BSV architecture and explicit RTL detail.</div><div id="owner-context" hidden></div>
+<main><aside id="hierarchy" hidden aria-label="Implementation hierarchy"></aside><section id="canvas-region" aria-label="Hardware canvas"><div id="empty"><h1>Read the BSV architecture</h1><p>Choose one of the three real compiled designs, then import its immutable artifact.</p><p>No compiler is run by this page. Without an artifact, exact hardware wiring is unavailable.</p></div><svg id="canvas" aria-label="Interactive hardware schematic"><g id="world"></g></svg><div id="canvas-note">Single click enters a block. Info or Space inspects. Wheel only zooms.</div></section><aside id="details" hidden aria-label="Hardware details"></aside></main>
+<section id="source-drawer" hidden aria-label="Read-only source browser"><div class="drawer-head"><strong id="source-title"></strong><button id="close-source">Close source</button></div><p id="source-meta"></p><p class="muted">Prototype source browser, not VS Code editor reveal. Production host integration: G6.</p><pre id="source-code"></pre></section>
+<footer><span id="status" role="status" aria-live="polite">Select a build to begin.</span><span id="legend">BSV semantic relations and RTL wires are separate views.</span></footer>
+</body></html>

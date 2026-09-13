@@ -1,0 +1,44 @@
+{
+  "schema": "g3-ghc96-input-v1",
+  "run": "run-st_01a07a97-03",
+  "sourcePin": "9bd39e6f3d54d314a94ce30339a224bb283cbade",
+  "yicesPin": "f705557b7d33d866eb1b47b5471f97189eb31cc4",
+  "checkpointSha256": "3c4305803cea94fb3e065778dbd2e3440464fd86502b30aeb7938ad0c7ee911c",
+  "previousImage": "sha256:07896abd5a50fab0f7274a0e4a9b994276c6d286c45d9fd91a34978795191516",
+  "intendedGhc": "9.6.7",
+  "hypothesis": "GHC 9.6.7 AArch64 native backend may avoid GHC 9.0.2 LLVM fallback memory pressure; not a verified remedy",
+  "limits": {
+    "cpus": 4,
+    "memoryBytes": 5368709120,
+    "pids": 512,
+    "buildSeconds": 5400,
+    "provisionSeconds": 1800,
+    "logBytes": 16777216,
+    "buildStorageBytes": 4294967296,
+    "ledgerBytes": 67108864,
+    "storageEnforcement": "monitored not hard quota"
+  },
+  "makeJobs": 1,
+  "GHCJOBS": 1,
+  "GHCOPTLEVEL": "-O2",
+  "GHCRTSFLAGS": "+RTS -M3500m -A32m -s -RTS",
+  "dependenciesImage": "sha256:d94a69f27fec8d669fa1d14bbaccdcd3182e82e31aacd7d6e329a47de93aafe0",
+  "fixtures": [
+    {
+      "path": "Connected.bsv",
+      "sha256": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+    },
+    {
+      "path": "Control.bsv",
+      "sha256": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b"
+    },
+    {
+      "path": "Reuse.bsv",
+      "sha256": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+    }
+  ],
+  "GHC": "/opt/ghc-9.6.7/bin/ghc -XFlexibleContexts",
+  "sourceCompatibility": "Same explicit FlexibleContexts feature as run02; baseline source remains pinned and unchanged",
+  "imageBytes": 1253658687,
+  "officialBindistSha256": "3cfa843687856de304a946dbe849a497c4fdad021f0275628b8ca7b55ccf8082"
+}

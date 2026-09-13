@@ -1,0 +1,2689 @@
+{
+  "schemaVersion": 1,
+  "historicalBaseline": {
+    "corpus": "G1-BSV preserved definition-level origin census",
+    "exactLeafCauses": {
+      "numerator": 0,
+      "denominator": 53
+    },
+    "exactNetnameCauses": {
+      "numerator": 0,
+      "denominator": 168
+    },
+    "storageOriginSets": {
+      "numerator": 0,
+      "denominator": 8
+    },
+    "outermostExpressionSites": {
+      "numerator": 0,
+      "denominator": 22
+    }
+  },
+  "g3A": [
+    {
+      "corpus": "A",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "correspondenceId": "correspondence-bbbb444a603037e671060834378d9c5fbfcdfcca102e249f323de732630f8fd8",
+      "artifact": {
+        "hash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+        "pathRef": "docs/hardware/evidence/toolchain/A/design.json"
+      },
+      "providers": [
+        {
+          "id": "source-parser-v1",
+          "authority": "source-parser",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "declaration"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "stock-bluetcl-v1",
+          "authority": "caller-approved-stock-capture",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "declaration",
+            "contract"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "generated-rtl-v1",
+          "authority": "registered-generated-rtl",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "contract"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "yosys-json-v1",
+          "authority": "artifact-reader",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "connectivity"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "correspondence-v1",
+          "authority": "validated-premise-composition",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "contract",
+            "connectivity",
+            "context"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        }
+      ],
+      "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+      "categories": [
+        {
+          "category": "declaration",
+          "selection": "SourceReferenceIndex lexical records",
+          "populationIds": [
+            "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:expression:354:359",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:get:580:expression:601:610",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:get:580:statement:601",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:311",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:315",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:314:315",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:callsite:512:527",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:callsite:535:562",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:512:527",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:521:526",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:535:562",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:545:553",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:545:561",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:556:561",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:statement:512",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:statement:535",
+            "def:Connected:$package",
+            "def:Connected:Stage",
+            "def:Connected:Stage.interface-method.get",
+            "def:Connected:Stage.interface-method.put",
+            "def:Connected:mkConnected",
+            "def:Connected:mkConnected.get",
+            "def:Connected:mkConnected.instance-declaration.left",
+            "def:Connected:mkConnected.instance-declaration.right",
+            "def:Connected:mkConnected.put",
+            "def:Connected:mkStage",
+            "def:Connected:mkStage.get",
+            "def:Connected:mkStage.put",
+            "def:Connected:mkStage.state-declaration.state"
+          ],
+          "populationHash": "3833ed95478eb71264bd6e403b3c35721a89fc565b58460e666dfc617d20ff65",
+          "total": 31,
+          "resolved": 31,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 0,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "contract",
+          "selection": "Contextual Semantic method endpoint IDs",
+          "populationIds": [
+            "endpoint:instance:def:Connected:mkConnected:mkConnected:get",
+            "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+            "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get",
+            "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put",
+            "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get",
+            "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put"
+          ],
+          "populationHash": "c1887d290420acd9fbc695a04b2a58292e76a50f644c86249670fdf9097eb808",
+          "total": 6,
+          "resolved": 6,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 0,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "connectivity",
+          "selection": "Contextual Semantic method endpoint IDs",
+          "populationIds": [
+            "endpoint:instance:def:Connected:mkConnected:mkConnected:get",
+            "endpoint:instance:def:Connected:mkConnected:mkConnected:put",
+            "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:get",
+            "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:put",
+            "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:get",
+            "endpoint:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:put"
+          ],
+          "populationHash": "c1887d290420acd9fbc695a04b2a58292e76a50f644c86249670fdf9097eb808",
+          "total": 6,
+          "resolved": 6,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 0,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Occurrence-expanded leaf cells (not historical definition-cell denominator)",
+          "populationIds": [
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1A~1rtl~1mkStage.v:72$2",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$eq$docs~1hardware~1evidence~1toolchain~1A~1rtl~1mkStage.v:79$4",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$procdff$10",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$procmux$5",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$procmux$8",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1A~1rtl~1mkStage.v:72$2",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$eq$docs~1hardware~1evidence~1toolchain~1A~1rtl~1mkStage.v:79$4",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$8",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1A~1rtl~1mkConnected.v:97$1"
+          ],
+          "populationHash": "7563c766a5b3504af8d3a1680b4b00c35c81a1aa71820ebdf82ab898e3eeac17",
+          "total": 11,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 11,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Definition netname aliases, including parameter-specialized definitions",
+          "populationIds": [
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/%24add%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FA%2Frtl%2FmkConnected.v%3A97%241_Y",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/CLK",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/EN_put",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/RDY_get",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/RDY_put",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/RST_N",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/get",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/left%24EN_put",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/left%24get",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/left%24put_value",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/put_value",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/right%24EN_put",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/right%24get",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkConnected/netname/right%24put_value",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/%240%5Cstate%5B7%3A0%5D",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/%24add%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FA%2Frtl%2FmkStage.v%3A72%242_Y",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/%24eq%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FA%2Frtl%2FmkStage.v%3A79%244_Y",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/%24procmux%245_Y",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/%24procmux%246_CMP",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/%24procmux%248_Y",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/%24procmux%249_CMP",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/CLK",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/EN_put",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/RDY_get",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/RDY_put",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/RST_N",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/get",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/put_value",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/state",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/state%24D_IN",
+            "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/definition/mkStage/netname/state%24EN"
+          ],
+          "populationHash": "1feb9318156195fa4924235ff96adb7274751ab2b36940170076db4cd0243777",
+          "total": 31,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 31,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Contextual source primitive storage instances",
+          "populationIds": [
+            "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+            "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:mkConnected.right.state"
+          ],
+          "populationHash": "cf7dd75321f8eff882fe82c4d0b7d9ca22c296bc379609728f8cd9c3481d4283",
+          "total": 2,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 2,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Existing Semantic expression records, not historical outermost expression-site census",
+          "populationIds": [
+            "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:expression:354:359",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:get:580:expression:601:610",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:311",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:315",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:314:315",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:512:527",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:521:526",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:535:562",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:545:553",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:545:561",
+            "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:556:561"
+          ],
+          "populationHash": "053297c7340ec9118239d77ac82df7f9a27283e1d90b8768fd12eeae11585c2d",
+          "total": 11,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 11,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        }
+      ],
+      "origin": {
+        "resolution": "unsupported",
+        "reason": "stock-metadata-has-no-origin-lineage",
+        "knownContributors": 0,
+        "completeContributorSets": 0
+      }
+    },
+    {
+      "corpus": "B",
+      "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+      "correspondenceId": "correspondence-f5d1182abda7aba6dc9eae40acbc3ef89c370190e8823a3195d846db6745d2d1",
+      "artifact": {
+        "hash": "4ac9fd67e0f90147a1748bcbc5dd014262fefbd9994b73b642ae88523653d6b6",
+        "pathRef": "docs/hardware/evidence/toolchain/B/design.json"
+      },
+      "providers": [
+        {
+          "id": "source-parser-v1",
+          "authority": "source-parser",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "declaration"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "stock-bluetcl-v1",
+          "authority": "caller-approved-stock-capture",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "declaration",
+            "contract"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "generated-rtl-v1",
+          "authority": "registered-generated-rtl",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "contract"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "yosys-json-v1",
+          "authority": "artifact-reader",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "connectivity"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "correspondence-v1",
+          "authority": "validated-premise-composition",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "contract",
+            "connectivity",
+            "context"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        }
+      ],
+      "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+      "categories": [
+        {
+          "category": "declaration",
+          "selection": "SourceReferenceIndex lexical records",
+          "populationIds": [
+            "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:528",
+            "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+            "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:531:532",
+            "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:550:555",
+            "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+            "code:experiments/hardware/fixtures/Control.bsv:method:read:573:expression:595:600",
+            "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:358",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:362",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:371",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:366:371",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:394",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:398",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:397:398",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:435",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:438:439",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:462",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:466",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:465:466",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:tick:236:expression:262:268",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:tick:236:statement:253",
+            "def:Control:$package",
+            "def:Control:Control",
+            "def:Control:Control.interface-method.inject",
+            "def:Control:Control.interface-method.read",
+            "def:Control:mkControl",
+            "def:Control:mkControl.inject",
+            "def:Control:mkControl.read",
+            "def:Control:mkControl.rule.decrement",
+            "def:Control:mkControl.rule.increment",
+            "def:Control:mkControl.rule.tick",
+            "def:Control:mkControl.state-declaration.count",
+            "def:Control:mkControl.state-declaration.phase"
+          ],
+          "populationHash": "4059b8029da0e9e61154fd89d0f9a4f4c3dd748beac04531e910ac05d1ce3029",
+          "total": 37,
+          "resolved": 37,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 0,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "contract",
+          "selection": "Contextual Semantic method endpoint IDs",
+          "populationIds": [
+            "endpoint:instance:def:Control:mkControl:mkControl:inject",
+            "endpoint:instance:def:Control:mkControl:mkControl:read"
+          ],
+          "populationHash": "b1ce1e88641e8ea762f7cb59133327cdc191e81c29011985c3dc557f653c288e",
+          "total": 2,
+          "resolved": 2,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 0,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "connectivity",
+          "selection": "Contextual Semantic method endpoint IDs",
+          "populationIds": [
+            "endpoint:instance:def:Control:mkControl:mkControl:inject",
+            "endpoint:instance:def:Control:mkControl:mkControl:read"
+          ],
+          "populationHash": "b1ce1e88641e8ea762f7cb59133327cdc191e81c29011985c3dc557f653c288e",
+          "total": 2,
+          "resolved": 2,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 0,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Occurrence-expanded leaf cells (not historical definition-cell denominator)",
+          "populationIds": [
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:89$11",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$eq$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:117$20",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_and$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:82$3",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_and$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:82$5",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_and$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:86$10",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_and$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:86$8",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_not$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:110$18",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_not$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:82$4",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_not$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:86$7",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_not$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:86$9",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_or$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:107$16",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$logic_or$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:107$17",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$lt$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:75$1",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$lt$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:86$6",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$ne$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:82$2",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procdff$36",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procdff$37",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procmux$21",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procmux$24",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procmux$26",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procmux$29",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procmux$32",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procmux$33_CMP0",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procmux$34_CMP0",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$procmux$35_CMP0",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/cell/$sub$docs~1hardware~1evidence~1toolchain~1B~1rtl~1mkControl.v:90$12"
+          ],
+          "populationHash": "3cfb55540ddc569facfec27d54989df345b56a135775b079cd9e8c4a6b5dd9e0",
+          "total": 26,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 26,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Definition netname aliases, including parameter-specialized definitions",
+          "populationIds": [
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%240%5Ccount%24D_IN%5B7%3A0%5D%2414",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%240%5Ccount%5B7%3A0%5D",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%240%5Cphase%5B0%3A0%5D",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%241%5Ccount%24D_IN%5B7%3A0%5D%2415",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24add%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A89%2411_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24eq%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A117%2420_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_and%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A82%243_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_and%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A82%245_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_and%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A86%2410_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_and%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A86%248_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_not%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A110%2418_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_not%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A82%244_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_not%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A86%247_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_not%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A86%249_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_or%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A107%2416_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24logic_or%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A107%2417_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24lt%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A75%241_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24lt%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A86%246_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24ne%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A82%242_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2421_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2422_CMP",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2424_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2425_CMP",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2426_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2427_CMP",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2429_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2430_CMP",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2432_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2433_CMP",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2434_CMP",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24procmux%2435_CMP",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/%24sub%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FB%2Frtl%2FmkControl.v%3A90%2412_Y",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/CLK",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/EN_inject",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/MUX_count%24write_1__VAL_2",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/MUX_count%24write_1__VAL_3",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/RDY_inject",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/RDY_read",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/RST_N",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/WILL_FIRE_RL_decrement",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/WILL_FIRE_RL_increment",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/count",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/count%24D_IN",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/count%24EN",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/inject_value",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/phase",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/phase%24D_IN",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/phase%24EN",
+            "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/definition/mkControl/netname/read"
+          ],
+          "populationHash": "d193edc0e3652b6500e0c245200eedea696b312992b5582aa91f499c41b9b6d7",
+          "total": 49,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 49,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Contextual source primitive storage instances",
+          "populationIds": [
+            "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+            "instance:instance:def:Control:mkControl:mkControl:mkControl.phase"
+          ],
+          "populationHash": "ea40fb580d8843620c25a730496160f5ee44afd799850d301c679422035e1720",
+          "total": 2,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 2,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Existing Semantic expression records, not historical outermost expression-site census",
+          "populationIds": [
+            "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:528",
+            "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+            "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:531:532",
+            "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:550:555",
+            "code:experiments/hardware/fixtures/Control.bsv:method:read:573:expression:595:600",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:358",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:362",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:371",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:366:371",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:394",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:398",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:397:398",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:435",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:438:439",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:462",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:466",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:465:466",
+            "code:experiments/hardware/fixtures/Control.bsv:rule:tick:236:expression:262:268"
+          ],
+          "populationHash": "451a765954d565510639d7873072a099ca04fff8c7bc5414c9d282ff5f1b8f93",
+          "total": 20,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 20,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        }
+      ],
+      "origin": {
+        "resolution": "unsupported",
+        "reason": "stock-metadata-has-no-origin-lineage",
+        "knownContributors": 0,
+        "completeContributorSets": 0
+      }
+    },
+    {
+      "corpus": "C",
+      "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+      "correspondenceId": "correspondence-85276b50b75833d02ea805f198c3d3bdc6955c7bec633a86361fa589cd8a2624",
+      "artifact": {
+        "hash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+        "pathRef": "docs/hardware/evidence/toolchain/C/design.json"
+      },
+      "providers": [
+        {
+          "id": "source-parser-v1",
+          "authority": "source-parser",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "declaration"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "stock-bluetcl-v1",
+          "authority": "caller-approved-stock-capture",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "declaration",
+            "contract"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "generated-rtl-v1",
+          "authority": "registered-generated-rtl",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "contract"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "yosys-json-v1",
+          "authority": "artifact-reader",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "connectivity"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        },
+        {
+          "id": "correspondence-v1",
+          "authority": "validated-premise-composition",
+          "schemaVersion": 1,
+          "supportedScopes": [
+            "contract",
+            "connectivity",
+            "context"
+          ],
+          "implementationIdentity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d"
+        }
+      ],
+      "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+      "categories": [
+        {
+          "category": "declaration",
+          "selection": "SourceReferenceIndex lexical records",
+          "populationIds": [
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:callsite:1332:1354",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:expression:1321:1329",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:expression:1321:1354",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:expression:1332:1354",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:expression:1343:1353",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:statement:1321",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:expression:347:352",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:594:expression:619:624",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:594:statement:619",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1179:1193",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1201:1216",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1224:1243",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1251:1281",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1260:1280",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1179:1193",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1187:1192",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1201:1216",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1210:1215",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1224:1243",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1235:1242",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1251:1281",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1260:1280",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1271:1279",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:statement:1179",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:statement:1201",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:statement:1224",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:statement:1251",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:301",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:308",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:304:308",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:514:expression:567:572",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:514:expression:567:576",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:514:expression:575:576",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:514:statement:558",
+            "def:Reuse:$package",
+            "def:Reuse:Reuse",
+            "def:Reuse:Reuse.interface-method.get",
+            "def:Reuse:Reuse.interface-method.put",
+            "def:Reuse:Sample",
+            "def:Reuse:Sample.interface-method.get",
+            "def:Reuse:Sample.interface-method.put",
+            "def:Reuse:mkBiased",
+            "def:Reuse:mkBiased.get",
+            "def:Reuse:mkBiased.put",
+            "def:Reuse:mkBiased.state-declaration.state",
+            "def:Reuse:mkNarrow",
+            "def:Reuse:mkNarrow.instance-declaration.implementation",
+            "def:Reuse:mkReuse",
+            "def:Reuse:mkReuse.get",
+            "def:Reuse:mkReuse.instance-declaration.high",
+            "def:Reuse:mkReuse.instance-declaration.low",
+            "def:Reuse:mkReuse.instance-declaration.narrow",
+            "def:Reuse:mkReuse.instance-declaration.wide",
+            "def:Reuse:mkReuse.put",
+            "def:Reuse:mkWide",
+            "def:Reuse:mkWide.instance-declaration.implementation",
+            "def:Reuse:mkWidth",
+            "def:Reuse:mkWidth.get",
+            "def:Reuse:mkWidth.put",
+            "def:Reuse:mkWidth.state-declaration.state"
+          ],
+          "populationHash": "bda408ca2b94ab7ce6eda740c073ccd43417cc1819266260cfeb1ac1bbf12ee5",
+          "total": 62,
+          "resolved": 62,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 0,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "contract",
+          "selection": "Contextual Semantic method endpoint IDs",
+          "populationIds": [
+            "endpoint:instance:def:Reuse:mkReuse:mkReuse:get",
+            "endpoint:instance:def:Reuse:mkReuse:mkReuse:put",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:get",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:put",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low:get",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low:put",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:get",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:put",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:get",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:put",
+            "endpoint:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation:get",
+            "endpoint:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation:put",
+            "endpoint:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation:get",
+            "endpoint:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation:put"
+          ],
+          "populationHash": "ecbcb7c8772af8d16db8e3fbd51eb6badfb784224a863dc4a900ef8696ec00c4",
+          "total": 14,
+          "resolved": 10,
+          "unmapped": 4,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 0,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "connectivity",
+          "selection": "Contextual Semantic method endpoint IDs",
+          "populationIds": [
+            "endpoint:instance:def:Reuse:mkReuse:mkReuse:get",
+            "endpoint:instance:def:Reuse:mkReuse:mkReuse:put",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:get",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:put",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low:get",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low:put",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:get",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:put",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:get",
+            "endpoint:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:put",
+            "endpoint:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation:get",
+            "endpoint:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation:put",
+            "endpoint:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation:get",
+            "endpoint:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation:put"
+          ],
+          "populationHash": "ecbcb7c8772af8d16db8e3fbd51eb6badfb784224a863dc4a900ef8696ec00c4",
+          "total": 14,
+          "resolved": 10,
+          "unmapped": 4,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 0,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Occurrence-expanded leaf cells (not historical definition-cell denominator)",
+          "populationIds": [
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkBiased.v:73$14",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$eq$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkBiased.v:80$16",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$procdff$40",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$procmux$32",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$procmux$35",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkBiased.v:73$11",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$eq$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkBiased.v:80$13",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$procdff$37",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$procmux$17",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$procmux$20",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkNarrow.v:72$4",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$eq$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkNarrow.v:79$6",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$procdff$39",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$procmux$27",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$procmux$30",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkWide.v:72$8",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$eq$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkWide.v:79$10",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$procdff$38",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$procmux$22",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$procmux$25",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7"
+          ],
+          "populationHash": "eee915a365ea1ae12f15591406652bd177e5f8f8508c60e6d93be21cc42c17c9",
+          "total": 21,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 21,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Definition netname aliases, including parameter-specialized definitions",
+          "populationIds": [
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/%240%5Cstate%5B7%3A0%5D",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/%24add%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FC%2Frtl%2FmkBiased.v%3A73%2411_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/%24eq%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FC%2Frtl%2FmkBiased.v%3A80%2413_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/%24procmux%2417_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/%24procmux%2418_CMP",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/%24procmux%2420_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/%24procmux%2421_CMP",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/CLK",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/EN_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/RDY_get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/RDY_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/RST_N",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/put_value",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/state",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/state%24D_IN",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00000011/netname/state%24EN",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/%240%5Cstate%5B7%3A0%5D",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/%24add%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FC%2Frtl%2FmkBiased.v%3A73%2414_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/%24eq%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FC%2Frtl%2FmkBiased.v%3A80%2416_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/%24procmux%2432_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/%24procmux%2433_CMP",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/%24procmux%2435_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/%24procmux%2436_CMP",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/CLK",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/EN_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/RDY_get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/RDY_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/RST_N",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/put_value",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/state",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/state%24D_IN",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/$paramod\\mkBiased\\bias=8'00001001/netname/state%24EN",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/%240%5Cimplementation_state%5B7%3A0%5D",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/%24add%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FC%2Frtl%2FmkNarrow.v%3A72%244_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/%24eq%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FC%2Frtl%2FmkNarrow.v%3A79%246_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/%24procmux%2427_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/%24procmux%2428_CMP",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/%24procmux%2430_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/%24procmux%2431_CMP",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/CLK",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/EN_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/RDY_get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/RDY_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/RST_N",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/implementation_state",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/implementation_state%24D_IN",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/implementation_state%24EN",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkNarrow/netname/put_value",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/%24add%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FC%2Frtl%2FmkReuse.v%3A79%247_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/CLK",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/EN_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/RDY_get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/RDY_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/RST_N",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/high%24EN_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/high%24get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/high%24put_value",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/low%24EN_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/low%24get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/low%24put_value",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/narrow%24EN_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/narrow%24get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/narrow%24put_value",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/put_value",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/wide%24EN_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/wide%24get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkReuse/netname/wide%24put_value",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/%240%5Cimplementation_state%5B11%3A0%5D",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/%24add%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FC%2Frtl%2FmkWide.v%3A72%248_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/%24eq%24docs%2Fhardware%2Fevidence%2Ftoolchain%2FC%2Frtl%2FmkWide.v%3A79%2410_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/%24procmux%2422_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/%24procmux%2423_CMP",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/%24procmux%2425_Y",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/%24procmux%2426_CMP",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/CLK",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/EN_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/RDY_get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/RDY_put",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/RST_N",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/get",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/implementation_state",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/implementation_state%24D_IN",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/implementation_state%24EN",
+            "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/definition/mkWide/netname/put_value"
+          ],
+          "populationHash": "76c926878d2b7faec7a5e17775c9eae4b358ee52570d82d30d865ecfa7028ccf",
+          "total": 88,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 88,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Contextual source primitive storage instances",
+          "populationIds": [
+            "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+            "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low:mkReuse.low.state",
+            "instance:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation:mkReuse.narrow.implementation.state",
+            "instance:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation:mkReuse.wide.implementation.state"
+          ],
+          "populationHash": "8b6705b97a9c33d04dd3f56a4a2bf0db7c6b6a79c0ee819a23e42ead0a465cf6",
+          "total": 4,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 4,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        },
+        {
+          "category": "origin",
+          "selection": "Existing Semantic expression records, not historical outermost expression-site census",
+          "populationIds": [
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:expression:1321:1329",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:expression:1321:1354",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:expression:1332:1354",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:expression:1343:1353",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:expression:347:352",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:get:594:expression:619:624",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1179:1193",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1187:1192",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1201:1216",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1210:1215",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1224:1243",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1235:1242",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1251:1281",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1260:1280",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1271:1279",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:301",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:308",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:304:308",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:514:expression:567:572",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:514:expression:567:576",
+            "code:experiments/hardware/fixtures/Reuse.bsv:method:put:514:expression:575:576"
+          ],
+          "populationHash": "8c94194464faa64419421d0878658ffcc66d9383c71ebae9f50048b3af225b69",
+          "total": 21,
+          "resolved": 0,
+          "unmapped": 0,
+          "ambiguous": 0,
+          "partial": 0,
+          "generated": 0,
+          "removed": 0,
+          "unsupported": 21,
+          "knownContributors": 0,
+          "completeContributorSets": 0,
+          "excluded": []
+        }
+      ],
+      "origin": {
+        "resolution": "unsupported",
+        "reason": "stock-metadata-has-no-origin-lineage",
+        "knownContributors": 0,
+        "completeContributorSets": 0
+      }
+    }
+  ],
+  "g3B": {
+    "sourcePin": "9bd39e6f3d54d314a94ce30339a224bb283cbade",
+    "compilerBinarySha256": "74a8004efdd032860e788dac3ff2d182a62bb3f9f2f79f07314d4774e85d94de",
+    "patchSha256": "d15955aceb355d0e2e19322a62a2f7928166ff15beb87ec286c44bf83931df85",
+    "provider": "isolated-bsc-ghc96-root-observer-v1",
+    "artifacts": {
+      "A": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+      "B": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+      "C": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc"
+    },
+    "definitionPopulation": [
+      {
+        "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+        "module": "mkConnected",
+        "cell": "$add$A/rtl/mkConnected.v:97$1",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+        "module": "mkStage",
+        "cell": "$add$A/rtl/mkStage.v:73$2",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+        "module": "mkStage",
+        "cell": "$eq$A/rtl/mkStage.v:81$4",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+        "module": "mkStage",
+        "cell": "$procdff$10",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+        "module": "mkStage",
+        "cell": "$procmux$5",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+        "module": "mkStage",
+        "cell": "$procmux$8",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$add$B/rtl/mkControl.v:90$11",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$eq$B/rtl/mkControl.v:121$20",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_and$B/rtl/mkControl.v:82$3",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_and$B/rtl/mkControl.v:82$5",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_and$B/rtl/mkControl.v:86$10",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_and$B/rtl/mkControl.v:86$8",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_not$B/rtl/mkControl.v:114$18",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_not$B/rtl/mkControl.v:82$4",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_not$B/rtl/mkControl.v:86$7",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_not$B/rtl/mkControl.v:86$9",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_or$B/rtl/mkControl.v:111$16",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$logic_or$B/rtl/mkControl.v:111$17",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$lt$B/rtl/mkControl.v:75$1",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$lt$B/rtl/mkControl.v:86$6",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$ne$B/rtl/mkControl.v:82$2",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procdff$36",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procdff$37",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procmux$21",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procmux$24",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procmux$26",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procmux$29",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procmux$32",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procmux$33_CMP0",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procmux$34_CMP0",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$procmux$35_CMP0",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "module": "mkControl",
+        "cell": "$sub$B/rtl/mkControl.v:93$12",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00000011",
+        "cell": "$add$C/rtl/mkBiased.v:74$11",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00000011",
+        "cell": "$eq$C/rtl/mkBiased.v:82$13",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00000011",
+        "cell": "$procdff$37",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00000011",
+        "cell": "$procmux$17",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00000011",
+        "cell": "$procmux$20",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00001001",
+        "cell": "$add$C/rtl/mkBiased.v:74$14",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00001001",
+        "cell": "$eq$C/rtl/mkBiased.v:82$16",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00001001",
+        "cell": "$procdff$40",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00001001",
+        "cell": "$procmux$32",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "$paramod\\mkBiased\\bias=8'00001001",
+        "cell": "$procmux$35",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkNarrow",
+        "cell": "$add$C/rtl/mkNarrow.v:73$4",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkNarrow",
+        "cell": "$eq$C/rtl/mkNarrow.v:81$6",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkNarrow",
+        "cell": "$procdff$39",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkNarrow",
+        "cell": "$procmux$27",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkNarrow",
+        "cell": "$procmux$30",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkReuse",
+        "cell": "$add$C/rtl/mkReuse.v:79$7",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkWide",
+        "cell": "$add$C/rtl/mkWide.v:73$8",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkWide",
+        "cell": "$eq$C/rtl/mkWide.v:81$10",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkWide",
+        "cell": "$procdff$38",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkWide",
+        "cell": "$procmux$22",
+        "kind": "leaf-cell"
+      },
+      {
+        "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "module": "mkWide",
+        "cell": "$procmux$25",
+        "kind": "leaf-cell"
+      }
+    ],
+    "definitionPopulationHash": "cf5ae1bfbca3c74f603953189ee40c3a61a6e04f5ef120981443889babda945b",
+    "knownContributorLeafDefinitions": 6,
+    "completeOriginSetLeafDefinitions": 0,
+    "acceptedLinks": [
+      "7d993e73d69a0a0d21ca426eb138e478a0e817ae71c852b756d02654cea8dd2e",
+      "43142ba67fd3ecd34dbb2fab9731f114852b8fd40d5ffcc9988041238eeef93a",
+      "56d11379df580ec84673cd4100dd1a655f9096ef9a514e5b1bf58564809da36d",
+      "5d0f1fbad0ea0e0dd8dee6a44580339c0a46003b1566113118da4e26753dc770",
+      "b883ffa7abf990b64afc4ae4b4aa58db5b8fadf4b64421e77c3e158e71349a9d",
+      "34febddb09e96b354422efe1eab5959223e0ab2c3a16ead7c5d0fdb40d19c61a"
+    ],
+    "partialLinks": [
+      {
+        "id": "667482fbba096eed9709f9199a5a1b39b7ebd938e9fda4976d5268d779fece39",
+        "target": {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "cell": "$add$B/rtl/mkControl.v:90$11",
+          "kind": "leaf-cell"
+        },
+        "gaps": [
+          {
+            "stage": "aopt",
+            "reason": "ordered root descriptor changed without a supported branch event"
+          }
+        ]
+      },
+      {
+        "id": "51edd2271a1158a753ed87bbcb80dde702569e206746580125065d6648bc50eb",
+        "target": {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "cell": "$sub$B/rtl/mkControl.v:93$12",
+          "kind": "leaf-cell"
+        },
+        "gaps": [
+          {
+            "stage": "aopt",
+            "reason": "ordered root descriptor changed without a supported branch event"
+          }
+        ]
+      },
+      {
+        "id": "066e3f444b759f8953a9a3d367e68602879b21ee884fc063cb364125d8f27f91",
+        "target": {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "cell": "$add$C/rtl/mkBiased.v:74$11",
+          "kind": "leaf-cell"
+        },
+        "gaps": [
+          {
+            "stage": "reader-hierarchy-derive",
+            "reason": "parameter context and copied token measured; no independent AST clone event identity in stock reader"
+          }
+        ]
+      },
+      {
+        "id": "8d1b9f47780a1efbd5db291d4972f46cc665d8a4cb7373b413c0c7ce555125c4",
+        "target": {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "cell": "$procdff$37",
+          "kind": "leaf-cell"
+        },
+        "gaps": [
+          {
+            "stage": "reader-hierarchy-derive",
+            "reason": "parameter context and copied token measured; no independent AST clone event identity in stock reader"
+          }
+        ]
+      },
+      {
+        "id": "1f0511ceb7d2340656247a08d260ce4276e4505c512e2df839a26d72a2048619",
+        "target": {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "cell": "$add$C/rtl/mkBiased.v:74$14",
+          "kind": "leaf-cell"
+        },
+        "gaps": [
+          {
+            "stage": "reader-hierarchy-derive",
+            "reason": "parameter context and copied token measured; no independent AST clone event identity in stock reader"
+          }
+        ]
+      },
+      {
+        "id": "ff71050db41aef4bc4714ae09d9c2c65d3fbb2767139fc9e078a15842a166710",
+        "target": {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "cell": "$procdff$40",
+          "kind": "leaf-cell"
+        },
+        "gaps": [
+          {
+            "stage": "reader-hierarchy-derive",
+            "reason": "parameter context and copied token measured; no independent AST clone event identity in stock reader"
+          }
+        ]
+      }
+    ],
+    "unresolved": [
+      {
+        "compilerRootId": "c8dee23cc9ce42856f00db845cd6469ff5594897c6fbe925911d74956744eccb",
+        "origin": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b:/input/fixtures/Control.bsv:binding:10:18:10:35",
+        "module": "mkControl",
+        "status": "unsupported-no-emitted-root",
+        "gaps": [
+          {
+            "stage": "verilog",
+            "reason": "no unique marked root",
+            "matches": 0
+          },
+          {
+            "stage": "verilog-dollar",
+            "reason": "no unique marked root",
+            "matches": 0
+          }
+        ],
+        "notAnObservedRemoval": true
+      },
+      {
+        "compilerRootId": "9940763b20dd7fd5e9618d8e1ea103d0d1b444e52d4e22ed62c63b4e6a4b56e9",
+        "origin": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b:/input/fixtures/Control.bsv:binding:11:15:11:36",
+        "module": "mkControl",
+        "status": "unsupported-no-emitted-root",
+        "gaps": [
+          {
+            "stage": "verilog",
+            "reason": "no unique marked root",
+            "matches": 0
+          },
+          {
+            "stage": "verilog-dollar",
+            "reason": "no unique marked root",
+            "matches": 0
+          }
+        ],
+        "notAnObservedRemoval": true
+      },
+      {
+        "origin": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b:/input/fixtures/Reuse.bsv:binding:28:8:28:33",
+        "status": "binding-context-only-no-stage-root",
+        "notAnObservedRemoval": true,
+        "compilerContexts": [
+          "mkNarrow"
+        ]
+      },
+      {
+        "origin": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b:/input/fixtures/Reuse.bsv:binding:34:8:34:33",
+        "status": "binding-context-only-no-stage-root",
+        "notAnObservedRemoval": true,
+        "compilerContexts": [
+          "mkWide"
+        ]
+      }
+    ],
+    "productOccurrences": [
+      {
+        "corpus": "A",
+        "snapshotId": "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0",
+        "originBundleId": "origin-bundle-8dc3efe81ab15f86917c9dfa0e2397d0c84425df8f1bc1b93484d2d6dea95372",
+        "adapterIdentity": "e41209b61b11fac0cb635c58535fddd4ea03a580392deb903db88266b322af0a",
+        "coverage": {
+          "selection": "occurrence-expanded leaf cells in the selected instrumented artifact",
+          "populationIds": [
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$add$A~1rtl~1mkStage.v:73$2",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$eq$A~1rtl~1mkStage.v:81$4",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$procdff$10",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$procmux$5",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22left%22%5D/cell/$procmux$8",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$add$A~1rtl~1mkStage.v:73$2",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$eq$A~1rtl~1mkStage.v:81$4",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$8",
+            "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%5D/cell/$add$A~1rtl~1mkConnected.v:97$1"
+          ],
+          "populationHash": "722e38bf9966bcf02d6e90fab2e8953ca0627c921c7901debe3da45ca37b4c76",
+          "total": 11,
+          "knownContributorObjects": 4,
+          "completeOriginSetObjects": 0,
+          "unmappedOrPartial": 7
+        }
+      },
+      {
+        "corpus": "B",
+        "snapshotId": "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede",
+        "originBundleId": "origin-bundle-b040541c12f2ad77a74ac7131d207d054233a8fa41df446fafde7c449d1de4aa",
+        "adapterIdentity": "2b131b9bfa82574575c81f19e9da103d8a0faf4c580269662cf1d164e1601e4e",
+        "coverage": {
+          "selection": "occurrence-expanded leaf cells in the selected instrumented artifact",
+          "populationIds": [
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$add$B~1rtl~1mkControl.v:90$11",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$eq$B~1rtl~1mkControl.v:121$20",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_and$B~1rtl~1mkControl.v:82$3",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_and$B~1rtl~1mkControl.v:82$5",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_and$B~1rtl~1mkControl.v:86$10",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_and$B~1rtl~1mkControl.v:86$8",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_not$B~1rtl~1mkControl.v:114$18",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_not$B~1rtl~1mkControl.v:82$4",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_not$B~1rtl~1mkControl.v:86$7",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_not$B~1rtl~1mkControl.v:86$9",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_or$B~1rtl~1mkControl.v:111$16",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$logic_or$B~1rtl~1mkControl.v:111$17",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$lt$B~1rtl~1mkControl.v:75$1",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$lt$B~1rtl~1mkControl.v:86$6",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$ne$B~1rtl~1mkControl.v:82$2",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procdff$36",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procdff$37",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procmux$21",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procmux$24",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procmux$26",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procmux$29",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procmux$32",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procmux$33_CMP0",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procmux$34_CMP0",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$procmux$35_CMP0",
+            "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D/cell/$sub$B~1rtl~1mkControl.v:93$12"
+          ],
+          "populationHash": "2a6a5d4d84a2014a3ec71720ea17bd58e6bd6be0b37e6c7bd177161d47d4bc32",
+          "total": 26,
+          "knownContributorObjects": 0,
+          "completeOriginSetObjects": 0,
+          "unmappedOrPartial": 26
+        }
+      },
+      {
+        "corpus": "C",
+        "snapshotId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484",
+        "originBundleId": "origin-bundle-199243b73e26f07c360da95ea49693fda04a027332d79f8ab1979fa041a18b32",
+        "adapterIdentity": "2f3949b1ad1ae2de9e35d3d4075aa824efdbe537705aef53027b083500738905",
+        "coverage": {
+          "selection": "occurrence-expanded leaf cells in the selected instrumented artifact",
+          "populationIds": [
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$add$C~1rtl~1mkBiased.v:74$14",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$eq$C~1rtl~1mkBiased.v:82$16",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$procdff$40",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$procmux$32",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22high%22%5D/cell/$procmux$35",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$add$C~1rtl~1mkBiased.v:74$11",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$eq$C~1rtl~1mkBiased.v:82$13",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$procdff$37",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$procmux$17",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22low%22%5D/cell/$procmux$20",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$add$C~1rtl~1mkNarrow.v:73$4",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$eq$C~1rtl~1mkNarrow.v:81$6",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$procdff$39",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$procmux$27",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D/cell/$procmux$30",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$add$C~1rtl~1mkWide.v:73$8",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$eq$C~1rtl~1mkWide.v:81$10",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$procdff$38",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$procmux$22",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D/cell/$procmux$25",
+            "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%5D/cell/$add$C~1rtl~1mkReuse.v:79$7"
+          ],
+          "populationHash": "fff132fcdb9701cf84668bd20dd01d387abf3c4f26af4959f6ee00e395276071",
+          "total": 21,
+          "knownContributorObjects": 4,
+          "completeOriginSetObjects": 0,
+          "unmappedOrPartial": 17
+        }
+      }
+    ],
+    "aliases": {
+      "definitionTotal": 168,
+      "population": [
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "$add$A/rtl/mkConnected.v:97$1_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "CLK",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "RDY_get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "RDY_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "RST_N",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "left$EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "left$get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "left$put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "right$EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "right$get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkConnected",
+          "name": "right$put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "$0\\state[7:0]",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "$add$A/rtl/mkStage.v:73$2_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "$eq$A/rtl/mkStage.v:81$4_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "$procmux$5_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "$procmux$6_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "$procmux$8_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "$procmux$9_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "CLK",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "RDY_get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "RDY_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "RST_N",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "state",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "state$D_IN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+          "module": "mkStage",
+          "name": "state$EN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$0\\count$D_IN[7:0]$14",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$0\\count[7:0]",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$0\\phase[0:0]",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$1\\count$D_IN[7:0]$15",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$add$B/rtl/mkControl.v:90$11_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$eq$B/rtl/mkControl.v:121$20_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_and$B/rtl/mkControl.v:82$3_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_and$B/rtl/mkControl.v:82$5_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_and$B/rtl/mkControl.v:86$10_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_and$B/rtl/mkControl.v:86$8_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_not$B/rtl/mkControl.v:114$18_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_not$B/rtl/mkControl.v:82$4_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_not$B/rtl/mkControl.v:86$7_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_not$B/rtl/mkControl.v:86$9_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_or$B/rtl/mkControl.v:111$16_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$logic_or$B/rtl/mkControl.v:111$17_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$lt$B/rtl/mkControl.v:75$1_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$lt$B/rtl/mkControl.v:86$6_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$ne$B/rtl/mkControl.v:82$2_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$21_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$22_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$24_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$25_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$26_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$27_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$29_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$30_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$32_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$33_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$34_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$procmux$35_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "$sub$B/rtl/mkControl.v:93$12_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "CLK",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "EN_inject",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "MUX_count$write_1__VAL_2",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "MUX_count$write_1__VAL_3",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "RDY_inject",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "RDY_read",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "RST_N",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "WILL_FIRE_RL_decrement",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "WILL_FIRE_RL_increment",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "count",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "count$D_IN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "count$EN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "inject_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "phase",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "phase$D_IN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "phase$EN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+          "module": "mkControl",
+          "name": "read",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "$0\\state[7:0]",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "$add$C/rtl/mkBiased.v:74$11_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "$eq$C/rtl/mkBiased.v:82$13_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "$procmux$17_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "$procmux$18_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "$procmux$20_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "$procmux$21_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "CLK",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "RDY_get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "RDY_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "RST_N",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "state",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "state$D_IN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00000011",
+          "name": "state$EN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "$0\\state[7:0]",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "$add$C/rtl/mkBiased.v:74$14_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "$eq$C/rtl/mkBiased.v:82$16_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "$procmux$32_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "$procmux$33_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "$procmux$35_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "$procmux$36_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "CLK",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "RDY_get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "RDY_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "RST_N",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "state",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "state$D_IN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "$paramod\\mkBiased\\bias=8'00001001",
+          "name": "state$EN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "$0\\implementation_state[7:0]",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "$add$C/rtl/mkNarrow.v:73$4_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "$eq$C/rtl/mkNarrow.v:81$6_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "$procmux$27_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "$procmux$28_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "$procmux$30_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "$procmux$31_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "CLK",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "RDY_get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "RDY_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "RST_N",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "implementation_state",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "implementation_state$D_IN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "implementation_state$EN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkNarrow",
+          "name": "put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "$add$C/rtl/mkReuse.v:79$7_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "CLK",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "RDY_get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "RDY_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "RST_N",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "high$EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "high$get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "high$put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "low$EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "low$get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "low$put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "narrow$EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "narrow$get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "narrow$put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "wide$EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "wide$get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkReuse",
+          "name": "wide$put_value",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "$0\\implementation_state[11:0]",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "$add$C/rtl/mkWide.v:73$8_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "$eq$C/rtl/mkWide.v:81$10_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "$procmux$22_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "$procmux$23_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "$procmux$25_Y",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "$procmux$26_CMP",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "CLK",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "EN_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "RDY_get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "RDY_put",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "RST_N",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "get",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "implementation_state",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "implementation_state$D_IN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "implementation_state$EN",
+          "kind": "definition-alias"
+        },
+        {
+          "artifactSha256": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+          "module": "mkWide",
+          "name": "put_value",
+          "kind": "definition-alias"
+        }
+      ],
+      "populationHash": "e3b4993c2e3e68ec115750139843e5e19b0ac241e0402dce8045d7bf24bc3e62",
+      "knownOriginContributors": 0,
+      "completeOriginSets": 0,
+      "selection": "All definition netname aliases in the three instrumented artifacts; none inferred from cell contact"
+    },
+    "limitations": [
+      "captured caller-approved experiment evidence, not cryptographic attestation of arbitrary imported sidecars",
+      "source spans are compiler-minted declarator/RHS spans, not full semantic declaration bodies",
+      "stage-boundary preservation is checked for unique carried roots, not universal AST provenance",
+      "complete supported-origin sets are not asserted",
+      "no generated/reset/mux/alias origin inferred from connectivity or containment",
+      "no missing-name optimized-away claims"
+    ]
+  }
+}

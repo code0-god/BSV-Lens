@@ -5,6 +5,9 @@ const { WorkspaceAnalyzer } = require('./architecture/analyzer');
 const { parseBsvFile } = require('./architecture/parser');
 const { ArchitecturePanel, VIEW_TYPE } = require('./panel/architecture-panel');
 const { getBuildInfo } = require('./build-info');
+const { createHardwarePanels, VIEW_TYPE: HARDWARE_VIEW_TYPE, COMMAND: HARDWARE_COMMAND } = require('./panel/hardware-panel');
+
+let disposeNativeHardware = null;
 
 function activate(context) {
     const output = vscode.window.createOutputChannel('BSV Lens');
@@ -13,6 +16,19 @@ function activate(context) {
     const analyzer = new WorkspaceAnalyzer(vscode, { output });
     const runtime = { vscode, extensionUri: context.extensionUri, buildInfo };
     const codeLensProvider = new BsvArchitectureCodeLensProvider(vscode);
+    let hardware = null;
+    const nativeHardware = () => hardware || (hardware = createHardwarePanels({ vscode, context, output }));
+    disposeNativeHardware = () => hardware?.dispose();
+    context.subscriptions.push({ dispose: () => disposeNativeHardware?.() });
+    context.subscriptions.push(vscode.commands.registerCommand(HARDWARE_COMMAND, () => nativeHardware().open().catch(error => {
+        output.appendLine(`Hardware Schematic: ${error.code || 'HOST_ERROR'} ${error.message}`);
+        vscode.window.showErrorMessage(`BSV Lens Hardware: ${error.message}`);
+    })));
+    context.subscriptions.push(vscode.window.registerWebviewPanelSerializer(HARDWARE_VIEW_TYPE, {
+        deserializeWebviewPanel: (panel, state) => nativeHardware().revive(panel, state).catch(error => {
+            panel.dispose(); vscode.window.showWarningMessage(`Hardware Schematic restore: ${error.message}`);
+        })
+    }));
 
     context.subscriptions.push(output);
     context.subscriptions.push(vscode.commands.registerCommand('bsvArchitecture.openWorkspace', async () => {
@@ -147,10 +163,12 @@ function activate(context) {
     }));
 
     output.appendLine('BSV Lens activated.');
+    return Object.freeze({ hardware: Object.freeze({ getDiagnostics: () => hardware?.getDiagnostics() || { activePanels: 0, sessions: [] } }) });
 }
 
 function deactivate() {
     ArchitecturePanel.currentPanel?.dispose();
+    return disposeNativeHardware?.();
 }
 
 function activeBsvUri() {

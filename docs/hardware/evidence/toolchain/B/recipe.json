@@ -1,0 +1,64 @@
+{
+  "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+  "compileArgv": [
+    "/opt/homebrew/bin/bsc",
+    "-u",
+    "-verilog",
+    "-elab",
+    "-g",
+    "mkControl",
+    "-bdir",
+    ".build/hardware/toolchain/B/bdir",
+    "-vdir",
+    "docs/hardware/evidence/toolchain/B/rtl",
+    "-info-dir",
+    ".build/hardware/toolchain/B/info",
+    "-show-schedule",
+    "-show-module-use",
+    "-show-elab-progress",
+    "experiments/hardware/fixtures/Control.bsv"
+  ],
+  "passes": [
+    "read_verilog docs/hardware/evidence/toolchain/B/rtl/mkControl.v",
+    "hierarchy -check -top mkControl",
+    "write_rtlil docs/hardware/evidence/toolchain/B/pre-proc.il",
+    "proc -noopt",
+    "write_json docs/hardware/evidence/toolchain/B/design.json",
+    "write_rtlil docs/hardware/evidence/toolchain/B/design.il"
+  ],
+  "procExpansion": [
+    "proc_clean",
+    "proc_rmdead",
+    "proc_prune",
+    "proc_init",
+    "proc_arst",
+    "proc_rom",
+    "proc_mux",
+    "proc_dlatch",
+    "proc_dff",
+    "proc_memwr",
+    "proc_clean"
+  ],
+  "externalRtlLibraryInputs": [],
+  "macros": "Yosys read_verilog default SYNTHESIS; BSC reset macros from emitted RTL; translate_off initial blocks omitted",
+  "bscDirectPackageDependencies": [
+    "Prelude",
+    "PreludeBSV"
+  ],
+  "compiledMetadataArtifacts": [
+    {
+      "path": ".build/hardware/toolchain/B/bdir/Control.bo",
+      "sha256": "29562cdbe76577488d6f1bd91a1e43c9124ce54124320d7c29d48394e4b7540f",
+      "bytes": 14652
+    },
+    {
+      "path": ".build/hardware/toolchain/B/bdir/mkControl.ba",
+      "sha256": "94ae476b03ab10458680535e451e98069741c6730132df0cc7a9fcfc33e8cc05",
+      "bytes": 7499
+    }
+  ],
+  "source": {
+    "path": "experiments/hardware/fixtures/Control.bsv",
+    "sha256": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b"
+  }
+}

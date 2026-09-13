@@ -44,7 +44,9 @@
     "onCommand:bsvArchitecture.createConfig",
     "onCommand:bsvArchitecture.exportJson",
     "onWebviewPanel:bsvArchitecture.explorer",
-    "workspaceContains:**/*.bsv"
+    "workspaceContains:**/*.bsv",
+    "onCommand:bsvArchitecture.openHardwareSchematic",
+    "onWebviewPanel:bsvArchitecture.hardwareSchematic"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
@@ -87,6 +89,11 @@
         "command": "bsvArchitecture.openSymbol",
         "title": "BSV Lens: Open Symbol",
         "category": "BSV Lens"
+      },
+      {
+        "command": "bsvArchitecture.openHardwareSchematic",
+        "title": "BSV Lens: Open Hardware Schematic (Experimental)",
+        "category": "BSV Lens"
       }
     ],
     "menus": {
@@ -123,6 +130,17 @@
     "configuration": {
       "title": "BSV Lens",
       "properties": {
+        "bsvArchitecture.hardwareAutoDiscover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Discover bounded workspace BSV sources when Open Hardware Schematic (Experimental) is explicitly run. Never executes a compiler or task."
+        },
+        "bsvArchitecture.hardwareInclude": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "Workspace-relative BSV glob patterns explicitly included in Hardware Schematic even when excluded by source settings. Cache/evidence and file authority limits still apply."
+        },
         "bsvArchitecture.autoRefresh": {
           "type": "boolean",
           "default": true,

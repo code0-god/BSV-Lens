@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="{{language}}" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="{{csp}}">
+    <meta name="bsv-build-id" content="{{buildId}}">
+    <meta name="bsv-protocol" content="{{protocol}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Inspect BSV hardware hierarchy, source relations and verified RTL implementation evidence.">
+    <title>BSV Lens - Hardware Architecture</title>
+    <link rel="stylesheet" href="{{hardware.css}}">
+    <script nonce="{{nonce}}" defer src="{{hardware-strings.js}}"></script>
+    <script nonce="{{nonce}}" defer src="{{hardware-native.js}}"></script>
+    <script nonce="{{nonce}}" defer src="{{hardware-navigation.js}}"></script>
+    <script nonce="{{nonce}}" defer src="{{hardware-layout.js}}"></script>
+    <script nonce="{{nonce}}" defer src="{{hardware-readability.js}}"></script>
+    <script nonce="{{nonce}}" defer src="{{hardware-analysis.js}}"></script>
+    <script nonce="{{nonce}}" defer src="{{hardware-inspector.js}}"></script>
+    <script nonce="{{nonce}}" defer src="{{hardware-view.js}}"></script>
+</head>
+<body class="native-hardware">
+    <header class="app-header">
+        <div class="product"><strong>BSV Lens</strong><span>{{text.Hardware · Experimental}}</span></div>
+        <label class="native-design-select">{{text.Design}} <select id="build-select" aria-label="{{text.Registered hardware root}}"></select></label>
+        <details class="native-inputs" id="native-inputs">
+            <summary aria-label="{{text.Advanced inputs and diagnostics}}">{{text.Settings}}</summary>
+            <div class="native-settings-content">
+            <div class="native-input-actions">
+                <button data-native-action="open-settings">{{text.Workspace source settings}}</button>
+                <button data-native-action="choose-source">{{text.Choose BSV source}}</button>
+                <button data-native-action="choose-artifact">{{text.Register artifact}}</button>
+                <button data-native-action="choose-manifest">{{text.Register bundle}}</button>
+                <button data-native-action="choose-origin">{{text.Register origin capture}}</button>
+                <button data-native-action="refresh-input">{{text.Refresh registered input}}</button>
+            </div>
+            <div class="native-input-actions">
+                <label>{{text.Theme}} <select id="theme-select" aria-label="{{text.Color theme}}">
+                    <option value="dark">{{text.Dark}}</option>
+                    <option value="light">{{text.Light}}</option>
+                    <option value="high-contrast">{{text.High contrast}}</option>
+                </select></label>
+                <label>{{text.Implementation}} <select id="provider-select" aria-label="{{text.Implementation provider}}">
+                    <option value="instrumented">{{text.Instrumented capture}}</option>
+                    <option value="stock">{{text.Stock metadata}}</option>
+                </select></label>
+                <button id="export-svg">{{text.Export SVG}}</button>
+            </div>
+            <output id="native-build">{{text.Checking installed build...}}</output>
+            <details class="native-inventory">
+                <summary>{{text.Source inventory and exclusions}}</summary>
+                <pre id="native-discovery-inventory" aria-label="{{text.Source inventory and exclusions}}"></pre>
+            </details>
+            </div>
+        </details>
+        <span id="native-input-status" role="status" aria-live="polite">{{text.Finding BSV sources in this workspace...}}</span>
+        <div id="native-history-recovery" class="navigation-feedback" hidden>
+            <span id="native-history-explanation">{{text.A new history replaces previous Back and Forward entries only after the design opens.}}</span>
+            <button id="native-new-history" aria-describedby="native-history-explanation"></button>
+        </div>
+    </header>
+    <nav class="navigation" aria-label="{{text.Hardware navigation}}">
+        <div class="control-group">
+            <button id="back" title="{{text.Previous analysis visit (Alt+Left)}}" disabled>{{text.Back}}</button>
+            <button id="forward" title="{{text.Next analysis visit (Alt+Right)}}" disabled>{{text.Forward}}</button>
+            <button id="up" title="{{text.Actual hierarchy parent}}" disabled>{{text.Up}}</button>
+            <button id="return-bsv" hidden>{{text.Return BSV}}</button>
+        </div>
+        <div id="breadcrumb" class="breadcrumb" aria-label="{{text.BSV occurrence path}}"></div>
+        <div class="control-group implementation-controls">
+            <button id="rtl" hidden>{{text.View RTL Implementation}}</button>
+            <button id="fit" title="{{text.Show the complete current topology; fold supplementary labels}}">{{text.Fit structure}}</button>
+            <button id="fit-selection" title="{{text.Read the selected object and local relationships; other structure may remain outside the viewport}}" disabled>{{text.Fit selection}}</button>
+            <button id="toggle-inspector" aria-controls="inspector" aria-expanded="true">{{text.Hide Inspector}}</button>
+        </div>
+    </nav>
+    <section class="scene-header" aria-label="{{text.Current hardware scene}}">
+        <h1 id="scene-title">{{text.BSV Architecture}}</h1>
+        <span id="scene-path"></span>
+        <nav id="source-breadcrumb" class="breadcrumb" aria-label="Return to BSV source occurrence" hidden></nav>
+        <span id="provider-status"></span>
+        <span id="readability-context" data-readability-context></span>
+        <div id="native-source-only" class="native-source-only" hidden>
+            <span>{{text.Analyzing BSV source only. Connect a compiler result to inspect RTL.}}</span>
+            <button id="connect-rtl" data-native-action="choose-artifact">{{text.Connect RTL result}}</button>
+        </div>
+        <div id="navigation-feedback" class="navigation-feedback" role="status" hidden>
+            <span id="navigation-message"></span>
+            <details id="unrouted-connections" hidden>
+                <summary>{{text.Show connections}}</summary>
+                <div id="unrouted-list" class="behavior-actions"></div>
+            </details>
+            <button id="retry-navigation">{{text.Retry}}</button>
+            <details id="navigation-problem">
+                <summary>{{text.Problem details}}</summary>
+                <pre id="navigation-diagnostic"></pre>
+                <button id="copy-diagnostics">{{text.Copy diagnostics}}</button>
+            </details>
+        </div>
+    </section>
+    <main class="workspace">
+        <section id="canvas" class="canvas" aria-label="{{text.Hardware schematic}}">
+            <section id="native-empty" class="native-empty" aria-label="{{text.Choose hardware input}}">
+                <h2 id="native-empty-title">{{text.Open your BSV design}}</h2>
+                <p id="native-empty-message">{{text.Workspace sources are discovered automatically. Select a design when several roots are found.}}</p>
+                <p id="native-empty-detail">{{text.Source analysis works without a compiler or RTL result. Additional inputs are available in Settings.}}</p>
+                <button id="native-select-design" data-native-action="discover-workspace" hidden>{{text.Choose a design}}</button>
+            </section>
+            <svg id="viewport" role="group" aria-label="Interactive hardware scene">
+                <defs>
+                    <marker id="semantic-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+                        <path d="M1,1 L7,4 L1,7" fill="none" class="arrow"/>
+                    </marker>
+                </defs>
+                <g id="world">
+                    <g id="connections-layer"></g>
+                    <g id="shells-layer"></g>
+                    <g id="contacts-layer"></g>
+                </g>
+            </svg>
+            <div id="canvas-message" class="canvas-message" role="status" hidden>Resolving registered input...</div>
+            <div id="wire-tooltip" class="wire-tooltip" role="tooltip" hidden></div>
+            <div id="wire-choices" class="wire-choices" role="dialog" aria-label="Choose connection" hidden></div>
+            <div class="canvas-help"><span id="display-status"></span><span id="canvas-instructions">{{text.Click a block to see inside.}} {{text.Select a port or connection to inspect related code.}}</span></div>
+        </section>
+        <aside id="inspector" class="inspector" aria-label="{{text.Hardware details}}">
+            <div class="inspector-heading">
+                <h2 id="selection-title">{{text.Hardware details}}</h2>
+                <button id="clear-selection" title="{{text.Clear selection (Escape)}}" aria-label="{{text.Clear selection}}">{{text.Clear}}</button>
+            </div>
+            <div id="inspector-content"></div>
+            <details id="capability-panel" class="capability-panel">
+                <summary>{{text.Providers and capabilities}}</summary>
+                <div id="capability-content"></div>
+            </details>
+        </aside>
+    </main>
+    <footer class="status-bar">
+        <span id="status" role="status" aria-live="polite">{{text.Finding BSV sources in this workspace...}}</span>
+        <div class="legend" aria-label="{{text.Connection legend}}">
+            <span><i class="line-sample semantic"></i>{{text.BSV relation}}</span>
+            <span><i class="line-sample physical"></i>{{text.RTL net}}</span>
+            <span><i class="origin-sample"></i>{{text.Partial origin}}</span>
+            <span>{{text.Dot = junction; crossing without dot = separate}}</span>
+        </div>
+    </footer>
+</body>
+</html>

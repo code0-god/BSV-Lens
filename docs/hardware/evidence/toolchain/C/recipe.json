@@ -1,0 +1,79 @@
+{
+  "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+  "compileArgv": [
+    "/opt/homebrew/bin/bsc",
+    "-u",
+    "-verilog",
+    "-elab",
+    "-g",
+    "mkReuse",
+    "-bdir",
+    ".build/hardware/toolchain/C/bdir",
+    "-vdir",
+    "docs/hardware/evidence/toolchain/C/rtl",
+    "-info-dir",
+    ".build/hardware/toolchain/C/info",
+    "-show-schedule",
+    "-show-module-use",
+    "-show-elab-progress",
+    "experiments/hardware/fixtures/Reuse.bsv"
+  ],
+  "passes": [
+    "read_verilog docs/hardware/evidence/toolchain/C/rtl/mkBiased.v docs/hardware/evidence/toolchain/C/rtl/mkNarrow.v docs/hardware/evidence/toolchain/C/rtl/mkReuse.v docs/hardware/evidence/toolchain/C/rtl/mkWide.v",
+    "hierarchy -check -top mkReuse",
+    "write_rtlil docs/hardware/evidence/toolchain/C/pre-proc.il",
+    "proc -noopt",
+    "write_json docs/hardware/evidence/toolchain/C/design.json",
+    "write_rtlil docs/hardware/evidence/toolchain/C/design.il"
+  ],
+  "procExpansion": [
+    "proc_clean",
+    "proc_rmdead",
+    "proc_prune",
+    "proc_init",
+    "proc_arst",
+    "proc_rom",
+    "proc_mux",
+    "proc_dlatch",
+    "proc_dff",
+    "proc_memwr",
+    "proc_clean"
+  ],
+  "externalRtlLibraryInputs": [],
+  "macros": "Yosys read_verilog default SYNTHESIS; BSC reset macros from emitted RTL; translate_off initial blocks omitted",
+  "bscDirectPackageDependencies": [
+    "Prelude",
+    "PreludeBSV"
+  ],
+  "compiledMetadataArtifacts": [
+    {
+      "path": ".build/hardware/toolchain/C/bdir/Reuse.bo",
+      "sha256": "a0d76b709bd72b2290faead567155c7e15237561f4ab328e4df36449f3d30ecc",
+      "bytes": 25103
+    },
+    {
+      "path": ".build/hardware/toolchain/C/bdir/mkBiased.ba",
+      "sha256": "138054970ca63990236db10aaa0eb8929f0c25656c7065787444a75079aec134",
+      "bytes": 3417
+    },
+    {
+      "path": ".build/hardware/toolchain/C/bdir/mkNarrow.ba",
+      "sha256": "f7a55ab6db9d5b574bf70f121ab4e4710060478129b4d89efc15638a354e2bc7",
+      "bytes": 3444
+    },
+    {
+      "path": ".build/hardware/toolchain/C/bdir/mkReuse.ba",
+      "sha256": "2e89a3e6aaa9a0de9926da693a394b9b21994c5a7e53c0ad048d9ba10d8e7574",
+      "bytes": 5687
+    },
+    {
+      "path": ".build/hardware/toolchain/C/bdir/mkWide.ba",
+      "sha256": "faca87483becbd9fa661221c9bfde5649bc029b40b482f7f8fe358b6a0300f21",
+      "bytes": 3442
+    }
+  ],
+  "source": {
+    "path": "experiments/hardware/fixtures/Reuse.bsv",
+    "sha256": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+  }
+}

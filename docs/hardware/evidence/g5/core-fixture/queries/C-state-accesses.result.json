@@ -1,0 +1,1395 @@
+{
+  "schemaVersion": 1,
+  "queryId": "analysis-query-62b72b8975030690522b17189be70e97bb523151ae167f49bbe6c4a80fca7ef2",
+  "kind": "state-accesses",
+  "status": "complete",
+  "availability": "available",
+  "completeness": "complete",
+  "context": {
+    "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+    "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+    "modelId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/implementation/yosys-json-v1",
+    "implementationProvider": "stock",
+    "providerIdentity": "yosys-json-v1",
+    "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+    "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+    "buildInputFingerprint": "38d8d43db33071a507e9d24c158c4a40efa11ed7b00cede0fc2320151a443f67",
+    "sourceModelIdentity": "54d4ae86a479ad9373e35bd8915ff1086b4e5346ab4c3c9b4238169d88c2dc45",
+    "sourceStatus": "attached",
+    "originAnalysisId": null,
+    "freshness": "fresh",
+    "unknownInputs": [
+      "dependencyFingerprint",
+      "toolchain",
+      "passSequence",
+      "buildOptionsFingerprint",
+      "concreteParameters"
+    ],
+    "capabilities": {
+      "same-net": "available",
+      "drivers-loads": "available",
+      "dependencies": "available",
+      "state-accesses": "available",
+      "behavior": "available",
+      "call-site": "available",
+      "source-dependencies": "available",
+      "correspondence": "available"
+    }
+  },
+  "seed": {
+    "entityId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+    "sourceRevision": null,
+    "entryCallSiteId": null,
+    "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+    "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+    "domain": "source",
+    "positions": []
+  },
+  "scope": {
+    "kind": "design",
+    "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+  },
+  "direction": null,
+  "semanticsProfile": null,
+  "objects": [
+    {
+      "kind": "source",
+      "entityId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+      "objectKind": "instance-occurrence",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "label": "state",
+      "sourceRefs": [
+        "analysis-source-bd5a59279998a9c1c227fa13e10f7e2033bc57fa0132df2881ef704727eeb622"
+      ],
+      "record": {
+        "name": "state",
+        "type": "Reg#(Bit#(8))",
+        "declaredType": "Reg#(Bit#(8))",
+        "constructor": "mkReg",
+        "constructorExpression": "mkReg(0)",
+        "staticArguments": [],
+        "arguments": [
+          "0"
+        ],
+        "specialization": null,
+        "multiplicity": null,
+        "primitiveKind": "register",
+        "signature": "Reg#(Bit#(8)) state <- mkReg(0);",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 9,
+          "column": 17,
+          "endLine": 9,
+          "endColumn": 22
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 8,
+          "column": 53,
+          "endLine": 9,
+          "endColumn": 35
+        },
+        "range": {
+          "start": 207,
+          "end": 243
+        },
+        "id": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+        "kind": "instance-occurrence",
+        "path": "mkReuse.high.state",
+        "parentInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "targetDefinitionId": null,
+        "targetResolutionStatus": "unresolved",
+        "root": false,
+        "synthetic": false,
+        "expansionStatus": "unresolved",
+        "parameterBindings": [],
+        "analysisOrigin": "Source-derived",
+        "confidence": "unresolved",
+        "evidence": "Reg#(Bit#(8)) state <- mkReg(0);"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "objectKind": "instance-occurrence",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "label": "high",
+      "sourceRefs": [
+        "analysis-source-7402354f307d7bfa5e0e1084582a4fd315d7e8d8791afe528f83e76e725eaae2"
+      ],
+      "record": {
+        "name": "high",
+        "type": "Sample#(8)",
+        "declaredType": "Sample#(8)",
+        "constructor": "mkBiased",
+        "constructorExpression": "mkBiased(9)",
+        "staticArguments": [],
+        "arguments": [
+          "9"
+        ],
+        "specialization": null,
+        "multiplicity": null,
+        "primitiveKind": null,
+        "signature": "Sample#(8) high <- mkBiased(9);",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 45,
+          "column": 14,
+          "endLine": 45,
+          "endColumn": 18
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 44,
+          "column": 33,
+          "endLine": 45,
+          "endColumn": 34
+        },
+        "range": {
+          "start": 1035,
+          "end": 1070
+        },
+        "id": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "kind": "instance-occurrence",
+        "path": "mkReuse.high",
+        "parentInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "targetDefinitionId": "def:Reuse:mkBiased",
+        "targetResolutionStatus": "exact",
+        "root": false,
+        "synthetic": false,
+        "expansionStatus": "expanded",
+        "parameterBindings": [
+          {
+            "index": 0,
+            "formalParameter": "bias",
+            "actualExpression": "9",
+            "resolutionStatus": "metadata"
+          }
+        ],
+        "analysisOrigin": "Source-derived",
+        "staticBindings": [],
+        "confidence": "exact",
+        "evidence": "Sample#(8) high <- mkBiased(9);"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:access:0",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-78c112cabebd84a89f668fda67ffc1451b377dfe82f961007ec8cb814dd952c1"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "targetInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state <= value + bias;",
+        "sourceText": "state <= value + bias;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 11,
+          "column": 6,
+          "endLine": 11,
+          "endColumn": 28
+        },
+        "evidence": {
+          "callable": "put",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 12,
+          "classification": "register-write",
+          "snippet": "state <= value + bias;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:0",
+            "bindingId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:access:0",
+            "text": "state <= value + bias;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 11,
+              "column": 6,
+              "endLine": 11,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 11,
+              "column": 6,
+              "endLine": 11,
+              "endColumn": 28
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 11,
+          "column": 6,
+          "endLine": 11,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+      "objectKind": "method",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "label": "put",
+      "sourceRefs": [
+        "analysis-source-fdb84e7cd68c34737e6047127607c244cd187727f97521e847039df145a3b66d"
+      ],
+      "record": {
+        "id": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+        "name": "put",
+        "interfacePath": [],
+        "kind": "method",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "definitionId": "def:Reuse:mkBiased.put",
+        "category": "action",
+        "returnType": "Action",
+        "guard": "",
+        "reads": [],
+        "writes": [
+          "state"
+        ],
+        "inputs": [
+          {
+            "name": "value",
+            "type": "Bit#(8)"
+          }
+        ],
+        "outputs": [],
+        "invocations": [],
+        "predicateExpressionId": null,
+        "statementIds": [
+          "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287"
+        ],
+        "expressionIds": [
+          "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:301",
+          "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:304:308",
+          "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:308"
+        ],
+        "callSiteIds": [],
+        "transitions": [
+          {
+            "state": "state",
+            "effect": "write",
+            "operation": "register-write",
+            "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+            "pathConditionExpressionIds": [],
+            "evidence": "state <= value + bias;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 11,
+              "column": 6,
+              "endLine": 11,
+              "endColumn": 11
+            }
+          }
+        ],
+        "summary": "Updates state.",
+        "protocolMembership": [],
+        "evidence": [
+          "method Action put(Bit#(8) value);",
+          "state <= value + bias;"
+        ],
+        "origin": "Source-derived",
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 10,
+          "column": 17,
+          "endLine": 10,
+          "endColumn": 20
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 10,
+          "column": 3,
+          "endLine": 12,
+          "endColumn": 12
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+      "objectKind": "state-assignment",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "label": "state <= value + bias;",
+      "sourceRefs": [
+        "analysis-source-b883c6cea9c8dbf980f15d49aee42a77dff4bee35e9b6f89c7ec24db7f081074"
+      ],
+      "record": {
+        "id": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+        "kind": "state-assignment",
+        "enclosingCallableId": "def:Reuse:mkBiased.put",
+        "parentStatementId": null,
+        "parentBlockId": null,
+        "conditionExpressionId": null,
+        "pathConditionExpressionIds": [],
+        "sourceDocumentId": "experiments/hardware/fixtures/Reuse.bsv",
+        "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 11,
+          "column": 6,
+          "endLine": 11,
+          "endColumn": 28
+        },
+        "range": {
+          "start": 287,
+          "end": 309
+        },
+        "text": "state <= value + bias;",
+        "resolutionStatus": "exact",
+        "targetSymbol": {
+          "name": "state",
+          "kind": "state"
+        },
+        "rightExpressionId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:308",
+        "stateEffect": {
+          "state": "state",
+          "effect": "write",
+          "expressionId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:308"
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:access:0",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-9f6528cc35cc94a5b740787b0b0aff7ea4c92a9b788c56e36e8d18bbc224c804"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "targetInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state;",
+        "sourceText": "state;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 13,
+          "column": 24,
+          "endLine": 13,
+          "endColumn": 30
+        },
+        "evidence": {
+          "callable": "get",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 14,
+          "classification": "register-read",
+          "snippet": "state;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:0",
+            "bindingId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:access:0",
+            "text": "state;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 13,
+              "column": 24,
+              "endLine": 13,
+              "endColumn": 29
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 13,
+              "column": 24,
+              "endLine": 13,
+              "endColumn": 30
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 13,
+          "column": 24,
+          "endLine": 13,
+          "endColumn": 29
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+      "objectKind": "method",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "label": "get",
+      "sourceRefs": [
+        "analysis-source-c9c589fe82bae1360d13875f66a804d06d404a2dbc1359b8184e93c6a23e3426"
+      ],
+      "record": {
+        "id": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+        "name": "get",
+        "interfacePath": [],
+        "kind": "method",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "definitionId": "def:Reuse:mkBiased.get",
+        "category": "value",
+        "returnType": "Bit#(8)",
+        "guard": "",
+        "reads": [
+          "state"
+        ],
+        "writes": [],
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "Bit#(8)"
+          }
+        ],
+        "invocations": [],
+        "predicateExpressionId": null,
+        "statementIds": [
+          "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347"
+        ],
+        "expressionIds": [
+          "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:expression:347:352"
+        ],
+        "callSiteIds": [],
+        "transitions": [
+          {
+            "state": "state",
+            "effect": "read",
+            "operation": "register-read",
+            "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+            "pathConditionExpressionIds": [],
+            "evidence": "state;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 13,
+              "column": 24,
+              "endLine": 13,
+              "endColumn": 29
+            }
+          }
+        ],
+        "summary": "Method get.",
+        "protocolMembership": [],
+        "evidence": [
+          "method Bit#(8) get = state;",
+          "state;"
+        ],
+        "origin": "Source-derived",
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 13,
+          "column": 18,
+          "endLine": 13,
+          "endColumn": 21
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 13,
+          "column": 3,
+          "endLine": 13,
+          "endColumn": 30
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+      "objectKind": "unsupported",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "label": "state;",
+      "sourceRefs": [
+        "analysis-source-72d74d4cc3e259a9145fcab2e6bd8715a3c5f269294fb84da61e17dd6997b4f5"
+      ],
+      "record": {
+        "id": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+        "kind": "unsupported",
+        "enclosingCallableId": "def:Reuse:mkBiased.get",
+        "parentStatementId": null,
+        "parentBlockId": null,
+        "conditionExpressionId": null,
+        "pathConditionExpressionIds": [],
+        "sourceDocumentId": "experiments/hardware/fixtures/Reuse.bsv",
+        "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 13,
+          "column": 24,
+          "endLine": 13,
+          "endColumn": 30
+        },
+        "range": {
+          "start": 347,
+          "end": 353
+        },
+        "text": "state;",
+        "resolutionStatus": "unsupported",
+        "expressionId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:expression:347:352"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "id": "analysis-source-relation-9cace4b5320a178fce09468e70064c0715a2d921f05f199c817b57f4ff71ce68",
+      "family": "source",
+      "kind": "write",
+      "from": {
+        "kind": "source",
+        "entityId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:access:0",
+      "behaviorId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+      "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+      "callSiteId": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:0",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "targetInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state <= value + bias;",
+        "sourceText": "state <= value + bias;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 11,
+          "column": 6,
+          "endLine": 11,
+          "endColumn": 28
+        },
+        "evidence": {
+          "callable": "put",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 12,
+          "classification": "register-write",
+          "snippet": "state <= value + bias;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:0",
+            "bindingId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:access:0",
+            "text": "state <= value + bias;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 11,
+              "column": 6,
+              "endLine": 11,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 11,
+              "column": 6,
+              "endLine": 11,
+              "endColumn": 28
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 11,
+          "column": 6,
+          "endLine": 11,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "id": "analysis-source-relation-c31294b71e3856aa859f69af68300e53f15adfd8255900d4efc15cd6af92f73a",
+      "family": "source",
+      "kind": "read",
+      "from": {
+        "kind": "source",
+        "entityId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:access:0",
+      "behaviorId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+      "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+      "callSiteId": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:0",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "targetInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state;",
+        "sourceText": "state;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 13,
+          "column": 24,
+          "endLine": 13,
+          "endColumn": 30
+        },
+        "evidence": {
+          "callable": "get",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 14,
+          "classification": "register-read",
+          "snippet": "state;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:0",
+            "bindingId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:access:0",
+            "text": "state;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 13,
+              "column": 24,
+              "endLine": 13,
+              "endColumn": 29
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 13,
+              "column": 24,
+              "endLine": 13,
+              "endColumn": 30
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 13,
+          "column": 24,
+          "endLine": 13,
+          "endColumn": 29
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    }
+  ],
+  "boundaries": [],
+  "frontier": [],
+  "sourceRefs": [
+    {
+      "id": "analysis-source-bd5a59279998a9c1c227fa13e10f7e2033bc57fa0132df2881ef704727eeb622",
+      "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+      "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "sourceKind": "instance-occurrence",
+      "semanticId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "range": {
+        "start": 207,
+        "end": 243,
+        "text": "\n   Reg#(Bit#(8)) state <- mkReg(0);"
+      },
+      "text": "\n   Reg#(Bit#(8)) state <- mkReg(0);",
+      "sliceHash": "9b8545469e53b0c71bd1e340689626958e9ad088a63981533c3931c778cd8939"
+    },
+    {
+      "id": "analysis-source-7402354f307d7bfa5e0e1084582a4fd315d7e8d8791afe528f83e76e725eaae2",
+      "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+      "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "sourceKind": "instance-occurrence",
+      "semanticId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "range": {
+        "start": 1035,
+        "end": 1070,
+        "text": "\n   Sample#(8) high <- mkBiased(9);"
+      },
+      "text": "\n   Sample#(8) high <- mkBiased(9);",
+      "sliceHash": "41cceb00e203a4bb14c9c50d861c39dd52a9ef7cd720de2dad438fe32f565b73"
+    },
+    {
+      "id": "analysis-source-78c112cabebd84a89f668fda67ffc1451b377dfe82f961007ec8cb814dd952c1",
+      "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+      "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:access:0",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "range": {
+        "start": 287,
+        "end": 309,
+        "text": "state <= value + bias;"
+      },
+      "text": "state <= value + bias;",
+      "sliceHash": "2be87904c4ef275e81f04d811080974ce6af33d80b3322c6b7faa98fd321040b"
+    },
+    {
+      "id": "analysis-source-fdb84e7cd68c34737e6047127607c244cd187727f97521e847039df145a3b66d",
+      "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+      "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "sourceKind": "method",
+      "semanticId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "range": {
+        "start": 247,
+        "end": 322,
+        "text": "method Action put(Bit#(8) value);\n      state <= value + bias;\n   endmethod"
+      },
+      "text": "method Action put(Bit#(8) value);\n      state <= value + bias;\n   endmethod",
+      "sliceHash": "f116a93514f2745d4ef9e0ca155655f06391b60826a623d3eaa590333580dcd4"
+    },
+    {
+      "id": "analysis-source-b883c6cea9c8dbf980f15d49aee42a77dff4bee35e9b6f89c7ec24db7f081074",
+      "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+      "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "sourceKind": "state-assignment",
+      "semanticId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "range": {
+        "start": 287,
+        "end": 309,
+        "text": "state <= value + bias;"
+      },
+      "text": "state <= value + bias;",
+      "sliceHash": "2be87904c4ef275e81f04d811080974ce6af33d80b3322c6b7faa98fd321040b"
+    },
+    {
+      "id": "analysis-source-9f6528cc35cc94a5b740787b0b0aff7ea4c92a9b788c56e36e8d18bbc224c804",
+      "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+      "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:access:0",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "range": {
+        "start": 347,
+        "end": 353,
+        "text": "state;"
+      },
+      "text": "state;",
+      "sliceHash": "dbe98a85338e5917d2411026497f62ea681d1986d11268981aba87b52bf68a81"
+    },
+    {
+      "id": "analysis-source-c9c589fe82bae1360d13875f66a804d06d404a2dbc1359b8184e93c6a23e3426",
+      "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+      "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "sourceKind": "method",
+      "semanticId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "range": {
+        "start": 326,
+        "end": 353,
+        "text": "method Bit#(8) get = state;"
+      },
+      "text": "method Bit#(8) get = state;",
+      "sliceHash": "2b79750160d9b25144581ce3675e60e8ff7b41a2432597d629a2aed113b5ea09"
+    },
+    {
+      "id": "analysis-source-72d74d4cc3e259a9145fcab2e6bd8715a3c5f269294fb84da61e17dd6997b4f5",
+      "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+      "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+      "sourceKind": "unsupported",
+      "semanticId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+      "range": {
+        "start": 347,
+        "end": 353,
+        "text": "state;"
+      },
+      "text": "state;",
+      "sliceHash": "dbe98a85338e5917d2411026497f62ea681d1986d11268981aba87b52bf68a81"
+    }
+  ],
+  "evidenceRefs": [],
+  "candidates": [],
+  "limits": {
+    "maxBits": 4096,
+    "maxPins": 8192,
+    "maxCells": 512,
+    "maxEdges": 16384,
+    "maxHierarchyDepth": 64,
+    "maxResultBytes": 4194304,
+    "timeoutMs": 30000,
+    "stopReasons": []
+  },
+  "code": {
+    "sourceMode": "build",
+    "freshness": {
+      "status": "current",
+      "documents": [
+        {
+          "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+          "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+          "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+          "status": "current",
+          "currentHash": null
+        }
+      ]
+    },
+    "entity": {
+      "name": "state",
+      "type": "Reg#(Bit#(8))",
+      "declaredType": "Reg#(Bit#(8))",
+      "constructor": "mkReg",
+      "constructorExpression": "mkReg(0)",
+      "staticArguments": [],
+      "arguments": [
+        "0"
+      ],
+      "specialization": null,
+      "multiplicity": null,
+      "primitiveKind": "register",
+      "signature": "Reg#(Bit#(8)) state <- mkReg(0);",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Reuse.bsv",
+        "line": 9,
+        "column": 17,
+        "endLine": 9,
+        "endColumn": 22
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Reuse.bsv",
+        "line": 8,
+        "column": 53,
+        "endLine": 9,
+        "endColumn": 35
+      },
+      "range": {
+        "start": 207,
+        "end": 243
+      },
+      "id": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+      "kind": "instance-occurrence",
+      "path": "mkReuse.high.state",
+      "parentInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "targetDefinitionId": null,
+      "targetResolutionStatus": "unresolved",
+      "root": false,
+      "synthetic": false,
+      "expansionStatus": "unresolved",
+      "parameterBindings": [],
+      "analysisOrigin": "Source-derived",
+      "confidence": "unresolved",
+      "evidence": "Reg#(Bit#(8)) state <- mkReg(0);"
+    },
+    "owner": {
+      "name": "high",
+      "type": "Sample#(8)",
+      "declaredType": "Sample#(8)",
+      "constructor": "mkBiased",
+      "constructorExpression": "mkBiased(9)",
+      "staticArguments": [],
+      "arguments": [
+        "9"
+      ],
+      "specialization": null,
+      "multiplicity": null,
+      "primitiveKind": null,
+      "signature": "Sample#(8) high <- mkBiased(9);",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Reuse.bsv",
+        "line": 45,
+        "column": 14,
+        "endLine": 45,
+        "endColumn": 18
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Reuse.bsv",
+        "line": 44,
+        "column": 33,
+        "endLine": 45,
+        "endColumn": 34
+      },
+      "range": {
+        "start": 1035,
+        "end": 1070
+      },
+      "id": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "kind": "instance-occurrence",
+      "path": "mkReuse.high",
+      "parentInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+      "targetDefinitionId": "def:Reuse:mkBiased",
+      "targetResolutionStatus": "exact",
+      "root": false,
+      "synthetic": false,
+      "expansionStatus": "expanded",
+      "parameterBindings": [
+        {
+          "index": 0,
+          "formalParameter": "bias",
+          "actualExpression": "9",
+          "resolutionStatus": "metadata"
+        }
+      ],
+      "analysisOrigin": "Source-derived",
+      "staticBindings": [],
+      "confidence": "exact",
+      "evidence": "Sample#(8) high <- mkBiased(9);"
+    },
+    "storage": {
+      "id": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+      "kind": "storage",
+      "label": "state",
+      "secondaryLabel": "Reg#(Bit#(8))",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "definitionId": "def:Reuse:mkBiased.state-declaration.state",
+      "sourceRefs": [
+        {
+          "id": "scene-source-711c3c6b59f1cc20f4bc320df1a82768ad687a03d20dd720c22f3129a359bab0",
+          "pathRef": "experiments/hardware/fixtures/Reuse.bsv",
+          "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+          "contentHash": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+          "semanticId": "def:Reuse:mkBiased.state-declaration.state",
+          "sourceKind": "state-declaration",
+          "range": {
+            "start": 207,
+            "end": 243
+          },
+          "text": "\n   Reg#(Bit#(8)) state <- mkReg(0);",
+          "sliceHash": "9b8545469e53b0c71bd1e340689626958e9ad088a63981533c3931c778cd8939"
+        }
+      ],
+      "semanticRefs": [
+        "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state"
+      ],
+      "interaction": {
+        "kind": "inspect",
+        "entityId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state"
+      },
+      "status": "source-derived",
+      "path": "mkReuse.high.state",
+      "parentInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "declaredType": "Reg#(Bit#(8))",
+      "constructor": "mkReg",
+      "defaultExpressions": [
+        "0"
+      ],
+      "parameterBindings": [],
+      "primitiveKind": "register",
+      "readers": [
+        {
+          "id": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+          "label": "get",
+          "kind": "method"
+        }
+      ],
+      "writers": [
+        {
+          "id": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+          "label": "put",
+          "kind": "method"
+        }
+      ]
+    },
+    "behavior": null,
+    "functionDefinition": null,
+    "statements": [],
+    "expressions": [],
+    "bindings": [
+      {
+        "id": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "targetInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state <= value + bias;",
+        "sourceText": "state <= value + bias;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 11,
+          "column": 6,
+          "endLine": 11,
+          "endColumn": 28
+        },
+        "evidence": {
+          "callable": "put",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 12,
+          "classification": "register-write",
+          "snippet": "state <= value + bias;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:0",
+            "bindingId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put:access:0",
+            "text": "state <= value + bias;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 11,
+              "column": 6,
+              "endLine": 11,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 11,
+              "column": 6,
+              "endLine": 11,
+              "endColumn": 28
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 11,
+          "column": 6,
+          "endLine": 11,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      },
+      {
+        "id": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "targetInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state;",
+        "sourceText": "state;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 13,
+          "column": 24,
+          "endLine": 13,
+          "endColumn": 30
+        },
+        "evidence": {
+          "callable": "get",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 14,
+          "classification": "register-read",
+          "snippet": "state;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:0",
+            "bindingId": "binding:behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get:access:0",
+            "text": "state;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 13,
+              "column": 24,
+              "endLine": 13,
+              "endColumn": 29
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Reuse.bsv",
+              "line": 13,
+              "column": 24,
+              "endLine": 13,
+              "endColumn": 30
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Reuse.bsv",
+          "line": 13,
+          "column": 24,
+          "endLine": 13,
+          "endColumn": 29
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    ],
+    "dependencies": [],
+    "assertions": [],
+    "stateEffects": [],
+    "readiness": {
+      "status": "not-attached",
+      "evidence": []
+    },
+    "scheduling": {
+      "compiler": {
+        "status": "not-attached",
+        "relations": []
+      },
+      "sourceRelations": [],
+      "potentialDependencies": []
+    },
+    "limitations": []
+  },
+  "conditions": {
+    "predicate": null,
+    "body": []
+  },
+  "callMappings": [],
+  "readers": [
+    {
+      "id": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get",
+      "name": "get",
+      "interfacePath": [],
+      "kind": "method",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "definitionId": "def:Reuse:mkBiased.get",
+      "category": "value",
+      "returnType": "Bit#(8)",
+      "guard": "",
+      "reads": [
+        "state"
+      ],
+      "writes": [],
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "Bit#(8)"
+        }
+      ],
+      "invocations": [],
+      "predicateExpressionId": null,
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:expression:347:352"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "state",
+          "effect": "read",
+          "operation": "register-read",
+          "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:statement:347",
+          "pathConditionExpressionIds": [],
+          "evidence": "state;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Reuse.bsv",
+            "line": 13,
+            "column": 24,
+            "endLine": 13,
+            "endColumn": 29
+          }
+        }
+      ],
+      "summary": "Method get.",
+      "protocolMembership": [],
+      "evidence": [
+        "method Bit#(8) get = state;",
+        "state;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Reuse.bsv",
+        "line": 13,
+        "column": 18,
+        "endLine": 13,
+        "endColumn": 21
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Reuse.bsv",
+        "line": 13,
+        "column": 3,
+        "endLine": 13,
+        "endColumn": 30
+      }
+    }
+  ],
+  "writers": [
+    {
+      "id": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put",
+      "name": "put",
+      "interfacePath": [],
+      "kind": "method",
+      "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+      "definitionId": "def:Reuse:mkBiased.put",
+      "category": "action",
+      "returnType": "Action",
+      "guard": "",
+      "reads": [],
+      "writes": [
+        "state"
+      ],
+      "inputs": [
+        {
+          "name": "value",
+          "type": "Bit#(8)"
+        }
+      ],
+      "outputs": [],
+      "invocations": [],
+      "predicateExpressionId": null,
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:301",
+        "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:304:308",
+        "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:308"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "state",
+          "effect": "write",
+          "operation": "register-write",
+          "statementId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:statement:287",
+          "pathConditionExpressionIds": [],
+          "evidence": "state <= value + bias;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Reuse.bsv",
+            "line": 11,
+            "column": 6,
+            "endLine": 11,
+            "endColumn": 11
+          }
+        }
+      ],
+      "summary": "Updates state.",
+      "protocolMembership": [],
+      "evidence": [
+        "method Action put(Bit#(8) value);",
+        "state <= value + bias;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Reuse.bsv",
+        "line": 10,
+        "column": 17,
+        "endLine": 10,
+        "endColumn": 20
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Reuse.bsv",
+        "line": 10,
+        "column": 3,
+        "endLine": 12,
+        "endColumn": 12
+      }
+    }
+  ],
+  "id": "analysis-result-1e37cdba79105f040ae152682228738227abbc1149917935e2691a40b56e1314",
+  "request": {
+    "queryGeneration": 1,
+    "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474"
+  },
+  "metrics": {
+    "execution": "host",
+    "recordsVisited": 8,
+    "elapsedMs": 0.9424999999999955,
+    "resultBytes": 40012
+  }
+}

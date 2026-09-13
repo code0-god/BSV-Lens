@@ -174,6 +174,10 @@ function buildCodeIR(files, definitions) {
                 .map((item) => item.expressionId).filter(Boolean),
             sourceDocumentId: definition.uri, sourceRevision: files.find((file) => file.uri === definition.uri)?.sourceDocument?.revision || null,
             sourceRange: definition.sourceRange, range: definition.range,
+            ...(definition.declarationScope ? {
+                declarationScope: definition.declarationScope,
+                declarationOnly: definition.declarationOnly
+            } : {}),
             resolutionStatus: functionResolutionStatus(definition.id)
         })) };
 
@@ -201,12 +205,6 @@ function buildCodeIR(files, definitions) {
             [...(functionsByName.get(fn.name) || []), fn]);
         const expressionById = new Map(expressions.map((item) => [item.id, item]));
         for (const call of callSites) {
-            if (call.builtin && !call.specialization) {
-                call.resolutionStatus = 'exact';
-                const builtinExpression = expressionById.get(call.expressionId);
-                if (builtinExpression) builtinExpression.resolutionStatus = 'exact';
-                continue;
-            }
             const simpleName = call.calleeName.includes('.') ? null : call.calleeName;
             const caller = callableContexts.get(call.enclosingCallableId);
             const importedPackages = packageImports.get(caller?.packageName) || new Set();
@@ -215,10 +213,18 @@ function buildCodeIR(files, definitions) {
                     ? !fn.ownerDefinitionId || fn.ownerDefinitionId === caller.ownerDefinitionId
                     : !fn.ownerDefinitionId && importedPackages.has(fn.packageName)
             ) : [];
+            const requiresDispatch = candidates.some((fn) => Boolean(fn.declarationScope));
+            if (call.builtin && !call.specialization && !requiresDispatch) {
+                call.resolutionStatus = 'exact';
+                const builtinExpression = expressionById.get(call.expressionId);
+                if (builtinExpression) builtinExpression.resolutionStatus = 'exact';
+                continue;
+            }
             call.candidateDefinitionIds = candidates.map((item) => item.id).sort();
-            const exact = !call.specialization && candidates.length === 1
+            const exact = !requiresDispatch && !call.specialization && candidates.length === 1
                 && (candidates[0].parameters || []).length === call.argumentExpressionIds.length;
             call.resolutionStatus = exact ? 'exact' : 'unresolved';
+            if (requiresDispatch) call.resolutionReason = 'typeclass-dispatch-not-resolved';
             call.calleeDefinitionId = exact ? candidates[0].id : null;
             call.actualToFormal = exact ? call.argumentExpressionIds.map((expressionId, index) => ({
                 actualExpressionId: expressionId,

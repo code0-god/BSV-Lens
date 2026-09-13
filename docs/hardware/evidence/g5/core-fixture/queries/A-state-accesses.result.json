@@ -1,0 +1,1377 @@
+{
+  "schemaVersion": 1,
+  "queryId": "analysis-query-9796481299380cc52e95ab2ce82d0fd81ae5c2edf91240ef8d72ec47862edf7e",
+  "kind": "state-accesses",
+  "status": "complete",
+  "availability": "available",
+  "completeness": "complete",
+  "context": {
+    "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+    "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+    "modelId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/implementation/yosys-json-v1",
+    "implementationProvider": "stock",
+    "providerIdentity": "yosys-json-v1",
+    "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+    "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+    "buildInputFingerprint": "bec63f75407971f586c5289fd62dba8d00a2b3b33e49df3d4ba673c8d807ce9d",
+    "sourceModelIdentity": "3f8661ccdd2d444a1a4122011e6ffca0c74cf8739d392229dc3e763cfb52bbcd",
+    "sourceStatus": "attached",
+    "originAnalysisId": null,
+    "freshness": "fresh",
+    "unknownInputs": [
+      "dependencyFingerprint",
+      "toolchain",
+      "passSequence",
+      "buildOptionsFingerprint",
+      "concreteParameters"
+    ],
+    "capabilities": {
+      "same-net": "available",
+      "drivers-loads": "available",
+      "dependencies": "available",
+      "state-accesses": "available",
+      "behavior": "available",
+      "call-site": "available",
+      "source-dependencies": "available",
+      "correspondence": "available"
+    }
+  },
+  "seed": {
+    "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+    "sourceRevision": null,
+    "entryCallSiteId": null,
+    "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+    "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+    "domain": "source",
+    "positions": []
+  },
+  "scope": {
+    "kind": "design",
+    "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+  },
+  "direction": null,
+  "semanticsProfile": null,
+  "objects": [
+    {
+      "kind": "source",
+      "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+      "objectKind": "instance-occurrence",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "label": "state",
+      "sourceRefs": [
+        "analysis-source-376ea0fe05d3934128d0d4bdb018df18a394462026d701ad717888481a1367c0"
+      ],
+      "record": {
+        "name": "state",
+        "type": "Reg#(Bit#(8))",
+        "declaredType": "Reg#(Bit#(8))",
+        "constructor": "mkReg",
+        "constructorExpression": "mkReg(0)",
+        "staticArguments": [],
+        "arguments": [
+          "0"
+        ],
+        "specialization": null,
+        "multiplicity": null,
+        "primitiveKind": "register",
+        "signature": "Reg#(Bit#(8)) state <- mkReg(0);",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 10,
+          "column": 17,
+          "endLine": 10,
+          "endColumn": 22
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 9,
+          "column": 22,
+          "endLine": 10,
+          "endColumn": 35
+        },
+        "range": {
+          "start": 217,
+          "end": 253
+        },
+        "id": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+        "kind": "instance-occurrence",
+        "path": "mkConnected.left.state",
+        "parentInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "targetDefinitionId": null,
+        "targetResolutionStatus": "unresolved",
+        "root": false,
+        "synthetic": false,
+        "expansionStatus": "unresolved",
+        "parameterBindings": [],
+        "analysisOrigin": "Source-derived",
+        "confidence": "unresolved",
+        "evidence": "Reg#(Bit#(8)) state <- mkReg(0);"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "objectKind": "instance-occurrence",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "label": "left",
+      "sourceRefs": [
+        "analysis-source-2d17b3274d596a94cd1df663cdb31a6ec861d316eb9e6501ae433f703f098546"
+      ],
+      "record": {
+        "name": "left",
+        "type": "Stage",
+        "declaredType": "Stage",
+        "constructor": "mkStage",
+        "constructorExpression": "mkStage",
+        "staticArguments": [],
+        "arguments": [],
+        "specialization": null,
+        "multiplicity": null,
+        "primitiveKind": null,
+        "signature": "Stage left <- mkStage;",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 19,
+          "column": 9,
+          "endLine": 19,
+          "endColumn": 13
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 18,
+          "column": 26,
+          "endLine": 19,
+          "endColumn": 25
+        },
+        "range": {
+          "start": 415,
+          "end": 441
+        },
+        "id": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "kind": "instance-occurrence",
+        "path": "mkConnected.left",
+        "parentInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+        "targetDefinitionId": "def:Connected:mkStage",
+        "targetResolutionStatus": "exact",
+        "root": false,
+        "synthetic": false,
+        "expansionStatus": "expanded",
+        "parameterBindings": [],
+        "analysisOrigin": "Source-derived",
+        "staticBindings": [],
+        "confidence": "exact",
+        "evidence": "Stage left <- mkStage;"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:access:0",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-42ee68d645c4fdbfdb9f1daa752988ff2e8a9a027156cd4bb6cd2c0dbc95c6d9"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "targetInstanceId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state <= value + 1;",
+        "sourceText": "state <= value + 1;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 12,
+          "column": 6,
+          "endLine": 12,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "put",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 13,
+          "classification": "register-write",
+          "snippet": "state <= value + 1;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:0",
+            "bindingId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:access:0",
+            "text": "state <= value + 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 12,
+              "column": 6,
+              "endLine": 12,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 12,
+              "column": 6,
+              "endLine": 12,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 12,
+          "column": 6,
+          "endLine": 12,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+      "objectKind": "method",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "label": "put",
+      "sourceRefs": [
+        "analysis-source-20a977321a607d37ba6dece3983ed4cfe3d813c14b8516f8f81738402fe118ce"
+      ],
+      "record": {
+        "id": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+        "name": "put",
+        "interfacePath": [],
+        "kind": "method",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "definitionId": "def:Connected:mkStage.put",
+        "category": "action",
+        "returnType": "Action",
+        "guard": "",
+        "reads": [],
+        "writes": [
+          "state"
+        ],
+        "inputs": [
+          {
+            "name": "value",
+            "type": "Bit#(8)"
+          }
+        ],
+        "outputs": [],
+        "invocations": [],
+        "predicateExpressionId": null,
+        "statementIds": [
+          "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297"
+        ],
+        "expressionIds": [
+          "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:311",
+          "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:314:315",
+          "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:315"
+        ],
+        "callSiteIds": [],
+        "transitions": [
+          {
+            "state": "state",
+            "effect": "write",
+            "operation": "register-write",
+            "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+            "pathConditionExpressionIds": [],
+            "evidence": "state <= value + 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 12,
+              "column": 6,
+              "endLine": 12,
+              "endColumn": 11
+            }
+          }
+        ],
+        "summary": "Updates state.",
+        "protocolMembership": [],
+        "evidence": [
+          "method Action put(Bit#(8) value);",
+          "state <= value + 1;"
+        ],
+        "origin": "Source-derived",
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 11,
+          "column": 17,
+          "endLine": 11,
+          "endColumn": 20
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 11,
+          "column": 3,
+          "endLine": 13,
+          "endColumn": 12
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+      "objectKind": "state-assignment",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "label": "state <= value + 1;",
+      "sourceRefs": [
+        "analysis-source-f37cf8f12cd643b1387ff747f1937f11aa19191bf386122aafceec236579a80b"
+      ],
+      "record": {
+        "id": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+        "kind": "state-assignment",
+        "enclosingCallableId": "def:Connected:mkStage.put",
+        "parentStatementId": null,
+        "parentBlockId": null,
+        "conditionExpressionId": null,
+        "pathConditionExpressionIds": [],
+        "sourceDocumentId": "experiments/hardware/fixtures/Connected.bsv",
+        "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 12,
+          "column": 6,
+          "endLine": 12,
+          "endColumn": 25
+        },
+        "range": {
+          "start": 297,
+          "end": 316
+        },
+        "text": "state <= value + 1;",
+        "resolutionStatus": "exact",
+        "targetSymbol": {
+          "name": "state",
+          "kind": "state"
+        },
+        "rightExpressionId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:315",
+        "stateEffect": {
+          "state": "state",
+          "effect": "write",
+          "expressionId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:315"
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:access:0",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-d9de8c701d958af5d4a927d0d59d59ced3917dc1825c1dde547b3c924292e2b0"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "targetInstanceId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state;",
+        "sourceText": "state;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 14,
+          "column": 24,
+          "endLine": 14,
+          "endColumn": 30
+        },
+        "evidence": {
+          "callable": "get",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 15,
+          "classification": "register-read",
+          "snippet": "state;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:0",
+            "bindingId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:access:0",
+            "text": "state;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 14,
+              "column": 24,
+              "endLine": 14,
+              "endColumn": 29
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 14,
+              "column": 24,
+              "endLine": 14,
+              "endColumn": 30
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 14,
+          "column": 24,
+          "endLine": 14,
+          "endColumn": 29
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+      "objectKind": "method",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "label": "get",
+      "sourceRefs": [
+        "analysis-source-5a9192edc5780558dacd511a1dd18d0882b6c2e790f57762121c66f485788dd4"
+      ],
+      "record": {
+        "id": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+        "name": "get",
+        "interfacePath": [],
+        "kind": "method",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "definitionId": "def:Connected:mkStage.get",
+        "category": "value",
+        "returnType": "Bit#(8)",
+        "guard": "",
+        "reads": [
+          "state"
+        ],
+        "writes": [],
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "Bit#(8)"
+          }
+        ],
+        "invocations": [],
+        "predicateExpressionId": null,
+        "statementIds": [
+          "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354"
+        ],
+        "expressionIds": [
+          "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:expression:354:359"
+        ],
+        "callSiteIds": [],
+        "transitions": [
+          {
+            "state": "state",
+            "effect": "read",
+            "operation": "register-read",
+            "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+            "pathConditionExpressionIds": [],
+            "evidence": "state;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 14,
+              "column": 24,
+              "endLine": 14,
+              "endColumn": 29
+            }
+          }
+        ],
+        "summary": "Method get.",
+        "protocolMembership": [],
+        "evidence": [
+          "method Bit#(8) get = state;",
+          "state;"
+        ],
+        "origin": "Source-derived",
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 14,
+          "column": 18,
+          "endLine": 14,
+          "endColumn": 21
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 14,
+          "column": 3,
+          "endLine": 14,
+          "endColumn": 30
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+      "objectKind": "unsupported",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "label": "state;",
+      "sourceRefs": [
+        "analysis-source-7be3c38079fd9fe25f97bb12c597b14a3742bdcb82064b0561d0b41744d41416"
+      ],
+      "record": {
+        "id": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+        "kind": "unsupported",
+        "enclosingCallableId": "def:Connected:mkStage.get",
+        "parentStatementId": null,
+        "parentBlockId": null,
+        "conditionExpressionId": null,
+        "pathConditionExpressionIds": [],
+        "sourceDocumentId": "experiments/hardware/fixtures/Connected.bsv",
+        "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 14,
+          "column": 24,
+          "endLine": 14,
+          "endColumn": 30
+        },
+        "range": {
+          "start": 354,
+          "end": 360
+        },
+        "text": "state;",
+        "resolutionStatus": "unsupported",
+        "expressionId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:expression:354:359"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "id": "analysis-source-relation-f967d33aa1af573e351736d288c83a6bebda89dac18a9884347c76c57116de4e",
+      "family": "source",
+      "kind": "write",
+      "from": {
+        "kind": "source",
+        "entityId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:access:0",
+      "behaviorId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+      "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+      "callSiteId": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:0",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "targetInstanceId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state <= value + 1;",
+        "sourceText": "state <= value + 1;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 12,
+          "column": 6,
+          "endLine": 12,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "put",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 13,
+          "classification": "register-write",
+          "snippet": "state <= value + 1;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:0",
+            "bindingId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:access:0",
+            "text": "state <= value + 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 12,
+              "column": 6,
+              "endLine": 12,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 12,
+              "column": 6,
+              "endLine": 12,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 12,
+          "column": 6,
+          "endLine": 12,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "id": "analysis-source-relation-90be594adde64049ada48dff9a6e595407b161186f3e235a382212edc7d7aeb5",
+      "family": "source",
+      "kind": "read",
+      "from": {
+        "kind": "source",
+        "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:access:0",
+      "behaviorId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+      "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+      "callSiteId": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:0",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "targetInstanceId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state;",
+        "sourceText": "state;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 14,
+          "column": 24,
+          "endLine": 14,
+          "endColumn": 30
+        },
+        "evidence": {
+          "callable": "get",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 15,
+          "classification": "register-read",
+          "snippet": "state;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:0",
+            "bindingId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:access:0",
+            "text": "state;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 14,
+              "column": 24,
+              "endLine": 14,
+              "endColumn": 29
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 14,
+              "column": 24,
+              "endLine": 14,
+              "endColumn": 30
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 14,
+          "column": 24,
+          "endLine": 14,
+          "endColumn": 29
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    }
+  ],
+  "boundaries": [],
+  "frontier": [],
+  "sourceRefs": [
+    {
+      "id": "analysis-source-376ea0fe05d3934128d0d4bdb018df18a394462026d701ad717888481a1367c0",
+      "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+      "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "sourceKind": "instance-occurrence",
+      "semanticId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "range": {
+        "start": 217,
+        "end": 253,
+        "text": "\n   Reg#(Bit#(8)) state <- mkReg(0);"
+      },
+      "text": "\n   Reg#(Bit#(8)) state <- mkReg(0);",
+      "sliceHash": "9b8545469e53b0c71bd1e340689626958e9ad088a63981533c3931c778cd8939"
+    },
+    {
+      "id": "analysis-source-2d17b3274d596a94cd1df663cdb31a6ec861d316eb9e6501ae433f703f098546",
+      "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+      "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "sourceKind": "instance-occurrence",
+      "semanticId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "range": {
+        "start": 415,
+        "end": 441,
+        "text": "\n   Stage left <- mkStage;"
+      },
+      "text": "\n   Stage left <- mkStage;",
+      "sliceHash": "4e20bbb0237a1a442c07f41e91ab7999ee393ed051ba7d11db0cb6cfe75afef4"
+    },
+    {
+      "id": "analysis-source-42ee68d645c4fdbfdb9f1daa752988ff2e8a9a027156cd4bb6cd2c0dbc95c6d9",
+      "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+      "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:access:0",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "range": {
+        "start": 297,
+        "end": 316,
+        "text": "state <= value + 1;"
+      },
+      "text": "state <= value + 1;",
+      "sliceHash": "18a45d5bba5f0ab18b791de31eadc97f6843ac04aea87497ed3bb0fd598bdef2"
+    },
+    {
+      "id": "analysis-source-20a977321a607d37ba6dece3983ed4cfe3d813c14b8516f8f81738402fe118ce",
+      "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+      "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "sourceKind": "method",
+      "semanticId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "range": {
+        "start": 257,
+        "end": 329,
+        "text": "method Action put(Bit#(8) value);\n      state <= value + 1;\n   endmethod"
+      },
+      "text": "method Action put(Bit#(8) value);\n      state <= value + 1;\n   endmethod",
+      "sliceHash": "9614980abf954471762fe84fde32a42d209bec47b5082d016ba4952f7caf6202"
+    },
+    {
+      "id": "analysis-source-f37cf8f12cd643b1387ff747f1937f11aa19191bf386122aafceec236579a80b",
+      "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+      "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "sourceKind": "state-assignment",
+      "semanticId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "range": {
+        "start": 297,
+        "end": 316,
+        "text": "state <= value + 1;"
+      },
+      "text": "state <= value + 1;",
+      "sliceHash": "18a45d5bba5f0ab18b791de31eadc97f6843ac04aea87497ed3bb0fd598bdef2"
+    },
+    {
+      "id": "analysis-source-d9de8c701d958af5d4a927d0d59d59ced3917dc1825c1dde547b3c924292e2b0",
+      "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+      "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:access:0",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "range": {
+        "start": 354,
+        "end": 360,
+        "text": "state;"
+      },
+      "text": "state;",
+      "sliceHash": "dbe98a85338e5917d2411026497f62ea681d1986d11268981aba87b52bf68a81"
+    },
+    {
+      "id": "analysis-source-5a9192edc5780558dacd511a1dd18d0882b6c2e790f57762121c66f485788dd4",
+      "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+      "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "sourceKind": "method",
+      "semanticId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "range": {
+        "start": 333,
+        "end": 360,
+        "text": "method Bit#(8) get = state;"
+      },
+      "text": "method Bit#(8) get = state;",
+      "sliceHash": "2b79750160d9b25144581ce3675e60e8ff7b41a2432597d629a2aed113b5ea09"
+    },
+    {
+      "id": "analysis-source-7be3c38079fd9fe25f97bb12c597b14a3742bdcb82064b0561d0b41744d41416",
+      "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+      "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "sourceKind": "unsupported",
+      "semanticId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+      "range": {
+        "start": 354,
+        "end": 360,
+        "text": "state;"
+      },
+      "text": "state;",
+      "sliceHash": "dbe98a85338e5917d2411026497f62ea681d1986d11268981aba87b52bf68a81"
+    }
+  ],
+  "evidenceRefs": [],
+  "candidates": [],
+  "limits": {
+    "maxBits": 4096,
+    "maxPins": 8192,
+    "maxCells": 512,
+    "maxEdges": 16384,
+    "maxHierarchyDepth": 64,
+    "maxResultBytes": 4194304,
+    "timeoutMs": 30000,
+    "stopReasons": []
+  },
+  "code": {
+    "sourceMode": "build",
+    "freshness": {
+      "status": "current",
+      "documents": [
+        {
+          "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+          "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+          "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+          "status": "current",
+          "currentHash": null
+        }
+      ]
+    },
+    "entity": {
+      "name": "state",
+      "type": "Reg#(Bit#(8))",
+      "declaredType": "Reg#(Bit#(8))",
+      "constructor": "mkReg",
+      "constructorExpression": "mkReg(0)",
+      "staticArguments": [],
+      "arguments": [
+        "0"
+      ],
+      "specialization": null,
+      "multiplicity": null,
+      "primitiveKind": "register",
+      "signature": "Reg#(Bit#(8)) state <- mkReg(0);",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Connected.bsv",
+        "line": 10,
+        "column": 17,
+        "endLine": 10,
+        "endColumn": 22
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Connected.bsv",
+        "line": 9,
+        "column": 22,
+        "endLine": 10,
+        "endColumn": 35
+      },
+      "range": {
+        "start": 217,
+        "end": 253
+      },
+      "id": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+      "kind": "instance-occurrence",
+      "path": "mkConnected.left.state",
+      "parentInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "targetDefinitionId": null,
+      "targetResolutionStatus": "unresolved",
+      "root": false,
+      "synthetic": false,
+      "expansionStatus": "unresolved",
+      "parameterBindings": [],
+      "analysisOrigin": "Source-derived",
+      "confidence": "unresolved",
+      "evidence": "Reg#(Bit#(8)) state <- mkReg(0);"
+    },
+    "owner": {
+      "name": "left",
+      "type": "Stage",
+      "declaredType": "Stage",
+      "constructor": "mkStage",
+      "constructorExpression": "mkStage",
+      "staticArguments": [],
+      "arguments": [],
+      "specialization": null,
+      "multiplicity": null,
+      "primitiveKind": null,
+      "signature": "Stage left <- mkStage;",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Connected.bsv",
+        "line": 19,
+        "column": 9,
+        "endLine": 19,
+        "endColumn": 13
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Connected.bsv",
+        "line": 18,
+        "column": 26,
+        "endLine": 19,
+        "endColumn": 25
+      },
+      "range": {
+        "start": 415,
+        "end": 441
+      },
+      "id": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "kind": "instance-occurrence",
+      "path": "mkConnected.left",
+      "parentInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+      "targetDefinitionId": "def:Connected:mkStage",
+      "targetResolutionStatus": "exact",
+      "root": false,
+      "synthetic": false,
+      "expansionStatus": "expanded",
+      "parameterBindings": [],
+      "analysisOrigin": "Source-derived",
+      "staticBindings": [],
+      "confidence": "exact",
+      "evidence": "Stage left <- mkStage;"
+    },
+    "storage": {
+      "id": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+      "kind": "storage",
+      "label": "state",
+      "secondaryLabel": "Reg#(Bit#(8))",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "definitionId": "def:Connected:mkStage.state-declaration.state",
+      "sourceRefs": [
+        {
+          "id": "scene-source-10b9ee51212669281ac7f7481046e79a9facccc2acbd4f64ca1d92ec36d1dabc",
+          "pathRef": "experiments/hardware/fixtures/Connected.bsv",
+          "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+          "contentHash": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+          "semanticId": "def:Connected:mkStage.state-declaration.state",
+          "sourceKind": "state-declaration",
+          "range": {
+            "start": 217,
+            "end": 253
+          },
+          "text": "\n   Reg#(Bit#(8)) state <- mkReg(0);",
+          "sliceHash": "9b8545469e53b0c71bd1e340689626958e9ad088a63981533c3931c778cd8939"
+        }
+      ],
+      "semanticRefs": [
+        "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state"
+      ],
+      "interaction": {
+        "kind": "inspect",
+        "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state"
+      },
+      "status": "source-derived",
+      "path": "mkConnected.left.state",
+      "parentInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "declaredType": "Reg#(Bit#(8))",
+      "constructor": "mkReg",
+      "defaultExpressions": [
+        "0"
+      ],
+      "parameterBindings": [],
+      "primitiveKind": "register",
+      "readers": [
+        {
+          "id": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+          "label": "get",
+          "kind": "method"
+        }
+      ],
+      "writers": [
+        {
+          "id": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+          "label": "put",
+          "kind": "method"
+        }
+      ]
+    },
+    "behavior": null,
+    "functionDefinition": null,
+    "statements": [],
+    "expressions": [],
+    "bindings": [
+      {
+        "id": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "targetInstanceId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state <= value + 1;",
+        "sourceText": "state <= value + 1;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 12,
+          "column": 6,
+          "endLine": 12,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "put",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 13,
+          "classification": "register-write",
+          "snippet": "state <= value + 1;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:0",
+            "bindingId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put:access:0",
+            "text": "state <= value + 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 12,
+              "column": 6,
+              "endLine": 12,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 12,
+              "column": 6,
+              "endLine": 12,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 12,
+          "column": 6,
+          "endLine": 12,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      },
+      {
+        "id": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:access:0",
+        "callSiteId": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "targetInstanceId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "state;",
+        "sourceText": "state;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 14,
+          "column": 24,
+          "endLine": 14,
+          "endColumn": 30
+        },
+        "evidence": {
+          "callable": "get",
+          "referencedInstance": "state",
+          "invokedMember": null,
+          "statementLine": 15,
+          "classification": "register-read",
+          "snippet": "state;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:0",
+            "bindingId": "binding:behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get:access:0",
+            "text": "state;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 14,
+              "column": 24,
+              "endLine": 14,
+              "endColumn": 29
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Connected.bsv",
+              "line": 14,
+              "column": 24,
+              "endLine": 14,
+              "endColumn": 30
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Connected.bsv",
+          "line": 14,
+          "column": 24,
+          "endLine": 14,
+          "endColumn": 29
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    ],
+    "dependencies": [],
+    "assertions": [],
+    "stateEffects": [],
+    "readiness": {
+      "status": "not-attached",
+      "evidence": []
+    },
+    "scheduling": {
+      "compiler": {
+        "status": "not-attached",
+        "relations": []
+      },
+      "sourceRelations": [],
+      "potentialDependencies": []
+    },
+    "limitations": []
+  },
+  "conditions": {
+    "predicate": null,
+    "body": []
+  },
+  "callMappings": [],
+  "readers": [
+    {
+      "id": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get",
+      "name": "get",
+      "interfacePath": [],
+      "kind": "method",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "definitionId": "def:Connected:mkStage.get",
+      "category": "value",
+      "returnType": "Bit#(8)",
+      "guard": "",
+      "reads": [
+        "state"
+      ],
+      "writes": [],
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "Bit#(8)"
+        }
+      ],
+      "invocations": [],
+      "predicateExpressionId": null,
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:expression:354:359"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "state",
+          "effect": "read",
+          "operation": "register-read",
+          "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:statement:354",
+          "pathConditionExpressionIds": [],
+          "evidence": "state;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Connected.bsv",
+            "line": 14,
+            "column": 24,
+            "endLine": 14,
+            "endColumn": 29
+          }
+        }
+      ],
+      "summary": "Method get.",
+      "protocolMembership": [],
+      "evidence": [
+        "method Bit#(8) get = state;",
+        "state;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Connected.bsv",
+        "line": 14,
+        "column": 18,
+        "endLine": 14,
+        "endColumn": 21
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Connected.bsv",
+        "line": 14,
+        "column": 3,
+        "endLine": 14,
+        "endColumn": 30
+      }
+    }
+  ],
+  "writers": [
+    {
+      "id": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put",
+      "name": "put",
+      "interfacePath": [],
+      "kind": "method",
+      "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+      "definitionId": "def:Connected:mkStage.put",
+      "category": "action",
+      "returnType": "Action",
+      "guard": "",
+      "reads": [],
+      "writes": [
+        "state"
+      ],
+      "inputs": [
+        {
+          "name": "value",
+          "type": "Bit#(8)"
+        }
+      ],
+      "outputs": [],
+      "invocations": [],
+      "predicateExpressionId": null,
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:311",
+        "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:314:315",
+        "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:315"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "state",
+          "effect": "write",
+          "operation": "register-write",
+          "statementId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:statement:297",
+          "pathConditionExpressionIds": [],
+          "evidence": "state <= value + 1;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Connected.bsv",
+            "line": 12,
+            "column": 6,
+            "endLine": 12,
+            "endColumn": 11
+          }
+        }
+      ],
+      "summary": "Updates state.",
+      "protocolMembership": [],
+      "evidence": [
+        "method Action put(Bit#(8) value);",
+        "state <= value + 1;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Connected.bsv",
+        "line": 11,
+        "column": 17,
+        "endLine": 11,
+        "endColumn": 20
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Connected.bsv",
+        "line": 11,
+        "column": 3,
+        "endLine": 13,
+        "endColumn": 12
+      }
+    }
+  ],
+  "id": "analysis-result-a7b500fdd18a84a1eaeb1f0ae70961e7828e31f4c878f67a0940e2dc0736b414",
+  "request": {
+    "queryGeneration": 1,
+    "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34"
+  },
+  "metrics": {
+    "execution": "host",
+    "recordsVisited": 8,
+    "elapsedMs": 0.8079170000000317,
+    "resultBytes": 41972
+  }
+}

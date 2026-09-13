@@ -1,0 +1,650 @@
+{
+  "schema": "g6-usability-semantic-reference-v1",
+  "provenance": {
+    "kind": "Derived only from SHA-pinned original G5 capture and executed original archive provider; no current expected semantic values",
+    "capture": {
+      "path": "docs/hardware/evidence/g5-readability/run-0vHU05/checks/semantic-details/before.capture.json",
+      "sha256": "7728623c829d74c7671cdb40133c617c96668557a3b4b472e10abc20d26e18f6"
+    },
+    "baseline": {
+      "path": "docs/hardware/g6/G6_SEMANTIC_BASELINE.json",
+      "sha256": "8c699f3b29eee5d4f7ad2a11d8e2ef28c5c0042df79de3ea1da08544a2d9c664"
+    },
+    "archive": {
+      "path": "dist/bsv-lens-hardware-g5-source.zip",
+      "sha256": "3504decafff6ad0c600b2a8c2d0c2651edee3f84a33c408e522d85663b23c686"
+    },
+    "archiveRequiredForReplay": false
+  },
+  "provider": {
+    "identity": "3ed84fbd410187122747ac1ab78ae1b2804fa7792473e6c76f385d985ab2cd6d",
+    "files": [
+      {
+        "pathRef": "architecture/behavior-analysis.js",
+        "contentHash": "fd778aa151eb87d4831724a9fdec8b8d6d0a27badc8f4507581b16f9fa4e013c"
+      },
+      {
+        "pathRef": "architecture/code-analysis.js",
+        "contentHash": "13626b7b3cb9520943d4764c66bdd08d1262bac3a62138aa3a250e6158d55fc8"
+      },
+      {
+        "pathRef": "architecture/interface-contract-diagnostics.js",
+        "contentHash": "34a78ef8e947de687600394ad641f1a95af95f7517716b3c4225cee3e935092a"
+      },
+      {
+        "pathRef": "architecture/interface-contract-types.js",
+        "contentHash": "dc3578b80becc0e9275bc53c84ee268b83fd99f42d17328f9635ed8eb8c68504"
+      },
+      {
+        "pathRef": "architecture/parser.js",
+        "contentHash": "fbe28a62290d2aaf09c50ad86f4e54763f08f7659a124034a430a3922e641d1e"
+      },
+      {
+        "pathRef": "architecture/semantic/behavior-bindings.js",
+        "contentHash": "2b372baef1a459da966c9dd461af2ee6fa62c821e7adec7d708aeabc456b51cf"
+      },
+      {
+        "pathRef": "architecture/semantic/boundaries.js",
+        "contentHash": "432c414f1753c03e5b201289863a68c5f822d4f0b54d466202bb5f524bd8e4d5"
+      },
+      {
+        "pathRef": "architecture/semantic/constructor-bindings.js",
+        "contentHash": "621286aecef19c55371013106d3ec88da04061da96db52b06e6411c9639e88e2"
+      },
+      {
+        "pathRef": "architecture/semantic/contracts.js",
+        "contentHash": "a4365eff73a5cc109814abe17c0d40a74bc95381c857bcbab35cffd5780d16d2"
+      },
+      {
+        "pathRef": "architecture/semantic/definitions.js",
+        "contentHash": "a943a4317f46484602f85f176c65caac3a3676e50bf5cdd3224ecfa7f39fc3fd"
+      },
+      {
+        "pathRef": "architecture/semantic/endpoints.js",
+        "contentHash": "9f5b0e9836e4aac924647db813cb4371c7bedf9f89ae0d9a31a25d8709f55780"
+      },
+      {
+        "pathRef": "architecture/semantic/ids.js",
+        "contentHash": "76af50dd6e2270fb3bbbc84a316463951585e42a83c8d112a380a7d1b07e3b60"
+      },
+      {
+        "pathRef": "architecture/semantic/indexes.js",
+        "contentHash": "bf7b8ac4c87b5c5b0485084173e86afe40ed5afd5979d2bdf22e02751c218c55"
+      },
+      {
+        "pathRef": "architecture/semantic/instances.js",
+        "contentHash": "fc409ceafb4da3a0e9584e8ebc9339d51558a511d9146d16f9bfa76f0d3d2857"
+      },
+      {
+        "pathRef": "architecture/semantic/model.js",
+        "contentHash": "d4cdb00602840f469ea7307ecc68c71ccf365510e3055db833dc300986f62bf4"
+      },
+      {
+        "pathRef": "architecture/semantic/protocol-channels.js",
+        "contentHash": "4871ba6fbd333b72f4fcf1b6e747502db88eb9012788802fd3e62f1c9df2c4d2"
+      },
+      {
+        "pathRef": "architecture/semantic/provenance.js",
+        "contentHash": "2310bbde481f3f1b86d61f87095e78cb3316d119a2d42fefc6daa092461a9151"
+      },
+      {
+        "pathRef": "architecture/semantic/scheduling.js",
+        "contentHash": "21fe82b0b9b7b69cc1b1befa40623711774ff2ab9fcf27334c5ecf92fa315285"
+      },
+      {
+        "pathRef": "architecture/semantic/semantic-flow.js",
+        "contentHash": "167a1d354d2a0c62aeddaea0833a1c34f7699f91d672437ca6576b6bd760acab"
+      },
+      {
+        "pathRef": "architecture/semantic/source-references.js",
+        "contentHash": "e6c2a9265e533cb63acd344db6e88197cebd5e443afaabf2aec375d13663a14f"
+      },
+      {
+        "pathRef": "architecture/semantic/state-behaviors.js",
+        "contentHash": "1b6b6d9b4d8c23d81ed4b0e796c4344f459ce94fa270ac8303b49a8277154224"
+      },
+      {
+        "pathRef": "architecture/source-utils.js",
+        "contentHash": "17a438addc6279e7b2bd3982e918c3e0cddbe5f12c8896d0809fd9eb5f87ebfa"
+      },
+      {
+        "pathRef": "architecture/type-analysis.js",
+        "contentHash": "7a87329d0f79f6b20268320fbb389cdb621933ce2684f7a545b2397510bce054"
+      },
+      {
+        "pathRef": "hardware/correspondence/build.js",
+        "contentHash": "f464e89e1588362f792055ed6c51ac8eb1064fef35c7dcbe38463340dc866290"
+      },
+      {
+        "pathRef": "hardware/correspondence/index.js",
+        "contentHash": "245ddad518caa68ae5ebb78c51abebd186668876f92cf4c670c38c99440d44fa"
+      },
+      {
+        "pathRef": "hardware/correspondence/schema.js",
+        "contentHash": "6c6a921135171fe285b8d35656e65e1443ef7bf3c815679a4525ec6ba9bc024b"
+      },
+      {
+        "pathRef": "hardware/correspondence/source.js",
+        "contentHash": "da130ac645365c6fc24d513a6347c7cb985bc78ca28d8c4eef18c0b68a0a472e"
+      },
+      {
+        "pathRef": "hardware/correspondence/stock.js",
+        "contentHash": "29a30036f7bec13cc4c107a7c5d56d3176b44b1bbfcbaa37d4c49e7b43a241ab"
+      },
+      {
+        "pathRef": "hardware/correspondence/worker.js",
+        "contentHash": "3fd0b89482fb9be91dc37f8088cdd54de45461852d8cefaec1d9503a20f15451"
+      },
+      {
+        "pathRef": "hardware/json.js",
+        "contentHash": "541854160794f89855f72a9eccdc33b9245a6662044f9aaa904e7e8455de42f8"
+      },
+      {
+        "pathRef": "hardware/snapshot.js",
+        "contentHash": "25f9f1e5e9450c05fd1f4935296fe77a3bb38b7eb6e7ce650244a4266af84a42"
+      },
+      {
+        "pathRef": "hardware/yosys-json.js",
+        "contentHash": "356e5c7f96423df56b79d98e4338a6a5db6b9e1b06071f9adafef042bccc3844"
+      }
+    ]
+  },
+  "originAdapterFiles": [
+    {
+      "path": "src/hardware/correspondence/origin.js",
+      "hash": "02401605f7e11d28d519408454fe61516f2d14b47fed9a5ab3afd51b21247103"
+    },
+    {
+      "path": "src/hardware/correspondence/origin-data.js",
+      "hash": "3f775736016188a8b1d15e552e581e8a45682951fea99ef0cf1c8b4ec3b5f433"
+    },
+    {
+      "path": "src/hardware/correspondence/origin-worker.js",
+      "hash": "99d71f83e5ee7d4c9ba8ae9abee36b4beb5fb3e2f44557f654189dcf9954ed6b"
+    }
+  ],
+  "builds": [
+    {
+      "buildId": "A",
+      "sourceModelIdentity": "3f8661ccdd2d444a1a4122011e6ffca0c74cf8739d392229dc3e763cfb52bbcd",
+      "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+      "correspondenceId": "correspondence-bbbb444a603037e671060834378d9c5fbfcdfcca102e249f323de732630f8fd8",
+      "originSourceAnalysisId": "analysis-07f16f55370568c678b2389c40c5d153945b033f08c60e44a5ea26d4742a0ad2",
+      "originAdapterIdentity": "e41209b61b11fac0cb635c58535fddd4ea03a580392deb903db88266b322af0a",
+      "originBundleId": "origin-bundle-8dc3efe81ab15f86917c9dfa0e2397d0c84425df8f1bc1b93484d2d6dea95372",
+      "originAnalysisId": "origin-analysis-ab2dcc30836c6bb32132492f0e442d4aba4c251d0f7d4973ffc854a378e1200f"
+    },
+    {
+      "buildId": "B",
+      "sourceModelIdentity": "eccefbbba8552eec436ad429c938b554ea4ac0e185a61b3beae8a70effa752bf",
+      "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+      "correspondenceId": "correspondence-f5d1182abda7aba6dc9eae40acbc3ef89c370190e8823a3195d846db6745d2d1",
+      "originSourceAnalysisId": "analysis-ad49f38f248656652eee1f9b5a9a38be47756e9bc93b707f37e97c62fd6d00bb",
+      "originAdapterIdentity": "2b131b9bfa82574575c81f19e9da103d8a0faf4c580269662cf1d164e1601e4e",
+      "originBundleId": "origin-bundle-b040541c12f2ad77a74ac7131d207d054233a8fa41df446fafde7c449d1de4aa",
+      "originAnalysisId": "origin-analysis-b8bd69ba0edbd73049e894a662f6975ddc46591d059db06807662a19365c5ae2"
+    },
+    {
+      "buildId": "C",
+      "sourceModelIdentity": "54d4ae86a479ad9373e35bd8915ff1086b4e5346ab4c3c9b4238169d88c2dc45",
+      "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+      "correspondenceId": "correspondence-85276b50b75833d02ea805f198c3d3bdc6955c7bec633a86361fa589cd8a2624",
+      "originSourceAnalysisId": "analysis-c2b503c387ec5f3a42fccf8e81a62863c42243bb4f92fe72d7da338452cd88eb",
+      "originAdapterIdentity": "2f3949b1ad1ae2de9e35d3d4075aa824efdbe537705aef53027b083500738905",
+      "originBundleId": "origin-bundle-199243b73e26f07c360da95ea49693fda04a027332d79f8ab1979fa041a18b32",
+      "originAnalysisId": "origin-analysis-7e27b1a36e0be1d56c934b0d4e75b0f1ce182cd2cacfdce8de68c17c535b0f1b"
+    }
+  ],
+  "queries": [
+    {
+      "buildId": "A",
+      "label": "ordered-half-open-slice",
+      "queryId": "analysis-query-602fd3b0975d8f4835fb4b8bf4ba43dc5d0c1e24ee7a6668251c20f9e27a6270",
+      "resultId": "analysis-result-6de8232271e13049513b208ff8766293bfbc0ce1e0680fd2a0e98a1762f8dc2c"
+    },
+    {
+      "buildId": "A",
+      "label": "occurrence-scoped-dependency",
+      "queryId": "analysis-query-536f72bab189af40a72e28af495e3322e29198bfe7b2086709b4adbaeca71395",
+      "resultId": "analysis-result-247478a52f02b0b4a916f99c4ba42a2baaeaffbf9cd2f939b3662dd0bf020d95"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/put",
+      "queryId": "analysis-query-b8150d7fac69e6a63dc6eb4da9fd96195b18f1dde9a252d06fec3a26832ad161",
+      "resultId": "analysis-result-de0b5e5467698b23a055dd40f699124651a011c0998717ad3d144fdc8dac37f5"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/put/expression",
+      "queryId": "analysis-query-47874b09530ca8b5d8ac0d36b0ec53cae02547d2a0b06ccfe8b769b9e0887465",
+      "resultId": "analysis-result-c1651cc641a201b5f90f4309c473a99366caef2488cde0400980e4532347c33d"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/get",
+      "queryId": "analysis-query-cc015d0e59e7881ce848284f7fbcc5c2d620b1fe6e22f9e75d133cc25d453bf9",
+      "resultId": "analysis-result-909fab5d099d4f5eb5bdd531ba2bc26c60e73f8e19ad7f2bb09a2d21d836e207"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/get/expression",
+      "queryId": "analysis-query-e1d71523dfaa1f7969a32bb0e4a8dc355cd9b83d14527fafee933322c1342686",
+      "resultId": "analysis-result-1ee8da704bf401a0d62c8662f1967dc9834c4c42797922ba9e0c44b58cf902e2"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/put",
+      "queryId": "analysis-query-e9f5d1c8780ff1ad136d5ae0fe23e9548d7d6e033b7d97a734a2be90e42cc306",
+      "resultId": "analysis-result-07185a2d06f4f452640269f7d91b7062c54cf78df075b2aadc0e5c173f57613d"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/put/expression",
+      "queryId": "analysis-query-1136237e56732231416779085819d126c1c937aacf82e433693ec52c6c501aa9",
+      "resultId": "analysis-result-a8584c6f601e5e00f14f9ff985b2287aa0684a9cd638edb8914a2442b5c82809"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/get",
+      "queryId": "analysis-query-8986bd652f58e71f5d9e1d4966ae2d4b0afd9cdf972f0f0b76b252c3dc070d3e",
+      "resultId": "analysis-result-d30b208bb92e18d18983caef9bb1810278f549f2c630e6adde049fe51b75b4fd"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/get/expression",
+      "queryId": "analysis-query-f1019236043a7dc239d309c986db44ddd5273ae7c4981c8b33a0f77f92690de0",
+      "resultId": "analysis-result-7a1fc94974cf76cf42edce04d9dbb3950d017b7d8d0c1792dd04bd77f9d5d828"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/put",
+      "queryId": "analysis-query-2d28ad0b8f77ccf086b014e9e5d1bf35e68f77fd5787c70aa290d9dc0813d3ba",
+      "resultId": "analysis-result-122b67b9d3c25ed2f4faacdb2cc0435fc9e85a6d40d7f3a2068697acd9ac116a"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/put/expression",
+      "queryId": "analysis-query-55efa11dfa70db2119507111435348ec31a8a2ca81e4836645fe86947e6991be",
+      "resultId": "analysis-result-c13bccd9e26d4884e655c2997d7a37354046e40447d1276b76f07b3703a28df1"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/get",
+      "queryId": "analysis-query-1fe87343f254216b7d42618a1fb323160495882556a53ae7e1b5b5142a287700",
+      "resultId": "analysis-result-120b43cf1c33c9a53f4e25c960d0326874bddc8e26afb67358a4fda8cb2b0b95"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/get/expression",
+      "queryId": "analysis-query-7bbb8dbfa32c8ed47adbeb4ed4339eacadc79956a69f33b12660a2d6820d69d8",
+      "resultId": "analysis-result-57d1b62a287d84ece9ad548ec2e1050e819b8eafddbdfb46c5158ccdade2f848"
+    },
+    {
+      "buildId": "A",
+      "label": "left.put",
+      "queryId": "analysis-query-5c19e30e276bd855791d5eb3116339cc5de62554847a2669b978e0184329e26f",
+      "resultId": "analysis-result-2ff9f7d741e135e90359ad197044b9a872a6209171555f30426e11d676225b34"
+    },
+    {
+      "buildId": "A",
+      "label": "right.put",
+      "queryId": "analysis-query-b2fd45a26d240f6186c9e577986b798761414351bf874522f7ac50bc6f22eab5",
+      "resultId": "analysis-result-ad69a8ec0fd5f2f028bfb283105594cb3f1dd45380f2e6876f25fdb417eb1c20"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left.state/correspondence",
+      "queryId": "analysis-query-d4661924595ec795bb961a4f204810fdd067c8d7525a61e29e68edd567d74ff3",
+      "resultId": "analysis-result-38c0bcda8d8405b41c265ac7e600cf1d6ba04d86cb07807330cdb139fbc21ef0"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left.state/correspondence",
+      "queryId": "analysis-query-fc9ca5db4ff10671f62a4b9c42e24dc0b811fad6a3a62051ae7bd8902662ab79",
+      "resultId": "analysis-result-e75432dae54bd15edf5fec7a0296ae2153426a5928a620c03907272ddb691c52"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right.state/correspondence",
+      "queryId": "analysis-query-f07ae376c86021a743453ed7c311af35aeb8ae371a7825a0f7ed9e80c7f4b333",
+      "resultId": "analysis-result-e0b87d0cb66365214fefbc6b1936361ca5072114c255907e5c129f6dc3b6e009"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right.state/correspondence",
+      "queryId": "analysis-query-bf46c7e0f239187afb98ababb98ad1e79c043f3d309c51cbace9914ae33cc62f",
+      "resultId": "analysis-result-355d6f107aacc86b21edb383b2cff92e39043fdb3b952f9f48b03ae69a325474"
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/get/stock-correspondence",
+      "queryId": "analysis-query-d7634131beb5dccfa964d416d341df88d20d0de23bf3075413ca9afc834fa284",
+      "resultId": "analysis-result-f7553c8817a6c3ebb73f26576b81d7b5a58c8482d6e2414f1bbcf2aec16c538c"
+    },
+    {
+      "buildId": "B",
+      "label": "ordered-half-open-slice",
+      "queryId": "analysis-query-16f7c2424b81764a7604d49e62e9532fa76bc4669df973af47fadd298bcb6d14",
+      "resultId": "analysis-result-beb82f4136477ac585b2aceab5143c0dfc0a52ea5aa2f6b308e5d58c500cd8de"
+    },
+    {
+      "buildId": "B",
+      "label": "occurrence-scoped-dependency",
+      "queryId": "analysis-query-dcd56eae4e846d8871974c9c136073554bda8e2285e9b64c15cd27c049037922",
+      "resultId": "analysis-result-2800ba04087700049e602332f653a73047eca5cfc8fdbaa5d539fe35742385b5"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/tick",
+      "queryId": "analysis-query-c372753cdc41762aee94b9fd102d1ecb4665acb30c4d7eb6ce1fdc13516fd99b",
+      "resultId": "analysis-result-855f7c385158df8422db3793f9683a900a7950fa2248c4b458e57c354cd30c1c"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/tick/expression",
+      "queryId": "analysis-query-098a97364bab69610c7154d190b26f768b7def35ea977c0f41121f13d789486e",
+      "resultId": "analysis-result-a49ea096e4a002382389df6886a4f018d6c611a9a2308a2e6510e3e849b45b7d"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/decrement",
+      "queryId": "analysis-query-9c18be7b1018c4a0f3b4b6e1ee0001ab2d9102521e42fff9cfa0ff69c81f5705",
+      "resultId": "analysis-result-123503eb4befa1672a0b7391133f0cf19243e6321db0f54183b0c3a85d2cfca2"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/decrement/expression",
+      "queryId": "analysis-query-0efd568b857cc23aa588718403e5e9ff5cee8f0ca02327cb264a7f69c554efec",
+      "resultId": "analysis-result-bb521797080cac46876edd51e026172c2f9dd23accd7ed44630f6a4524be7a18"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/increment",
+      "queryId": "analysis-query-37d208afc3a8db45ea9a0e5189a34eb39b1677a2f29d49781d00debc3e6e959a",
+      "resultId": "analysis-result-e751eab24b5a3002f5334f78f3baf6a3f975b06d28187ebd4eca2c5498a06e99"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/increment/expression",
+      "queryId": "analysis-query-626c409ca9ddcd2e26acbc8521a36cf73c4f6e10a50c5d1a570b34cd4483e8e3",
+      "resultId": "analysis-result-161178503e5d677d631d9fa86a6aa42a338cd94d1ac7d00f401dc0f07fdf5e3f"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/inject",
+      "queryId": "analysis-query-4e8cf087724b898e2f3c581489256f44dc8396e54c06a8896b5d2a355d97d4fc",
+      "resultId": "analysis-result-98807ffb26dc2fd38a0d1e9e20843a8997a024504c10a2beeffc7ed776e7369a"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/inject/expression",
+      "queryId": "analysis-query-44844d87f43306ee82948a9f43ee762cd2a0ee468fa8be7f836462943875d488",
+      "resultId": "analysis-result-a498e2e6abf5e54754d7215dd553665fac173f6aab632ec021586079907fe8aa"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/read",
+      "queryId": "analysis-query-6ad62f610126fe22a202f487c4e9581e757569c8cd9c47ae696bab3e2021d762",
+      "resultId": "analysis-result-306b0d887a2658e76be58978611ba5541183a7d078fff6330ea93995edfab9c7"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/read/expression",
+      "queryId": "analysis-query-5b99b53e7e2584ede05ac6956691eedb3180d3a443ad1c3548b58ce78542324f",
+      "resultId": "analysis-result-1eeab144cd7aa36325522a8af28e8c461d99964dcfac5e52be97246ee8f89653"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.count/correspondence",
+      "queryId": "analysis-query-899c5671de885700324bb5b3e7f2c5d133a4cca43acfee87d5f1bb14fe1af6cf",
+      "resultId": "analysis-result-84d94cbdbe155389068435f0826029252a624bf4a6e6b441df5081bea501fba0"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.count/correspondence",
+      "queryId": "analysis-query-43402b47cd41acc1c6ae49d962462c57965ddc6a6fd60d76f0fb0440ca3ff4ae",
+      "resultId": "analysis-result-f8fd43ab843af23b2674d1c43499ac2ff921b337b93469c8d6e5b4f42cd694cc"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.phase/correspondence",
+      "queryId": "analysis-query-d1679644d3a766140b8e3352a32fc1350cdbc2ee716aa8f16eb0be92bf153a3e",
+      "resultId": "analysis-result-d3854d671a1bd187e66221cf1f98ae29193be61bae33deb02cfda42cb3450b70"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.phase/correspondence",
+      "queryId": "analysis-query-43fd829afa7da7bd21b2ea255142333b49028968dcc04d002093a3dd51d10e10",
+      "resultId": "analysis-result-a9dc3d74d3561ac5029a8c89de832445a5598849ac288f7d1d866f55f45d692d"
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/inject/stock-correspondence",
+      "queryId": "analysis-query-8d0ba4cfd0ba9c364b523ef2019e7c7f045a07cea74c2c6c2e65f20f3ae5d12f",
+      "resultId": "analysis-result-05867dc3ea2d5c9ba487bc3d3a3e4abaff3592f89e2e0e3cf746a3cd3f27309e"
+    },
+    {
+      "buildId": "C",
+      "label": "ordered-half-open-slice",
+      "queryId": "analysis-query-8af48c477d06ade36423c35e5ff800129c7a6215b06103f74b5c74145915ecab",
+      "resultId": "analysis-result-65109ecfe383bb796ab0da3497c18d9e30e640d1d2374de00ad85b804291ccd0"
+    },
+    {
+      "buildId": "C",
+      "label": "occurrence-scoped-dependency",
+      "queryId": "analysis-query-8796550dc592be09e449717832f8daf4e0bca9754d51db8fc7a6c07159d74954",
+      "resultId": "analysis-result-3572c437beab5ea71bfcee67a0b24de8a0d59e1ab5233d84686203987dcc86d1"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/put",
+      "queryId": "analysis-query-9996bda3e755d991d76f053410133f3d3609a167b629c74fa8f9ad018e89430c",
+      "resultId": "analysis-result-f5bb1081afd251a95fb643944dd13f908847d82b78e0f82e7c3d35466d363040"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/put/expression",
+      "queryId": "analysis-query-2ceafdcfb4fac42b669c3b89bb3dc96fa22e63cc7606d79d2046aea3fe7a8ec9",
+      "resultId": "analysis-result-f7ba6ad475d47a4d82c4e8086623bb268828c2863be04c9f4eee312615010fe0"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/get",
+      "queryId": "analysis-query-171a5841634c6cc9a217c5329bbf0838b5ca661383adf2165cf304db9527cad6",
+      "resultId": "analysis-result-20f2e500d107bb600bb2bad4303e30926342c5f2a1364d81210b072490542740"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/get/expression",
+      "queryId": "analysis-query-0301173b5e8a73847c461e95ee495656b1058497edeeea0a8d25a316933a6662",
+      "resultId": "analysis-result-8e97b7b044436dae953e795a0f67a7f80a874be480578bf6697b5eb7be3954a7"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/put",
+      "queryId": "analysis-query-2b727d47e1d7fe5e3012768a380de8aaa43d71a8908b15bc7b4dad3c00456897",
+      "resultId": "analysis-result-3f80a4acacd4c44329da7cd973482b95e3446c8d6c20d41a35dc61c1987acc0b"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/put/expression",
+      "queryId": "analysis-query-83ec86b71875e9c030e0e330b9c8361bf9b5d3377e53c2349d7588bdefb2445e",
+      "resultId": "analysis-result-cb87cbdee16696e8b8f15757307050b854e7b8b662e8973eede80cf4387dd82f"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/get",
+      "queryId": "analysis-query-a7fed537db72c3628f246fe693e0976c0311f0a059d712bee105e05e9093ffed",
+      "resultId": "analysis-result-8d2590c020d6a854ff142e1fc02fffe23dc19a03f5c6dd6f855361fc5faa91ce"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/get/expression",
+      "queryId": "analysis-query-b842141a55fa8ee3396d4219cbb4cf00d744d776d24be09adb3a18f4d3675a62",
+      "resultId": "analysis-result-cc26b61b8094fa2b8a4e324210320b3bde5032338a95ab76894ec27fa49252ed"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/put",
+      "queryId": "analysis-query-9db2bdd9630c07c5a9adf4c8ff531b87b3fcc59ae8e319b3cdb26c836c7afb62",
+      "resultId": "analysis-result-f2e7bea1cb6b12d4c36924fb8676a9f6441badc43ec7bc4bdabacb39fde8b265"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/put/expression",
+      "queryId": "analysis-query-dc44a9729382145a67195a9b57b0e7dfde8d2a3f0509e7e7c52d8bcc6ae21c42",
+      "resultId": "analysis-result-73a2b3574c05501b3176975ab60e4b959fb0884f7cf7ec169b188c516835833f"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/get",
+      "queryId": "analysis-query-4742c111eafdc293ca3fe81bd9538acb071f97b6f5914eb74fb12a1f0fa225cf",
+      "resultId": "analysis-result-facff8ce5041658d73e383b2ee61918270b670b52613427f79609f058e10e0fd"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/get/expression",
+      "queryId": "analysis-query-2d0d8b64e8f15bee35417ef5e4fefd009f3569f309078ad6c3b0dbe92b06ee20",
+      "resultId": "analysis-result-ec3883f480d5dfbf0906ff52b3c33678db7074c0758f6f5d2ea69a7841585963"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/put",
+      "queryId": "analysis-query-c7c7604699d8d99043c3be2ee4e70c6161dd27c5fe909841d4d87154721bbaae",
+      "resultId": "analysis-result-d80e5d0559040a6d5e156d8ca90bece1fcc8c72ab82a8f611f2b8a7760038cae"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/put/expression",
+      "queryId": "analysis-query-d32360c4ab46c03b30103b8cc2af308130a049a808590f69c8272519e30ce70b",
+      "resultId": "analysis-result-cb540a8210f8006b9592b9f91ac3e90da026b53bf3f069845f1713bd6412b529"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/get",
+      "queryId": "analysis-query-d981a23cd1efd5862ae504219a2b3e79e3ea050c71aec631efc3b1c65d259df0",
+      "resultId": "analysis-result-aab58c721d4e6b94e16c9efe151d4276eda96377ecf5b5aa3f3ce65a3017bd97"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/get/expression",
+      "queryId": "analysis-query-ba79883ac8536b9acb3109a4273df1ccdcb7b4fddd5172d620c332bb05435ffe",
+      "resultId": "analysis-result-4f5f8a838398dc30d36142762139c539748137840180325d0ea99bf09f07e435"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/put",
+      "queryId": "analysis-query-9f0aaecec3bb555224a6ae3135b834fd03fb1c573f12539b22da9dc21eeafe21",
+      "resultId": "analysis-result-2bc1642ae66ae673047b96468ae34a38cb1d937c737acccc97bce6654b466b65"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/put/expression",
+      "queryId": "analysis-query-50493567419737df5b5f77429d36e21b0f44105083f4f85715e46c6702861f61",
+      "resultId": "analysis-result-ec54157805fbdcc2160aa4fc50fcbc26a6a63ae3d6e621fc70ce3283e8933e81"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/get",
+      "queryId": "analysis-query-df0654c726cd570c86f90beedd62373a47a37d34423e56c1044169ac232b8fe0",
+      "resultId": "analysis-result-d6fcf9ee3df50bb9ebc885e378396f82c968d1cf2fdfcf3341b1855066c263cd"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/get/expression",
+      "queryId": "analysis-query-e5845a153dcb527da97c9973ac50b252fcfa8b9adbf457d0e4505df1ce2a6fc5",
+      "resultId": "analysis-result-c44deca38771350f4dbe9c604ec5d09182438deab8d02ef9a1b38c1dbb159609"
+    },
+    {
+      "buildId": "C",
+      "label": "low.put",
+      "queryId": "analysis-query-040620c8433c6cd500646397ff1b1d943ffdbcfc47fae431cd37abecdc4b9733",
+      "resultId": "analysis-result-49ab949194d5de95bf2f9d3d57ccc87a6fc206e7e655e7dcb314e07b7f8a7cbd"
+    },
+    {
+      "buildId": "C",
+      "label": "high.put",
+      "queryId": "analysis-query-681b6b7d2f2f503c9d58685e46adda74bbb4ee0cb913c66e8d3b03b206056a1c",
+      "resultId": "analysis-result-ac8eac63ee25d51f17726459216aa8ba1be6c28441c4db2a4dd87c618367c9ea"
+    },
+    {
+      "buildId": "C",
+      "label": "narrow.put",
+      "queryId": "analysis-query-3f1a182b10093128c64a1ce2fdceb748fadfa2bca10bf9d63a193c8dc573d5b9",
+      "resultId": "analysis-result-37dc24e713539b0a7cdf300a1075b1207163fdb47cbe312e603ee283568f2707"
+    },
+    {
+      "buildId": "C",
+      "label": "zeroExtend",
+      "queryId": "analysis-query-6cac9a49befca61bc7d6c4e5dddf836768da3feb121756f6cfd52b5b74761938",
+      "resultId": "analysis-result-89857ab52943882ca25aa188d7585bfab2b0394ef7e3dee58647e2983e07b88e"
+    },
+    {
+      "buildId": "C",
+      "label": "wide.put",
+      "queryId": "analysis-query-b922f779ba781fd12377f8a75788d242c027af21793341002a116d5a833fa406",
+      "resultId": "analysis-result-6d1d6ce02bc4577b7a28c6ed00d028dd1432c58fce22e4a517bd71763a062ef3"
+    },
+    {
+      "buildId": "C",
+      "label": "zeroExtend",
+      "queryId": "analysis-query-58d6d501cf6f31c556b0be0ccca8617cb60ca6d4763d6e8303916962956db51c",
+      "resultId": "analysis-result-2ad7f23dd64e117c9c2bf6d31a402aa932137c9b9d8af8a94d28cdf9486cfbbe"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low.state/correspondence",
+      "queryId": "analysis-query-a8172f0ca3ed1c4b189116e7d2e22ce81b087d10f710796e5361b3df9e68ff74",
+      "resultId": "analysis-result-62418510270acacbb66a22eb2d41457cd1870e722d01644746fbda19890946fa"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low.state/correspondence",
+      "queryId": "analysis-query-00117e572405d789d99347404f3c0b7b3b3face5f038577419a1f1065d9c4206",
+      "resultId": "analysis-result-1b31a6e4f7911e49f8d77525164f812b2e34ec6022c69619554fcbb4624491ac"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high.state/correspondence",
+      "queryId": "analysis-query-11f53e5bf40d301d4b84bde6c1435b6f8a134b2b96a6376ddc752c7ecbe4e28d",
+      "resultId": "analysis-result-f04f36ed6ef19e1de66e361c18b94c19b1b1aa7bfffcc61115b658150e9193c5"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high.state/correspondence",
+      "queryId": "analysis-query-494eec03bc6d050d33f10a3e9c647fd0bcb5aa9b482aff91375b3a1e2d2e17bb",
+      "resultId": "analysis-result-0a165beee4f6c6c2baadde7748371eba513ce3b2744b077ba326c65ab3e6a061"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation.state/correspondence",
+      "queryId": "analysis-query-8251dfd04c0f213fa5bf4592aca0cf1f22da1fce3f80062138ea4dd1e35f06c8",
+      "resultId": "analysis-result-37d344b95613437411b98dbf266161f6ece1c74da7458a95cffcc39d8223308e"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation.state/correspondence",
+      "queryId": "analysis-query-8a62f23af6b1c359f083128de7ddf5a773cb063a7444059de22c2bce18ca43b5",
+      "resultId": "analysis-result-61332c695e21a0f53efb23ad1fd60ed5e369e5a0c09b2770299f4afb447711c7"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation.state/correspondence",
+      "queryId": "analysis-query-8f749e32e1107558151a089b4947fbbd70374839b0a8849b6ca410418788734c",
+      "resultId": "analysis-result-9e31ff8a772946fb8892e62ae84ecad2e3148fc1a5068f88f535b3eb981a1c40"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation.state/correspondence",
+      "queryId": "analysis-query-229c61f60c1756b126a71b43ef7cb42f47d018c9b85fabd5517bfd45bbe32401",
+      "resultId": "analysis-result-02a6eeb92267f57d794f7691ccafaf88611f730ddec759e885cce0b317b516fc"
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/get/stock-correspondence",
+      "queryId": "analysis-query-f22a4c8dd72160609f75a46d8b8c0483c0ba31ca95729fd99f36bf7a22f70389",
+      "resultId": "analysis-result-9b2ca7e1ddcf14ab0265bb1ab79ef1752c724e0ac6dfc2c5874d4a35e958d394"
+    }
+  ]
+}

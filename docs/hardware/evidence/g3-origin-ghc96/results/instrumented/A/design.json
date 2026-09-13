@@ -1,0 +1,499 @@
+{
+  "creator": "Yosys 0.68 (git sha1 38e001a6f, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)",
+  "modules": {
+    "mkConnected": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "A/rtl/mkConnected.v:34.1-99.10"
+      },
+      "ports": {
+        "CLK": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "RST_N": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "put_value": {
+          "direction": "input",
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11 ]
+        },
+        "EN_put": {
+          "direction": "input",
+          "bits": [ 12 ]
+        },
+        "RDY_put": {
+          "direction": "output",
+          "bits": [ "1" ]
+        },
+        "get": {
+          "direction": "output",
+          "bits": [ 13, 14, 15, 16, 17, 18, 19, 20 ]
+        },
+        "RDY_get": {
+          "direction": "output",
+          "bits": [ "1" ]
+        }
+      },
+      "cells": {
+        "$add$A/rtl/mkConnected.v:97$1": {
+          "hide_name": 1,
+          "type": "$add",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:97.28-97.48"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 21, 22, 23, 24, 25, 26, 27, 28 ],
+            "B": [ 4, 5, 6, 7, 8, 9, 10, 11 ],
+            "Y": [ 29, 30, 31, 32, 33, 34, 35, 36 ]
+          }
+        },
+        "left": {
+          "hide_name": 0,
+          "type": "mkStage",
+          "parameters": {
+          },
+          "attributes": {
+            "g3_emit_id": "instance:c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c:/input/fixtures/Connected.bsv:binding:20:10:20:25",
+            "g3_origin_ref": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c:/input/fixtures/Connected.bsv:binding:20:10:20:25",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "A/rtl/mkConnected.v:75.290-81.54"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "EN_put": "input",
+            "RDY_get": "output",
+            "RDY_put": "output",
+            "RST_N": "input",
+            "get": "output",
+            "put_value": "input"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "EN_put": [ 12 ],
+            "RDY_get": [ ],
+            "RDY_put": [ ],
+            "RST_N": [ 3 ],
+            "get": [ 21, 22, 23, 24, 25, 26, 27, 28 ],
+            "put_value": [ 4, 5, 6, 7, 8, 9, 10, 11 ]
+          }
+        },
+        "right": {
+          "hide_name": 0,
+          "type": "mkStage",
+          "parameters": {
+          },
+          "attributes": {
+            "g3_emit_id": "instance:c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c:/input/fixtures/Connected.bsv:binding:21:10:21:26",
+            "g3_origin_ref": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c:/input/fixtures/Connected.bsv:binding:21:10:21:26",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "A/rtl/mkConnected.v:84.290-90.55"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "EN_put": "input",
+            "RDY_get": "output",
+            "RDY_put": "output",
+            "RST_N": "input",
+            "get": "output",
+            "put_value": "input"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "EN_put": [ 12 ],
+            "RDY_get": [ ],
+            "RDY_put": [ ],
+            "RST_N": [ 3 ],
+            "get": [ 13, 14, 15, 16, 17, 18, 19, 20 ],
+            "put_value": [ 29, 30, 31, 32, 33, 34, 35, 36 ]
+          }
+        }
+      },
+      "netnames": {
+        "$add$A/rtl/mkConnected.v:97$1_Y": {
+          "hide_name": 1,
+          "bits": [ 29, 30, 31, 32, 33, 34, 35, 36 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:97.28-97.48"
+          }
+        },
+        "CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:43.10-43.13"
+          }
+        },
+        "EN_put": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:48.10-48.16"
+          }
+        },
+        "RDY_get": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:53.10-53.17"
+          }
+        },
+        "RDY_put": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:49.10-49.17"
+          }
+        },
+        "RST_N": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:44.10-44.15"
+          }
+        },
+        "get": {
+          "hide_name": 0,
+          "bits": [ 13, 14, 15, 16, 17, 18, 19, 20 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:52.18-52.21"
+          }
+        },
+        "left$EN_put": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:61.8-61.19"
+          }
+        },
+        "left$get": {
+          "hide_name": 0,
+          "bits": [ 21, 22, 23, 24, 25, 26, 27, 28 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:60.16-60.24"
+          }
+        },
+        "left$put_value": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:60.26-60.40"
+          }
+        },
+        "put_value": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:47.18-47.27"
+          }
+        },
+        "right$EN_put": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:65.8-65.20"
+          }
+        },
+        "right$get": {
+          "hide_name": 0,
+          "bits": [ 13, 14, 15, 16, 17, 18, 19, 20 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:64.16-64.25"
+          }
+        },
+        "right$put_value": {
+          "hide_name": 0,
+          "bits": [ 29, 30, 31, 32, 33, 34, 35, 36 ],
+          "attributes": {
+            "src": "A/rtl/mkConnected.v:64.27-64.42"
+          }
+        }
+      }
+    },
+    "mkStage": {
+      "attributes": {
+        "src": "A/rtl/mkStage.v:34.1-104.10"
+      },
+      "ports": {
+        "CLK": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "RST_N": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "put_value": {
+          "direction": "input",
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11 ]
+        },
+        "EN_put": {
+          "direction": "input",
+          "bits": [ 12 ]
+        },
+        "RDY_put": {
+          "direction": "output",
+          "bits": [ "1" ]
+        },
+        "get": {
+          "direction": "output",
+          "bits": [ 13, 14, 15, 16, 17, 18, 19, 20 ]
+        },
+        "RDY_get": {
+          "direction": "output",
+          "bits": [ "1" ]
+        }
+      },
+      "cells": {
+        "$add$A/rtl/mkStage.v:73$2": {
+          "hide_name": 1,
+          "type": "$add",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "g3_emit_id": "operator:c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c:/input/fixtures/Connected.bsv:rhs-binary:13:16:13:25",
+            "g3_origin_ref": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c:/input/fixtures/Connected.bsv:rhs-binary:13:16:13:25",
+            "src": "A/rtl/mkStage.v:73.7-74.296"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 4, 5, 6, 7, 8, 9, 10, 11 ],
+            "B": [ "1", "0", "0", "0", "0", "0", "0", "0" ],
+            "Y": [ 21, 22, 23, 24, 25, 26, 27, 28 ]
+          }
+        },
+        "$eq$A/rtl/mkStage.v:81$4": {
+          "hide_name": 1,
+          "type": "$eq",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "A/rtl/mkStage.v:81.42-82.46"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ "0" ],
+            "Y": [ 29 ]
+          }
+        },
+        "$procdff$10": {
+          "hide_name": 1,
+          "type": "$dff",
+          "parameters": {
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "g3_emit_id": "process:c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c:/input/fixtures/Connected.bsv:binding:11:18:11:35",
+            "g3_origin_ref": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c:/input/fixtures/Connected.bsv:binding:11:18:11:35",
+            "src": "A/rtl/mkStage.v:79.281-93.39"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 30, 31, 32, 33, 34, 35, 36, 37 ],
+            "Q": [ 13, 14, 15, 16, 17, 18, 19, 20 ]
+          }
+        },
+        "$procmux$5": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "A/rtl/mkStage.v:89.46-89.54|A/rtl/mkStage.v:89.42-91.52"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 13, 14, 15, 16, 17, 18, 19, 20 ],
+            "B": [ 21, 22, 23, 24, 25, 26, 27, 28 ],
+            "S": [ 12 ],
+            "Y": [ 38, 39, 40, 41, 42, 43, 44, 45 ]
+          }
+        },
+        "$procmux$8": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "full_case": "00000000000000000000000000000001",
+            "src": "A/rtl/mkStage.v:81.42-82.46|A/rtl/mkStage.v:81.38-92.43"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 38, 39, 40, 41, 42, 43, 44, 45 ],
+            "B": [ "0", "0", "0", "0", "0", "0", "0", "0" ],
+            "S": [ 29 ],
+            "Y": [ 30, 31, 32, 33, 34, 35, 36, 37 ]
+          }
+        }
+      },
+      "netnames": {
+        "$0\\state[7:0]": {
+          "hide_name": 1,
+          "bits": [ 30, 31, 32, 33, 34, 35, 36, 37 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:79.281-93.39"
+          }
+        },
+        "$add$A/rtl/mkStage.v:73$2_Y": {
+          "hide_name": 1,
+          "bits": [ 21, 22, 23, 24, 25, 26, 27, 28 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:73.7-74.296"
+          }
+        },
+        "$eq$A/rtl/mkStage.v:81$4_Y": {
+          "hide_name": 1,
+          "bits": [ 29 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:81.42-82.46"
+          }
+        },
+        "$procmux$5_Y": {
+          "hide_name": 1,
+          "bits": [ 38, 39, 40, 41, 42, 43, 44, 45 ],
+          "attributes": {
+          }
+        },
+        "$procmux$6_CMP": {
+          "hide_name": 1,
+          "bits": [ 12 ],
+          "attributes": {
+          }
+        },
+        "$procmux$8_Y": {
+          "hide_name": 1,
+          "bits": [ 30, 31, 32, 33, 34, 35, 36, 37 ],
+          "attributes": {
+          }
+        },
+        "$procmux$9_CMP": {
+          "hide_name": 1,
+          "bits": [ 29 ],
+          "attributes": {
+          }
+        },
+        "CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:43.10-43.13"
+          }
+        },
+        "EN_put": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:48.10-48.16"
+          }
+        },
+        "RDY_get": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:53.10-53.17"
+          }
+        },
+        "RDY_put": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:49.10-49.17"
+          }
+        },
+        "RST_N": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:44.10-44.15"
+          }
+        },
+        "get": {
+          "hide_name": 0,
+          "bits": [ 13, 14, 15, 16, 17, 18, 19, 20 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:52.18-52.21"
+          }
+        },
+        "put_value": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:47.18-47.27"
+          }
+        },
+        "state": {
+          "hide_name": 0,
+          "bits": [ 13, 14, 15, 16, 17, 18, 19, 20 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:60.15-60.20"
+          }
+        },
+        "state$D_IN": {
+          "hide_name": 0,
+          "bits": [ 21, 22, 23, 24, 25, 26, 27, 28 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:61.16-61.26"
+          }
+        },
+        "state$EN": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "A/rtl/mkStage.v:62.8-62.16"
+          }
+        }
+      }
+    }
+  }
+}

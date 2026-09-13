@@ -1,0 +1,36 @@
+{
+  "schema": "g6-evidence-plan-v1",
+  "instructions": "Non-executable example. Replace every root/file, supply all N01-N15/S01-S14 proofs, all actual traces/captures/measurements/verdicts, exact source files and measured base budgets. Nothing is auto-discovered.",
+  "budget": { "archiveBaseBytes": 596509844, "legacyBaseBytes": 433399473 },
+  "lanes": [
+    {
+      "id": "native",
+      "root": ".build/hardware/runs/REPLACE-final-native/g6",
+      "files": ["native-receipt.json", "archive-package.json", "installed-package.json", "native-acceptance.json", "native-trace-001-N01.zip", "selected-window.png", "selected-webview.png", "selected.measurement.json", "selected.verdict.json"],
+      "omit": [{ "from": "selected.state.json", "reason": "Redundant full-state diagnostic; result, identity/history measurement and complete native trace retained." }]
+    },
+    {
+      "id": "vsix",
+      "root": ".build/hardware/runs/REPLACE-final-vsix/g6",
+      "files": ["bsv-lens-0.4.1-0123456789abcdef.vsix", "bsv-lens-0.4.1-0123456789abcdef.vsix.validation.json"]
+    },
+    {
+      "id": "selected-source",
+      "kind": "external-workspace-data",
+      "role": "external-workspace-data",
+      "root": "/absolute/explicitly-selected-source-root",
+      "files": [{ "from": "hw/Selected.bsv", "to": "inputs/sources/hw/Selected.bsv" }]
+    },
+    {
+      "id": "live-input",
+      "root": ".build/hardware/runs/REPLACE-live-capture/g6",
+      "role": "external-workspace-data",
+      "files": [{ "from": "native-input.json", "to": "inputs/native-input.json" }, { "from": "design.json", "to": "inputs/artifacts/design.json" }]
+    }
+  ],
+  "vsix": { "file": "vsix/bsv-lens-0.4.1-0123456789abcdef.vsix", "receipt": "vsix/bsv-lens-0.4.1-0123456789abcdef.vsix.validation.json" },
+  "native": { "receipts": ["native/native-receipt.json"], "traces": ["native/native-trace-001-N01.zip"], "captures": ["native/selected-window.png", "native/selected-webview.png"] },
+  "acceptance": [{ "id": "N01", "status": "NOT RUN", "reason": "Replace with all actually executed native and security gates; this example cannot produce a complete delivery." }],
+  "results": [{ "id": "native", "status": "NOT RUN", "receipt": "native/native-acceptance.json" }],
+  "inputs": [{ "manifest": "inputs/native-input.json", "sourceRoot": "inputs/sources", "artifactRoot": "inputs/artifacts" }]
+}

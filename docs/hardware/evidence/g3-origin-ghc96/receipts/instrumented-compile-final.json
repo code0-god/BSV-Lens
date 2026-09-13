@@ -1,0 +1,287 @@
+{
+  "argv": [
+    "docker",
+    "start",
+    "-a",
+    "g3-origin-st_01a07a97-run03"
+  ],
+  "cwd": "/Users/zerogod/Projects/bsv-architecture-explorer",
+  "started": "2026-09-07T09:34:20.420783+00:00",
+  "pid": 83638,
+  "secondsLimit": 120,
+  "logLimitBytes": 16777216,
+  "watchLimits": [
+    "/Users/zerogod/Projects/bsv-architecture-explorer/.build/hardware/g3-origin/run-st_01a07a97-03/instrumented:4294967296"
+  ],
+  "storageEnforcement": "monitored, not hard quota",
+  "containerInspectExit": 0,
+  "containerInspect": [
+    {
+      "Id": "d279de1f8301728f5801388e5873eb85af0f193b2faa9e2f6d8b9ba86eb22873",
+      "Created": "2026-09-07T09:34:20.360372175Z",
+      "Path": "/bin/sh",
+      "Args": [
+        "-c",
+        "timeout --signal=TERM --kill-after=10s 100s /bin/sh -ec 'mkdir -p /work/run && cd /work/run && /work/inst/bin/bsc -v && mkdir -p A/bdir A/rtl A/info && /work/inst/bin/bsc -u -verilog -elab -g mkConnected -bdir A/bdir -vdir A/rtl -info-dir A/info -show-schedule -show-module-use -show-elab-progress -trace-g3-origin /input/fixtures/Connected.bsv && mkdir -p B/bdir B/rtl B/info && /work/inst/bin/bsc -u -verilog -elab -g mkControl -bdir B/bdir -vdir B/rtl -info-dir B/info -show-schedule -show-module-use -show-elab-progress -trace-g3-origin /input/fixtures/Control.bsv && mkdir -p C/bdir C/rtl C/info && /work/inst/bin/bsc -u -verilog -elab -g mkReuse -bdir C/bdir -vdir C/rtl -info-dir C/info -show-schedule -show-module-use -show-elab-progress -trace-g3-origin /input/fixtures/Reuse.bsv'; rc=$?; printf \"\nG3_BUILD_CGROUP_BEGIN\n\"; for f in memory.max memory.peak memory.events pids.max; do printf \"%s\n\" \"$f\"; head -40 /sys/fs/cgroup/$f; done; printf \"G3_BUILD_CGROUP_END exit=%s\n\" \"$rc\"; exit \"$rc\""
+      ],
+      "State": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-09-07T09:34:20.47041855Z",
+        "FinishedAt": "2026-09-07T09:34:21.117830092Z"
+      },
+      "Image": "sha256:d94a69f27fec8d669fa1d14bbaccdcd3182e82e31aacd7d6e329a47de93aafe0",
+      "ResolvConfPath": "/var/lib/docker/containers/d279de1f8301728f5801388e5873eb85af0f193b2faa9e2f6d8b9ba86eb22873/resolv.conf",
+      "HostnamePath": "/var/lib/docker/containers/d279de1f8301728f5801388e5873eb85af0f193b2faa9e2f6d8b9ba86eb22873/hostname",
+      "HostsPath": "/var/lib/docker/containers/d279de1f8301728f5801388e5873eb85af0f193b2faa9e2f6d8b9ba86eb22873/hosts",
+      "LogPath": "",
+      "Name": "/g3-origin-st_01a07a97-run03",
+      "RestartCount": 0,
+      "Driver": "overlayfs",
+      "Platform": "linux",
+      "MountLabel": "",
+      "ProcessLabel": "",
+      "AppArmorProfile": "",
+      "ExecIDs": null,
+      "HostConfig": {
+        "Binds": null,
+        "ContainerIDFile": "",
+        "LogConfig": {
+          "Type": "local",
+          "Config": {
+            "compress": "false",
+            "max-file": "1",
+            "max-size": "16m"
+          }
+        },
+        "NetworkMode": "none",
+        "PortBindings": {},
+        "RestartPolicy": {
+          "Name": "no",
+          "MaximumRetryCount": 0
+        },
+        "AutoRemove": false,
+        "VolumeDriver": "",
+        "VolumesFrom": null,
+        "ConsoleSize": [
+          0,
+          0
+        ],
+        "CapAdd": null,
+        "CapDrop": [
+          "ALL"
+        ],
+        "CgroupnsMode": "private",
+        "Dns": null,
+        "DnsOptions": [],
+        "DnsSearch": [],
+        "ExtraHosts": null,
+        "GroupAdd": null,
+        "IpcMode": "private",
+        "Cgroup": "",
+        "Links": null,
+        "OomScoreAdj": 0,
+        "PidMode": "",
+        "Privileged": false,
+        "PublishAllPorts": false,
+        "ReadonlyRootfs": true,
+        "SecurityOpt": [
+          "no-new-privileges"
+        ],
+        "Tmpfs": {
+          "/run": "rw,nosuid,size=16m",
+          "/tmp": "rw,nosuid,size=256m"
+        },
+        "UTSMode": "",
+        "UsernsMode": "",
+        "ShmSize": 67108864,
+        "Runtime": "runc",
+        "Isolation": "",
+        "CpuShares": 0,
+        "Memory": 5368709120,
+        "NanoCpus": 4000000000,
+        "CgroupParent": "",
+        "BlkioWeight": 0,
+        "BlkioWeightDevice": [],
+        "BlkioDeviceReadBps": [],
+        "BlkioDeviceWriteBps": [],
+        "BlkioDeviceReadIOps": [],
+        "BlkioDeviceWriteIOps": [],
+        "CpuPeriod": 0,
+        "CpuQuota": 0,
+        "CpuRealtimePeriod": 0,
+        "CpuRealtimeRuntime": 0,
+        "CpusetCpus": "",
+        "CpusetMems": "",
+        "Devices": [],
+        "DeviceCgroupRules": null,
+        "DeviceRequests": null,
+        "MemoryReservation": 0,
+        "MemorySwap": 5368709120,
+        "MemorySwappiness": null,
+        "OomKillDisable": null,
+        "PidsLimit": 512,
+        "Ulimits": [],
+        "CpuCount": 0,
+        "CpuPercent": 0,
+        "IOMaximumIOps": 0,
+        "IOMaximumBandwidth": 0,
+        "Mounts": [
+          {
+            "Type": "bind",
+            "Source": "/Users/zerogod/Projects/bsv-architecture-explorer/.build/hardware/g3-origin/run-st_01a07a97-03/instrumented",
+            "Target": "/work"
+          },
+          {
+            "Type": "bind",
+            "Source": "/Users/zerogod/Projects/bsv-architecture-explorer/.build/hardware/g3-origin/run-st_01a07a97-03/inputs",
+            "Target": "/input",
+            "ReadOnly": true
+          }
+        ],
+        "MaskedPaths": [
+          "/proc/acpi",
+          "/proc/asound",
+          "/proc/interrupts",
+          "/proc/kcore",
+          "/proc/keys",
+          "/proc/latency_stats",
+          "/proc/sched_debug",
+          "/proc/scsi",
+          "/proc/timer_list",
+          "/proc/timer_stats",
+          "/sys/devices/virtual/powercap",
+          "/sys/firmware"
+        ],
+        "ReadonlyPaths": [
+          "/proc/bus",
+          "/proc/fs",
+          "/proc/irq",
+          "/proc/sys",
+          "/proc/sysrq-trigger"
+        ],
+        "Init": true
+      },
+      "Storage": {
+        "RootFS": {
+          "Snapshot": {
+            "Name": "overlayfs"
+          }
+        }
+      },
+      "Mounts": [
+        {
+          "Type": "bind",
+          "Source": "/Users/zerogod/Projects/bsv-architecture-explorer/.build/hardware/g3-origin/run-st_01a07a97-03/instrumented",
+          "Destination": "/work",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/Users/zerogod/Projects/bsv-architecture-explorer/.build/hardware/g3-origin/run-st_01a07a97-03/inputs",
+          "Destination": "/input",
+          "Mode": "",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "Config": {
+        "Hostname": "d279de1f8301",
+        "Domainname": "",
+        "User": "",
+        "AttachStdin": false,
+        "AttachStdout": true,
+        "AttachStderr": true,
+        "Tty": false,
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Env": [
+          "PATH=/opt/ghc-9.6.7/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "GIT_CONFIG_COUNT=1",
+          "GIT_CONFIG_KEY_0=safe.directory",
+          "GIT_CONFIG_VALUE_0=/work/bsc",
+          "HOME=/opt/g3-ghc96-home",
+          "CABAL_DIR=/opt/g3-cabal",
+          "GHC=/opt/ghc-9.6.7/bin/ghc -XFlexibleContexts",
+          "NODE_VERSION=22.22.0",
+          "YARN_VERSION=1.22.22"
+        ],
+        "Cmd": [
+          "-c",
+          "timeout --signal=TERM --kill-after=10s 100s /bin/sh -ec 'mkdir -p /work/run && cd /work/run && /work/inst/bin/bsc -v && mkdir -p A/bdir A/rtl A/info && /work/inst/bin/bsc -u -verilog -elab -g mkConnected -bdir A/bdir -vdir A/rtl -info-dir A/info -show-schedule -show-module-use -show-elab-progress -trace-g3-origin /input/fixtures/Connected.bsv && mkdir -p B/bdir B/rtl B/info && /work/inst/bin/bsc -u -verilog -elab -g mkControl -bdir B/bdir -vdir B/rtl -info-dir B/info -show-schedule -show-module-use -show-elab-progress -trace-g3-origin /input/fixtures/Control.bsv && mkdir -p C/bdir C/rtl C/info && /work/inst/bin/bsc -u -verilog -elab -g mkReuse -bdir C/bdir -vdir C/rtl -info-dir C/info -show-schedule -show-module-use -show-elab-progress -trace-g3-origin /input/fixtures/Reuse.bsv'; rc=$?; printf \"\nG3_BUILD_CGROUP_BEGIN\n\"; for f in memory.max memory.peak memory.events pids.max; do printf \"%s\n\" \"$f\"; head -40 /sys/fs/cgroup/$f; done; printf \"G3_BUILD_CGROUP_END exit=%s\n\" \"$rc\"; exit \"$rc\""
+        ],
+        "Image": "sha256:d94a69f27fec8d669fa1d14bbaccdcd3182e82e31aacd7d6e329a47de93aafe0",
+        "Volumes": null,
+        "WorkingDir": "/work/bsc",
+        "Entrypoint": [
+          "/bin/sh"
+        ],
+        "Labels": {
+          "g3.run": "run03",
+          "g3.task": "st_01a07a97"
+        },
+        "StopTimeout": 1
+      },
+      "NetworkSettings": {
+        "SandboxID": "",
+        "SandboxKey": "",
+        "Ports": {},
+        "Networks": {
+          "none": {
+            "IPAMConfig": null,
+            "Links": null,
+            "Aliases": null,
+            "DriverOpts": null,
+            "GwPriority": 0,
+            "NetworkID": "73723f71076602c8f0c9636f7955307df1532803e19c05c55a35d7330f2dacef",
+            "EndpointID": "",
+            "Gateway": "",
+            "IPAddress": "",
+            "MacAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "DNSNames": null
+          }
+        }
+      },
+      "ImageManifestDescriptor": {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:d94a69f27fec8d669fa1d14bbaccdcd3182e82e31aacd7d6e329a47de93aafe0",
+        "size": 2058,
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux"
+        }
+      }
+    }
+  ],
+  "exit": 0,
+  "reason": null,
+  "elapsedSeconds": 1.1346396659500897,
+  "finished": "2026-09-07T09:34:21.555595+00:00",
+  "outputBytes": 379012,
+  "completeLog": true,
+  "logSha256": "06a0f1a2c2882b1adef6763ba71ca023dbd6e86476553009b9659f7341bb2b87",
+  "samples": [
+    {
+      "elapsedSeconds": 0.0038705829065293074,
+      "/Users/zerogod/Projects/bsv-architecture-explorer/.build/hardware/g3-origin/run-st_01a07a97-03/instrumented": 922943488,
+      "dockerStats": "{\"BlockIO\":\"0B / 0B\",\"CPUPerc\":\"0.00%\",\"Container\":\"g3-origin-st_01a07a97-run03\",\"ID\":\"d279de1f8301\",\"MemPerc\":\"0.00%\",\"MemUsage\":\"0B / 0B\",\"Name\":\"g3-origin-st_01a07a97-run03\",\"NetIO\":\"0B / 0B\",\"PIDs\":\"0\"}\n",
+      "dockerStatsExit": 0
+    }
+  ],
+  "peakDirectoryBytes": {
+    "/Users/zerogod/Projects/bsv-architecture-explorer/.build/hardware/g3-origin/run-st_01a07a97-03/instrumented": 922943488
+  }
+}

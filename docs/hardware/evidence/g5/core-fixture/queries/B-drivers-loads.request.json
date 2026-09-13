@@ -1,0 +1,21 @@
+{
+  "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+  "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+  "implementationProvider": "stock",
+  "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+  "ownerInstanceId": null,
+  "scope": {
+    "kind": "design",
+    "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+  },
+  "queryGeneration": 1,
+  "kind": "drivers-loads",
+  "seed": {
+    "entityId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/port/inject_value",
+    "indices": [
+      0,
+      1,
+      0
+    ]
+  }
+}

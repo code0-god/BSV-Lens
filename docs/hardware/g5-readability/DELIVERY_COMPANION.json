@@ -1,0 +1,372 @@
+{
+  "schema": "g5-readability-companion-v1",
+  "omittedRoot": "docs/hardware/evidence/g5/run-YTGBZS/",
+  "purpose": "Historical G5 resume QA supplement only; preserved source/compiler/query evidence remains inline.",
+  "archives": [
+    {
+      "path": "dist/bsv-lens-hardware-g5-review.zip",
+      "bytes": 240158866,
+      "sha256": "8a9ebbacefdac7a523bad036af37fa374ea1bb574495974ac8a12e1e2e897282"
+    },
+    {
+      "path": "dist/bsv-lens-hardware-g5-source.zip",
+      "bytes": 223922190,
+      "sha256": "3504decafff6ad0c600b2a8c2d0c2651edee3f84a33c408e522d85663b23c686"
+    }
+  ],
+  "inventory": [
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/B-code.png",
+      "bytes": 107465,
+      "sha256": "6c3fbce02ccc27741227e254f2ac87e7e3b94adb58b4607b08645e6e4d2afccf"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/B-dependencies.png",
+      "bytes": 126955,
+      "sha256": "011f556e8d4f2d46e872081266571530db4e084f50ef4eed1d52e19aadfac1e4"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/C-narrow-source.png",
+      "bytes": 116986,
+      "sha256": "e0c32ebde0d923d2387f429aa93639b0d6040345e0a4a5e004597e317bc47bc9"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/C-wide-source.png",
+      "bytes": 117176,
+      "sha256": "fb9c4428d24dbfc1ac9374479279fa77d71748d5bd5439f3498fbbabea21292f"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J01.png",
+      "bytes": 98311,
+      "sha256": "56018fdfe91e77c8e40663e8f095601ca1f0c27573c4375b0f5a61e71adfbab8"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J02.png",
+      "bytes": 133530,
+      "sha256": "39ba93036cc0987ad33d3973b0f3aee3479721b74da2a3fa0b1bc2f1cfce16f8"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J03.png",
+      "bytes": 110707,
+      "sha256": "b5b800e1d63460613f2c318abd043d5078f84559c63de2c331b180317984f087"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J04.png",
+      "bytes": 113972,
+      "sha256": "7c326745737b8fff8b5a4a391d4099faaedcf7095dad4c521093222fa6c2eb2e"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J05.png",
+      "bytes": 122981,
+      "sha256": "98bdae64a0caf43ed970b3592998f4a6ab0a56ef6d29d83bc4db5a7abd627f5a"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J06.png",
+      "bytes": 133201,
+      "sha256": "4cf88432ed336835f3ca25353ee6b32bb09fc735504217a6b436475103dc68e3"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J07.png",
+      "bytes": 134033,
+      "sha256": "ef779c7787bb5c6d21904a1a5b98383d5b40e82c0969ebae26d4940a21312e6a"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J08.png",
+      "bytes": 105096,
+      "sha256": "78e30fc70018fb49d4b02824c9b3b2287175c1f0b63e7e329f886ebc8f09600f"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J09.png",
+      "bytes": 125377,
+      "sha256": "382bb203535bdbe756194cb369b1bb13c48ab2a37ce00c35c868f1a1dbdc61d8"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J10.png",
+      "bytes": 116545,
+      "sha256": "7c316e8cde05045db7e5d21c760e358f942f02bded28d0e1b85b6f3665aa95ba"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J11.png",
+      "bytes": 95168,
+      "sha256": "6a8a972a459eb041a0455690ffcfa395e56cc9876c0da51a4660b78448f5f235"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J12.png",
+      "bytes": 117485,
+      "sha256": "dbb12ba77f70e18981755631148253e7248aa4c215a39e5f7e129a0bc7203795"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J13.png",
+      "bytes": 117485,
+      "sha256": "dbb12ba77f70e18981755631148253e7248aa4c215a39e5f7e129a0bc7203795"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J14.png",
+      "bytes": 132623,
+      "sha256": "5a9850045f565bb48a04e9eec048d2a8393e1f9d74556bf5709b05960ee7f659"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/J15.png",
+      "bytes": 48757,
+      "sha256": "bfb66641e2bfe3dad3d6380f697b059fc625ff769605a51ab69b5ed4d5843ced"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/receipt.json",
+      "bytes": 22366234,
+      "sha256": "a3a7d1a3de7a704ba7ee029f6f1d1e469f9e4b5b9aaa09e0d866d1ab3ddf54aa"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/source-1440-dark.png",
+      "bytes": 113496,
+      "sha256": "0630b8a997c620253bb0ee6b85aae6ac9d7c9059c659d14772c4da5e436c7cb4"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/source-420-high-contrast.png",
+      "bytes": 48757,
+      "sha256": "bfb66641e2bfe3dad3d6380f697b059fc625ff769605a51ab69b5ed4d5843ced"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/source-960-light.png",
+      "bytes": 93666,
+      "sha256": "56961d26d6cc99d01b9a2c9254ecc27cc2d13c228e3f2a22497fbcd546071199"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/trace.zip",
+      "bytes": 42736559,
+      "sha256": "3220e999e46e670a2deb4a57783599c777e07e3aeb815e1cc0cef81657177b58"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/variant-1440-dark.png",
+      "bytes": 113496,
+      "sha256": "0630b8a997c620253bb0ee6b85aae6ac9d7c9059c659d14772c4da5e436c7cb4"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/variant-420-high-contrast.png",
+      "bytes": 40112,
+      "sha256": "89db74fa11f507d09be751aa6f40b2993293b41323d5ba805ee1dc81d8aeae3e"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/browser/variant-960-light.png",
+      "bytes": 93666,
+      "sha256": "56961d26d6cc99d01b9a2c9254ecc27cc2d13c228e3f2a22497fbcd546071199"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/check/closure-receipt.json",
+      "bytes": 2130,
+      "sha256": "2d8314175345fc4d6b89139507f4a9a0d3b5d32f4f2c8cdb4d8d2f826f1f52b3"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/check/closure-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/check/closure-stdout.log",
+      "bytes": 142,
+      "sha256": "d5b99766acce3021ba8220b5b0bcc949e20238452164956efed7e4e4523583f3"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/check/receipt.json",
+      "bytes": 2124,
+      "sha256": "feb3375e3fa5bce54e5e9e674787aaeeb9be8f388155adb6a3124e81c120e8d0"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/check/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/check/stdout.log",
+      "bytes": 142,
+      "sha256": "d5b99766acce3021ba8220b5b0bcc949e20238452164956efed7e4e4523583f3"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/delivery-bounds/receipt.json",
+      "bytes": 2167,
+      "sha256": "eafb0fca65661d641348efefe9a4e0ca75da28123d3c6d27483e56a6a2122396"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/delivery-bounds/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/delivery-bounds/stdout.log",
+      "bytes": 836,
+      "sha256": "e5bee669865f6ad6a574670f591a9e9543873d227eb09d5290c11de1fef83380"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/delivery-final/receipt.json",
+      "bytes": 2170,
+      "sha256": "3a9e98821d772abb6d889e64541f569845c1bc833a63b4640f2634a3482eb1ce"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/delivery-final/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/delivery-final/stdout.log",
+      "bytes": 936,
+      "sha256": "881dbd1e66d7021dbc5eb5626cccc4f8f2b0f2087c331fef0bbef9db9f5ad541"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/final-full/receipt.json",
+      "bytes": 5634,
+      "sha256": "65d8aa149f8d461f0fa1080641d0d77d7278c9433b58802b49c7d26f9ba21402"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/final-full/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/final-full/stdout.log",
+      "bytes": 71273,
+      "sha256": "15b88a33e477ebc3ea81eebe2fe53ba4adda22c7c032b3be9488c903806057e4"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/full/receipt.json",
+      "bytes": 5631,
+      "sha256": "0871148f99eeb233cedf19ab1d01c07ea7a3093f709dc38fdafba381fc265488"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/full/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/full/stdout.log",
+      "bytes": 71173,
+      "sha256": "3634048b1f3e90cdfb5b15ba708e691814d0a9244ddc76707534c114e7429f56"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/g4-delivery-green/receipt.json",
+      "bytes": 2217,
+      "sha256": "e25e2a12b193a3f8ee4bc5ddc291aaeaf58042623959ce459f6336e8e1dd3add"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/g4-delivery-green/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/g4-delivery-green/stdout.log",
+      "bytes": 1303,
+      "sha256": "1e948a745f7d6446dcd1980095f42d24b43a34768341ceccfb26d5abd46016ba"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/intermediate-stage/review.validation.json",
+      "bytes": 31386830,
+      "sha256": "245022edcd54ba5ff0d5634284bb4d4bc1f0c6c8276cccc4b9c5252da305ccca"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/intermediate-stage/source.validation.json",
+      "bytes": 31382805,
+      "sha256": "f892d7633022a41287ea615ace6fc944d6afcddd3645434d6fe16bc4d8bdf01b"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/local-state-green/receipt.json",
+      "bytes": 2179,
+      "sha256": "dd0d491ef7177da8624df0527587f8bb4d90bf6a8b470e517cc8f1ea629cc047"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/local-state-green/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/local-state-green/stdout.log",
+      "bytes": 834,
+      "sha256": "ea100bce5922eca92eba604ee307c8f7445c8b68a3f1cc421288346110c98f0f"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/local-state-red/receipt.json",
+      "bytes": 2173,
+      "sha256": "b32067702268070ff3575f1be8c6b6c070e0f72bb988fff61b0d96bcd8826357"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/local-state-red/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/local-state-red/stdout.log",
+      "bytes": 4119,
+      "sha256": "01d94ce50cec2f87d3a1f1ff48316c132c4f77beb6bbd5578b93f8e29043ce04"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/preservation/receipt.json",
+      "bytes": 4916,
+      "sha256": "5eb7213ce03f1fd2071a262936f539a688aa463b62313875b188a2474483e22b"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/replay-output-green/receipt.json",
+      "bytes": 2185,
+      "sha256": "0308fb229e1ef27f28c71276777ded9dbb8ae14e20072f04cd5f969a188c4587"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/replay-output-green/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/replay-output-green/stdout.log",
+      "bytes": 941,
+      "sha256": "3656e5a47fa6775b19c6f59edb1d440271a49d6e1e5f9fa109f7b7cb43ff9f73"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/replay-output-red/receipt.json",
+      "bytes": 2179,
+      "sha256": "ebe7d709ac7c19a352c18c08a472cb28f9a3ff213845e4ddd6577e2c81a24458"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/replay-output-red/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/replay-output-red/stdout.log",
+      "bytes": 3162,
+      "sha256": "5db4a37393dc57a27857a3c05a76275fc142198902e18e3a4e9ed0b5f79e8a66"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/visual-diff/receipt.json",
+      "bytes": 2349,
+      "sha256": "9bad43e29f002e3eae8ff327314e4703ecf595d44bf13201b93e056c882f6076"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/visual-diff/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/checks/visual-diff/stdout.log",
+      "bytes": 370,
+      "sha256": "7e5f0c7e0a4fd8a9fc8da8ae361b80b35afb4b96e09fa39d5239bd68125980e6"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/diagnostics.json",
+      "bytes": 792,
+      "sha256": "84e9ec9b571f103dfc5a83b4d2ed238ed38b7927c92a72d74dcf5dde6009f2dc"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/index.json",
+      "bytes": 13540,
+      "sha256": "09d3c64896ef757d8dce3abdc4225213efafdd16a394ed4d978eaa230d198fd6"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/reviews.json",
+      "bytes": 2324,
+      "sha256": "c1b3cbc23123f1c94944e0f95c66e632eb8e5a29bcf346a1234f8e6ca111b7ee"
+    },
+    {
+      "path": "docs/hardware/evidence/g5/run-YTGBZS/runtime.json",
+      "bytes": 53487,
+      "sha256": "d610134c75fe56bc8f5916486f05588d31134d28f6da1acb8776930f17b59954"
+    }
+  ],
+  "inventorySha256": "2d955fb182f1ea7e045aa90865f32d8eef392032a5a408c61a87a74a095736b3",
+  "replayRequirement": "Optional historical QA companion. Core/readability replay requires no historical archive. Author-input preservation still fails without its separate 14 inputs.",
+  "preservation": "Original supplement and both original G5 ZIPs remain unchanged on disk. Recover omitted files from bsv-lens/ paths in either named archive."
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "g3-origin-execution-identities-v1",
+  "baselineBscSha256": "fca222952f5b69df384f1aa079efc70fa57b8c2ba5b185ef53d34a9f9943807b",
+  "instrumentedBscSha256": "74a8004efdd032860e788dac3ff2d182a62bb3f9f2f79f07314d4774e85d94de",
+  "instrumentedBluetclSha256": "2202b7fdb7815a51ba0392fd99f1e03e2d7e1758fda8c635ea4ed0d7a96be471",
+  "patchSha256": "d15955aceb355d0e2e19322a62a2f7928166ff15beb87ec286c44bf83931df85",
+  "originAdapterSha256": "802e41b87430ff564d05effda6c96812a3ba7ba4a6963ebc660da3c6ca0e5510",
+  "comparisonAdapterSha256": "81695efdd6c69e3bb3ecfa489396dfcca33109aecb02a7cb8fbb7ea67fcba512",
+  "sourcePin": "9bd39e6f3d54d314a94ce30339a224bb283cbade",
+  "toolchainImage": "sha256:d94a69f27fec8d669fa1d14bbaccdcd3182e82e31aacd7d6e329a47de93aafe0"
+}

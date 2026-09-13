@@ -1,0 +1,6 @@
+# Experiment-only tools; install into .build/hardware/toolchain/tools/venv.
+yowasp-yosys==0.68.0.0.post1208
+yowasp-runtime==1.96
+wasmtime==47.0.1
+click==8.5.0
+platformdirs==4.11.7

@@ -1,0 +1,978 @@
+{
+  "schemaVersion": 1,
+  "id": "analysis-result-939683704a4c1b29a8f147dd7fa4b5b371ac95b8eca983593d69633c3a0f7301",
+  "queryId": "analysis-query-ffe6d9ef8031cadb42ff02c428da18188fa4b9673878f69f6780dbe69f206890",
+  "kind": "drivers-loads",
+  "status": "complete",
+  "availability": "available",
+  "completeness": "complete",
+  "freshness": "fresh",
+  "context": {
+    "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+    "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+    "modelId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/implementation/yosys-json-v1",
+    "implementationProvider": "stock",
+    "providerIdentity": "yosys-json-v1",
+    "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+    "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+    "buildInputFingerprint": "38d8d43db33071a507e9d24c158c4a40efa11ed7b00cede0fc2320151a443f67",
+    "sourceModelIdentity": "54d4ae86a479ad9373e35bd8915ff1086b4e5346ab4c3c9b4238169d88c2dc45",
+    "sourceStatus": "attached",
+    "originAnalysisId": null,
+    "freshness": "fresh",
+    "unknownInputs": [
+      "dependencyFingerprint",
+      "toolchain",
+      "passSequence",
+      "buildOptionsFingerprint",
+      "concreteParameters"
+    ],
+    "capabilities": {
+      "same-net": "available",
+      "drivers-loads": "available",
+      "dependencies": "available",
+      "state-accesses": "available",
+      "behavior": "available",
+      "call-site": "available",
+      "source-dependencies": "available",
+      "correspondence": "available"
+    }
+  },
+  "seed": {
+    "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+    "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+    "positions": [
+      {
+        "position": 0,
+        "index": 0,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get"
+      },
+      {
+        "position": 1,
+        "index": 1,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get"
+      },
+      {
+        "position": 2,
+        "index": 0,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get"
+      }
+    ]
+  },
+  "scope": {
+    "kind": "design",
+    "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+  },
+  "direction": null,
+  "semanticsProfile": null,
+  "groups": [
+    {
+      "seed": {
+        "position": 0,
+        "index": 0,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get"
+      },
+      "bitIds": [
+        "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13"
+      ],
+      "incidences": [
+        {
+          "id": "analysis-incidence-4099fc5680125d0bc1db1aceba36f4061c2c3c8a51411ccc8fe67aa34299fb71",
+          "kind": "implementation",
+          "objectKind": "pin",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": "output",
+          "role": "leaf-terminal"
+        },
+        {
+          "id": "analysis-incidence-5fd3e05e68f3864aa7f49512d5750001f24b74fc1d9b97e76481cec41482755d",
+          "kind": "implementation",
+          "objectKind": "port",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": "output",
+          "role": "external-contact"
+        },
+        {
+          "id": "analysis-incidence-70843a6ddd6a332af597446c2ed09b567a73cfd715dffd6e24ad17f1c96c4841",
+          "kind": "implementation",
+          "objectKind": "alias",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/get",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": null,
+          "role": "alias"
+        },
+        {
+          "id": "analysis-incidence-e586398fefd3b30c0feaf91c3a14bb987f7ee98cf0f8e64e3e53552036c6b269",
+          "kind": "implementation",
+          "objectKind": "alias",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": null,
+          "role": "alias"
+        }
+      ],
+      "boundaryIds": [],
+      "drivers": [
+        {
+          "id": "analysis-incidence-4099fc5680125d0bc1db1aceba36f4061c2c3c8a51411ccc8fe67aa34299fb71",
+          "kind": "implementation",
+          "objectKind": "pin",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": "output",
+          "role": "leaf-terminal"
+        }
+      ],
+      "loads": [
+        {
+          "id": "analysis-incidence-5fd3e05e68f3864aa7f49512d5750001f24b74fc1d9b97e76481cec41482755d",
+          "kind": "implementation",
+          "objectKind": "port",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": "output",
+          "role": "external-contact"
+        }
+      ],
+      "boundaryContacts": [],
+      "unknownContacts": [],
+      "membership": "complete",
+      "interpretation": "complete"
+    },
+    {
+      "seed": {
+        "position": 1,
+        "index": 1,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get"
+      },
+      "bitIds": [
+        "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14"
+      ],
+      "incidences": [
+        {
+          "id": "analysis-incidence-55fb1806aba3c4188b8384d94e75061978bb26e1ef78d327d473ca559cb14db2",
+          "kind": "implementation",
+          "objectKind": "alias",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 1,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+          "direction": null,
+          "role": "alias"
+        },
+        {
+          "id": "analysis-incidence-61f489a1f7c36cd505582bd3d13e17aab4f9f9670a5ad09118dcd0aa94807de4",
+          "kind": "implementation",
+          "objectKind": "alias",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/get",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 1,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+          "direction": null,
+          "role": "alias"
+        },
+        {
+          "id": "analysis-incidence-831190ce08593b8ad7addf8e2eabfc7b3f6b8c3025d9760e96c4f16999adbb28",
+          "kind": "implementation",
+          "objectKind": "pin",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 1,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+          "direction": "output",
+          "role": "leaf-terminal"
+        },
+        {
+          "id": "analysis-incidence-d7228c015afb7e3a5745d792e6e7a9ee26a2e340d88f52c8633a19200c4fc053",
+          "kind": "implementation",
+          "objectKind": "port",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 1,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+          "direction": "output",
+          "role": "external-contact"
+        }
+      ],
+      "boundaryIds": [],
+      "drivers": [
+        {
+          "id": "analysis-incidence-831190ce08593b8ad7addf8e2eabfc7b3f6b8c3025d9760e96c4f16999adbb28",
+          "kind": "implementation",
+          "objectKind": "pin",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 1,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+          "direction": "output",
+          "role": "leaf-terminal"
+        }
+      ],
+      "loads": [
+        {
+          "id": "analysis-incidence-d7228c015afb7e3a5745d792e6e7a9ee26a2e340d88f52c8633a19200c4fc053",
+          "kind": "implementation",
+          "objectKind": "port",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 1,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+          "direction": "output",
+          "role": "external-contact"
+        }
+      ],
+      "boundaryContacts": [],
+      "unknownContacts": [],
+      "membership": "complete",
+      "interpretation": "complete"
+    },
+    {
+      "seed": {
+        "position": 2,
+        "index": 0,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get"
+      },
+      "bitIds": [
+        "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13"
+      ],
+      "incidences": [
+        {
+          "id": "analysis-incidence-4099fc5680125d0bc1db1aceba36f4061c2c3c8a51411ccc8fe67aa34299fb71",
+          "kind": "implementation",
+          "objectKind": "pin",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": "output",
+          "role": "leaf-terminal"
+        },
+        {
+          "id": "analysis-incidence-5fd3e05e68f3864aa7f49512d5750001f24b74fc1d9b97e76481cec41482755d",
+          "kind": "implementation",
+          "objectKind": "port",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": "output",
+          "role": "external-contact"
+        },
+        {
+          "id": "analysis-incidence-70843a6ddd6a332af597446c2ed09b567a73cfd715dffd6e24ad17f1c96c4841",
+          "kind": "implementation",
+          "objectKind": "alias",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/get",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": null,
+          "role": "alias"
+        },
+        {
+          "id": "analysis-incidence-e586398fefd3b30c0feaf91c3a14bb987f7ee98cf0f8e64e3e53552036c6b269",
+          "kind": "implementation",
+          "objectKind": "alias",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": null,
+          "role": "alias"
+        }
+      ],
+      "boundaryIds": [],
+      "drivers": [
+        {
+          "id": "analysis-incidence-4099fc5680125d0bc1db1aceba36f4061c2c3c8a51411ccc8fe67aa34299fb71",
+          "kind": "implementation",
+          "objectKind": "pin",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": "output",
+          "role": "leaf-terminal"
+        }
+      ],
+      "loads": [
+        {
+          "id": "analysis-incidence-5fd3e05e68f3864aa7f49512d5750001f24b74fc1d9b97e76481cec41482755d",
+          "kind": "implementation",
+          "objectKind": "port",
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+          "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+          "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+          "index": 0,
+          "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+          "direction": "output",
+          "role": "external-contact"
+        }
+      ],
+      "boundaryContacts": [],
+      "unknownContacts": [],
+      "membership": "complete",
+      "interpretation": "complete"
+    }
+  ],
+  "objects": [
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+      "kind": "implementation",
+      "objectKind": "alias",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+      "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+      "name": "$add$docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:79$7_Y"
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/get",
+      "kind": "implementation",
+      "objectKind": "alias",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/get",
+      "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+      "name": "get"
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+      "kind": "implementation",
+      "objectKind": "signal-bit",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+      "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+      "value": 13
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+      "kind": "implementation",
+      "objectKind": "signal-bit",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+      "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+      "value": 14
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7",
+      "kind": "implementation",
+      "objectKind": "cell",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7",
+      "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+      "name": "$add$docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:79$7",
+      "type": "$add"
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+      "kind": "implementation",
+      "objectKind": "pin",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+      "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+      "name": "Y"
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+      "kind": "implementation",
+      "objectKind": "port",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+      "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+      "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+      "name": "get"
+    }
+  ],
+  "relations": [
+    {
+      "id": "analysis-incidence-4099fc5680125d0bc1db1aceba36f4061c2c3c8a51411ccc8fe67aa34299fb71",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "index": 0,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "direction": "output",
+        "role": "leaf-terminal"
+      }
+    },
+    {
+      "id": "analysis-incidence-55fb1806aba3c4188b8384d94e75061978bb26e1ef78d327d473ca559cb14db2",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "index": 1,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-5fd3e05e68f3864aa7f49512d5750001f24b74fc1d9b97e76481cec41482755d",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "index": 0,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "direction": "output",
+        "role": "external-contact"
+      }
+    },
+    {
+      "id": "analysis-incidence-61f489a1f7c36cd505582bd3d13e17aab4f9f9670a5ad09118dcd0aa94807de4",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/get",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "index": 1,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-70843a6ddd6a332af597446c2ed09b567a73cfd715dffd6e24ad17f1c96c4841",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/get",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "index": 0,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-831190ce08593b8ad7addf8e2eabfc7b3f6b8c3025d9760e96c4f16999adbb28",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "index": 1,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "direction": "output",
+        "role": "leaf-terminal"
+      }
+    },
+    {
+      "id": "analysis-incidence-d7228c015afb7e3a5745d792e6e7a9ee26a2e340d88f52c8633a19200c4fc053",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "index": 1,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+        "direction": "output",
+        "role": "external-contact"
+      }
+    },
+    {
+      "id": "analysis-incidence-e586398fefd3b30c0feaf91c3a14bb987f7ee98cf0f8e64e3e53552036c6b269",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "occurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "index": 0,
+        "bitId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+        "direction": null,
+        "role": "alias"
+      }
+    }
+  ],
+  "boundaries": [],
+  "frontier": [],
+  "sourceRefs": [],
+  "evidenceRefs": [
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+      "kind": "generated-evidence",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+      "providerRefs": [
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/netnames/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:79.16-79.47",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkReuse/netnames/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/netnames/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/get",
+      "kind": "generated-evidence",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/alias/get",
+      "providerRefs": [
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/netnames/get"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:52.19-52.22",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkReuse/netnames/get",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/netnames/get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+      "kind": "generated-evidence",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/13",
+      "providerRefs": [
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/ports/get/bits/0"
+        },
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/netnames/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y/bits/0"
+        },
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/netnames/get/bits/0"
+        },
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/connections/Y/0"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:34.1-133.10",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:79.16-79.47",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse/netnames/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/netnames/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:52.19-52.22",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse/netnames/get",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/netnames/get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:79.16-79.47",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+      "kind": "generated-evidence",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/bit/14",
+      "providerRefs": [
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/ports/get/bits/1"
+        },
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/netnames/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y/bits/1"
+        },
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/netnames/get/bits/1"
+        },
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/connections/Y/1"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:34.1-133.10",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:79.16-79.47",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse/netnames/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/netnames/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7_Y/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:52.19-52.22",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse/netnames/get",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/netnames/get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:79.16-79.47",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7",
+      "kind": "generated-evidence",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7",
+      "providerRefs": [
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:79.16-79.47",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+      "kind": "generated-evidence",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/cell/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/pin/Y",
+      "providerRefs": [
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/connections/Y"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:79.16-79.47",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/cells/$add$docs~1hardware~1evidence~1toolchain~1C~1rtl~1mkReuse.v:79$7/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+      "kind": "generated-evidence",
+      "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+      "providerRefs": [
+        {
+          "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+          "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+          "pointer": "/modules/mkReuse/ports/get"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/C/rtl/mkReuse.v:34.1-133.10",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkReuse",
+          "providerRefs": [
+            {
+              "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+              "pathRef": "docs/hardware/evidence/toolchain/C/design.json",
+              "pointer": "/modules/mkReuse/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    }
+  ],
+  "candidates": [],
+  "limits": {
+    "maxBits": 4096,
+    "maxPins": 8192,
+    "maxCells": 512,
+    "maxEdges": 16384,
+    "maxHierarchyDepth": 64,
+    "maxResultBytes": 4194304,
+    "timeoutMs": 30000,
+    "stopReasons": []
+  },
+  "request": {
+    "queryGeneration": 1,
+    "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474"
+  },
+  "metrics": {
+    "preparationMs": 0.11808299999995597,
+    "executionMs": 1.2658340000000408,
+    "cancellationMs": 0,
+    "visitedBits": 2,
+    "visitedPins": 1,
+    "visitedCells": 1,
+    "visitedEdges": 8,
+    "maxHierarchyDepth": 0,
+    "resultBytes": 41289,
+    "workerStartupMs": 14.187792000000002,
+    "elapsedMs": 20.29879199999999
+  }
+}

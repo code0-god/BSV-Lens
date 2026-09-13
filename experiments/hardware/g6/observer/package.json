@@ -1,0 +1,13 @@
+{
+  "name": "bsv-lens-g6-observer",
+  "displayName": "BSV Lens G6 Test Observer",
+  "publisher": "bsv-lens-tests",
+  "version": "0.0.1",
+  "engines": { "vscode": "^1.90.0" },
+  "main": "./index.js",
+  "activationEvents": ["*"],
+  "capabilities": {
+    "untrustedWorkspaces": { "supported": true },
+    "virtualWorkspaces": { "supported": false }
+  }
+}

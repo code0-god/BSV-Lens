@@ -6,13 +6,12 @@ const { bindConstructorArguments } = require('./constructor-bindings');
 const SOURCE_ORIGIN = 'Source-derived';
 const ROOT_ORIGIN = 'Source-derived root projection';
 
-function buildInstances(definitions, parsedFiles, config = {}, context = {}) {
+function sourceModuleIndex(definitions, parsedFiles, diagnostics = []) {
     const modules = definitions.filter((item) => item.kind === 'module-definition');
     const byName = groupBy(modules, (item) => item.name);
     const importsByPackage = new Map(parsedFiles.map((file) => [
         file.packageName, new Set((file.imports || []).map((item) => item.package))
     ]));
-    const diagnostics = [];
     const resolve = (owner, name, location) => resolveTarget(
         owner, name, byName, importsByPackage, diagnostics, location
     );
@@ -23,7 +22,12 @@ function buildInstances(definitions, parsedFiles, config = {}, context = {}) {
             if (target) instantiated.add(target.id);
         }
     }
+    return { modules, byName, instantiated, resolve };
+}
 
+function buildInstances(definitions, parsedFiles, config = {}, context = {}) {
+    const diagnostics = [];
+    const { modules, instantiated, resolve } = sourceModuleIndex(definitions, parsedFiles, diagnostics);
     const configuredEntries = config.entrypoints || [];
     const configured = configuredRoots(modules, configuredEntries, diagnostics);
     const uninstantiated = modules.filter((item) => !instantiated.has(item.id));
@@ -218,9 +222,9 @@ function configuredRoots(modules, entries, diagnostics) {
     const result = [];
     for (const entry of entries) {
         const qualified = /^(.*?)(?:::|\.)(mk[A-Za-z_$][\w$]*)$/.exec(entry);
-        const matches = modules.filter((item) => qualified
+        const matches = modules.filter((item) => item.id === entry || (qualified
             ? item.packageName === qualified[1] && item.name === qualified[2]
-            : item.name === entry);
+            : item.name === entry));
         if (matches.length === 1 && !result.includes(matches[0])) result.push(matches[0]);
         else if (matches.length > 1) diagnostics.push({
             code: 'entrypoint.ambiguous',
@@ -280,4 +284,4 @@ function groupBy(items, key) {
     return result;
 }
 
-module.exports = { buildInstances };
+module.exports = { buildInstances, sourceModuleIndex, targetConstructor };

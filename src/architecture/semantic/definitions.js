@@ -105,7 +105,8 @@ function functionDefinition(packageName, file, item) {
         ...item,
         id: definitionId(
             packageName,
-            item.parentModuleName ? `${item.parentModuleName}.${item.name}` : item.name
+            item.parentModuleName ? `${item.parentModuleName}.${item.name}`
+                : item.declarationScope ? `${item.declarationScope.key}.${item.name}` : item.name
         ),
         kind: 'function-definition',
         packageName,

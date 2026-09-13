@@ -1,0 +1,192 @@
+{
+  "id": "A:mkConnected/left:get:result",
+  "status": "VERIFIED",
+  "kind": "source-method/compiler-port/rtl-instance/netlist-pin-connectivity",
+  "sourceMethod": {
+    "name": "get",
+    "definitionId": "Connected::mkStage.get",
+    "source": {
+      "path": "experiments/hardware/fixtures/Connected.bsv",
+      "sha256": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+      "bytes": 633,
+      "start": {
+        "line1": 15,
+        "column1": 4
+      },
+      "endExclusive": {
+        "line1": 15,
+        "column1": 31
+      },
+      "convention": "1-based ASCII code-point columns, exclusive end; source-reviewed, not compiler-exported",
+      "text": "method Bit#(8) get = state;"
+    }
+  },
+  "sourceInstance": {
+    "name": "left",
+    "definition": "mkStage",
+    "position": [
+      "experiments/hardware/fixtures/Connected.bsv",
+      "20",
+      "10"
+    ],
+    "mports": [
+      [
+        "put",
+        "put_value"
+      ],
+      [
+        "put",
+        "EN_put"
+      ],
+      [
+        "RDY_put",
+        "RDY_put"
+      ],
+      [
+        "get",
+        "get"
+      ],
+      [
+        "RDY_get",
+        "RDY_get"
+      ]
+    ]
+  },
+  "compilerMethod": {
+    "name": "get",
+    "rtlName": "get",
+    "args": [],
+    "enable": "",
+    "ready": "RDY_get",
+    "result": "get",
+    "clock": "default_clock",
+    "reset": "default_reset",
+    "rawRule": "method {position {experiments/hardware/fixtures/Connected.bsv 10 8}} {predicate True} {methods {{} state.read}}"
+  },
+  "occurrence": "mkConnected/left",
+  "generatedRtlInstance": {
+    "path": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v",
+    "sha256": "af16a547832325cc3e41eed430f0cc265241a96806de8e6b23dac22d42618805",
+    "bytes": 2066,
+    "start": {
+      "line1": 75,
+      "column1": 3
+    },
+    "endExclusive": {
+      "line1": 81,
+      "column1": 21
+    },
+    "convention": "1-based ASCII code-point columns, exclusive end; source-reviewed, not compiler-exported",
+    "text": "mkStage left(.CLK(CLK),\n\t       .RST_N(RST_N),\n\t       .put_value(left$put_value),\n\t       .EN_put(left$EN_put),\n\t       .RDY_put(),\n\t       .get(left$get),\n\t       .RDY_get());"
+  },
+  "generatedRtlMethodPort": {
+    "path": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v",
+    "sha256": "f246fb0fcbb74a816d1761e287539613f0d9c77f5927b649bc6fdc48058f3fcd",
+    "bytes": 1969,
+    "start": {
+      "line1": 52,
+      "column1": 3
+    },
+    "endExclusive": {
+      "line1": 52,
+      "column1": 22
+    },
+    "convention": "1-based ASCII code-point columns, exclusive end; source-reviewed, not compiler-exported",
+    "text": "output [7 : 0] get;"
+  },
+  "artifact": {
+    "path": "docs/hardware/evidence/toolchain/A/design.json",
+    "sha256": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+    "bytes": 15189
+  },
+  "metadata": {
+    "path": "docs/hardware/evidence/bsv/A/bluetcl.json",
+    "sha256": "9f174be2f831e66d5b47575664e3240372c810fd388bc3d45ec1abebeeff468a",
+    "bytes": 13644
+  },
+  "formalBitsLsbFirst": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "actualBitsLsbFirst": [
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ],
+  "parentAlias": "left$get",
+  "parentLeafEndpoints": [
+    {
+      "occurrence": "mkConnected",
+      "cell": "$add$docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:97$1",
+      "pin": "A",
+      "direction": "input",
+      "bits": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "generatedRtl": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:97.28-97.48"
+    }
+  ],
+  "childOutputEndpoint": {
+    "occurrence": "mkConnected/left",
+    "cell": "$procdff$10",
+    "pin": "Q",
+    "bits": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  "scalar0Component": [
+    [
+      "mkConnected",
+      "bit",
+      21
+    ],
+    [
+      "mkConnected/left",
+      "bit",
+      13
+    ]
+  ],
+  "sourceInvocationContext": {
+    "path": "experiments/hardware/fixtures/Connected.bsv",
+    "sha256": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+    "bytes": 633,
+    "start": {
+      "line1": 24,
+      "column1": 7
+    },
+    "endExclusive": {
+      "line1": 24,
+      "column1": 35
+    },
+    "convention": "1-based ASCII code-point columns, exclusive end; source-reviewed, not compiler-exported",
+    "text": "right.put(left.get + value);"
+  },
+  "exactInvocationToWire": false,
+  "exactLeafCellCause": false,
+  "caveat": "Source-reviewed method range plus compiler contract proves method-port connectivity. The destination add and Q endpoint are real pin contacts, not claims of exact source expression/register cause. No leaf origin is assigned."
+}

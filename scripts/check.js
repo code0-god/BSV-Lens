@@ -152,6 +152,32 @@ const externalFixtureReferences = new Set([
     'test/fixtures/semantic-workspace/src/SemanticFlowFixture.bsv',
     'test/release-workflows.test.js'
 ]);
+const externalWorkspaceReferences = new Set([
+    'experiments/hardware/g6/live-compiler.cjs',
+    'experiments/hardware/g6-usability/native-before.cjs',
+    'experiments/hardware/g6-usability/native-acceptance.cjs',
+    'experiments/hardware/g6-usability/native-fresh-replay.cjs',
+    'experiments/hardware/g6-usability/native-responsive.cjs',
+    ...['FOLLOWUP_CONTRACT', 'DISCOVERY_AND_AUTHORITY', 'UX_AND_PROJECTION', 'FOLLOWUP_REPORT', 'USER_INSTALL']
+        .map(name => `docs/hardware/g6-usability/${name}.md`),
+    ...['G6_REPORT', 'G6_PERFORMANCE', 'G6_SUPPORT_MATRIX', 'G6_USER_INSTALL', 'G6_NATIVE_ACCEPTANCE', 'G6_VALIDATION_MATRIX', 'G6_INPUT_AND_TRUST', 'G6_NATIVE_ARCHITECTURE']
+        .map(name => `docs/hardware/g6/${name}.md`)
+]);
+function indexedExternalWorkspaceData(relativePath, content) {
+    const match = /^(docs\/hardware\/evidence\/g6(?:-usability)?\/run-[A-Za-z0-9_-]+)\/(.+\.(?:json|jsonl|bsv|v|md))$/.exec(relativePath);
+    if (!match || match[2] === 'index.json') return false;
+    const file = path.join(root, match[1], 'index.json');
+    if (!fs.existsSync(file)) return false;
+    try {
+        const index = JSON.parse(fs.readFileSync(file, 'utf8'));
+        const schema = match[1].includes('/g6-usability/') ? 'g6-usability-evidence-v1' : 'g6-evidence-v1';
+        const visualReport = match[1].includes('/g6-usability/') && /^visual\/(?:FINAL_)?VISUAL_REVIEW\.md$/.test(match[2]);
+        const row = index.schema === schema && index.files?.find(row => row.path === match[2]
+            && (visualReport && row.role === undefined || !match[2].endsWith('.md') && row.role === 'external-workspace-data'));
+        return !!row && row.bytes === Buffer.byteLength(content)
+            && row.sha256 === require('node:crypto').createHash('sha256').update(content).digest('hex');
+    } catch { return false; }
+}
 const forbiddenBrandTokens = [
     String.fromCharCode(65, 81, 117, 65),
     String.fromCharCode(97, 113, 117, 97, 66, 115, 118, 65, 114, 99, 104),
@@ -160,8 +186,12 @@ const forbiddenBrandTokens = [
 for (const filePath of brandedSources) {
     const relativePath = path.relative(root, filePath).replace(/\\/g, '/');
     if (externalFixtureReferences.has(relativePath)) continue;
+    // Immutable command captures can contain external fixture names, not product branding.
+    // Keep authored evidence documents and executable files subject to the existing checks.
+    if (relativePath.startsWith('docs/hardware/evidence/') && /\/(?:stdout|stderr)\.log$/.test(relativePath)) continue;
     const content = fs.readFileSync(filePath, 'utf8');
     for (const token of forbiddenBrandTokens) {
+        if (token === forbiddenBrandTokens[0] && (externalWorkspaceReferences.has(relativePath) || indexedExternalWorkspaceData(relativePath, content))) continue;
         assert.equal(content.includes(token), false, `Legacy branding remains in ${path.relative(root, filePath)}`);
     }
 }
@@ -171,7 +201,7 @@ console.log('check: generic manifest, JavaScript syntax, CSP, parser, graph mode
 
 function walk(directory) {
     return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-        if (['.git', '.omo', '.vscode-test', 'node_modules', '.build', 'dist'].includes(entry.name)) return [];
+        if (['.git', '.omo', '.omx', '.codegraph', '.vscode-test', 'node_modules', '.build', 'dist'].includes(entry.name)) return [];
         const fullPath = path.join(directory, entry.name);
         return entry.isDirectory() ? walk(fullPath) : [fullPath];
     });

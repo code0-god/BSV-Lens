@@ -1,0 +1,1864 @@
+{
+  "schemaVersion": 1,
+  "id": "analysis-result-1167b37a992299c3d219fb37a90c5ed5ab4023799565ce9ee419a336afe5cbe3",
+  "queryId": "analysis-query-95232d26865cfa81b97dcca7f526f0741a4d6f9a2bc7007bdbb1427b4a89a83b",
+  "kind": "dependencies",
+  "status": "complete",
+  "availability": "available",
+  "completeness": "complete",
+  "freshness": "fresh",
+  "context": {
+    "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+    "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+    "modelId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/implementation/yosys-json-v1",
+    "implementationProvider": "stock",
+    "providerIdentity": "yosys-json-v1",
+    "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+    "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+    "buildInputFingerprint": "bec63f75407971f586c5289fd62dba8d00a2b3b33e49df3d4ba673c8d807ce9d",
+    "sourceModelIdentity": "3f8661ccdd2d444a1a4122011e6ffca0c74cf8739d392229dc3e763cfb52bbcd",
+    "sourceStatus": "attached",
+    "originAnalysisId": null,
+    "freshness": "fresh",
+    "unknownInputs": [
+      "dependencyFingerprint",
+      "toolchain",
+      "passSequence",
+      "buildOptionsFingerprint",
+      "concreteParameters"
+    ],
+    "capabilities": {
+      "same-net": "available",
+      "drivers-loads": "available",
+      "dependencies": "available",
+      "state-accesses": "available",
+      "behavior": "available",
+      "call-site": "available",
+      "source-dependencies": "available",
+      "correspondence": "available"
+    }
+  },
+  "seed": {
+    "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+    "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+    "positions": [
+      {
+        "position": 0,
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get"
+      },
+      {
+        "position": 1,
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get"
+      },
+      {
+        "position": 2,
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get"
+      }
+    ]
+  },
+  "scope": {
+    "kind": "design",
+    "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+  },
+  "direction": "backward",
+  "semanticsProfile": "yosys-0.68-structural-v1",
+  "groups": [
+    {
+      "seed": {
+        "position": 0,
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get"
+      },
+      "bitIds": [
+        "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13"
+      ],
+      "relationIds": [
+        "analysis-incidence-17f2d4b6876b98628fe14f5913a03063669452c5f12f54ae81122bfd61a7755d",
+        "analysis-incidence-27127765c2544e566447810ff59f638bd946e75938e679f6d190509dd1a2e944",
+        "analysis-incidence-544674693451f9e689c49fb8237c1eb9569ab25f07e5f92c30b9fc85ada5fbcc",
+        "analysis-incidence-93c3e4748702cb75f7201e649ce8c2b6d97a882132f0f65b49702f16475e8e79",
+        "analysis-incidence-c88f80091cf8e96c45b1b1094779f41398e83ce161088fe36dee9a14d7614e27",
+        "analysis-incidence-d1f2d0071217516f34d0a24b25d22355d3a348ae71d43dcc41aa719f39e5ff8e",
+        "analysis-incidence-df2228f46bf7646666ec98fb1112a28af0b58da3671bcb633adc1bb3382b2ac7",
+        "analysis-incidence-f982d2012e6af2914dd0333d2292b6f5f0a170e54789dfc59c27233fae603d1c",
+        "analysis-incidence-fb1582f31e63e732793f84fd8b2e3df1561f04aa94a074064de7df1c6efd50ed",
+        "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/boundary/get/0"
+      ],
+      "boundaryIds": [
+        "analysis-dependency-boundary-36d30acc804f19cc4c55a800163778e8461a2cef4f56d96a017f5b25dacf5994",
+        "analysis-dependency-boundary-d1b4bc3603f2b9b5cd8c5b485fd3e63f02e8d230faa1acdae993f0299125d1ed"
+      ],
+      "interpretation": "complete"
+    },
+    {
+      "seed": {
+        "position": 1,
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get"
+      },
+      "bitIds": [
+        "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14"
+      ],
+      "relationIds": [
+        "analysis-incidence-22ceaa72d7f2658ec16cee8a504e39fa8e0b3a98e777dd1e36fcd9d6053dbc94",
+        "analysis-incidence-47f74f34e7f92ee06e8a43b9931c4705483bad44b1eea0552e6b24fef5149c91",
+        "analysis-incidence-49f9cb974bc59f9c89d8bae1aa735b294c73ecf7673a5b04ef4bc5a9f6fc218a",
+        "analysis-incidence-6d9fb4ef194a20c0204841cffacee30fca87190dacef2ed32531ebba01aa5ec7",
+        "analysis-incidence-8084d24ea9295b41d378965680858d0d7bdce057d4be00bb2799699ae962854a",
+        "analysis-incidence-848b771b1fae79c36144598fb1516ec1299e1944e1223e7ec7debb715b996339",
+        "analysis-incidence-8eb421f81a672e5f9f45e9ac51254bd8dcbad500ee5b42a93ed0272ee2770a17",
+        "analysis-incidence-af14644e44619754479822151e13ea31e5e4614d3aabbbb528063b0d49e8baee",
+        "analysis-incidence-cccca5701e9e5534085efd3c316a2adc0b511b38ebfb839059361c433b975532",
+        "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/boundary/get/1"
+      ],
+      "boundaryIds": [
+        "analysis-dependency-boundary-94442b4b8d934752fed20656862df141569d1aab3bb182b15146dbeb46033874",
+        "analysis-dependency-boundary-cbed1f967555455c90909d180ea2dc6c40980296811b6064b8a9fb0490fbff4f"
+      ],
+      "interpretation": "complete"
+    },
+    {
+      "seed": {
+        "position": 2,
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get"
+      },
+      "bitIds": [
+        "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13"
+      ],
+      "relationIds": [
+        "analysis-incidence-17f2d4b6876b98628fe14f5913a03063669452c5f12f54ae81122bfd61a7755d",
+        "analysis-incidence-27127765c2544e566447810ff59f638bd946e75938e679f6d190509dd1a2e944",
+        "analysis-incidence-544674693451f9e689c49fb8237c1eb9569ab25f07e5f92c30b9fc85ada5fbcc",
+        "analysis-incidence-93c3e4748702cb75f7201e649ce8c2b6d97a882132f0f65b49702f16475e8e79",
+        "analysis-incidence-c88f80091cf8e96c45b1b1094779f41398e83ce161088fe36dee9a14d7614e27",
+        "analysis-incidence-d1f2d0071217516f34d0a24b25d22355d3a348ae71d43dcc41aa719f39e5ff8e",
+        "analysis-incidence-df2228f46bf7646666ec98fb1112a28af0b58da3671bcb633adc1bb3382b2ac7",
+        "analysis-incidence-f982d2012e6af2914dd0333d2292b6f5f0a170e54789dfc59c27233fae603d1c",
+        "analysis-incidence-fb1582f31e63e732793f84fd8b2e3df1561f04aa94a074064de7df1c6efd50ed",
+        "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/boundary/get/0"
+      ],
+      "boundaryIds": [
+        "analysis-dependency-boundary-36d30acc804f19cc4c55a800163778e8461a2cef4f56d96a017f5b25dacf5994",
+        "analysis-dependency-boundary-d1b4bc3603f2b9b5cd8c5b485fd3e63f02e8d230faa1acdae993f0299125d1ed"
+      ],
+      "interpretation": "complete"
+    }
+  ],
+  "objects": [
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/get",
+      "kind": "implementation",
+      "objectKind": "alias",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/get",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "name": "get"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/state",
+      "kind": "implementation",
+      "objectKind": "alias",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/state",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "name": "state"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+      "kind": "implementation",
+      "objectKind": "signal-bit",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "value": 13
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+      "kind": "implementation",
+      "objectKind": "signal-bit",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "value": 14
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "kind": "implementation",
+      "objectKind": "cell",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "name": "$procdff$10",
+      "type": "$dff"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+      "kind": "implementation",
+      "objectKind": "pin",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "name": "Q"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5",
+      "kind": "implementation",
+      "objectKind": "cell",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "name": "$procmux$5",
+      "type": "$mux"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5/pin/A",
+      "kind": "implementation",
+      "objectKind": "pin",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5/pin/A",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "name": "A"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/port/get",
+      "kind": "implementation",
+      "objectKind": "port",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/port/get",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "name": "get"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/get",
+      "kind": "implementation",
+      "objectKind": "alias",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/get",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+      "name": "get"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/right$get",
+      "kind": "implementation",
+      "objectKind": "alias",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/right$get",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+      "name": "right$get"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+      "kind": "implementation",
+      "objectKind": "signal-bit",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+      "value": 13
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+      "kind": "implementation",
+      "objectKind": "signal-bit",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+      "value": 14
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right",
+      "kind": "implementation",
+      "objectKind": "cell",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+      "name": "right",
+      "type": "mkStage"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/get",
+      "kind": "implementation",
+      "objectKind": "pin",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/get",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+      "name": "get"
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+      "kind": "implementation",
+      "objectKind": "port",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+      "name": "get"
+    }
+  ],
+  "relations": [
+    {
+      "id": "analysis-incidence-17f2d4b6876b98628fe14f5913a03063669452c5f12f54ae81122bfd61a7755d",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/port/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "direction": "output",
+        "role": "hierarchy-pass-through"
+      }
+    },
+    {
+      "id": "analysis-incidence-22ceaa72d7f2658ec16cee8a504e39fa8e0b3a98e777dd1e36fcd9d6053dbc94",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5/pin/A",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "direction": "input",
+        "role": "leaf-terminal"
+      }
+    },
+    {
+      "id": "analysis-incidence-27127765c2544e566447810ff59f638bd946e75938e679f6d190509dd1a2e944",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5/pin/A",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "direction": "input",
+        "role": "leaf-terminal"
+      }
+    },
+    {
+      "id": "analysis-incidence-47f74f34e7f92ee06e8a43b9931c4705483bad44b1eea0552e6b24fef5149c91",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/port/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "direction": "output",
+        "role": "hierarchy-pass-through"
+      }
+    },
+    {
+      "id": "analysis-incidence-49f9cb974bc59f9c89d8bae1aa735b294c73ecf7673a5b04ef4bc5a9f6fc218a",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "direction": "output",
+        "role": "external-contact"
+      }
+    },
+    {
+      "id": "analysis-incidence-544674693451f9e689c49fb8237c1eb9569ab25f07e5f92c30b9fc85ada5fbcc",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "direction": "output",
+        "role": "external-contact"
+      }
+    },
+    {
+      "id": "analysis-incidence-6d9fb4ef194a20c0204841cffacee30fca87190dacef2ed32531ebba01aa5ec7",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/right$get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-8084d24ea9295b41d378965680858d0d7bdce057d4be00bb2799699ae962854a",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/state",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-848b771b1fae79c36144598fb1516ec1299e1944e1223e7ec7debb715b996339",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-8eb421f81a672e5f9f45e9ac51254bd8dcbad500ee5b42a93ed0272ee2770a17",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "direction": "output",
+        "role": "hierarchy-pass-through"
+      }
+    },
+    {
+      "id": "analysis-incidence-93c3e4748702cb75f7201e649ce8c2b6d97a882132f0f65b49702f16475e8e79",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "direction": "output",
+        "role": "hierarchy-pass-through"
+      }
+    },
+    {
+      "id": "analysis-incidence-af14644e44619754479822151e13ea31e5e4614d3aabbbb528063b0d49e8baee",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-c88f80091cf8e96c45b1b1094779f41398e83ce161088fe36dee9a14d7614e27",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/state",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-cccca5701e9e5534085efd3c316a2adc0b511b38ebfb839059361c433b975532",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "direction": "output",
+        "role": "leaf-terminal"
+      }
+    },
+    {
+      "id": "analysis-incidence-d1f2d0071217516f34d0a24b25d22355d3a348ae71d43dcc41aa719f39e5ff8e",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-df2228f46bf7646666ec98fb1112a28af0b58da3671bcb633adc1bb3382b2ac7",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/right$get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "analysis-incidence-f982d2012e6af2914dd0333d2292b6f5f0a170e54789dfc59c27233fae603d1c",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "direction": "output",
+        "role": "leaf-terminal"
+      }
+    },
+    {
+      "id": "analysis-incidence-fb1582f31e63e732793f84fd8b2e3df1561f04aa94a074064de7df1c6efd50ed",
+      "kind": "incidence",
+      "family": "same-net",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "alias",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "direction": null,
+        "role": "alias"
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/boundary/get/0",
+      "kind": "hierarchy-crossing",
+      "family": "same-net",
+      "boundaryId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/boundary/get/0",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/boundary/get/1",
+      "kind": "hierarchy-crossing",
+      "family": "same-net",
+      "boundaryId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/boundary/get/1",
+      "from": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+      },
+      "to": {
+        "kind": "implementation",
+        "objectKind": "signal-bit",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D"
+      }
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "analysis-dependency-boundary-36d30acc804f19cc4c55a800163778e8461a2cef4f56d96a017f5b25dacf5994",
+      "kind": "dependency-boundary",
+      "family": "logic-dependency",
+      "aspect": "dependencies",
+      "reason": "sequential",
+      "at": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "direction": "output",
+        "role": "leaf-terminal"
+      },
+      "nextAnalysis": null,
+      "cellId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "side": "state-source",
+      "clock": {
+        "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/CLK",
+        "polarity": 1,
+        "edge": "positive"
+      }
+    },
+    {
+      "id": "analysis-dependency-boundary-94442b4b8d934752fed20656862df141569d1aab3bb182b15146dbeb46033874",
+      "kind": "dependency-boundary",
+      "family": "logic-dependency",
+      "aspect": "dependencies",
+      "reason": "external-contact",
+      "at": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "direction": "output",
+        "role": "external-contact"
+      },
+      "nextAnalysis": null,
+      "side": "external-sink"
+    },
+    {
+      "id": "analysis-dependency-boundary-cbed1f967555455c90909d180ea2dc6c40980296811b6064b8a9fb0490fbff4f",
+      "kind": "dependency-boundary",
+      "family": "logic-dependency",
+      "aspect": "dependencies",
+      "reason": "sequential",
+      "at": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "direction": "output",
+        "role": "leaf-terminal"
+      },
+      "nextAnalysis": null,
+      "cellId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "side": "state-source",
+      "clock": {
+        "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/CLK",
+        "polarity": 1,
+        "edge": "positive"
+      }
+    },
+    {
+      "id": "analysis-dependency-boundary-d1b4bc3603f2b9b5cd8c5b485fd3e63f02e8d230faa1acdae993f0299125d1ed",
+      "kind": "dependency-boundary",
+      "family": "logic-dependency",
+      "aspect": "dependencies",
+      "reason": "external-contact",
+      "at": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "direction": "output",
+        "role": "external-contact"
+      },
+      "nextAnalysis": null,
+      "side": "external-sink"
+    }
+  ],
+  "frontier": [
+    {
+      "id": "analysis-frontier-37a736200b1bc319adb82628b8cb959423d6dd046ac8c871269bdda59209f604",
+      "kind": "frontier",
+      "reason": "external-contact",
+      "aspect": "dependencies",
+      "at": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+        "direction": "output",
+        "role": "external-contact"
+      },
+      "boundaryId": "analysis-dependency-boundary-94442b4b8d934752fed20656862df141569d1aab3bb182b15146dbeb46033874",
+      "nextAnalysis": null,
+      "side": "external-sink"
+    },
+    {
+      "id": "analysis-frontier-419b56973d27c047ca440a04ab14ec7097fcfa1d76734815262c634f01aac011",
+      "kind": "frontier",
+      "reason": "sequential",
+      "aspect": "dependencies",
+      "at": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+        "direction": "output",
+        "role": "leaf-terminal"
+      },
+      "boundaryId": "analysis-dependency-boundary-36d30acc804f19cc4c55a800163778e8461a2cef4f56d96a017f5b25dacf5994",
+      "nextAnalysis": null,
+      "cellId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "side": "state-source",
+      "clock": {
+        "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/CLK",
+        "polarity": 1,
+        "edge": "positive"
+      }
+    },
+    {
+      "id": "analysis-frontier-71083abbc44b29db8550868362d881ff4622cd2be588041d1bc8b5e5eeb81643",
+      "kind": "frontier",
+      "reason": "sequential",
+      "aspect": "dependencies",
+      "at": {
+        "kind": "implementation",
+        "objectKind": "pin",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "index": 1,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+        "direction": "output",
+        "role": "leaf-terminal"
+      },
+      "boundaryId": "analysis-dependency-boundary-cbed1f967555455c90909d180ea2dc6c40980296811b6064b8a9fb0490fbff4f",
+      "nextAnalysis": null,
+      "cellId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "side": "state-source",
+      "clock": {
+        "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/CLK",
+        "polarity": 1,
+        "edge": "positive"
+      }
+    },
+    {
+      "id": "analysis-frontier-992ffb5cf93049691c59fbba2694e4ca089718bc544436765497138ab666579a",
+      "kind": "frontier",
+      "reason": "external-contact",
+      "aspect": "dependencies",
+      "at": {
+        "kind": "implementation",
+        "objectKind": "port",
+        "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "index": 0,
+        "bitId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+        "direction": "output",
+        "role": "external-contact"
+      },
+      "boundaryId": "analysis-dependency-boundary-d1b4bc3603f2b9b5cd8c5b485fd3e63f02e8d230faa1acdae993f0299125d1ed",
+      "nextAnalysis": null,
+      "side": "external-sink"
+    }
+  ],
+  "cellDescriptions": [
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "cellId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "type": "$dff",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "semanticsProfile": "yosys-0.68-structural-v1",
+      "classification": "sequential",
+      "status": "boundary",
+      "reason": "sequential",
+      "precision": "verified-boundary",
+      "parameters": {
+        "CLK_POLARITY": 1,
+        "WIDTH": 8
+      },
+      "ports": [
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/CLK",
+          "name": "CLK",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/D",
+          "name": "D",
+          "direction": "input",
+          "width": 8
+        },
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+          "name": "Q",
+          "direction": "output",
+          "width": 8
+        }
+      ],
+      "limitations": [],
+      "clock": {
+        "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/CLK",
+        "polarity": 1,
+        "edge": "positive"
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right",
+      "cellId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right",
+      "type": "mkStage",
+      "occurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+      "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+      "semanticsProfile": "yosys-0.68-structural-v1",
+      "classification": "hierarchy",
+      "status": "supported",
+      "reason": "binding",
+      "precision": "verified-binding",
+      "parameters": {},
+      "ports": [
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/CLK",
+          "name": "CLK",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/EN_put",
+          "name": "EN_put",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/RDY_get",
+          "name": "RDY_get",
+          "direction": "output",
+          "width": 0
+        },
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/RDY_put",
+          "name": "RDY_put",
+          "direction": "output",
+          "width": 0
+        },
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/RST_N",
+          "name": "RST_N",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/get",
+          "name": "get",
+          "direction": "output",
+          "width": 8
+        },
+        {
+          "pinId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/put_value",
+          "name": "put_value",
+          "direction": "input",
+          "width": 8
+        }
+      ],
+      "limitations": []
+    }
+  ],
+  "sourceRefs": [],
+  "evidenceRefs": [
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/get",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/get",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/netnames/get"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:52.18-52.21",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkStage/netnames/get",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/netnames/get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/state",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/alias/state",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/netnames/state"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:60.15-60.20",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkStage/netnames/state",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/netnames/state/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/13",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/ports/get/bits/0"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/netnames/get/bits/0"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/netnames/state/bits/0"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/cells/$procdff$10/connections/Q/0"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/cells/$procmux$5/connections/A/0"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:34.1-98.10",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:52.18-52.21",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/netnames/get",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/netnames/get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:60.15-60.20",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/netnames/state",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/netnames/state/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:77.3-87.6",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/cells/$procdff$10",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/cells/$procdff$10/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:85.13-85.21|docs/hardware/evidence/toolchain/A/rtl/mkStage.v:85.9-85.44",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/cells/$procmux$5",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/cells/$procmux$5/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/bit/14",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/ports/get/bits/1"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/netnames/get/bits/1"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/netnames/state/bits/1"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/cells/$procdff$10/connections/Q/1"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/cells/$procmux$5/connections/A/1"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:34.1-98.10",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:52.18-52.21",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/netnames/get",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/netnames/get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:60.15-60.20",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/netnames/state",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/netnames/state/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:77.3-87.6",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/cells/$procdff$10",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/cells/$procdff$10/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:85.13-85.21|docs/hardware/evidence/toolchain/A/rtl/mkStage.v:85.9-85.44",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/cells/$procmux$5",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/cells/$procmux$5/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/cells/$procdff$10"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:77.3-87.6",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkStage/cells/$procdff$10",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/cells/$procdff$10/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procdff$10/pin/Q",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/cells/$procdff$10/connections/Q"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:77.3-87.6",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/cells/$procdff$10",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/cells/$procdff$10/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/cells/$procmux$5"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:85.13-85.21|docs/hardware/evidence/toolchain/A/rtl/mkStage.v:85.9-85.44",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkStage/cells/$procmux$5",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/cells/$procmux$5/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5/pin/A",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/cell/$procmux$5/pin/A",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/cells/$procmux$5/connections/A"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:85.13-85.21|docs/hardware/evidence/toolchain/A/rtl/mkStage.v:85.9-85.44",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage/cells/$procmux$5",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/cells/$procmux$5/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/port/get",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D/port/get",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkStage/ports/get"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkStage.v:34.1-98.10",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkStage",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkStage/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/get",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/get",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/netnames/get"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:52.18-52.21",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkConnected/netnames/get",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/netnames/get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/right$get",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/alias/right$get",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/netnames/right$get"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:64.16-64.25",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkConnected/netnames/right$get",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/netnames/right$get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/13",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/ports/get/bits/0"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/netnames/get/bits/0"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/netnames/right$get/bits/0"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/cells/right/connections/get/0"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:34.1-99.10",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:52.18-52.21",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected/netnames/get",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/netnames/get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:64.16-64.25",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected/netnames/right$get",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/netnames/right$get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:84.11-90.14",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected/cells/right",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/cells/right/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/bit/14",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/ports/get/bits/1"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/netnames/get/bits/1"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/netnames/right$get/bits/1"
+        },
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/cells/right/connections/get/1"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:34.1-99.10",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:52.18-52.21",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected/netnames/get",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/netnames/get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:64.16-64.25",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected/netnames/right$get",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/netnames/right$get/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        },
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:84.11-90.14",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected/cells/right",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/cells/right/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/cells/right"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:84.11-90.14",
+          "kind": "generated-rtl",
+          "scope": "entity-attribute",
+          "ownerPointer": "/modules/mkConnected/cells/right",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/cells/right/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/get",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/cell/right/pin/get",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/cells/right/connections/get"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:84.11-90.14",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected/cells/right",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/cells/right/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    },
+    {
+      "id": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+      "kind": "generated-evidence",
+      "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+      "providerRefs": [
+        {
+          "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+          "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+          "pointer": "/modules/mkConnected/ports/get"
+        }
+      ],
+      "generatedRtl": [
+        {
+          "raw": "docs/hardware/evidence/toolchain/A/rtl/mkConnected.v:34.1-99.10",
+          "kind": "generated-rtl",
+          "scope": "ancestor-context",
+          "ownerPointer": "/modules/mkConnected",
+          "providerRefs": [
+            {
+              "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+              "pathRef": "docs/hardware/evidence/toolchain/A/design.json",
+              "pointer": "/modules/mkConnected/attributes/src"
+            }
+          ],
+          "access": "unvalidated-no-file-read"
+        }
+      ],
+      "originalBsv": {
+        "status": "unmapped",
+        "refs": []
+      }
+    }
+  ],
+  "candidates": [],
+  "limits": {
+    "maxBits": 4096,
+    "maxPins": 8192,
+    "maxCells": 512,
+    "maxEdges": 16384,
+    "maxHierarchyDepth": 64,
+    "maxResultBytes": 4194304,
+    "timeoutMs": 30000,
+    "stopReasons": []
+  },
+  "request": {
+    "queryGeneration": 1,
+    "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34"
+  },
+  "metrics": {
+    "preparationMs": 0.07254199999999855,
+    "executionMs": 2.001790999999969,
+    "cancellationMs": 0,
+    "visitedBits": 4,
+    "visitedPins": 3,
+    "visitedCells": 3,
+    "visitedEdges": 20,
+    "maxHierarchyDepth": 1,
+    "resultBytes": 75951,
+    "workerStartupMs": 11.190290999999945,
+    "elapsedMs": 18.628124999999955
+  }
+}

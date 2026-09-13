@@ -1,0 +1,77 @@
+{
+  "schema": "g5-official-semantics-reference-v1",
+  "profile": "yosys-0.68-structural-v1",
+  "capturedAtDate": "2026-09-08",
+  "repository": "https://github.com/YosysHQ/yosys",
+  "revision": "38e001a6ff74ca434bf4cc02c053f53619160ab0",
+  "capturedReaderVersion": "Yosys 0.68 (git sha1 38e001a6f)",
+  "captureMethod": "Static HTTPS GET of exact revision; original bytes saved through apply_patch; post-write byte/hash verification",
+  "authority": "Official revision-pinned upstream implementation/documentation; HTTPS and byte identity, not a signed-release attestation",
+  "references": [
+    {
+      "path": "upstream/COPYING",
+      "upstreamPath": "COPYING",
+      "url": "https://raw.githubusercontent.com/YosysHQ/yosys/38e001a6ff74ca434bf4cc02c053f53619160ab0/COPYING",
+      "browserUrl": "https://github.com/YosysHQ/yosys/blob/38e001a6ff74ca434bf4cc02c053f53619160ab0/COPYING",
+      "bytes": 777,
+      "sha256": "6998b5724d4cb3f459d1c12b6bd0cdbfa9c949ef14d0fb6d7d97d97404e5b5f3"
+    },
+    {
+      "path": "upstream/techlibs/common/simlib.v",
+      "upstreamPath": "techlibs/common/simlib.v",
+      "url": "https://raw.githubusercontent.com/YosysHQ/yosys/38e001a6ff74ca434bf4cc02c053f53619160ab0/techlibs/common/simlib.v",
+      "browserUrl": "https://github.com/YosysHQ/yosys/blob/38e001a6ff74ca434bf4cc02c053f53619160ab0/techlibs/common/simlib.v",
+      "bytes": 78616,
+      "sha256": "e79c08085225bdc6f52ce99f128328158009a33b8ea0c8c273011dfde370561d"
+    },
+    {
+      "path": "upstream/docs/source/cell/word_binary.rst",
+      "upstreamPath": "docs/source/cell/word_binary.rst",
+      "url": "https://raw.githubusercontent.com/YosysHQ/yosys/38e001a6ff74ca434bf4cc02c053f53619160ab0/docs/source/cell/word_binary.rst",
+      "browserUrl": "https://github.com/YosysHQ/yosys/blob/38e001a6ff74ca434bf4cc02c053f53619160ab0/docs/source/cell/word_binary.rst",
+      "bytes": 4632,
+      "sha256": "dc052b7d43731c43371d007c3d781fee12b9b184cb3989c9fedbffd00df740c8"
+    },
+    {
+      "path": "upstream/docs/source/cell/word_unary.rst",
+      "upstreamPath": "docs/source/cell/word_unary.rst",
+      "url": "https://raw.githubusercontent.com/YosysHQ/yosys/38e001a6ff74ca434bf4cc02c053f53619160ab0/docs/source/cell/word_unary.rst",
+      "browserUrl": "https://github.com/YosysHQ/yosys/blob/38e001a6ff74ca434bf4cc02c053f53619160ab0/docs/source/cell/word_unary.rst",
+      "bytes": 1648,
+      "sha256": "7c16adca8275a3051e518470ea575c935a404d54fe17cb76cc579ee8009bc2d7"
+    },
+    {
+      "path": "upstream/docs/source/cell/word_mux.rst",
+      "upstreamPath": "docs/source/cell/word_mux.rst",
+      "url": "https://raw.githubusercontent.com/YosysHQ/yosys/38e001a6ff74ca434bf4cc02c053f53619160ab0/docs/source/cell/word_mux.rst",
+      "browserUrl": "https://github.com/YosysHQ/yosys/blob/38e001a6ff74ca434bf4cc02c053f53619160ab0/docs/source/cell/word_mux.rst",
+      "bytes": 2479,
+      "sha256": "2ea9dbea94bb4b18c326442965010cedc1c2c65c4cf3baef5a3adcfb96c333fd"
+    },
+    {
+      "path": "upstream/kernel/rtlil.cc",
+      "upstreamPath": "kernel/rtlil.cc",
+      "url": "https://raw.githubusercontent.com/YosysHQ/yosys/38e001a6ff74ca434bf4cc02c053f53619160ab0/kernel/rtlil.cc",
+      "browserUrl": "https://github.com/YosysHQ/yosys/blob/38e001a6ff74ca434bf4cc02c053f53619160ab0/kernel/rtlil.cc",
+      "bytes": 176484,
+      "sha256": "f9acef078d9075f9becc28707b6951152f88c3992c1915aabc9b68d38358bdbc"
+    }
+  ],
+  "installedSimlibComparison": {
+    "path": ".build/hardware/toolchain/tools/venv/lib/python3.14/site-packages/yowasp_yosys/share/simlib.v",
+    "sha256": "e79c08085225bdc6f52ce99f128328158009a33b8ea0c8c273011dfde370561d",
+    "bytes": 78616,
+    "equalToUpstream": true
+  },
+  "license": {
+    "path": "upstream/COPYING",
+    "name": "ISC",
+    "note": "Original simlib.v and rtlil.cc copyright/license headers retained unchanged"
+  },
+  "census": {
+    "path": "census.json",
+    "sha256": "33fba7fc140b50b52a356982706c28a3cca4ad09e5b0d6f991235288b5985ded",
+    "bytes": 115519
+  },
+  "verificationScope": "Reference byte equality and preserved artifact census only; no semantics implementation, behavioral test run, build, or simulator execution"
+}

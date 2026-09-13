@@ -188,7 +188,7 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
             const ownerId = item.parentModuleName
                 ? moduleNodeId(file.packageName, item.parentModuleName)
                 : packageId;
-            const id = functionNodeId(file.packageName, item.name, item.parentModuleName, item.location.line);
+            const id = functionNodeId(file.packageName, item.name, item.parentModuleName, item.location.line, item.declarationScope);
             const node = addNode({
                 id,
                 sourceId: item.name,
@@ -211,7 +211,8 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
                     calls: item.calls,
                     returns: item.returns,
                     operations: item.operations,
-                    parentModuleName: item.parentModuleName
+                    parentModuleName: item.parentModuleName,
+                    ...(item.declarationScope ? { declarationScope: item.declarationScope, declarationOnly: item.declarationOnly } : {})
                 }
             });
             indexByName(functionNodesByName, item.name, node);
@@ -429,7 +430,7 @@ function buildArchitectureModel(parsedFiles, config, context = {}) {
         }
 
         for (const fn of file.functions) {
-            const sourceId = functionNodeId(file.packageName, fn.name, fn.parentModuleName, fn.location.line);
+            const sourceId = functionNodeId(file.packageName, fn.name, fn.parentModuleName, fn.location.line, fn.declarationScope);
             const sourceNode = nodeById.get(sourceId);
             if (sourceNode) {
                 addCallEdges(sourceNode, fn.calls, file, functionNodesByName, nodes, nodeById, addEdge, diagnostics);
@@ -806,7 +807,12 @@ function addCallEdges(sourceNode, calls, file, functionNodesByName, nodes, nodeB
             nodeById,
             ['function']
         );
-        if (target.status === 'exact' && target.node.id !== sourceNode.id) {
+        if (target.status === 'exact' && target.node.details.declarationScope) {
+            addResolutionDiagnostic(diagnostics, call.name, {
+                status: 'unresolved',
+                reason: `Resolving typeclass dispatch requires type information; candidate ${target.node.id} is not an exact target.`
+            }, sourceNode.location);
+        } else if (target.status === 'exact' && target.node.id !== sourceNode.id) {
             addEdge(sourceNode.id, target.node.id, 'call', call.name, true, {
                 mode: 'data-flow',
                 origin: 'source-derived',
@@ -1173,8 +1179,8 @@ function typeNodeId(packageName, typeName, parentModuleName = null) {
     return `type:${packageName}.${parentModuleName ? `${parentModuleName}.` : ''}${typeName}`;
 }
 
-function functionNodeId(packageName, functionName, parentModuleName, line) {
-    return `function:${packageName}.${parentModuleName ? `${parentModuleName}.` : ''}${functionName}:${line + 1}`;
+function functionNodeId(packageName, functionName, parentModuleName, line, declarationScope = null) {
+    return `function:${packageName}.${parentModuleName ? `${parentModuleName}.` : ''}${functionName}:${line + 1}${declarationScope ? `:${declarationScope.key}` : ''}`;
 }
 
 function instanceNodeId(ownerId, instanceName, line) {

@@ -1,0 +1,82 @@
+{
+  "schema": "g6-typeclass-native-label-authority-v1",
+  "ownerId": "instance:instance:def:IM2PCore:mkIM2PCore:mkIM2PCore:mkIM2PCore.core",
+  "ownerLabel": "core",
+  "source": {
+    "path": "src/core/IM2PCore.bsv",
+    "sha256": "8613eb740ceb58758c168a613ab4c1846302341014b91abaed39bafc81fff9f2"
+  },
+  "sceneEvidence": {
+    "path": ".build/hardware/runs/g6-core-routing-b06X8U/g6/scene.json",
+    "bytes": 7418097,
+    "sha256": "02c04988b4d4af1c12a30f6f446132aced4d176e81dcad6320a95c51270643be"
+  },
+  "children": [
+    {
+      "id": "instance:instance:instance:def:IM2PCore:mkIM2PCore:mkIM2PCore:mkIM2PCore.core:mkIM2PCore.core.engine",
+      "name": "engine",
+      "definitionId": "def:SystolicEngine:mkSystolicEngineWithArray",
+      "sourceRefs": [
+        {
+          "path": "src/core/IM2PCore.bsv",
+          "revision": "8613eb740ceb58758c168a613ab4c1846302341014b91abaed39bafc81fff9f2"
+        }
+      ]
+    },
+    {
+      "id": "instance:instance:instance:def:IM2PCore:mkIM2PCore:mkIM2PCore:mkIM2PCore.core:mkIM2PCore.core.vectorUnit",
+      "name": "vectorUnit",
+      "definitionId": "def:VectorUnit:mkVectorUnit",
+      "sourceRefs": [
+        {
+          "path": "src/core/IM2PCore.bsv",
+          "revision": "8613eb740ceb58758c168a613ab4c1846302341014b91abaed39bafc81fff9f2"
+        }
+      ]
+    },
+    {
+      "id": "instance:instance:instance:def:IM2PCore:mkIM2PCore:mkIM2PCore:mkIM2PCore.core:mkIM2PCore.core.accumulator",
+      "name": "accumulator",
+      "definitionId": "def:Accumulator:mkAccumulator",
+      "sourceRefs": [
+        {
+          "path": "src/core/IM2PCore.bsv",
+          "revision": "8613eb740ceb58758c168a613ab4c1846302341014b91abaed39bafc81fff9f2"
+        }
+      ]
+    },
+    {
+      "id": "instance:instance:instance:def:IM2PCore:mkIM2PCore:mkIM2PCore:mkIM2PCore.core:mkIM2PCore.core.matmulScheduler",
+      "name": "matmulScheduler",
+      "definitionId": "def:MatmulScheduler:mkMatmulScheduler",
+      "sourceRefs": [
+        {
+          "path": "src/core/IM2PCore.bsv",
+          "revision": "8613eb740ceb58758c168a613ab4c1846302341014b91abaed39bafc81fff9f2"
+        }
+      ]
+    },
+    {
+      "id": "instance:instance:instance:def:IM2PCore:mkIM2PCore:mkIM2PCore:mkIM2PCore.core:mkIM2PCore.core.workScheduler",
+      "name": "workScheduler",
+      "definitionId": "def:WorkScheduler:mkWorkScheduler",
+      "sourceRefs": [
+        {
+          "path": "src/core/IM2PCore.bsv",
+          "revision": "8613eb740ceb58758c168a613ab4c1846302341014b91abaed39bafc81fff9f2"
+        }
+      ]
+    },
+    {
+      "id": "instance:instance:instance:def:IM2PCore:mkIM2PCore:mkIM2PCore:mkIM2PCore.core:mkIM2PCore.core.executionPosition",
+      "name": "executionPosition",
+      "definitionId": "def:WorkScheduler:mkBlockPosition",
+      "sourceRefs": [
+        {
+          "path": "src/core/IM2PCore.bsv",
+          "revision": "8613eb740ceb58758c168a613ab4c1846302341014b91abaed39bafc81fff9f2"
+        }
+      ]
+    }
+  ]
+}

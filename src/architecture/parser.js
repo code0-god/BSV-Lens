@@ -384,6 +384,7 @@ function parseSubinterfaceDeclarations(body, baseOffset, uri, lineStarts) {
 
 function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics, sourceRevision) {
     const functions = [];
+    const scopes = parseFunctionScopes(text, masked, uri, lineStarts, moduleSpans);
     const expression = /\bfunction\b/g;
     let match;
 
@@ -394,20 +395,25 @@ function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics,
         const callable = parseCallableSignature(header);
         if (!callable.name) continue;
 
-        const inlineEquals = findTopLevelCharacter(header, '=');
-        const endKeyword = inlineEquals >= 0 ? -1 : findKeywordEnd(masked, headerEnd + 1, 'endfunction');
+        const parentSpan = findContainingSpan(match.index, moduleSpans);
+        const declarationScope = parentSpan ? null : findContainingSpan(match.index, scopes)?.item;
+        const declarationOnly = declarationScope?.kind === 'typeclass';
+        const inlineEquals = declarationOnly ? -1 : findTopLevelCharacter(header, '=');
+        const scopeEnd = declarationScope?.range.bodyEnd ?? parentSpan?.item.range.bodyEnd ?? masked.length;
+        const candidateEnd = inlineEquals >= 0 || declarationOnly ? -1
+            : findKeywordEnd(masked, headerEnd + 1, 'endfunction');
+        const endKeyword = candidateEnd < scopeEnd ? candidateEnd : -1;
         const end = endKeyword >= 0 ? endKeyword + 'endfunction'.length : headerEnd + 1;
-        if (inlineEquals < 0 && endKeyword < 0) {
+        if (!declarationOnly && inlineEquals < 0 && endKeyword < 0) {
             diagnostics.push(makeDiagnostic(uri, lineStarts, match.index, 'warning', `Function ${callable.name} has no endfunction; only its signature was analyzed.`));
         }
 
         const bodyStart = inlineEquals >= 0
             ? match.index + match[0].length + inlineEquals + 1
             : headerEnd + 1;
-        const bodyEnd = inlineEquals >= 0 ? headerEnd : (endKeyword >= 0 ? endKeyword : headerEnd);
+        const bodyEnd = inlineEquals >= 0 ? headerEnd : (endKeyword >= 0 ? endKeyword : bodyStart);
         const bodyMasked = masked.slice(bodyStart, bodyEnd);
         const bodyText = text.slice(bodyStart, bodyEnd);
-        const parentSpan = findContainingSpan(match.index, moduleSpans);
         const analysis = analyzeCallableBody(bodyText, bodyMasked, bodyStart, callable.parameters, uri, lineStarts);
         const callableId = `code:${uri}:function:${callable.name}:${match.index}`;
         const codeAnalysis = analyzeCode({
@@ -425,6 +431,7 @@ function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics,
             signature: truncate(text.slice(match.index, headerEnd + 1), 260),
             annotations: getLeadingAnnotations(text, lineStarts, match.index),
             parentModuleName: parentSpan ? parentSpan.item.name : null,
+            ...(declarationScope ? { declarationScope, declarationOnly } : {}),
             locals: analysis.locals,
             calls: analysis.calls,
             returns: analysis.returns,
@@ -439,6 +446,32 @@ function parseFunctions(text, masked, uri, lineStarts, moduleSpans, diagnostics,
     }
 
     return functions;
+}
+
+function parseFunctionScopes(text, masked, uri, lineStarts, moduleSpans) {
+    const scopes = [];
+    const expression = /\b(typeclass|instance)\s+([A-Za-z_$][\w$]*)/g;
+    let match;
+    while ((match = expression.exec(masked)) !== null) {
+        if (isInsideSpan(match.index, moduleSpans)) continue;
+        const headerEnd = findStatementEnd(masked, expression.lastIndex);
+        if (headerEnd < 0) continue;
+        const boundary = /\b(endtypeclass|endinstance|endpackage|typeclass|instance)\b/g;
+        boundary.lastIndex = headerEnd + 1;
+        const closing = boundary.exec(masked);
+        const bodyEnd = closing ? closing.index : masked.length;
+        const end = closing?.[0] === `end${match[1]}` ? bodyEnd + closing[0].length : bodyEnd;
+        const head = text.slice(match.index, headerEnd + 1);
+        const scope = {
+            kind: match[1], name: match[2], head,
+            key: `${match[1]}:${match[2]}:${createHash('sha256').update(normalizeWhitespace(head)).digest('hex')}`,
+            sourceRange: makeLocation(uri, lineStarts, match.index, end),
+            range: { start: match.index, end, bodyStart: headerEnd + 1, bodyEnd }
+        };
+        scopes.push({ start: scope.range.bodyStart, end: bodyEnd, item: scope });
+        expression.lastIndex = end;
+    }
+    return scopes;
 }
 
 function parseCallableSignature(header) {

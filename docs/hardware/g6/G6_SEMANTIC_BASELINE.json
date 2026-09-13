@@ -1,0 +1,4708 @@
+{
+  "schema": "g6-semantic-baseline-v1",
+  "createdAt": "2026-09-09T16:11:07.854Z",
+  "provenance": {
+    "kind": "Hashes derived only from immutable pre-G6 capture before current G6 query execution",
+    "capture": {
+      "path": "docs/hardware/evidence/g5-readability/run-0vHU05/checks/semantic-details/before.capture.json",
+      "bytes": 11184307,
+      "sha256": "7728623c829d74c7671cdb40133c617c96668557a3b4b472e10abc20d26e18f6"
+    },
+    "replayReport": {
+      "path": "docs/hardware/evidence/g5-readability/run-0vHU05/checks/semantic-details/semantic-details.json",
+      "bytes": 280502,
+      "sha256": "b3bb62c213f76758f157c24778bcba05d91611e409f72de58d5cc413802fbbdb"
+    },
+    "evidenceIndex": {
+      "path": "docs/hardware/evidence/g5-readability/run-0vHU05/index.json",
+      "bytes": 53627,
+      "sha256": "b3a5e4ee1ec81dc40442a0545de90a9f9ff4d3943648a29689c88089d03ab444"
+    },
+    "originalG5SourceArchive": {
+      "path": "dist/bsv-lens-hardware-g5-source.zip",
+      "bytes": 223922190,
+      "sha256": "3504decafff6ad0c600b2a8c2d0c2651edee3f84a33c408e522d85663b23c686"
+    },
+    "historicalInputsRequiredForReplay": false
+  },
+  "encoding": "UTF-8 JSON.stringify(value, null, 2) followed by one LF; full ordered objects/arrays retained when hashing",
+  "exclusions": [
+    "top-level query result.metrics",
+    "top-level query result.request"
+  ],
+  "identities": [
+    {
+      "buildId": "A",
+      "stock": {
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "modelId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/implementation/yosys-json-v1",
+        "implementationProvider": "stock",
+        "providerIdentity": "yosys-json-v1",
+        "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+        "artifactHash": "bfbba8b62912548e760141fd07075474df14c2c81067aca5ae83e5e187c6e8a9",
+        "buildInputFingerprint": "bec63f75407971f586c5289fd62dba8d00a2b3b33e49df3d4ba673c8d807ce9d",
+        "sourceModelIdentity": "3f8661ccdd2d444a1a4122011e6ffca0c74cf8739d392229dc3e763cfb52bbcd",
+        "sourceStatus": "attached",
+        "originAnalysisId": null,
+        "freshness": "fresh",
+        "unknownInputs": [
+          "dependencyFingerprint",
+          "toolchain",
+          "passSequence",
+          "buildOptionsFingerprint",
+          "concreteParameters"
+        ],
+        "capabilities": {
+          "same-net": "available",
+          "drivers-loads": "available",
+          "dependencies": "available",
+          "state-accesses": "available",
+          "behavior": "available",
+          "call-site": "available",
+          "source-dependencies": "available",
+          "correspondence": "available"
+        }
+      },
+      "instrumented": {
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0",
+        "modelId": "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/implementation/yosys-json-v1",
+        "implementationProvider": "instrumented",
+        "providerIdentity": "yosys-json-v1",
+        "stage": "bsc-instrumented-origin/yosys-hierarchy-proc-noopt",
+        "artifactHash": "33aac355602f031448dc824790d591867bb8495863c8e95f9737a862c4f96663",
+        "buildInputFingerprint": "3ed5fb9a74e70b4ec17da5bfd2685082604fef785d4a5491df5c2b67181b7683",
+        "sourceModelIdentity": "3f8661ccdd2d444a1a4122011e6ffca0c74cf8739d392229dc3e763cfb52bbcd",
+        "sourceStatus": "attached",
+        "originAnalysisId": "origin-analysis-ab2dcc30836c6bb32132492f0e442d4aba4c251d0f7d4973ffc854a378e1200f",
+        "freshness": "unknown",
+        "unknownInputs": [
+          "tops",
+          "sourceInputs",
+          "dependencyFingerprint",
+          "toolchain",
+          "passSequence",
+          "buildOptionsFingerprint",
+          "concreteParameters"
+        ],
+        "capabilities": {
+          "same-net": "available",
+          "drivers-loads": "available",
+          "dependencies": "available",
+          "state-accesses": "available",
+          "behavior": "available",
+          "call-site": "available",
+          "source-dependencies": "available",
+          "correspondence": "available"
+        }
+      },
+      "sources": [
+        {
+          "path": "experiments/hardware/fixtures/Connected.bsv",
+          "revision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c",
+          "sha256": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "stock": {
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "modelId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/implementation/yosys-json-v1",
+        "implementationProvider": "stock",
+        "providerIdentity": "yosys-json-v1",
+        "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+        "artifactHash": "4ac9fd67e0f90147a1748bcbc5dd014262fefbd9994b73b642ae88523653d6b6",
+        "buildInputFingerprint": "0cb927d07e5836184016522402cb2cb092a0e9bdd406adb57cd872850006d846",
+        "sourceModelIdentity": "eccefbbba8552eec436ad429c938b554ea4ac0e185a61b3beae8a70effa752bf",
+        "sourceStatus": "attached",
+        "originAnalysisId": null,
+        "freshness": "fresh",
+        "unknownInputs": [
+          "dependencyFingerprint",
+          "toolchain",
+          "passSequence",
+          "buildOptionsFingerprint",
+          "concreteParameters"
+        ],
+        "capabilities": {
+          "same-net": "available",
+          "drivers-loads": "available",
+          "dependencies": "available",
+          "state-accesses": "available",
+          "behavior": "available",
+          "call-site": "available",
+          "source-dependencies": "available",
+          "correspondence": "available"
+        }
+      },
+      "instrumented": {
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede",
+        "modelId": "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/implementation/yosys-json-v1",
+        "implementationProvider": "instrumented",
+        "providerIdentity": "yosys-json-v1",
+        "stage": "bsc-instrumented-origin/yosys-hierarchy-proc-noopt",
+        "artifactHash": "b0c19ae52fd6d2ead295053bf56cebef998dc890ddfbd200ece6d5bec6978190",
+        "buildInputFingerprint": "3ed5fb9a74e70b4ec17da5bfd2685082604fef785d4a5491df5c2b67181b7683",
+        "sourceModelIdentity": "eccefbbba8552eec436ad429c938b554ea4ac0e185a61b3beae8a70effa752bf",
+        "sourceStatus": "attached",
+        "originAnalysisId": "origin-analysis-b8bd69ba0edbd73049e894a662f6975ddc46591d059db06807662a19365c5ae2",
+        "freshness": "unknown",
+        "unknownInputs": [
+          "tops",
+          "sourceInputs",
+          "dependencyFingerprint",
+          "toolchain",
+          "passSequence",
+          "buildOptionsFingerprint",
+          "concreteParameters"
+        ],
+        "capabilities": {
+          "same-net": "available",
+          "drivers-loads": "available",
+          "dependencies": "available",
+          "state-accesses": "available",
+          "behavior": "available",
+          "call-site": "available",
+          "source-dependencies": "available",
+          "correspondence": "available"
+        }
+      },
+      "sources": [
+        {
+          "path": "experiments/hardware/fixtures/Control.bsv",
+          "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+          "sha256": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "stock": {
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "modelId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/implementation/yosys-json-v1",
+        "implementationProvider": "stock",
+        "providerIdentity": "yosys-json-v1",
+        "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+        "artifactHash": "b8bce85af868cba26eda55e7f0bd7ed4d7e37dea96f67c172227b6a6e915926a",
+        "buildInputFingerprint": "38d8d43db33071a507e9d24c158c4a40efa11ed7b00cede0fc2320151a443f67",
+        "sourceModelIdentity": "54d4ae86a479ad9373e35bd8915ff1086b4e5346ab4c3c9b4238169d88c2dc45",
+        "sourceStatus": "attached",
+        "originAnalysisId": null,
+        "freshness": "fresh",
+        "unknownInputs": [
+          "dependencyFingerprint",
+          "toolchain",
+          "passSequence",
+          "buildOptionsFingerprint",
+          "concreteParameters"
+        ],
+        "capabilities": {
+          "same-net": "available",
+          "drivers-loads": "available",
+          "dependencies": "available",
+          "state-accesses": "available",
+          "behavior": "available",
+          "call-site": "available",
+          "source-dependencies": "available",
+          "correspondence": "available"
+        }
+      },
+      "instrumented": {
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484",
+        "modelId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/implementation/yosys-json-v1",
+        "implementationProvider": "instrumented",
+        "providerIdentity": "yosys-json-v1",
+        "stage": "bsc-instrumented-origin/yosys-hierarchy-proc-noopt",
+        "artifactHash": "9535602266ce1a278a32fe5bcb80a3fbccc515435ca0fef6f3abe6f0ab0c67fc",
+        "buildInputFingerprint": "3ed5fb9a74e70b4ec17da5bfd2685082604fef785d4a5491df5c2b67181b7683",
+        "sourceModelIdentity": "54d4ae86a479ad9373e35bd8915ff1086b4e5346ab4c3c9b4238169d88c2dc45",
+        "sourceStatus": "attached",
+        "originAnalysisId": "origin-analysis-7e27b1a36e0be1d56c934b0d4e75b0f1ce182cd2cacfdce8de68c17c535b0f1b",
+        "freshness": "unknown",
+        "unknownInputs": [
+          "tops",
+          "sourceInputs",
+          "dependencyFingerprint",
+          "toolchain",
+          "passSequence",
+          "buildOptionsFingerprint",
+          "concreteParameters"
+        ],
+        "capabilities": {
+          "same-net": "available",
+          "drivers-loads": "available",
+          "dependencies": "available",
+          "state-accesses": "available",
+          "behavior": "available",
+          "call-site": "available",
+          "source-dependencies": "available",
+          "correspondence": "available"
+        }
+      },
+      "sources": [
+        {
+          "path": "experiments/hardware/fixtures/Reuse.bsv",
+          "revision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b",
+          "sha256": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        }
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "buildId": "A",
+      "label": "ordered-half-open-slice",
+      "input": {
+        "kind": "same-net",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "ownerInstanceId": null,
+        "seed": {
+          "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+          "slice": {
+            "start": 0,
+            "end": 2
+          }
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "occurrence-scoped-dependency",
+      "input": {
+        "kind": "dependencies",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "ownerInstanceId": null,
+        "seed": {
+          "entityId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D/port/get",
+          "indices": [
+            0,
+            1,
+            0
+          ]
+        },
+        "scope": {
+          "kind": "occurrence",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward",
+        "semanticsProfile": "yosys-0.68-structural-v1"
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/put",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+        "seed": {
+          "entityId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:put"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/put/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:expression:535:562",
+          "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/get",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+        "seed": {
+          "entityId": "behavior:instance:def:Connected:mkConnected:mkConnected:method:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/get/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:580:expression:601:610",
+          "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/put",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "seed": {
+          "entityId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:put"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/put/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:315",
+          "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/get",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "seed": {
+          "entityId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:method:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/get/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:expression:354:359",
+          "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/put",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+        "seed": {
+          "entityId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:method:put"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/put/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:257:expression:306:315",
+          "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/get",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+        "seed": {
+          "entityId": "behavior:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:method:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/get/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:get:333:expression:354:359",
+          "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "left.put",
+      "input": {
+        "kind": "call-site",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:callsite:512:527",
+          "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "right.put",
+      "input": {
+        "kind": "call-site",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Connected.bsv:method:put:472:callsite:535:562",
+          "sourceRevision": "c8030dc75e34dfd87dc8edc28ad428efd3e35f0cd376c2240c2691c7eca9cb3c"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "seed": {
+          "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0",
+        "implementationProvider": "instrumented",
+        "implementationOccurrenceId": "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+        "seed": {
+          "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+        "seed": {
+          "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:mkConnected.right.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0",
+        "implementationProvider": "instrumented",
+        "implementationOccurrenceId": "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%2C%22right%22%5D",
+        "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right",
+        "seed": {
+          "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.right:mkConnected.right.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-c13713c0b0e3d2bdaa9af2bd8682afa1b64d9a8deb62d802d19182f0df8d97b0/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/get/stock-correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+        "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D",
+        "ownerInstanceId": "instance:def:Connected:mkConnected:mkConnected",
+        "seed": {
+          "entityId": "endpoint:instance:def:Connected:mkConnected:mkConnected:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "ordered-half-open-slice",
+      "input": {
+        "kind": "same-net",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": null,
+        "seed": {
+          "entityId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/port/inject_value",
+          "slice": {
+            "start": 0,
+            "end": 2
+          }
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "occurrence-scoped-dependency",
+      "input": {
+        "kind": "dependencies",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": null,
+        "seed": {
+          "entityId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D/port/inject_value",
+          "indices": [
+            0,
+            1,
+            0
+          ]
+        },
+        "scope": {
+          "kind": "occurrence",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward",
+        "semanticsProfile": "yosys-0.68-structural-v1"
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/tick",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "behavior:instance:def:Control:mkControl:mkControl:rule:tick"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/tick/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Control.bsv:rule:tick:236:expression:262:268",
+          "sourceRevision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/decrement",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/decrement/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+          "sourceRevision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/increment",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/increment/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+          "sourceRevision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/inject",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "behavior:instance:def:Control:mkControl:mkControl:method:inject"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/inject/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+          "sourceRevision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/read",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "behavior:instance:def:Control:mkControl:mkControl:method:read"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/read/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:expression:595:600",
+          "sourceRevision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.count/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.count/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede",
+        "implementationProvider": "instrumented",
+        "implementationOccurrenceId": "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.phase/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.phase/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede",
+        "implementationProvider": "instrumented",
+        "implementationOccurrenceId": "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.phase"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-8ad00ac483acb6c0536d6eeeaab786cb0952a5b6f8628840866efa76ded03ede/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/inject/stock-correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+        "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "seed": {
+          "entityId": "endpoint:instance:def:Control:mkControl:mkControl:inject"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "ordered-half-open-slice",
+      "input": {
+        "kind": "same-net",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": null,
+        "seed": {
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+          "slice": {
+            "start": 0,
+            "end": 2
+          }
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "occurrence-scoped-dependency",
+      "input": {
+        "kind": "dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": null,
+        "seed": {
+          "entityId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D/port/get",
+          "indices": [
+            0,
+            1,
+            0
+          ]
+        },
+        "scope": {
+          "kind": "occurrence",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward",
+        "semanticsProfile": "yosys-0.68-structural-v1"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/put",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "behavior:instance:def:Reuse:mkReuse:mkReuse:method:put"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/put/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:expression:1251:1281",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/get",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "behavior:instance:def:Reuse:mkReuse:mkReuse:method:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/get/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:expression:1321:1354",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/put",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low",
+        "seed": {
+          "entityId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low:method:put"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/put/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:308",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/get",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low",
+        "seed": {
+          "entityId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low:method:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/get/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:expression:347:352",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/put",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "seed": {
+          "entityId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:put"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/put/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:247:expression:296:308",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/get",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "seed": {
+          "entityId": "behavior:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:method:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/get/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:326:expression:347:352",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/put",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation",
+        "seed": {
+          "entityId": "behavior:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation:method:put"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/put/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:514:expression:567:576",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/get",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation",
+        "seed": {
+          "entityId": "behavior:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation:method:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/get/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:594:expression:619:624",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/put",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation",
+        "seed": {
+          "entityId": "behavior:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation:method:put"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/put/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:514:expression:567:576",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/get",
+      "input": {
+        "kind": "behavior",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation",
+        "seed": {
+          "entityId": "behavior:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation:method:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/get/expression",
+      "input": {
+        "kind": "source-dependencies",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:594:expression:619:624",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1,
+        "direction": "backward"
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "low.put",
+      "input": {
+        "kind": "call-site",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1179:1193",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "high.put",
+      "input": {
+        "kind": "call-site",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1201:1216",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "narrow.put",
+      "input": {
+        "kind": "call-site",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1224:1243",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "zeroExtend",
+      "input": {
+        "kind": "call-site",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1260:1280",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "wide.put",
+      "input": {
+        "kind": "call-site",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:put:1139:callsite:1251:1281",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "zeroExtend",
+      "input": {
+        "kind": "call-site",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "code:experiments/hardware/fixtures/Reuse.bsv:method:get:1299:callsite:1332:1354",
+          "sourceRevision": "108379abe18027c79cc91ea9bae93e548a353f7d2b36189deb48dd2fa4bc088b"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22low%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low",
+        "seed": {
+          "entityId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low:mkReuse.low.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484",
+        "implementationProvider": "instrumented",
+        "implementationOccurrenceId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22low%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low",
+        "seed": {
+          "entityId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.low:mkReuse.low.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "seed": {
+          "entityId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484",
+        "implementationProvider": "instrumented",
+        "implementationOccurrenceId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22high%22%5D",
+        "ownerInstanceId": "instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high",
+        "seed": {
+          "entityId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.high:mkReuse.high.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation",
+        "seed": {
+          "entityId": "instance:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation:mkReuse.narrow.implementation.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484",
+        "implementationProvider": "instrumented",
+        "implementationOccurrenceId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22narrow%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation",
+        "seed": {
+          "entityId": "instance:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.narrow:mkReuse.narrow.implementation:mkReuse.narrow.implementation.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation",
+        "seed": {
+          "entityId": "instance:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation:mkReuse.wide.implementation.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation.state/correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484",
+        "implementationProvider": "instrumented",
+        "implementationOccurrenceId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%2C%22wide%22%5D",
+        "ownerInstanceId": "instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation",
+        "seed": {
+          "entityId": "instance:instance:instance:instance:def:Reuse:mkReuse:mkReuse:mkReuse.wide:mkReuse.wide.implementation:mkReuse.wide.implementation.state"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-9ef7ab83b4fb70ca592d2ed04ab259a54c07d72ab3effbd8c450ffb708484484/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/get/stock-correspondence",
+      "input": {
+        "kind": "correspondence",
+        "analysisId": "analysis-5a521b53757c57a8f918b0a815706adc22e744f364908d0ada4e0dc54a0e5b8e",
+        "snapshotId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474",
+        "implementationProvider": "stock",
+        "implementationOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D",
+        "ownerInstanceId": "instance:def:Reuse:mkReuse:mkReuse",
+        "seed": {
+          "entityId": "endpoint:instance:def:Reuse:mkReuse:mkReuse:get"
+        },
+        "scope": {
+          "kind": "design",
+          "rootOccurrenceId": "hw-44e6b2f067f40313541c4d08f8693ab2e1d78299297852630aefdb2dd1262474/occurrence/%5B%22mkReuse%22%5D"
+        },
+        "queryGeneration": 1
+      }
+    }
+  ],
+  "requestsIdentity": {
+    "bytes": 73441,
+    "sha256": "e8be46a16623693fb791f8af33548e810b373657924be2aed60cfca4e4ccdedd"
+  },
+  "queries": [
+    {
+      "buildId": "A",
+      "label": "ordered-half-open-slice",
+      "input": {
+        "bytes": 802,
+        "sha256": "d9ee7336dcc22c2543cecb4d244304726f963649b897390db5b2db380ae6fb52"
+      },
+      "result": {
+        "bytes": 101568,
+        "sha256": "8637635e2a8e25348ae9447493741725d3aff52c39499e8297bf0c712cbd1b61"
+      },
+      "sources": {
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "sourceItems": []
+    },
+    {
+      "buildId": "A",
+      "label": "occurrence-scoped-dependency",
+      "input": {
+        "bytes": 882,
+        "sha256": "39450aa0033cc8f84b985eb648e9b3d432e2ed6b32d48075d023b7cf4814ca35"
+      },
+      "result": {
+        "bytes": 52176,
+        "sha256": "6a77c25d13dfea04b697abffe8209b90362f582f443f2e3497702bcf96d90270"
+      },
+      "sources": {
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "sourceItems": []
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/put",
+      "input": {
+        "bytes": 746,
+        "sha256": "8bb255baf2ab667d763a9201d8a1be36278a7c62d347e407df7497a62355270e"
+      },
+      "result": {
+        "bytes": 138767,
+        "sha256": "01d0a006663e36dfe2eefa80435fb2640b5f983172ed3cd1f0a5060f582b8507"
+      },
+      "sources": {
+        "bytes": 17314,
+        "sha256": "26b387519a8930bc50692615714e33d23b99804683ec0118d2fbe2d88304f21d"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1096,
+          "sha256": "a5b8df2f311243f8d44f76417d674d2e8b4940b2bc3c4f3b0066ce156b3b5239"
+        },
+        {
+          "bytes": 1355,
+          "sha256": "dd547a3b5a9b0f31b84129b37c0096351d57377b3ffff5049725199a379a2cb5"
+        },
+        {
+          "bytes": 923,
+          "sha256": "85a633842648ac0b5d19b45c930a1201acf00ecf826cfbec9cce17eb610e29c7"
+        },
+        {
+          "bytes": 947,
+          "sha256": "c07d1be29071bf52b93b53529a65ed1449601a4869ee026b86379dc2b31bec68"
+        },
+        {
+          "bytes": 926,
+          "sha256": "a81132464eadee921c02922aac2deea0f6145242dc001989e6133957b73cc86e"
+        },
+        {
+          "bytes": 912,
+          "sha256": "5bdb7605cd93fd256386e716cde4a1b4961cfc4181e705a4becd25f2248ee5ab"
+        },
+        {
+          "bytes": 950,
+          "sha256": "04adb89af298200863ea7a1b4d834c3575c1dbc6d2d6056cb8b983e59660f1bc"
+        },
+        {
+          "bytes": 924,
+          "sha256": "5f12f2e76ec4c21cf2ddadd80d5f2c13e3875fb8966ae494c6f2609a4f8a6f89"
+        },
+        {
+          "bytes": 932,
+          "sha256": "f87c07619b6ab792d4a07c4bc5df06ea4bd70940997c849385e2da7251a09d86"
+        },
+        {
+          "bytes": 912,
+          "sha256": "4e9bb191f206ff07dfaf1cfbc4d149108f1abf499b85ad61e1d892ed9a3362a5"
+        },
+        {
+          "bytes": 940,
+          "sha256": "ba5adb54fec17a76267006e69dc03b932be36590638d41561a120b347bf671cd"
+        },
+        {
+          "bytes": 994,
+          "sha256": "539ff53a08356b291eb5c824fb78792c94ff1e2ef3ade8cfc01a8c7318f70743"
+        },
+        {
+          "bytes": 964,
+          "sha256": "8433ed6f227471612eb756e95791d5d6aa98166a7bc0c82938694e298d42f257"
+        },
+        {
+          "bytes": 964,
+          "sha256": "8df6714a35b28b58eb91ee39b1b87dd5682ea31cacda0b70cffa242024878dac"
+        },
+        {
+          "bytes": 999,
+          "sha256": "7d968a37c72eedb3abeecb767c077fdbd582781e08b1efffd49a18c92f12618e"
+        },
+        {
+          "bytes": 926,
+          "sha256": "e126336ccba45fc045461256757fca70449156a75330d965003eac8c6fdb6a83"
+        },
+        {
+          "bytes": 950,
+          "sha256": "cabb42caa77b89c5f67e0257e0b12e303afdcd20f6e44836fce44781f0af8acd"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/put/expression",
+      "input": {
+        "bytes": 890,
+        "sha256": "9e71c9f213fa823265aa66beaa6ac68c41f216e76779df3f78e83403fd2d86ff"
+      },
+      "result": {
+        "bytes": 106120,
+        "sha256": "e71595be38cf6a2fbb38ec80fc5900f76fee8a9ef5fcf44f434ee0dd5182620d"
+      },
+      "sources": {
+        "bytes": 10357,
+        "sha256": "c0c3662ea232d125f9c125b247d70f234bafc2a822da20c54cfb8b626129b4ee"
+      },
+      "sourceItems": [
+        {
+          "bytes": 950,
+          "sha256": "04adb89af298200863ea7a1b4d834c3575c1dbc6d2d6056cb8b983e59660f1bc"
+        },
+        {
+          "bytes": 1355,
+          "sha256": "dd547a3b5a9b0f31b84129b37c0096351d57377b3ffff5049725199a379a2cb5"
+        },
+        {
+          "bytes": 950,
+          "sha256": "cabb42caa77b89c5f67e0257e0b12e303afdcd20f6e44836fce44781f0af8acd"
+        },
+        {
+          "bytes": 964,
+          "sha256": "8df6714a35b28b58eb91ee39b1b87dd5682ea31cacda0b70cffa242024878dac"
+        },
+        {
+          "bytes": 999,
+          "sha256": "7d968a37c72eedb3abeecb767c077fdbd582781e08b1efffd49a18c92f12618e"
+        },
+        {
+          "bytes": 932,
+          "sha256": "f87c07619b6ab792d4a07c4bc5df06ea4bd70940997c849385e2da7251a09d86"
+        },
+        {
+          "bytes": 964,
+          "sha256": "8433ed6f227471612eb756e95791d5d6aa98166a7bc0c82938694e298d42f257"
+        },
+        {
+          "bytes": 994,
+          "sha256": "539ff53a08356b291eb5c824fb78792c94ff1e2ef3ade8cfc01a8c7318f70743"
+        },
+        {
+          "bytes": 924,
+          "sha256": "5f12f2e76ec4c21cf2ddadd80d5f2c13e3875fb8966ae494c6f2609a4f8a6f89"
+        },
+        {
+          "bytes": 912,
+          "sha256": "4e9bb191f206ff07dfaf1cfbc4d149108f1abf499b85ad61e1d892ed9a3362a5"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/get",
+      "input": {
+        "bytes": 746,
+        "sha256": "b99d24566d7571452ce90ba48394fe5a2dd1610747397bb4a7560dfa68c72aa2"
+      },
+      "result": {
+        "bytes": 35757,
+        "sha256": "7b8cb3c20ca98549fee602c9cf486c78d8d0b84f599ed2c0fd26b5dc37f12099"
+      },
+      "sources": {
+        "bytes": 6319,
+        "sha256": "9afd37c8d5a70f1c603041e1c31d840924dcff4d5f9f53f3a428681573a5a425"
+      },
+      "sourceItems": [
+        {
+          "bytes": 944,
+          "sha256": "091df6c2c79a03e3a8fcd1f084e1e5517ab774e3d4ad6bcda050927b8a72f702"
+        },
+        {
+          "bytes": 1355,
+          "sha256": "dd547a3b5a9b0f31b84129b37c0096351d57377b3ffff5049725199a379a2cb5"
+        },
+        {
+          "bytes": 918,
+          "sha256": "4bf331aea027f23f244df8436e09c72d010739f6fdaeedbd264252f5b0cb81de"
+        },
+        {
+          "bytes": 926,
+          "sha256": "682f30504bab2aaa75f4138de72f84e3eda7337a962eda2e199573a654d37a37"
+        },
+        {
+          "bytes": 928,
+          "sha256": "4442f601f4dd5942cb579fd4163388818fb091a70c505a531ba4e99e3d69ad6b"
+        },
+        {
+          "bytes": 999,
+          "sha256": "7d968a37c72eedb3abeecb767c077fdbd582781e08b1efffd49a18c92f12618e"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/get/expression",
+      "input": {
+        "bytes": 890,
+        "sha256": "21824fd65224336abec73d05befc5bf4d1c6ddb8444b97d185288d7c289a848f"
+      },
+      "result": {
+        "bytes": 17006,
+        "sha256": "fa8439ccdc32237280b49402b687f0e81e4ed7ff0cf17a15aa9714d35bac65a6"
+      },
+      "sources": {
+        "bytes": 2366,
+        "sha256": "24b0f853404d6f6297926b9ec23fbd9ca75b44990222b5fdf4550e0b4c3b4257"
+      },
+      "sourceItems": [
+        {
+          "bytes": 926,
+          "sha256": "682f30504bab2aaa75f4138de72f84e3eda7337a962eda2e199573a654d37a37"
+        },
+        {
+          "bytes": 1355,
+          "sha256": "dd547a3b5a9b0f31b84129b37c0096351d57377b3ffff5049725199a379a2cb5"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/put",
+      "input": {
+        "bytes": 811,
+        "sha256": "a14c75588f1a030681663f9b9f7d433ecd9411bccb5d0756da57ba2c81fa1a68"
+      },
+      "result": {
+        "bytes": 50764,
+        "sha256": "021b5a71f45737f29efa4a233cf3108190cb58a37a56e0aec240a52cf7430623"
+      },
+      "sources": {
+        "bytes": 8305,
+        "sha256": "c8733ac29c47292edb5235d0933dbb6bf6310b3e7872caa540e87b2ee9517dc9"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1095,
+          "sha256": "90369ceb0b89ee586ed80fc185949083c8e38a29bd7e0c682dceb2f1fa7e1b99"
+        },
+        {
+          "bytes": 994,
+          "sha256": "539ff53a08356b291eb5c824fb78792c94ff1e2ef3ade8cfc01a8c7318f70743"
+        },
+        {
+          "bytes": 980,
+          "sha256": "ebf095817808317dc42dce0a9cc1844b99ce1e5348e01135c546aa6fbffb226e"
+        },
+        {
+          "bytes": 951,
+          "sha256": "64799af5c4b8df7772d62a1843d39cf53bd9ad2e6603d41e64d49625518b7215"
+        },
+        {
+          "bytes": 957,
+          "sha256": "681d654b00bda038bc6ecf0b3d4b4917f964308e58ddc5fc1cb8438c20f2a7e7"
+        },
+        {
+          "bytes": 940,
+          "sha256": "36d58ec6436fce908177d380c0beb75f9aecf4c4ca1e94c1c69637a678e297ba"
+        },
+        {
+          "bytes": 1011,
+          "sha256": "12b9461cdef116c2d73a683e4819180da8f6632e2ab7a7eabda6457e0447f046"
+        },
+        {
+          "bytes": 1046,
+          "sha256": "1da0f145613a2faa13d8cc8f2f6fe22a906956feba4f34b6d4d22227ef7aad2c"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/put/expression",
+      "input": {
+        "bytes": 929,
+        "sha256": "b8c2e309f36017f7edc7ad488cffa1f167022bcbedaa5116dbb4a0f637ce2811"
+      },
+      "result": {
+        "bytes": 46049,
+        "sha256": "fd2ea7a82ba8835d201578a6320a6c16b4b294c676bc8d48995728f17588beb2"
+      },
+      "sources": {
+        "bytes": 4009,
+        "sha256": "6359db5a466d522d7b6863b7535a5ba5a7fc976dffef3179ea7f2b7ce9fd85fa"
+      },
+      "sourceItems": [
+        {
+          "bytes": 957,
+          "sha256": "681d654b00bda038bc6ecf0b3d4b4917f964308e58ddc5fc1cb8438c20f2a7e7"
+        },
+        {
+          "bytes": 994,
+          "sha256": "539ff53a08356b291eb5c824fb78792c94ff1e2ef3ade8cfc01a8c7318f70743"
+        },
+        {
+          "bytes": 951,
+          "sha256": "64799af5c4b8df7772d62a1843d39cf53bd9ad2e6603d41e64d49625518b7215"
+        },
+        {
+          "bytes": 940,
+          "sha256": "36d58ec6436fce908177d380c0beb75f9aecf4c4ca1e94c1c69637a678e297ba"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/get",
+      "input": {
+        "bytes": 811,
+        "sha256": "8fa30c4d439c4c9ad8325f61062abbf726de966a6ef986f5acc52e4f769cf0de"
+      },
+      "result": {
+        "bytes": 39460,
+        "sha256": "090e6ec2534234da372dbdee0f80aa3f0e34af3f977e36f1868319465a55ce60"
+      },
+      "sources": {
+        "bytes": 6180,
+        "sha256": "e61a168258f7a67241321693b6dee3b1da25d08e75d325309f930662a878e0f7"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1001,
+          "sha256": "9d42020b1bd59d59772d77ce9673d11c5374b4dea797b08b3f20bb77425bdadb"
+        },
+        {
+          "bytes": 994,
+          "sha256": "539ff53a08356b291eb5c824fb78792c94ff1e2ef3ade8cfc01a8c7318f70743"
+        },
+        {
+          "bytes": 949,
+          "sha256": "f4230ae4919f7008b059cc248daa7054f9f342c9442aaaad7a85ca1fb07843a0"
+        },
+        {
+          "bytes": 956,
+          "sha256": "f7b9f2d9bba92f7516cb7000e1bc026c739f7f6d4146a96dbd5b67cfe0da8edb"
+        },
+        {
+          "bytes": 985,
+          "sha256": "6619c8c1a6a51d98fe7ce66805d676b801455f379e5b01f4c4bf2e44a85904aa"
+        },
+        {
+          "bytes": 1046,
+          "sha256": "1da0f145613a2faa13d8cc8f2f6fe22a906956feba4f34b6d4d22227ef7aad2c"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left/get/expression",
+      "input": {
+        "bytes": 929,
+        "sha256": "33167b4e060a227c7a55b1c4ad7ec2afbbbeede4c1c86729ddb80ca097ca6eff"
+      },
+      "result": {
+        "bytes": 17225,
+        "sha256": "a938c779c07053ed929784a2adbc9545b3c7c11c2fb72a253d01ec4db9fcc4b8"
+      },
+      "sources": {
+        "bytes": 2035,
+        "sha256": "80f0c22edfe2554be9d1845aa65374ad6d614c1a0254045200dd8c13adf526d6"
+      },
+      "sourceItems": [
+        {
+          "bytes": 956,
+          "sha256": "f7b9f2d9bba92f7516cb7000e1bc026c739f7f6d4146a96dbd5b67cfe0da8edb"
+        },
+        {
+          "bytes": 994,
+          "sha256": "539ff53a08356b291eb5c824fb78792c94ff1e2ef3ade8cfc01a8c7318f70743"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/put",
+      "input": {
+        "bytes": 814,
+        "sha256": "caf734d01a467efc51dbed88e628ee7dd334358eada5f8ada765b4b3e8b819f2"
+      },
+      "result": {
+        "bytes": 50876,
+        "sha256": "4161f92ba3b42c1d95aa34d380103add4a4f3213a78700e2a0fcd85890e207cb"
+      },
+      "sources": {
+        "bytes": 8328,
+        "sha256": "24e6424b62f865a329ef58aa4bb91df29206419b4eafa548c0eccc87ff1e339b"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1098,
+          "sha256": "700716c052629de18ec748f44526bc3d8e63d7898e389120a2155a86bfd44e5f"
+        },
+        {
+          "bytes": 999,
+          "sha256": "7d968a37c72eedb3abeecb767c077fdbd582781e08b1efffd49a18c92f12618e"
+        },
+        {
+          "bytes": 982,
+          "sha256": "192eac50232b07cd30f3a4f3ef92a9061c336f7c09e0fe33bc5ac61e8ed309ba"
+        },
+        {
+          "bytes": 953,
+          "sha256": "c262aaf472409789de4f29e78e76a79fd7f46a41c7fbe334c4805a8088a0592f"
+        },
+        {
+          "bytes": 959,
+          "sha256": "ad1ad83ee7049abb0fc88f30b4d8e4530ca507872d9537e9a687369b648373c9"
+        },
+        {
+          "bytes": 942,
+          "sha256": "9ddbdd014bd905b440e95af2897afcefdf7fc09d94d26ce715300323487d7b1c"
+        },
+        {
+          "bytes": 1014,
+          "sha256": "e209840a3026e332b7371721df12779253f0cc0792ea41e0f7098a0af7558432"
+        },
+        {
+          "bytes": 1050,
+          "sha256": "0e5368677e6cb15e1d6723f4c53591f7fff0fb20ed2a060b2b2a66b0a7edc5b0"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/put/expression",
+      "input": {
+        "bytes": 931,
+        "sha256": "5122377bdaf44a4ca111cf7c2e2ec41a4acb03e41b6589dd29a461f0a30a7bd0"
+      },
+      "result": {
+        "bytes": 46090,
+        "sha256": "b3b777efafbb00ae0eaa098bab7c6bead2c164a6e0c1e5750c6773c5c5b94740"
+      },
+      "sources": {
+        "bytes": 4020,
+        "sha256": "831e11a2253e30d8a26de1d9257aa481413d0ea391f6a3d8b8f6026032e80a4f"
+      },
+      "sourceItems": [
+        {
+          "bytes": 959,
+          "sha256": "ad1ad83ee7049abb0fc88f30b4d8e4530ca507872d9537e9a687369b648373c9"
+        },
+        {
+          "bytes": 999,
+          "sha256": "7d968a37c72eedb3abeecb767c077fdbd582781e08b1efffd49a18c92f12618e"
+        },
+        {
+          "bytes": 953,
+          "sha256": "c262aaf472409789de4f29e78e76a79fd7f46a41c7fbe334c4805a8088a0592f"
+        },
+        {
+          "bytes": 942,
+          "sha256": "9ddbdd014bd905b440e95af2897afcefdf7fc09d94d26ce715300323487d7b1c"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/get",
+      "input": {
+        "bytes": 814,
+        "sha256": "a0d9d9fb983c5bce9c48e492a339fddafee76844cedc405b28713c64d84769b1"
+      },
+      "result": {
+        "bytes": 39562,
+        "sha256": "cd1a0844ed287eb1cc9b690567255fa2e2a9e8a340d2cb9a5c1fdcfb7db97af9"
+      },
+      "sources": {
+        "bytes": 6199,
+        "sha256": "aa168e15716029d48019cab9a22f014da0cfe56f3618c96a391318be24bfff71"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1004,
+          "sha256": "f0ba6266f274db7095ef844ea2705f16d86a5e21df5f59ff120cd8adb0eb0d5f"
+        },
+        {
+          "bytes": 999,
+          "sha256": "7d968a37c72eedb3abeecb767c077fdbd582781e08b1efffd49a18c92f12618e"
+        },
+        {
+          "bytes": 951,
+          "sha256": "4dc7409f45fc93742e1b0bfcc4b4aaa817855fb1b339a0d5f5b1a34f8962811b"
+        },
+        {
+          "bytes": 958,
+          "sha256": "58806ef6679830c0a89e8c188ffc6f43734b01a0a0f870beb06b26fc5448c0ea"
+        },
+        {
+          "bytes": 988,
+          "sha256": "66205f9e7ffeea661552309fd21ef969af0e19842e6109b5fdb71cd01c844419"
+        },
+        {
+          "bytes": 1050,
+          "sha256": "0e5368677e6cb15e1d6723f4c53591f7fff0fb20ed2a060b2b2a66b0a7edc5b0"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right/get/expression",
+      "input": {
+        "bytes": 931,
+        "sha256": "690b76ac5dd671f269bb634ab251181b753568ec251105fb887762283e6ba2bb"
+      },
+      "result": {
+        "bytes": 17250,
+        "sha256": "521599a2472e3bd68b94f810e61df6621287a128ceabfd2db3006fc0270a027e"
+      },
+      "sources": {
+        "bytes": 2042,
+        "sha256": "e2d0c76867cddf7d34c4361fc51c231ccfa110261be4bedea14534abb34ae401"
+      },
+      "sourceItems": [
+        {
+          "bytes": 958,
+          "sha256": "58806ef6679830c0a89e8c188ffc6f43734b01a0a0f870beb06b26fc5448c0ea"
+        },
+        {
+          "bytes": 999,
+          "sha256": "7d968a37c72eedb3abeecb767c077fdbd582781e08b1efffd49a18c92f12618e"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "left.put",
+      "input": {
+        "bytes": 851,
+        "sha256": "53de37d1795f1535cce4302554becb4d2a63d6ed1ec1d76f12f8c82d49f08c30"
+      },
+      "result": {
+        "bytes": 49283,
+        "sha256": "9038e078495ac8335e5062f0adfa32f1414a4f3334fa5febdc917d7e73900414"
+      },
+      "sources": {
+        "bytes": 5335,
+        "sha256": "9ec5ef4a38fed20c286bf06149bb11fc3e754cdc9cf748a210af08653e0f9ff8"
+      },
+      "sourceItems": [
+        {
+          "bytes": 926,
+          "sha256": "e126336ccba45fc045461256757fca70449156a75330d965003eac8c6fdb6a83"
+        },
+        {
+          "bytes": 1355,
+          "sha256": "dd547a3b5a9b0f31b84129b37c0096351d57377b3ffff5049725199a379a2cb5"
+        },
+        {
+          "bytes": 940,
+          "sha256": "ba5adb54fec17a76267006e69dc03b932be36590638d41561a120b347bf671cd"
+        },
+        {
+          "bytes": 994,
+          "sha256": "539ff53a08356b291eb5c824fb78792c94ff1e2ef3ade8cfc01a8c7318f70743"
+        },
+        {
+          "bytes": 912,
+          "sha256": "5bdb7605cd93fd256386e716cde4a1b4961cfc4181e705a4becd25f2248ee5ab"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "right.put",
+      "input": {
+        "bytes": 851,
+        "sha256": "c3c337aa8a0419a57e264b724525e7c345fa534b13e5e526296f0382bf846ce4"
+      },
+      "result": {
+        "bytes": 68634,
+        "sha256": "f4d6e887204432a36b873245e9431b01f3dfba7a7df967f3a55e9079b0091af9"
+      },
+      "sources": {
+        "bytes": 7448,
+        "sha256": "762695071f66e72540cb8655664ad11366ec8b53ba73cc32aabb3d9d5840f68b"
+      },
+      "sourceItems": [
+        {
+          "bytes": 950,
+          "sha256": "cabb42caa77b89c5f67e0257e0b12e303afdcd20f6e44836fce44781f0af8acd"
+        },
+        {
+          "bytes": 1355,
+          "sha256": "dd547a3b5a9b0f31b84129b37c0096351d57377b3ffff5049725199a379a2cb5"
+        },
+        {
+          "bytes": 964,
+          "sha256": "8df6714a35b28b58eb91ee39b1b87dd5682ea31cacda0b70cffa242024878dac"
+        },
+        {
+          "bytes": 999,
+          "sha256": "7d968a37c72eedb3abeecb767c077fdbd582781e08b1efffd49a18c92f12618e"
+        },
+        {
+          "bytes": 932,
+          "sha256": "f87c07619b6ab792d4a07c4bc5df06ea4bd70940997c849385e2da7251a09d86"
+        },
+        {
+          "bytes": 964,
+          "sha256": "8433ed6f227471612eb756e95791d5d6aa98166a7bc0c82938694e298d42f257"
+        },
+        {
+          "bytes": 994,
+          "sha256": "539ff53a08356b291eb5c824fb78792c94ff1e2ef3ade8cfc01a8c7318f70743"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left.state/correspondence",
+      "input": {
+        "bytes": 829,
+        "sha256": "9084ce61abd9c59049343787314b5690eb8797d8f2c713e14e045fbd7ba421b3"
+      },
+      "result": {
+        "bytes": 176669,
+        "sha256": "4050da6fe6ab1073d2eb105f501dd22dc8e73063bfd817fc9f7d68a2696d3bfb"
+      },
+      "sources": {
+        "bytes": 3168,
+        "sha256": "5887e04f04b1becabad015f815cbe6f79a4d3922072df043d976eae644cd9fa2"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1046,
+          "sha256": "1da0f145613a2faa13d8cc8f2f6fe22a906956feba4f34b6d4d22227ef7aad2c"
+        },
+        {
+          "bytes": 994,
+          "sha256": "539ff53a08356b291eb5c824fb78792c94ff1e2ef3ade8cfc01a8c7318f70743"
+        },
+        {
+          "bytes": 1000,
+          "sha256": "6e5c24935a10bebb9d2e45357154e05c8b8e840fac3ee5ba61a6e30c7fc82a8f"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.left.state/correspondence",
+      "input": {
+        "bytes": 836,
+        "sha256": "bdb49cd768c0c838cc5c89c8abc88c26f57ccf71ec2b63dcaa91df8eb4c367fc"
+      },
+      "result": {
+        "bytes": 175988,
+        "sha256": "0dcde603f8e21bf20855a790c1ef035443e0d5671e9602e22585d90cdb5c9ac7"
+      },
+      "sources": {
+        "bytes": 3168,
+        "sha256": "b04a6bdd457964806eb786ee8fed909e04a3ed237db5d6a46508e6ce3157db92"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1046,
+          "sha256": "7e9012cf23fd6c83835ea0f5087b0c909098ffc63a029ea13c25fdbe41cfc2ce"
+        },
+        {
+          "bytes": 994,
+          "sha256": "c83d58a15788351afb1685083b7e31376028cd0bff045c3064045e26d89b9ba9"
+        },
+        {
+          "bytes": 1000,
+          "sha256": "6e5c24935a10bebb9d2e45357154e05c8b8e840fac3ee5ba61a6e30c7fc82a8f"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right.state/correspondence",
+      "input": {
+        "bytes": 833,
+        "sha256": "cba2edd0100870e89962335919c8ec69b40d7833d198d38a7dd13ccea9d458b5"
+      },
+      "result": {
+        "bytes": 176721,
+        "sha256": "e632d0e7ea2c18bdc49cabb7722cda3e076e509970af19f7b7d45debcf440292"
+      },
+      "sources": {
+        "bytes": 3179,
+        "sha256": "6bc0256467552b62596501800e887c1fcf3348d7ba64aad17a50bc87ee5129d8"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1050,
+          "sha256": "0e5368677e6cb15e1d6723f4c53591f7fff0fb20ed2a060b2b2a66b0a7edc5b0"
+        },
+        {
+          "bytes": 999,
+          "sha256": "7d968a37c72eedb3abeecb767c077fdbd582781e08b1efffd49a18c92f12618e"
+        },
+        {
+          "bytes": 1002,
+          "sha256": "93473f9d2aae7ac8221fa3098aee79f28da6cbc74bdf9b577417d3ace65f9b89"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected.right.state/correspondence",
+      "input": {
+        "bytes": 840,
+        "sha256": "e1f61bb3c93626f25f8203dbc6e51553e315296d83d5fd87a0b0a301ebd19f13"
+      },
+      "result": {
+        "bytes": 176040,
+        "sha256": "dd21e36b864dc8ac10cfdfe2c694e72eb8f305276cc21eeb5a2fab7a08e1959c"
+      },
+      "sources": {
+        "bytes": 3179,
+        "sha256": "75a82c0c5bb6c19648ab1da9f00d23e9eef3c4bd9ac3319ddd36a47866bb8312"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1050,
+          "sha256": "72165030e193fe95c1ff1a79bac3a0acd4928a5cf528b0ec0b5af5faf57d0140"
+        },
+        {
+          "bytes": 999,
+          "sha256": "6c25af1109d7c7b3772e9668f8acffafe918e857cc68f47f99e4b4da257aab57"
+        },
+        {
+          "bytes": 1002,
+          "sha256": "93473f9d2aae7ac8221fa3098aee79f28da6cbc74bdf9b577417d3ace65f9b89"
+        }
+      ]
+    },
+    {
+      "buildId": "A",
+      "label": "mkConnected/get/stock-correspondence",
+      "input": {
+        "bytes": 745,
+        "sha256": "bb6ae3fcd60f8a276e94e969358c60714dc43d5ad5ad4131839ab97a0cd92ea9"
+      },
+      "result": {
+        "bytes": 1978661,
+        "sha256": "8518c44328e467f3d88eeec88f279cb392ca610a47240e8af3d19e1693eef6c3"
+      },
+      "sources": {
+        "bytes": 4364,
+        "sha256": "fccc8a597b8883af17b83c0e73ed50112d6577a7b59289501759c1fdf0871ac4"
+      },
+      "sourceItems": [
+        {
+          "bytes": 920,
+          "sha256": "3712053321f036ba74dfa0a335c9535a5532459dc67d568409ea56b46fd22fd4"
+        },
+        {
+          "bytes": 1355,
+          "sha256": "dd547a3b5a9b0f31b84129b37c0096351d57377b3ffff5049725199a379a2cb5"
+        },
+        {
+          "bytes": 952,
+          "sha256": "a569ef6dd1b6646a46c1f56e62135de321f65ad560c2216d3471c83050859332"
+        },
+        {
+          "bytes": 966,
+          "sha256": "14d8d503fab9a8864a0e1e386afe5179e7e59046314facaa6436536c614eaf89"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "ordered-half-open-slice",
+      "input": {
+        "bytes": 805,
+        "sha256": "72a780a2486854bfbc609f3602e0aeb66e8ad971d251dc45c604ef3ce25b66ef"
+      },
+      "result": {
+        "bytes": 35182,
+        "sha256": "2aee26e44ef69e3d9d48856a78ef9d771b9b02a43e509d7f3f6d2a3c7cadfc2f"
+      },
+      "sources": {
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "sourceItems": []
+    },
+    {
+      "buildId": "B",
+      "label": "occurrence-scoped-dependency",
+      "input": {
+        "bytes": 885,
+        "sha256": "f698d765ffe5839599b0b8f8045e76efd06f82aa93a2d197701bd32aae492b58"
+      },
+      "result": {
+        "bytes": 33328,
+        "sha256": "764104e4e560c699c256c0148e835077996141d6ba5292349a9cd66cc9de63c4"
+      },
+      "sources": {
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "sourceItems": []
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/tick",
+      "input": {
+        "bytes": 729,
+        "sha256": "9c997b4c037d1766e394d0d8df69645cf89421eba1da22a07992922f01772dc8"
+      },
+      "result": {
+        "bytes": 51275,
+        "sha256": "e1ba789deca11dd803a791e52195bfff94b0e0f123bdb60423981920147efb56"
+      },
+      "sources": {
+        "bytes": 7734,
+        "sha256": "98c9c9620f75f0cba68bc37819b0719ea8d72ed7238d108e6415376eed1da114"
+      },
+      "sourceItems": [
+        {
+          "bytes": 955,
+          "sha256": "37b2548d9cb828dd3d86ca738f2567286ce32ec43522eddfdf77214ee187fa07"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        },
+        {
+          "bytes": 922,
+          "sha256": "1f5c3d15251c2f5023ab9d8ad3c6fff957273e0fe24fb711f8973e6689e0bd51"
+        },
+        {
+          "bytes": 902,
+          "sha256": "057793a2b43c152face919203a3badeb7d25309dab8516ceebab4d4149d6d228"
+        },
+        {
+          "bytes": 923,
+          "sha256": "3dcd473fa64665daa1a50986e84cd90b7d8f7de062685a3f6dc293f97260e47e"
+        },
+        {
+          "bytes": 960,
+          "sha256": "7a4d6fb106bb0029cdb7d88bf3807cce6c088710864c6120d59e0baf28f2fbbb"
+        },
+        {
+          "bytes": 923,
+          "sha256": "0771f5f26fe729a8a0a400e7a2ca6ff6f5e334374d587eafe8286d2214877835"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/tick/expression",
+      "input": {
+        "bytes": 877,
+        "sha256": "e04e71de32d95baccf2faceef045eb370f169f339f36afbbd23f84f678720525"
+      },
+      "result": {
+        "bytes": 17764,
+        "sha256": "1a758e0c8f492f9c94834ba085c08c2c8b102c51d6621d0b565150272afcdb07"
+      },
+      "sources": {
+        "bytes": 2846,
+        "sha256": "7e8eeb185e07853cb927ed8000d09079d326b7231ca5e3f92ed2a4b96955db0a"
+      },
+      "sourceItems": [
+        {
+          "bytes": 902,
+          "sha256": "057793a2b43c152face919203a3badeb7d25309dab8516ceebab4d4149d6d228"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/decrement",
+      "input": {
+        "bytes": 734,
+        "sha256": "9449c8440309e24013393386c6be3376c8caa1fc4b58b5d5cc29a8ace1bca26d"
+      },
+      "result": {
+        "bytes": 99950,
+        "sha256": "01695d4292f9db402bb496588496013103ce2d7d4d5caa6ebbbe5a24e82e39e5"
+      },
+      "sources": {
+        "bytes": 16432,
+        "sha256": "cf50c76676059de5c8cb222dfdfb9230f094eb1fdb3e18b9227d8f14588f45a4"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1018,
+          "sha256": "2c6149f6a342b35300e6ff44b6bde9ac5de292ca0fd4483c13cc2b308ae83c6d"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        },
+        {
+          "bytes": 928,
+          "sha256": "05121094b1998a38dc3980480ceeceb8691b3b6ce62613aa81bacfcd418641c2"
+        },
+        {
+          "bytes": 933,
+          "sha256": "8d8a22b5e9a8814c13c1fcffa98b8bc7cec44f532a9f07f4142594fdc594da81"
+        },
+        {
+          "bytes": 909,
+          "sha256": "20459e0cb2a7b9fa3e832cb831d86cc0f8fa6e570dee9704fcea0d7112eedf40"
+        },
+        {
+          "bytes": 893,
+          "sha256": "e35835ef06e15f6fdc47ea4b0cacb90be81685d86c80cf760329780f84699e1b"
+        },
+        {
+          "bytes": 912,
+          "sha256": "92818fadf303923680191c2286149f597cdc74e6b9db2f424aa58328ee5530be"
+        },
+        {
+          "bytes": 909,
+          "sha256": "80513ff715f333a712568d2119b82af8418c163d27ab00c9bcfa6ee3b4750db8"
+        },
+        {
+          "bytes": 909,
+          "sha256": "c2bf033074c5325e37a6b7ad14c35fb9b8afd640d0f87c6f453fa86da113294f"
+        },
+        {
+          "bytes": 910,
+          "sha256": "d59d002b02e2579a8f8631a75128b7006e46c4985534a13ea32c6a935cc9d999"
+        },
+        {
+          "bytes": 893,
+          "sha256": "d891849ff211089d31fd5756a3677dafd9a640c4a4eacfd29d0930e933943970"
+        },
+        {
+          "bytes": 934,
+          "sha256": "b78c05587ff8fbf6fc400c0c39f10dc655e45a1dc7d5f7a7e2556040db9c252f"
+        },
+        {
+          "bytes": 958,
+          "sha256": "0a5696eacfb8cec75bb03efc474d4a3891e5237f970473da1278827c3c4637c4"
+        },
+        {
+          "bytes": 934,
+          "sha256": "55136079c9a7cc0c211a2876ba11cf3564577b7b766c10857e10595764ce1c4f"
+        },
+        {
+          "bytes": 914,
+          "sha256": "6379f4dc9a3dc8d0ce14a94a8c2089453f2d49c61ff11f60c7720ed2f8bda902"
+        },
+        {
+          "bytes": 960,
+          "sha256": "7a4d6fb106bb0029cdb7d88bf3807cce6c088710864c6120d59e0baf28f2fbbb"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/decrement/expression",
+      "input": {
+        "bytes": 882,
+        "sha256": "9d5506b63047cb9b7b46f2c0c59b01c0d156189baa7983403ee329be30feef23"
+      },
+      "result": {
+        "bytes": 48878,
+        "sha256": "d73d57eb8fef8bdf0ea93a6f2cd58b2eaba65c9eb89ad97e16284b4a63145bf8"
+      },
+      "sources": {
+        "bytes": 6659,
+        "sha256": "7e8a34c856a49d2a0949be5eb57163733016dd536f9dfac615f09e00bf1d0ec3"
+      },
+      "sourceItems": [
+        {
+          "bytes": 928,
+          "sha256": "05121094b1998a38dc3980480ceeceb8691b3b6ce62613aa81bacfcd418641c2"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        },
+        {
+          "bytes": 909,
+          "sha256": "20459e0cb2a7b9fa3e832cb831d86cc0f8fa6e570dee9704fcea0d7112eedf40"
+        },
+        {
+          "bytes": 912,
+          "sha256": "92818fadf303923680191c2286149f597cdc74e6b9db2f424aa58328ee5530be"
+        },
+        {
+          "bytes": 893,
+          "sha256": "e35835ef06e15f6fdc47ea4b0cacb90be81685d86c80cf760329780f84699e1b"
+        },
+        {
+          "bytes": 909,
+          "sha256": "80513ff715f333a712568d2119b82af8418c163d27ab00c9bcfa6ee3b4750db8"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/increment",
+      "input": {
+        "bytes": 734,
+        "sha256": "8248bf4eb415abf3bdf8aba2f9fb25af560264f930b991fab77ecf47c51f77c4"
+      },
+      "result": {
+        "bytes": 77455,
+        "sha256": "c94302dbfd6a5ca676738c781a3788d21b5aeb298c8579442a6f9163dc54145a"
+      },
+      "sources": {
+        "bytes": 12537,
+        "sha256": "d2562bf86241cdfcba6983dabc7dce5dd8170e92c3cb1001aaed0876175a226e"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1000,
+          "sha256": "fff5ef9fc94fec97d694221bb7a5f76b00f9bd9bca54762b059cdb044fd6c541"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        },
+        {
+          "bytes": 910,
+          "sha256": "573300f387c19a4d0c3cd2c2f5e6fc10f90735e935cea4a5829ea06d99c29880"
+        },
+        {
+          "bytes": 933,
+          "sha256": "b0d8082ccbe2ec943d26828793d3fd29fc1311f2b6dc2ea222311453a7dd3ee4"
+        },
+        {
+          "bytes": 909,
+          "sha256": "954282ab41a61c347bd51d77435b22b83c63d542cd09d57ec7645f25fb6f1ca5"
+        },
+        {
+          "bytes": 893,
+          "sha256": "e4840e86218c69517bd7338630f050b19bb757a3951fabfe2259153ddf66fedf"
+        },
+        {
+          "bytes": 909,
+          "sha256": "4d684ee036653a36f2f4bb1c25b79c8d1aae0f28754d1cfbabe81b865933c47e"
+        },
+        {
+          "bytes": 910,
+          "sha256": "afb14d1df62c1f3b51882fca792139780d50dac0d5322440af06ebb768f748ca"
+        },
+        {
+          "bytes": 893,
+          "sha256": "a9dc8eb25703a007a6e5d3a3e15f1448bb1269c3fc5b6448912d84e3d4ca6051"
+        },
+        {
+          "bytes": 934,
+          "sha256": "4619df0ce08427723204eda5a1e8cb19398b37a351bc0e1ac08406eff41a794f"
+        },
+        {
+          "bytes": 958,
+          "sha256": "0a5696eacfb8cec75bb03efc474d4a3891e5237f970473da1278827c3c4637c4"
+        },
+        {
+          "bytes": 934,
+          "sha256": "a01518f63c9b2506a44b2e15a9e5b8210b9f1b277761cb78d4d1073fc028c878"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/increment/expression",
+      "input": {
+        "bytes": 882,
+        "sha256": "7935b7f38332c4dfc2339ec8fc4f4f970538c3aa7a273abc02e5b556ae690602"
+      },
+      "result": {
+        "bytes": 32048,
+        "sha256": "0e9313de42e931a87b5cc585a362a16d336ffcdcf8eaf6fc13ee63cabb04f0a8"
+      },
+      "sources": {
+        "bytes": 4738,
+        "sha256": "832f0ed57e47df41666c66b6001d6030090214145e22c9c46c83d75779988bd8"
+      },
+      "sourceItems": [
+        {
+          "bytes": 910,
+          "sha256": "573300f387c19a4d0c3cd2c2f5e6fc10f90735e935cea4a5829ea06d99c29880"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        },
+        {
+          "bytes": 909,
+          "sha256": "954282ab41a61c347bd51d77435b22b83c63d542cd09d57ec7645f25fb6f1ca5"
+        },
+        {
+          "bytes": 893,
+          "sha256": "e4840e86218c69517bd7338630f050b19bb757a3951fabfe2259153ddf66fedf"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/inject",
+      "input": {
+        "bytes": 733,
+        "sha256": "1cedf083873a00b7c88587cd5bd796b51dafa1467c8c2f850e898c59e92e06fe"
+      },
+      "result": {
+        "bytes": 66792,
+        "sha256": "d36bf4eac6fbefae40be32f1e7fdcb4f8b1973ec94f1474c9945b1a520098f88"
+      },
+      "sources": {
+        "bytes": 10643,
+        "sha256": "faad4afd7ee9a087b6d973e4942d34666e934f547c5fc0fb28a6b89f528c9e9d"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1045,
+          "sha256": "50d882cc99b0e8d02edfe6b250806d2cd757f2468b5c9df799bdcf207d65eb9a"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        },
+        {
+          "bytes": 909,
+          "sha256": "f06bfddbfe81d784b76b4470ca615a189ea2bf0d97ff5e1de167aa9351d6edb2"
+        },
+        {
+          "bytes": 924,
+          "sha256": "e068398c809f8af1196f725c68c985db2b6630647981bba7ece8b3cbcdc0efc6"
+        },
+        {
+          "bytes": 908,
+          "sha256": "732d2515bb760c5a15f9d9c4711b3d6c67176f2bfd746b4e08d049e0afbfa0d0"
+        },
+        {
+          "bytes": 892,
+          "sha256": "52b160ae84ab84e592eb86e6a9c6b1d6eaa426c3d2ae5f06df0511d8a7cf5330"
+        },
+        {
+          "bytes": 903,
+          "sha256": "e6fef7c78fdde70054e2058401f58c4046f5951a5d92df9670dd91211884159a"
+        },
+        {
+          "bytes": 925,
+          "sha256": "a555c51edf6493bdfaebbf82f0a48ac5558b350a4b5b4c70ff748c00253a6022"
+        },
+        {
+          "bytes": 958,
+          "sha256": "0a5696eacfb8cec75bb03efc474d4a3891e5237f970473da1278827c3c4637c4"
+        },
+        {
+          "bytes": 907,
+          "sha256": "9291e038fa4885692eb7d2515ebadb912a6bdb2f3fdff4ad7b2947a90c78650e"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/inject/expression",
+      "input": {
+        "bytes": 881,
+        "sha256": "7e78f81782e79b3ece8106c5c22f37626a74e24f876e188eb4c0ca64a6d6fb78"
+      },
+      "result": {
+        "bytes": 36446,
+        "sha256": "74cc328310d51a3682f5d5c709d5738dd1f2d5db55afeacabd7fb21a4f44b2fc"
+      },
+      "sources": {
+        "bytes": 4735,
+        "sha256": "95072c9344480c047def8c2d72c6a87344f7ce15f69f4b7ef465d38fc04c277d"
+      },
+      "sourceItems": [
+        {
+          "bytes": 909,
+          "sha256": "f06bfddbfe81d784b76b4470ca615a189ea2bf0d97ff5e1de167aa9351d6edb2"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        },
+        {
+          "bytes": 908,
+          "sha256": "732d2515bb760c5a15f9d9c4711b3d6c67176f2bfd746b4e08d049e0afbfa0d0"
+        },
+        {
+          "bytes": 892,
+          "sha256": "52b160ae84ab84e592eb86e6a9c6b1d6eaa426c3d2ae5f06df0511d8a7cf5330"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/read",
+      "input": {
+        "bytes": 731,
+        "sha256": "5dc83a29b1a128bb62012fa1e68f5ec58ddc2bfc8ce549359eb7b64bcc9b8388"
+      },
+      "result": {
+        "bytes": 40475,
+        "sha256": "0962201a0227e9abbb12617148170b5c8ef097857b748f40b1cc7ae1b9a47119"
+      },
+      "sources": {
+        "bytes": 6699,
+        "sha256": "14485d01ef883a194dd5d9d1224ff798319210c554f917b6cea5018567914db1"
+      },
+      "sourceItems": [
+        {
+          "bytes": 923,
+          "sha256": "2bdb3673061b1cc421c113c5ef10be0956ca0283963229b20e53be197fae3ecf"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        },
+        {
+          "bytes": 899,
+          "sha256": "6d3e09bef0c4f74c8e281d9e9f99dc54573f7cd629004d39bc439c1f2979a657"
+        },
+        {
+          "bytes": 906,
+          "sha256": "96cb0a0dbbc83338ab7eb70e994c801ee0a9939c311d39e87c1461876ae88e25"
+        },
+        {
+          "bytes": 905,
+          "sha256": "bad50c09383a47344804147ed4ce54aa5d0e84db4c1deb2ab079c712d2f317b0"
+        },
+        {
+          "bytes": 958,
+          "sha256": "0a5696eacfb8cec75bb03efc474d4a3891e5237f970473da1278827c3c4637c4"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/read/expression",
+      "input": {
+        "bytes": 879,
+        "sha256": "d44aca655fb6ae0673da930e5f06553dacfd581f6967f6ed849d48edac3c7b8c"
+      },
+      "result": {
+        "bytes": 16643,
+        "sha256": "693510b155e2593039c24e6d8812ae6062a5727efd31bd50049a121d19259592"
+      },
+      "sources": {
+        "bytes": 2850,
+        "sha256": "ffbb2cb3a1c77fc862e2d60b9e711c7898ca3efca37f6a2b8e509abb516ca1a0"
+      },
+      "sourceItems": [
+        {
+          "bytes": 906,
+          "sha256": "96cb0a0dbbc83338ab7eb70e994c801ee0a9939c311d39e87c1461876ae88e25"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.count/correspondence",
+      "input": {
+        "bytes": 741,
+        "sha256": "34f0fac2d54ac3984991e2ef40723d3e902e6ebb89977b5389d533c2bec9538b"
+      },
+      "result": {
+        "bytes": 15030,
+        "sha256": "c85c81893267c40d05f26e7f813a413cdcc48f896741d3bd9291f7cea5515fb4"
+      },
+      "sources": {
+        "bytes": 2902,
+        "sha256": "aa6d5221fad7dfac9ce52051b3cae370f341b6baae4d976848fb2ea3fe98d454"
+      },
+      "sourceItems": [
+        {
+          "bytes": 958,
+          "sha256": "0a5696eacfb8cec75bb03efc474d4a3891e5237f970473da1278827c3c4637c4"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.count/correspondence",
+      "input": {
+        "bytes": 748,
+        "sha256": "27927d66aaeb4f2bbfd6caea6cfa1f2439f773b7312bf5128bb2dc3ad8a5e35c"
+      },
+      "result": {
+        "bytes": 14351,
+        "sha256": "97179a7e92255bae1cce8d78fbf6c95bc3312257e0cd04fbfe1d38aaa7e1e037"
+      },
+      "sources": {
+        "bytes": 2902,
+        "sha256": "669e613105858f72193d1749bff946ddae000b2235eaf8b7db9053fb5eab1e14"
+      },
+      "sourceItems": [
+        {
+          "bytes": 958,
+          "sha256": "65bb7adfd334a1e2002f4571650b4b480c770f8ef04ef6493f6cc5a834c9f3aa"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "0a6d9952de5e5c6ef3f48673cec8719088565ef95977887bba723c55de2a4061"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.phase/correspondence",
+      "input": {
+        "bytes": 741,
+        "sha256": "1bb32682114bac116b8bdd9f68eeab0f99d98a1f32bea0c3743bdb038afcbc4a"
+      },
+      "result": {
+        "bytes": 15046,
+        "sha256": "1ff11496931cf84120d8ce34cb0df1f27c4b0afb54b4620424bcdc1cea5ba698"
+      },
+      "sources": {
+        "bytes": 2904,
+        "sha256": "2815de816b8ccff34421a2b424a52330d08a1c09f3c051a7a0cfb4e6fba04ebe"
+      },
+      "sourceItems": [
+        {
+          "bytes": 960,
+          "sha256": "7a4d6fb106bb0029cdb7d88bf3807cce6c088710864c6120d59e0baf28f2fbbb"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl.phase/correspondence",
+      "input": {
+        "bytes": 748,
+        "sha256": "9da4befc5360cc49394413be77b43f3fafe22012b8e7ed6be03c7fc23eed8cef"
+      },
+      "result": {
+        "bytes": 14367,
+        "sha256": "220b7cb54d4cc33226063881bd2b53525f6d77ed86184b57bd003f786abcd4f0"
+      },
+      "sources": {
+        "bytes": 2904,
+        "sha256": "dee6382a9cb9de13bf4dac4b749f8a6d08be15d71781b99d3271053f5117cce0"
+      },
+      "sourceItems": [
+        {
+          "bytes": 960,
+          "sha256": "a4828d984d32c555bca4e290640e83cfb56efe0efe9ab5cd63eeed250062aa57"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "0a6d9952de5e5c6ef3f48673cec8719088565ef95977887bba723c55de2a4061"
+        }
+      ]
+    },
+    {
+      "buildId": "B",
+      "label": "mkControl/inject/stock-correspondence",
+      "input": {
+        "bytes": 732,
+        "sha256": "31f8cb80c5f32b035e692adfc4693289c0d98dbe4eb93c17aa0216c5e9223216"
+      },
+      "result": {
+        "bytes": 1330362,
+        "sha256": "9c167cf3b366c4ea7719e1d1a4c4a1d764889cc2db3763701b62314a1b0d408f"
+      },
+      "sources": {
+        "bytes": 3983,
+        "sha256": "3bf2c9f02bc06bd68d40f329f648bb3b342f8673c47a84322e10b4550dc7b225"
+      },
+      "sourceItems": [
+        {
+          "bytes": 941,
+          "sha256": "8fe07471bb0b9485c0e7a724c3cc9aeeb194c95fd787a6cf924b03a1c48ba78d"
+        },
+        {
+          "bytes": 1859,
+          "sha256": "3af94fd4828c40912d647ebd4761e400e51cf0be267fe6d0ebcadba87fd3e474"
+        },
+        {
+          "bytes": 1055,
+          "sha256": "534d63b92f294c89889f89b1013b59fa44b780f33a23664ac82b051b11a96a16"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "ordered-half-open-slice",
+      "input": {
+        "bytes": 790,
+        "sha256": "16a9460be896190b3d0e5cecec7e83afac7cf72eb5d2179d7abfb43afa06cebd"
+      },
+      "result": {
+        "bytes": 44424,
+        "sha256": "f369c44c4fddbaba0dbd587c1d87ad11e4a094cdd4e43a5b6d7673affc284e29"
+      },
+      "sources": {
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "sourceItems": []
+    },
+    {
+      "buildId": "C",
+      "label": "occurrence-scoped-dependency",
+      "input": {
+        "bytes": 870,
+        "sha256": "ad709f722b3ce7f6a76c74d9e33a14ae44354bc993db8ac893e022a07a18d141"
+      },
+      "result": {
+        "bytes": 475201,
+        "sha256": "345424e551eb7cac5fab157a0972c5d47bc98f3640998175bd9c7023f95eb324"
+      },
+      "sources": {
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "sourceItems": []
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/put",
+      "input": {
+        "bytes": 714,
+        "sha256": "b797e9a92f301d970f7be85d1ae5c51633cf6465903ab0d7694fbbc8eec9e0ea"
+      },
+      "result": {
+        "bytes": 232434,
+        "sha256": "f467035cd95e53c25550c304c663ba0feba17846dfe3d450c797f4625445cd99"
+      },
+      "sources": {
+        "bytes": 29872,
+        "sha256": "b12c8b9a06952f858602cb96e45e800fab34c168fde4b6671f498d0b07546a3d"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1174,
+          "sha256": "26f688c079c78c4ccbef557818fd5933c145002e7370994b8e31f6efd38698bf"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 901,
+          "sha256": "4eaf22fc5469185afebe2fbfcf1b4eccd12694482947a73b701665486966adaa"
+        },
+        {
+          "bytes": 903,
+          "sha256": "f2643fdf591fb9a7c416a4bab35d3143395c7e554a94131462b866c10597ee55"
+        },
+        {
+          "bytes": 911,
+          "sha256": "15496eb593233ecc697f5a1e1a234caa6de1af3cf2e916e730d6beea0afdfc42"
+        },
+        {
+          "bytes": 933,
+          "sha256": "a56faaae52a5e9da95eb4a645988188907e3d3df9b6777d3a4250b781bb32d07"
+        },
+        {
+          "bytes": 905,
+          "sha256": "ebe4aff8462fa678ef051fc325743c5fb518d937c49b2fbf16cc652ae386779a"
+        },
+        {
+          "bytes": 893,
+          "sha256": "971677777bf86f81375a7696f848d3fe7dc4cef9a6e57886d61d324498c9a0f5"
+        },
+        {
+          "bytes": 907,
+          "sha256": "3f3a8356fa0883f71267db918a16c07a67d5674342564957dc059b157d3d04db"
+        },
+        {
+          "bytes": 893,
+          "sha256": "2f37e65c984c083671193650dbd3e3ba9188d98269b90815146cd4a6c14c9a84"
+        },
+        {
+          "bytes": 915,
+          "sha256": "3dcd965a55071f2e17a1551c59e833e9b444c7d2c6dc7cb1cbfb35326b1c8c0f"
+        },
+        {
+          "bytes": 903,
+          "sha256": "767b82ea89eb64910d9a8f63647121aeeb5f24503957bdd6eb77d951853b6754"
+        },
+        {
+          "bytes": 937,
+          "sha256": "b4dff0edcaa3564cd7e33f92a0b04cba90c3e01140b9a5c8dd71e3895ce4f03a"
+        },
+        {
+          "bytes": 917,
+          "sha256": "0515fb27ae5e33641f6268518eea57a06e4387ae7233c86adbf5f37faeaa0e40"
+        },
+        {
+          "bytes": 905,
+          "sha256": "54172c0fe5104bd2fbfe6ba6fc832f9b74cef0dbf141aff9685567da6ce34aa6"
+        },
+        {
+          "bytes": 908,
+          "sha256": "54c72a74f1deaef5e076163bc2e95a23a474c0b3353d9c426ff6a13753c300fd"
+        },
+        {
+          "bytes": 969,
+          "sha256": "6a89102192031a886c8001256ad30a2cd99e36c2c24e99b2bcb2b0aa1df7507a"
+        },
+        {
+          "bytes": 910,
+          "sha256": "3425bfd5896375fbf2944c65d37772366fb7fb922d546bf9ca158040c59df90e"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        },
+        {
+          "bytes": 918,
+          "sha256": "aab25abbb515ef2453b7ce7f108d075cf72fb3dd25bbcd961644d80a02db8ce1"
+        },
+        {
+          "bytes": 918,
+          "sha256": "285d40ee8753e587646c1f14708f8a0934506467801afda0cd7de82a871fb10a"
+        },
+        {
+          "bytes": 978,
+          "sha256": "99b54978625dbd1c200011eb1d5492e9b070334f71c90cfdca412b4e375b8827"
+        },
+        {
+          "bytes": 940,
+          "sha256": "29d3e3483102b9f72ab11539d8d425cedf61ae60f2d2ef081d8cfe558b17c958"
+        },
+        {
+          "bytes": 940,
+          "sha256": "ef74a4c02555b70f1c5ffadfe47808568b8c1c17896247e2372bf04f5c299530"
+        },
+        {
+          "bytes": 966,
+          "sha256": "870a6cf81e9eeb29c703eaabdf2897143766eb7d0af7b4a124ec100248211825"
+        },
+        {
+          "bytes": 905,
+          "sha256": "c26525af33edad18b98bb3e76dcb15c3c88acb72fc8d78e942e99715a66a8530"
+        },
+        {
+          "bytes": 907,
+          "sha256": "6b50c8f935555288451701563d5701348d9534d0ce02f75a16ef77189fdd2f00"
+        },
+        {
+          "bytes": 915,
+          "sha256": "7bb0212ab4323571a6ea2d5ea6c6723c06a4768adc700d35ba2481c228975dca"
+        },
+        {
+          "bytes": 937,
+          "sha256": "32d23475331ef52f240b85c6a983d9dba2b71483e55d28e6146387ae2cdaa3c0"
+        },
+        {
+          "bytes": 917,
+          "sha256": "60de95b4013524a786e97d2cec5b86510643fba99edbfe08ac6999def42cd9a9"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/put/expression",
+      "input": {
+        "bytes": 869,
+        "sha256": "252b002fb3b0b2b793d9d1f9a79059635330fd70069f4be6e0a11b46b2797d35"
+      },
+      "result": {
+        "bytes": 96281,
+        "sha256": "e1e9e2fd6b57abaf75b5e6f8579c5f602b2efd10411212cb9c91c2edb2502ce9"
+      },
+      "sources": {
+        "bytes": 10486,
+        "sha256": "9db4d75d4f9301332151dec781cf34619ee9cb2415639e20de8bc42c361a7d70"
+      },
+      "sourceItems": [
+        {
+          "bytes": 937,
+          "sha256": "b4dff0edcaa3564cd7e33f92a0b04cba90c3e01140b9a5c8dd71e3895ce4f03a"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 937,
+          "sha256": "32d23475331ef52f240b85c6a983d9dba2b71483e55d28e6146387ae2cdaa3c0"
+        },
+        {
+          "bytes": 940,
+          "sha256": "ef74a4c02555b70f1c5ffadfe47808568b8c1c17896247e2372bf04f5c299530"
+        },
+        {
+          "bytes": 966,
+          "sha256": "870a6cf81e9eeb29c703eaabdf2897143766eb7d0af7b4a124ec100248211825"
+        },
+        {
+          "bytes": 917,
+          "sha256": "0515fb27ae5e33641f6268518eea57a06e4387ae7233c86adbf5f37faeaa0e40"
+        },
+        {
+          "bytes": 940,
+          "sha256": "29d3e3483102b9f72ab11539d8d425cedf61ae60f2d2ef081d8cfe558b17c958"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        },
+        {
+          "bytes": 917,
+          "sha256": "60de95b4013524a786e97d2cec5b86510643fba99edbfe08ac6999def42cd9a9"
+        },
+        {
+          "bytes": 905,
+          "sha256": "54172c0fe5104bd2fbfe6ba6fc832f9b74cef0dbf141aff9685567da6ce34aa6"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/get",
+      "input": {
+        "bytes": 714,
+        "sha256": "2c92d90222fd938a1ff66f18213cfe3f08ae614eed8d120a4f9b7f90e169e6d1"
+      },
+      "result": {
+        "bytes": 71972,
+        "sha256": "3d7495afb9541dbec658c96f7a53258b392f7ef2c2a295d8a67d9c2950582078"
+      },
+      "sources": {
+        "bytes": 12484,
+        "sha256": "1c924bc8b437dcb1e385ada8dd06f923a8d79c393612a41b1bec90385bf94326"
+      },
+      "sourceItems": [
+        {
+          "bytes": 964,
+          "sha256": "81aa426a05d7d9ea459e73942d7f6c4a1637dbd09f6dbe0efa686a2806a4f082"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 946,
+          "sha256": "689fbe7d4cebb3a5e24f485f106ce721643e73da3053cfad588b3ede31fdeacf"
+        },
+        {
+          "bytes": 905,
+          "sha256": "28ab18954e4abfe02c821597041b51e5a06c7efb685dc237740192067e73328e"
+        },
+        {
+          "bytes": 947,
+          "sha256": "5d9a88515d7c1165ef109c5fabf18cb4267effa7ef8cbc62180c536aa606d732"
+        },
+        {
+          "bytes": 921,
+          "sha256": "68f5c497a9dac1f7c56ad31484ee904f886d87344f9bfecc82dd2cd23c20719b"
+        },
+        {
+          "bytes": 909,
+          "sha256": "3eb695d2545fc58bbcb2d33296d24613cd6b2783cf7a6e871caffd447b2b2a60"
+        },
+        {
+          "bytes": 946,
+          "sha256": "427d0029c24c9d438e9391f8cca8eeb5e251708d303d5bba6a08b7ca7fe0f508"
+        },
+        {
+          "bytes": 978,
+          "sha256": "99b54978625dbd1c200011eb1d5492e9b070334f71c90cfdca412b4e375b8827"
+        },
+        {
+          "bytes": 946,
+          "sha256": "e069e05669eb3473f3e6a88965939a7d46477ff5af01b17fab6c4ff971dc2368"
+        },
+        {
+          "bytes": 966,
+          "sha256": "870a6cf81e9eeb29c703eaabdf2897143766eb7d0af7b4a124ec100248211825"
+        },
+        {
+          "bytes": 921,
+          "sha256": "8658413fa1c6ccca20f8dcb1eb083b41e3d918c7ee485ca57465c116c15a4ed4"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/get/expression",
+      "input": {
+        "bytes": 869,
+        "sha256": "6bca731f368248f84f549a5c8e609d34bb8f72c838a1965857a87f6543bef5ae"
+      },
+      "result": {
+        "bytes": 70064,
+        "sha256": "572ff2fc1cd11c1e8b1de8516809f997d1897535e7c7ad074f2284a7255119a6"
+      },
+      "sources": {
+        "bytes": 8498,
+        "sha256": "e4a5b400f9b8f263f430367e5c8b4261bc92e6a4bccdc56f2949ed71673d62b1"
+      },
+      "sourceItems": [
+        {
+          "bytes": 947,
+          "sha256": "5d9a88515d7c1165ef109c5fabf18cb4267effa7ef8cbc62180c536aa606d732"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 905,
+          "sha256": "28ab18954e4abfe02c821597041b51e5a06c7efb685dc237740192067e73328e"
+        },
+        {
+          "bytes": 921,
+          "sha256": "68f5c497a9dac1f7c56ad31484ee904f886d87344f9bfecc82dd2cd23c20719b"
+        },
+        {
+          "bytes": 921,
+          "sha256": "8658413fa1c6ccca20f8dcb1eb083b41e3d918c7ee485ca57465c116c15a4ed4"
+        },
+        {
+          "bytes": 946,
+          "sha256": "427d0029c24c9d438e9391f8cca8eeb5e251708d303d5bba6a08b7ca7fe0f508"
+        },
+        {
+          "bytes": 978,
+          "sha256": "99b54978625dbd1c200011eb1d5492e9b070334f71c90cfdca412b4e375b8827"
+        },
+        {
+          "bytes": 909,
+          "sha256": "3eb695d2545fc58bbcb2d33296d24613cd6b2783cf7a6e871caffd447b2b2a60"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/put",
+      "input": {
+        "bytes": 768,
+        "sha256": "e663d0fdcbad217aa133a32a0e302e75ed59b2d863158954b5292ff2870bb0bd"
+      },
+      "result": {
+        "bytes": 49447,
+        "sha256": "60346ca5f64bfa87e621d5c4c7cb422fbfc5ce0b20c9bc86824e0845c9fe5a6d"
+      },
+      "sources": {
+        "bytes": 8059,
+        "sha256": "08408243fda769dc12c33bc4a99c532104f5224993b45bf1e2ba9abaf14808b2"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1058,
+          "sha256": "38e5c76a311485a2a8ce3e97aca8d7a014f0b058d88b45ecdef9d6b2c66f3589"
+        },
+        {
+          "bytes": 969,
+          "sha256": "6a89102192031a886c8001256ad30a2cd99e36c2c24e99b2bcb2b0aa1df7507a"
+        },
+        {
+          "bytes": 956,
+          "sha256": "4c7be85da32932f1037099f4178fc9fd44712df3a2889008b0c37cc84f185606"
+        },
+        {
+          "bytes": 921,
+          "sha256": "5a48a380a5f7e2329491c62edfb5ab3106d8c4d3ae8bf4a58f52ed002f8433d2"
+        },
+        {
+          "bytes": 933,
+          "sha256": "7ac55a9d30c19a09a288779bbcd73ab1fac95fd06334cd75a25fe26454ad43c8"
+        },
+        {
+          "bytes": 919,
+          "sha256": "54c4e83f7dbeab6225fc8c87d1e90c55594f5de900e7e319b37ab6aded74a3f0"
+        },
+        {
+          "bytes": 974,
+          "sha256": "15a8a8c36796c9c443796e8da3ed47336bda4b5615b66a812d3cc4e3a958005c"
+        },
+        {
+          "bytes": 998,
+          "sha256": "a4c767f9a28fe70a3bc632416cb6bdea45356c578c1dbbb1fef31ce67e6d401d"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/put/expression",
+      "input": {
+        "bytes": 899,
+        "sha256": "10156047fdff8f8bcd0248c993eb18f95240f2f1d7d409b003b2f325cf509ac2"
+      },
+      "result": {
+        "bytes": 39610,
+        "sha256": "dddf6208e3e17ae217c37a3b904f469c4136d092b668fa5730569718d6306a91"
+      },
+      "sources": {
+        "bytes": 3909,
+        "sha256": "96ef8f6b680aab173cf8ff3918feb98b0009dee97cd75ca50c088cad0fc6b83f"
+      },
+      "sourceItems": [
+        {
+          "bytes": 933,
+          "sha256": "7ac55a9d30c19a09a288779bbcd73ab1fac95fd06334cd75a25fe26454ad43c8"
+        },
+        {
+          "bytes": 969,
+          "sha256": "6a89102192031a886c8001256ad30a2cd99e36c2c24e99b2bcb2b0aa1df7507a"
+        },
+        {
+          "bytes": 921,
+          "sha256": "5a48a380a5f7e2329491c62edfb5ab3106d8c4d3ae8bf4a58f52ed002f8433d2"
+        },
+        {
+          "bytes": 919,
+          "sha256": "54c4e83f7dbeab6225fc8c87d1e90c55594f5de900e7e319b37ab6aded74a3f0"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/get",
+      "input": {
+        "bytes": 768,
+        "sha256": "790b685611a29fd87eaf0cb7db0276b1661aa502ff7fdaf45732327305437467"
+      },
+      "result": {
+        "bytes": 38318,
+        "sha256": "627b41e54bc6f1e13501e058d5341349b7197a755849eae1042866e235a59363"
+      },
+      "sources": {
+        "bytes": 5961,
+        "sha256": "4b661e3d62ed555fbf4907472a9dfe7d63a58a95996f5f63028165d18129e211"
+      },
+      "sourceItems": [
+        {
+          "bytes": 958,
+          "sha256": "e925248a9477697b4c80ac8b0f8cdacf851aa0a53ff9a6340de1d4bdea8324be"
+        },
+        {
+          "bytes": 969,
+          "sha256": "6a89102192031a886c8001256ad30a2cd99e36c2c24e99b2bcb2b0aa1df7507a"
+        },
+        {
+          "bytes": 919,
+          "sha256": "f82811b29c949819c9d5d8e635bc64d126778dbcf8230bebce7a3897ceb8c984"
+        },
+        {
+          "bytes": 926,
+          "sha256": "40b651aa9e4feb4463232a0f31e7036d109f34544b7ce3dee14dbd1346a1fe33"
+        },
+        {
+          "bytes": 942,
+          "sha256": "2ddfa90839a61af2cd1a49aedf9a4a45143f815dda5cda240090d21f10c74e9d"
+        },
+        {
+          "bytes": 998,
+          "sha256": "a4c767f9a28fe70a3bc632416cb6bdea45356c578c1dbbb1fef31ce67e6d401d"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low/get/expression",
+      "input": {
+        "bytes": 899,
+        "sha256": "8807504297c090d5a76088540d39b5149f0b50020d2e1314885ab6bd5f7e568c"
+      },
+      "result": {
+        "bytes": 15113,
+        "sha256": "dbaf99b3812097ad50ee7f2123d82044a59e42b215fd4543643b00c466f94c26"
+      },
+      "sources": {
+        "bytes": 1980,
+        "sha256": "b191f52718013be1d3ad56241560d45b5397a5b004489fd91367fc47440311a8"
+      },
+      "sourceItems": [
+        {
+          "bytes": 926,
+          "sha256": "40b651aa9e4feb4463232a0f31e7036d109f34544b7ce3dee14dbd1346a1fe33"
+        },
+        {
+          "bytes": 969,
+          "sha256": "6a89102192031a886c8001256ad30a2cd99e36c2c24e99b2bcb2b0aa1df7507a"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/put",
+      "input": {
+        "bytes": 771,
+        "sha256": "9e054178ff3949e4267ab4af49fca6740e52343b071123f1d0e123f1908f60e9"
+      },
+      "result": {
+        "bytes": 49559,
+        "sha256": "218f50d33c67798bc82f238b34977ce669b70485e81003fabff1d55c3faa03d1"
+      },
+      "sources": {
+        "bytes": 8082,
+        "sha256": "859b53522c33983b119b6e192388f6899995e32ba90624b1c67cf348a92bfe7e"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1061,
+          "sha256": "0f1425788e8d3b5533c64963e2448c2cf731b6945b7679dfe9bb813271beb3ef"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        },
+        {
+          "bytes": 958,
+          "sha256": "db469dbc995f5097e66d60c461f0e42eebe76d004949ff35f398a8b293c0a9d4"
+        },
+        {
+          "bytes": 923,
+          "sha256": "fa8a8e09025fb2387e24ac5ce77a37856a808cab096fb92bc04789c271e14499"
+        },
+        {
+          "bytes": 935,
+          "sha256": "b4c5d36a645a76170785ae587a451c3c2a3e5d20197ff9305ada72dfa7caf657"
+        },
+        {
+          "bytes": 921,
+          "sha256": "c73e8c552c4aba9b84fef895adfbb202f5bd08aaec53526f3f64ac3e887e54a3"
+        },
+        {
+          "bytes": 977,
+          "sha256": "1d36b2c63e7d010b35247711c4f8c15f0ae61a55ea09a541f09e099151c66dae"
+        },
+        {
+          "bytes": 1002,
+          "sha256": "13c6f636d8b272392f88b765d1d640cc93b2be1bf07005b61bfec62ec8e2f15f"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/put/expression",
+      "input": {
+        "bytes": 901,
+        "sha256": "841e70b188b4daf2973d856b3a81780bc3dd01da718881bb3357fd851a7e7cd7"
+      },
+      "result": {
+        "bytes": 39655,
+        "sha256": "bb1b904c70e8d2230d852d8d6ed3d18ab2b38b1482e563bff870fe5159e9c00c"
+      },
+      "sources": {
+        "bytes": 3920,
+        "sha256": "0f26088e1379c323308b4ca8634fa92d32bf7da95eb0128df18275bb4b0b36a4"
+      },
+      "sourceItems": [
+        {
+          "bytes": 935,
+          "sha256": "b4c5d36a645a76170785ae587a451c3c2a3e5d20197ff9305ada72dfa7caf657"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        },
+        {
+          "bytes": 923,
+          "sha256": "fa8a8e09025fb2387e24ac5ce77a37856a808cab096fb92bc04789c271e14499"
+        },
+        {
+          "bytes": 921,
+          "sha256": "c73e8c552c4aba9b84fef895adfbb202f5bd08aaec53526f3f64ac3e887e54a3"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/get",
+      "input": {
+        "bytes": 771,
+        "sha256": "598bc51a4503ba258c7b6dc98f3b29266de25853ac39b7c118cb7a1c5cfd90e0"
+      },
+      "result": {
+        "bytes": 38420,
+        "sha256": "20660713c7905da6d4aa9493154db47bdfd3fe3d54c68160baf87da34e7ecb09"
+      },
+      "sources": {
+        "bytes": 5980,
+        "sha256": "8714a113dbdf5496c6bb7452bb2d43bf3bb591bb84efbd680f6b047199b1dd01"
+      },
+      "sourceItems": [
+        {
+          "bytes": 961,
+          "sha256": "40a62e75991dc172fabf74d4a4786e8a7085780bef7c9052af1f1d44173f83d6"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        },
+        {
+          "bytes": 921,
+          "sha256": "77362ea4496b028acfb2e634c76660cadac0fd0d4a7117dd55038b6fd325017f"
+        },
+        {
+          "bytes": 928,
+          "sha256": "fb572b92ac5967feeadc100226adbd2236e41e08fcbec22e1b88f32768b42992"
+        },
+        {
+          "bytes": 945,
+          "sha256": "b791c74038b8f0c5be5dac1acb5a431603d679ca50b968f2c367b528160e877b"
+        },
+        {
+          "bytes": 1002,
+          "sha256": "13c6f636d8b272392f88b765d1d640cc93b2be1bf07005b61bfec62ec8e2f15f"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high/get/expression",
+      "input": {
+        "bytes": 901,
+        "sha256": "67061fa257cd9b9086dac85aae01a78232dc73898b4b8de7722a4a41c0d127c7"
+      },
+      "result": {
+        "bytes": 15138,
+        "sha256": "1dfde8c3778c74d6eb269d5581a5cd1b84105b4992f01923d841da99820baa9b"
+      },
+      "sources": {
+        "bytes": 1987,
+        "sha256": "eda1741c1bc824b9991db28bb44f7b202ca10adc8e4d6283e2cd0883a3441ff2"
+      },
+      "sourceItems": [
+        {
+          "bytes": 928,
+          "sha256": "fb572b92ac5967feeadc100226adbd2236e41e08fcbec22e1b88f32768b42992"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/put",
+      "input": {
+        "bytes": 855,
+        "sha256": "42987080972cc2f925993c3d4e38863b8038d87671c69ceb7db384c257ac474e"
+      },
+      "result": {
+        "bytes": 52255,
+        "sha256": "b33b3c2fd4523b309bce9dfb84bb58b19ba19625b3dcec353907ef1c664d6c84"
+      },
+      "sources": {
+        "bytes": 8586,
+        "sha256": "79521a9e201c307638166e5161efd0681f728028b4e66231af14115872695bc8"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1147,
+          "sha256": "fd51adc9c12be88e851d722dc622a198b88c4d434505121fe47dad49eca7eacd"
+        },
+        {
+          "bytes": 1054,
+          "sha256": "d1e1d94ff3e645481f81d16f33c5aba265b14b0f9b6d7463507930efbf7b9f51"
+        },
+        {
+          "bytes": 995,
+          "sha256": "a8c38bd7a0d644406ab07adef78b1b02fdc1a3ac3434a1591cec2b96776f756c"
+        },
+        {
+          "bytes": 966,
+          "sha256": "5cbe18afc77c133d751544484d4daeaa340b425eb5ff82ab76cd52473d5d0f77"
+        },
+        {
+          "bytes": 972,
+          "sha256": "3133a590546939b77f9bd927256db9305aa80a5ed55f0e02f0d9c6782743363c"
+        },
+        {
+          "bytes": 955,
+          "sha256": "06cb46371c5d07e6d88ad0f96b36fd00cced0cbafe82ab50eb87510020224a3d"
+        },
+        {
+          "bytes": 1055,
+          "sha256": "4a5bd06410eb809aa203ec6d6540fa751aedcb37e7ed7ac554e07c84802b3e3b"
+        },
+        {
+          "bytes": 1111,
+          "sha256": "3451e12398e48affa435fef526483438515fd557f1529780d033be88372b80e2"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/put/expression",
+      "input": {
+        "bytes": 944,
+        "sha256": "ca767df863b1a0438cdbe4c58a8547942339915923ec5958de7fe65df359f4a7"
+      },
+      "result": {
+        "bytes": 46256,
+        "sha256": "28f68b7f8940529897c25c5d6a8825afb7328e69a2919bd63315bf3946487136"
+      },
+      "sources": {
+        "bytes": 4114,
+        "sha256": "e481dc6242bbf8fac322a5ecad0deebcc2bcc7f482a60a6f50b7198c2a03a307"
+      },
+      "sourceItems": [
+        {
+          "bytes": 972,
+          "sha256": "3133a590546939b77f9bd927256db9305aa80a5ed55f0e02f0d9c6782743363c"
+        },
+        {
+          "bytes": 1054,
+          "sha256": "d1e1d94ff3e645481f81d16f33c5aba265b14b0f9b6d7463507930efbf7b9f51"
+        },
+        {
+          "bytes": 966,
+          "sha256": "5cbe18afc77c133d751544484d4daeaa340b425eb5ff82ab76cd52473d5d0f77"
+        },
+        {
+          "bytes": 955,
+          "sha256": "06cb46371c5d07e6d88ad0f96b36fd00cced0cbafe82ab50eb87510020224a3d"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/get",
+      "input": {
+        "bytes": 855,
+        "sha256": "0a9b00bb875046f8fbcfdecc7bb58c52cbe5aae502107c08047cabf9a508831e"
+      },
+      "result": {
+        "bytes": 41060,
+        "sha256": "0e540071f107a60b189526d16414970485e7c6b21d3bb41976028c9c1561eba2"
+      },
+      "sources": {
+        "bytes": 6431,
+        "sha256": "007d4476c8c4955141dfe132c658764e2df46e1d0a9b1472a31943748c204007"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1053,
+          "sha256": "a33d725de44f94385dde9964c0400339de8afa5f1437f2e95a00c42c0e976eac"
+        },
+        {
+          "bytes": 1054,
+          "sha256": "d1e1d94ff3e645481f81d16f33c5aba265b14b0f9b6d7463507930efbf7b9f51"
+        },
+        {
+          "bytes": 964,
+          "sha256": "b9b9a4e337ec54071cfada3fb93f20315853f94b13df9bd8f014036a099e63c9"
+        },
+        {
+          "bytes": 971,
+          "sha256": "457cc30df869a360d795565d8df3cf76da0fed6f5f3cb48bdbc030080ebe39ae"
+        },
+        {
+          "bytes": 1029,
+          "sha256": "c4ef63cca785be0e1ecc8e279953406af596fdec75f23f32a780cdd358f0a6d8"
+        },
+        {
+          "bytes": 1111,
+          "sha256": "3451e12398e48affa435fef526483438515fd557f1529780d033be88372b80e2"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation/get/expression",
+      "input": {
+        "bytes": 944,
+        "sha256": "a725f67f2a294deaf22d312be9572cc2b1bb922a1bdebad47b712d9b61a99eed"
+      },
+      "result": {
+        "bytes": 17504,
+        "sha256": "95eb44384c368f6c465813364a294e6546601312bf5db634a4429dc0c48dbd21"
+      },
+      "sources": {
+        "bytes": 2110,
+        "sha256": "c139132e350f9da0b2f6cdb1f68194cdc2de05ce60ad5e21f770a46e9d1e6806"
+      },
+      "sourceItems": [
+        {
+          "bytes": 971,
+          "sha256": "457cc30df869a360d795565d8df3cf76da0fed6f5f3cb48bdbc030080ebe39ae"
+        },
+        {
+          "bytes": 1054,
+          "sha256": "d1e1d94ff3e645481f81d16f33c5aba265b14b0f9b6d7463507930efbf7b9f51"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/put",
+      "input": {
+        "bytes": 845,
+        "sha256": "c6f86ba1d8da62876c42eae886fbb5fb17ce7422309a8b6385da7e5c90ade6c4"
+      },
+      "result": {
+        "bytes": 51903,
+        "sha256": "77ecde93917a64251944870334496e55885efd057b0376cb351274fb8ee4ea82"
+      },
+      "sources": {
+        "bytes": 8520,
+        "sha256": "a421b517fcbf8e3c5dae0c50bffb7b3cb446b6362b65815f147f8f3a2e6d367c"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1137,
+          "sha256": "03406e37fe4c6329ec00f72c470982840e0131516e6a9d5cd7571234f79dbf35"
+        },
+        {
+          "bytes": 1044,
+          "sha256": "dd3d984c8b799d6e38cfff7238d00262d93bb093f69007ee390794114757317c"
+        },
+        {
+          "bytes": 989,
+          "sha256": "7aab052a49aac4011b396b1261c9c97d5764853c39e1df9daa2d871a26a18438"
+        },
+        {
+          "bytes": 960,
+          "sha256": "cc12d3bc2f414235a11f6a40661399a8031cb4b541ece01f2c9155133774504c"
+        },
+        {
+          "bytes": 966,
+          "sha256": "3288931e3b9e4ff5b781aa23ec4a273499c39d44fa29f78bbbcb6b2aeba41ee7"
+        },
+        {
+          "bytes": 949,
+          "sha256": "58dff17368bac090498cfb379261d9d8c80aaf6a3016654b86ff859a3674f95e"
+        },
+        {
+          "bytes": 1045,
+          "sha256": "c4cf69956ff1a7e0a84b0d579dc9846051831b21394cdcebc5be304fd4a1a3fb"
+        },
+        {
+          "bytes": 1099,
+          "sha256": "b4c43f39677ef84e6faf2ee0b16bfce8ed6ea505e9a4fb7ff94c8c45de20ea78"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/put/expression",
+      "input": {
+        "bytes": 938,
+        "sha256": "4adc4f7d2b49fc7eed292a9d84c7b8e6750ac1553ccf380897def8dccdf36c55"
+      },
+      "result": {
+        "bytes": 46154,
+        "sha256": "e752b86166f520199cfc16d6144962f6be1c32d860fa0bcfdc39d1b147914222"
+      },
+      "sources": {
+        "bytes": 4086,
+        "sha256": "8b7dc25d7a0df358cc78e8a80e3835efb4acfba0ed1c2d29eb31247f53154f4f"
+      },
+      "sourceItems": [
+        {
+          "bytes": 966,
+          "sha256": "3288931e3b9e4ff5b781aa23ec4a273499c39d44fa29f78bbbcb6b2aeba41ee7"
+        },
+        {
+          "bytes": 1044,
+          "sha256": "dd3d984c8b799d6e38cfff7238d00262d93bb093f69007ee390794114757317c"
+        },
+        {
+          "bytes": 960,
+          "sha256": "cc12d3bc2f414235a11f6a40661399a8031cb4b541ece01f2c9155133774504c"
+        },
+        {
+          "bytes": 949,
+          "sha256": "58dff17368bac090498cfb379261d9d8c80aaf6a3016654b86ff859a3674f95e"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/get",
+      "input": {
+        "bytes": 845,
+        "sha256": "3706bb689b7b22952aa9ea0362305169a7c13ea40a348a93e41e7a2474fe84d4"
+      },
+      "result": {
+        "bytes": 40738,
+        "sha256": "0bd38a8cd303af9556be7a95599b9a8d9956aab67d83764fa421e62df3dff544"
+      },
+      "sources": {
+        "bytes": 6377,
+        "sha256": "4ae00e984362fcb22324bce0d9fc1a082bd9c7dfbd27ccba95eca70da79bae35"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1043,
+          "sha256": "d6f58b745da19f1695b611f2bfd24cc5f4597eb2236b065f6c2739e2c1ef74a9"
+        },
+        {
+          "bytes": 1044,
+          "sha256": "dd3d984c8b799d6e38cfff7238d00262d93bb093f69007ee390794114757317c"
+        },
+        {
+          "bytes": 958,
+          "sha256": "dbae029bd687b92bf25ddf445baa56cf5a2b7883de7cbeda5e66cb53a95cd7ed"
+        },
+        {
+          "bytes": 965,
+          "sha256": "091a52ab976605aed7c1e91dc70d9d8cd7b6e2d18dc0d46525101f321f0ce50b"
+        },
+        {
+          "bytes": 1019,
+          "sha256": "247ee1a4e37a1b4a781907ff2101e2df0ad999de779fef75a71c9b8154e22872"
+        },
+        {
+          "bytes": 1099,
+          "sha256": "b4c43f39677ef84e6faf2ee0b16bfce8ed6ea505e9a4fb7ff94c8c45de20ea78"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation/get/expression",
+      "input": {
+        "bytes": 938,
+        "sha256": "c53b91b34b537a1371f55beaaebae7a86aaa4ebb30edadbcfa9023724c493db0"
+      },
+      "result": {
+        "bytes": 17450,
+        "sha256": "d9922438e4957f680d639b5e2139f0f3a250f8ff051bd7b59e95365bff6a8c11"
+      },
+      "sources": {
+        "bytes": 2094,
+        "sha256": "f88f2612a3cf9dc02a58c756ad92d336e1e1ecdf65d00335df2e59b8ff8b88cd"
+      },
+      "sourceItems": [
+        {
+          "bytes": 965,
+          "sha256": "091a52ab976605aed7c1e91dc70d9d8cd7b6e2d18dc0d46525101f321f0ce50b"
+        },
+        {
+          "bytes": 1044,
+          "sha256": "dd3d984c8b799d6e38cfff7238d00262d93bb093f69007ee390794114757317c"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "low.put",
+      "input": {
+        "bytes": 830,
+        "sha256": "4443b38a61ae02eb431c662ca76c6cc2df88d7f7f93b9ab13b0eca1d70389abe"
+      },
+      "result": {
+        "bytes": 42441,
+        "sha256": "48b3691a6aef445664668c25af081f7722cf67516e193aefe24fa56985e9e287"
+      },
+      "sources": {
+        "bytes": 5523,
+        "sha256": "7f19e3edc2b069e80c6f0e210c9cfb5b37db9b173a36fe206313586b78faaaed"
+      },
+      "sourceItems": [
+        {
+          "bytes": 905,
+          "sha256": "c26525af33edad18b98bb3e76dcb15c3c88acb72fc8d78e942e99715a66a8530"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 908,
+          "sha256": "54c72a74f1deaef5e076163bc2e95a23a474c0b3353d9c426ff6a13753c300fd"
+        },
+        {
+          "bytes": 969,
+          "sha256": "6a89102192031a886c8001256ad30a2cd99e36c2c24e99b2bcb2b0aa1df7507a"
+        },
+        {
+          "bytes": 893,
+          "sha256": "971677777bf86f81375a7696f848d3fe7dc4cef9a6e57886d61d324498c9a0f5"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "high.put",
+      "input": {
+        "bytes": 830,
+        "sha256": "2832d57182232d545248b10000d46b65158a5eca986b0f5f6281e280c3824bbd"
+      },
+      "result": {
+        "bytes": 42529,
+        "sha256": "70363bc4cede1e382acf3f7f37e36b6d87c0a31c629445a97e5549334d463028"
+      },
+      "sources": {
+        "bytes": 5532,
+        "sha256": "7418e2dece54087b0b5ada48645035b22ebc12392fc6e2a8e9d260866ca33238"
+      },
+      "sourceItems": [
+        {
+          "bytes": 907,
+          "sha256": "6b50c8f935555288451701563d5701348d9534d0ce02f75a16ef77189fdd2f00"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 910,
+          "sha256": "3425bfd5896375fbf2944c65d37772366fb7fb922d546bf9ca158040c59df90e"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        },
+        {
+          "bytes": 893,
+          "sha256": "2f37e65c984c083671193650dbd3e3ba9188d98269b90815146cd4a6c14c9a84"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "narrow.put",
+      "input": {
+        "bytes": 830,
+        "sha256": "6904fe83d1e8fda97e53424ac39dcac38faffd6fd4e81a63a907411dc7a6bde1"
+      },
+      "result": {
+        "bytes": 64055,
+        "sha256": "fa7159c6e9fd7d4669e1d5818c000b25350915f418fbe71dbd519f32b4fd41b6"
+      },
+      "sources": {
+        "bytes": 7531,
+        "sha256": "62e2bf841f4cb1f3ecfdc896d09b0b17755bd29d2573d415651c763dc7c34a50"
+      },
+      "sourceItems": [
+        {
+          "bytes": 915,
+          "sha256": "7bb0212ab4323571a6ea2d5ea6c6723c06a4768adc700d35ba2481c228975dca"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 918,
+          "sha256": "285d40ee8753e587646c1f14708f8a0934506467801afda0cd7de82a871fb10a"
+        },
+        {
+          "bytes": 978,
+          "sha256": "99b54978625dbd1c200011eb1d5492e9b070334f71c90cfdca412b4e375b8827"
+        },
+        {
+          "bytes": 903,
+          "sha256": "767b82ea89eb64910d9a8f63647121aeeb5f24503957bdd6eb77d951853b6754"
+        },
+        {
+          "bytes": 918,
+          "sha256": "aab25abbb515ef2453b7ce7f108d075cf72fb3dd25bbcd961644d80a02db8ce1"
+        },
+        {
+          "bytes": 969,
+          "sha256": "6a89102192031a886c8001256ad30a2cd99e36c2c24e99b2bcb2b0aa1df7507a"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "zeroExtend",
+      "input": {
+        "bytes": 830,
+        "sha256": "b795165aaf09d74503978515bce2a180c6637b3ca9d90178f5f84b5a78d978b1"
+      },
+      "result": {
+        "bytes": 32635,
+        "sha256": "2cd5be1966885f4a2b946cc747b75834acd750ee5ce7acbabe7fa909f60057ad"
+      },
+      "sources": {
+        "bytes": 4638,
+        "sha256": "0d6c4a177196005b950003eb358c7ae87b07dcca63cc601a03ef04e85856cb37"
+      },
+      "sourceItems": [
+        {
+          "bytes": 917,
+          "sha256": "60de95b4013524a786e97d2cec5b86510643fba99edbfe08ac6999def42cd9a9"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 940,
+          "sha256": "29d3e3483102b9f72ab11539d8d425cedf61ae60f2d2ef081d8cfe558b17c958"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "wide.put",
+      "input": {
+        "bytes": 830,
+        "sha256": "64497ee8ed2ea0fc9c9d455a1389668f41b46b4228d70225891eddaf36185bbd"
+      },
+      "result": {
+        "bytes": 60985,
+        "sha256": "4151aaaf332044b602f6cb1666966cbff77ba893f1151ce12b63d85b99ed42c3"
+      },
+      "sources": {
+        "bytes": 7604,
+        "sha256": "634f1ee928a1addb39cd1ff23c2662c248ef3382d85f10da7b335ede37109997"
+      },
+      "sourceItems": [
+        {
+          "bytes": 937,
+          "sha256": "32d23475331ef52f240b85c6a983d9dba2b71483e55d28e6146387ae2cdaa3c0"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 940,
+          "sha256": "ef74a4c02555b70f1c5ffadfe47808568b8c1c17896247e2372bf04f5c299530"
+        },
+        {
+          "bytes": 966,
+          "sha256": "870a6cf81e9eeb29c703eaabdf2897143766eb7d0af7b4a124ec100248211825"
+        },
+        {
+          "bytes": 917,
+          "sha256": "0515fb27ae5e33641f6268518eea57a06e4387ae7233c86adbf5f37faeaa0e40"
+        },
+        {
+          "bytes": 940,
+          "sha256": "29d3e3483102b9f72ab11539d8d425cedf61ae60f2d2ef081d8cfe558b17c958"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "zeroExtend",
+      "input": {
+        "bytes": 830,
+        "sha256": "7eccde7a3228db6989696da5ec2b9a09b8bb84e9dd7689610361b24a20951628"
+      },
+      "result": {
+        "bytes": 32563,
+        "sha256": "e0709c4d62e93ab3b31723569103ca7f74ac9daeabf7bb161c12d68d681b4b25"
+      },
+      "sources": {
+        "bytes": 4652,
+        "sha256": "894f084693bf0ead623904f74a2f17eb136d327dc453a37c3edefce998f2f77e"
+      },
+      "sourceItems": [
+        {
+          "bytes": 921,
+          "sha256": "8658413fa1c6ccca20f8dcb1eb083b41e3d918c7ee485ca57465c116c15a4ed4"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 946,
+          "sha256": "427d0029c24c9d438e9391f8cca8eeb5e251708d303d5bba6a08b7ca7fe0f508"
+        },
+        {
+          "bytes": 978,
+          "sha256": "99b54978625dbd1c200011eb1d5492e9b070334f71c90cfdca412b4e375b8827"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low.state/correspondence",
+      "input": {
+        "bytes": 781,
+        "sha256": "820ded82e96ec5afbaf5410aec538bffd9baa1a557462a0b11e1f6da34161290"
+      },
+      "result": {
+        "bytes": 15640,
+        "sha256": "e2efc5847166fbd4d7d463e167c8a4bafbc23eecdfe0029c3fe6ebea1301112a"
+      },
+      "sources": {
+        "bytes": 2052,
+        "sha256": "482d1279392d3480b7e5e9bffd2a66823a539764a8766d33e85869fca028052b"
+      },
+      "sourceItems": [
+        {
+          "bytes": 998,
+          "sha256": "a4c767f9a28fe70a3bc632416cb6bdea45356c578c1dbbb1fef31ce67e6d401d"
+        },
+        {
+          "bytes": 969,
+          "sha256": "6a89102192031a886c8001256ad30a2cd99e36c2c24e99b2bcb2b0aa1df7507a"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.low.state/correspondence",
+      "input": {
+        "bytes": 788,
+        "sha256": "143b10b40cd4e941c2025e5f3b09a046a8ca64730a1fc80f3c35a32ffc04c7dc"
+      },
+      "result": {
+        "bytes": 14963,
+        "sha256": "58eb90e0391abc52e9554700f44619e47877381d9c771d9e12e3f08a914dea5e"
+      },
+      "sources": {
+        "bytes": 2052,
+        "sha256": "6132f2dd244fed4bf9ee03bc2442245190a809b9ccaa2e7edb73c3afca37afbd"
+      },
+      "sourceItems": [
+        {
+          "bytes": 998,
+          "sha256": "b13a352d448f0fd47ef549331d1e706e3c5ef2af887ff28cca58a7db36a4ed49"
+        },
+        {
+          "bytes": 969,
+          "sha256": "d062fbab77e050f23ccf2c98b365ae401dff9ba7ddeaa9d7be6f9fa4034a30e8"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high.state/correspondence",
+      "input": {
+        "bytes": 785,
+        "sha256": "12106ade6eb6108f693c910593003b389d9322987d094c57a0a1ec35a1703c99"
+      },
+      "result": {
+        "bytes": 15679,
+        "sha256": "b25dfa8810e8ff8b05f4613ba78e63960524330d269eca16fa763856dff7c536"
+      },
+      "sources": {
+        "bytes": 2061,
+        "sha256": "ef5e00243040751f9109ad5750d6b988a1f5d8bb0a6d64a2730c927ac4f46160"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1002,
+          "sha256": "13c6f636d8b272392f88b765d1d640cc93b2be1bf07005b61bfec62ec8e2f15f"
+        },
+        {
+          "bytes": 974,
+          "sha256": "10b13883c4b9cf2fe362e59fc31ac756cea3318599f98c530e5699963594a0ae"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.high.state/correspondence",
+      "input": {
+        "bytes": 792,
+        "sha256": "52dba208738d40151fa4d4e4f7d3271335174673c61d379e6e0f991f5393526d"
+      },
+      "result": {
+        "bytes": 15002,
+        "sha256": "9fabb9463ef14862d1f197a0e552e26cf36c262fa1cb0280214bb54f603ba0d5"
+      },
+      "sources": {
+        "bytes": 2061,
+        "sha256": "5eccb199d7cadf1c613e314756dcfece9adfd2e551e96ee429c635011516ea12"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1002,
+          "sha256": "0566a503a149caa8f4a09c46a28ae484a9a637acbbdbe86ac2eb2006b3ad9ba1"
+        },
+        {
+          "bytes": 974,
+          "sha256": "98588a40052546959f00622a135697edd43f543e664530b1f2c4caf4c8968a90"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation.state/correspondence",
+      "input": {
+        "bytes": 886,
+        "sha256": "c9da76d043ac06519c45363bad504e04f6c260b20902c21255194f05c2d6033c"
+      },
+      "result": {
+        "bytes": 179236,
+        "sha256": "0c93c6ab7fcc0e4fb0127353fb393db2b3615c17ce7b4eaf004f7d8c500986e1"
+      },
+      "sources": {
+        "bytes": 3308,
+        "sha256": "88a233bb3a6c361ace55816633701e668fb7dd1b435f35fc89501cc4bce2893a"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1111,
+          "sha256": "3451e12398e48affa435fef526483438515fd557f1529780d033be88372b80e2"
+        },
+        {
+          "bytes": 1054,
+          "sha256": "d1e1d94ff3e645481f81d16f33c5aba265b14b0f9b6d7463507930efbf7b9f51"
+        },
+        {
+          "bytes": 1015,
+          "sha256": "19cddfd65637807adb16a43c5be8359e5db3583ed4d307cbc6b0e0b6f12af79b"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.narrow.implementation.state/correspondence",
+      "input": {
+        "bytes": 893,
+        "sha256": "ed3be00deb8676a11b81780e2678f317c63abee67fd42bb3a18f72e203c4e4a7"
+      },
+      "result": {
+        "bytes": 178559,
+        "sha256": "ce8630484363c684cc4f5d3accfd7b3f20e94866cbc7e1ac1f59aa874af14d90"
+      },
+      "sources": {
+        "bytes": 3308,
+        "sha256": "f7349897e770b3fd9002aee007dd86e38d17590075b36ae81929062a27361771"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1111,
+          "sha256": "ab570201cecf4eaf0f14baa773cc0089d91a4f521a9dfa31c4e58539887b4d2f"
+        },
+        {
+          "bytes": 1054,
+          "sha256": "be0b234a21f6521afa44b3a36c3ffb852f3f6a3e50aac17da2c81510a89ceec1"
+        },
+        {
+          "bytes": 1015,
+          "sha256": "19cddfd65637807adb16a43c5be8359e5db3583ed4d307cbc6b0e0b6f12af79b"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation.state/correspondence",
+      "input": {
+        "bytes": 874,
+        "sha256": "c6247f1e75cbad1f6714b234fe3cbdc56b2dab0e422d831d147b3d79b56e60dc"
+      },
+      "result": {
+        "bytes": 178738,
+        "sha256": "d37e10f799d3877be423da0edc02f1eb759a607a26b97b18f31076bc816f209b"
+      },
+      "sources": {
+        "bytes": 3280,
+        "sha256": "530a4ce9efc4cbb78e407e903d0329afe353932f9da3928f558bf44d5257894c"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1099,
+          "sha256": "b4c43f39677ef84e6faf2ee0b16bfce8ed6ea505e9a4fb7ff94c8c45de20ea78"
+        },
+        {
+          "bytes": 1044,
+          "sha256": "dd3d984c8b799d6e38cfff7238d00262d93bb093f69007ee390794114757317c"
+        },
+        {
+          "bytes": 1009,
+          "sha256": "132a9fd4d317fcbb12c896d402d87091970e8722014f33451d3c3b695ca74cc4"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse.wide.implementation.state/correspondence",
+      "input": {
+        "bytes": 881,
+        "sha256": "8a1e5e4ab763765e9ea1e2981722ed72b6c4e7559f94e786ccbe9989d6b43429"
+      },
+      "result": {
+        "bytes": 178061,
+        "sha256": "443234bb5946494c6b6a5afc2b39e8b390c54525f217e40db0d15bd71201d62a"
+      },
+      "sources": {
+        "bytes": 3280,
+        "sha256": "a06ff47feae77ace18cb133d0b7fcc172a9c64848d0f8b66b1cbdab4c5c349b8"
+      },
+      "sourceItems": [
+        {
+          "bytes": 1099,
+          "sha256": "6e87c189c3d4598f9928771666fb94b3e6a1aed61b7dd9623a3ba7be190fc530"
+        },
+        {
+          "bytes": 1044,
+          "sha256": "c11122e35bbb66ff8e973706e1599a28be4d734c4173de6e32028504637bb031"
+        },
+        {
+          "bytes": 1009,
+          "sha256": "132a9fd4d317fcbb12c896d402d87091970e8722014f33451d3c3b695ca74cc4"
+        }
+      ]
+    },
+    {
+      "buildId": "C",
+      "label": "mkReuse/get/stock-correspondence",
+      "input": {
+        "bytes": 713,
+        "sha256": "d20dd1a158f1a7c6fcb443e6506d916b37e7546c82b4074864a8a0a71dcb7099"
+      },
+      "result": {
+        "bytes": 1182269,
+        "sha256": "5c406502227ec05c6404b0b4be4588231a17f0f76659e89190dbb3384020063c"
+      },
+      "sources": {
+        "bytes": 3636,
+        "sha256": "5cea6fd9413659cb8b310a2ce77f898668d5a0a3580e8228279ef3454b98f3ca"
+      },
+      "sourceItems": [
+        {
+          "bytes": 892,
+          "sha256": "5a245432993eaa3f18756f1a095576e2861bbf3f6c4e19b5e01e13bff54a997f"
+        },
+        {
+          "bytes": 1640,
+          "sha256": "2e68e6a174f632ffca3c7dfb010356f606396daecc199574072b19f2fa2822a1"
+        },
+        {
+          "bytes": 976,
+          "sha256": "974e5a81a929bf728faef8b99620a523e7487afc35f93bfee1a651bfc7702b4e"
+        }
+      ]
+    }
+  ],
+  "fullCapture": {
+    "bytes": 11184307,
+    "sha256": "7728623c829d74c7671cdb40133c617c96668557a3b4b472e10abc20d26e18f6"
+  }
+}

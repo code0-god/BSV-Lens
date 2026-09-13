@@ -1,0 +1,3433 @@
+{
+  "schemaVersion": 1,
+  "queryId": "analysis-query-bb6fda144307281bb84a02a4af0bc50e08ca6ac35aae1c7c6ac28450242b7f4c",
+  "kind": "state-accesses",
+  "status": "complete",
+  "availability": "available",
+  "completeness": "complete",
+  "context": {
+    "analysisId": "analysis-5d73d5bf4521f5c7cdb3c9dfab18e8d373eaf1f86a0e491ddc928fbfaa12cb62",
+    "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5",
+    "modelId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/implementation/yosys-json-v1",
+    "implementationProvider": "stock",
+    "providerIdentity": "yosys-json-v1",
+    "stage": "bsc-generated-rtl/yosys-hierarchy-proc-noopt",
+    "artifactHash": "4ac9fd67e0f90147a1748bcbc5dd014262fefbd9994b73b642ae88523653d6b6",
+    "buildInputFingerprint": "0cb927d07e5836184016522402cb2cb092a0e9bdd406adb57cd872850006d846",
+    "sourceModelIdentity": "eccefbbba8552eec436ad429c938b554ea4ac0e185a61b3beae8a70effa752bf",
+    "sourceStatus": "attached",
+    "originAnalysisId": null,
+    "freshness": "fresh",
+    "unknownInputs": [
+      "dependencyFingerprint",
+      "toolchain",
+      "passSequence",
+      "buildOptionsFingerprint",
+      "concreteParameters"
+    ],
+    "capabilities": {
+      "same-net": "available",
+      "drivers-loads": "available",
+      "dependencies": "available",
+      "state-accesses": "available",
+      "behavior": "available",
+      "call-site": "available",
+      "source-dependencies": "available",
+      "correspondence": "available"
+    }
+  },
+  "seed": {
+    "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+    "sourceRevision": null,
+    "entryCallSiteId": null,
+    "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+    "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+    "domain": "source",
+    "positions": []
+  },
+  "scope": {
+    "kind": "design",
+    "rootOccurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+  },
+  "direction": null,
+  "semanticsProfile": null,
+  "objects": [
+    {
+      "kind": "source",
+      "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+      "objectKind": "instance-occurrence",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "count",
+      "sourceRefs": [
+        "analysis-source-7d36ee5689065230a5cfc3dfc309b428aeb715f54c76b6a87f52185326ecb1d8"
+      ],
+      "record": {
+        "name": "count",
+        "type": "Reg#(Bit#(8))",
+        "declaredType": "Reg#(Bit#(8))",
+        "constructor": "mkReg",
+        "constructorExpression": "mkReg(0)",
+        "staticArguments": [],
+        "arguments": [
+          "0"
+        ],
+        "specialization": null,
+        "multiplicity": null,
+        "primitiveKind": "register",
+        "signature": "Reg#(Bit#(8)) count <- mkReg(0);",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 9,
+          "column": 17,
+          "endLine": 9,
+          "endColumn": 22
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 8,
+          "column": 26,
+          "endLine": 9,
+          "endColumn": 35
+        },
+        "range": {
+          "start": 158,
+          "end": 194
+        },
+        "id": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "kind": "instance-occurrence",
+        "path": "mkControl.count",
+        "parentInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetDefinitionId": null,
+        "targetResolutionStatus": "unresolved",
+        "root": false,
+        "synthetic": false,
+        "expansionStatus": "unresolved",
+        "parameterBindings": [],
+        "analysisOrigin": "Source-derived",
+        "confidence": "unresolved",
+        "evidence": "Reg#(Bit#(8)) count <- mkReg(0);"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "instance:def:Control:mkControl:mkControl",
+      "objectKind": "instance-occurrence",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "mkControl",
+      "sourceRefs": [
+        "analysis-source-b0d84ed822d04fbe1177842bf6afd8d5a2315e60b34132915db528f4eed6a2d8"
+      ],
+      "record": {
+        "id": "instance:def:Control:mkControl:mkControl",
+        "kind": "instance-occurrence",
+        "name": "mkControl",
+        "path": "mkControl",
+        "parentInstanceId": null,
+        "targetDefinitionId": "def:Control:mkControl",
+        "targetResolutionStatus": "exact",
+        "packageName": "Control",
+        "declaredType": "Control",
+        "constructor": null,
+        "constructorExpression": null,
+        "staticArguments": [],
+        "arguments": [],
+        "multiplicity": {
+          "status": "exact",
+          "count": 1,
+          "expression": "1"
+        },
+        "root": true,
+        "rootReason": "configured",
+        "rootStatus": "unbound",
+        "synthetic": true,
+        "expansionStatus": "expanded",
+        "parameterBindings": [],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 8,
+          "column": 7,
+          "endLine": 8,
+          "endColumn": 16
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 8,
+          "column": 0,
+          "endLine": 27,
+          "endColumn": 9
+        },
+        "analysisOrigin": "Source-derived root projection",
+        "evidence": {
+          "selectionReason": "configured",
+          "path": "mkControl",
+          "targetDefinitionId": "def:Control:mkControl"
+        },
+        "confidence": "exact"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-14e2712b93df5745a02156a08d35d638599949b0a1ae817e87ead084485f8318"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count - 1;",
+        "sourceText": "count <= count - 1;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "decrement",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 18,
+          "classification": "register-write",
+          "snippet": "count <= count - 1;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+            "text": "count <= count - 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+      "objectKind": "rule",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "decrement",
+      "sourceRefs": [
+        "analysis-source-454ff273321d160d92ebaeaffda00dd1cb9d68e291895c25d705f9202ec64e96"
+      ],
+      "record": {
+        "id": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+        "name": "decrement",
+        "interfacePath": [],
+        "kind": "rule",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "definitionId": "def:Control:mkControl.rule.decrement",
+        "category": "unknown",
+        "returnType": null,
+        "guard": "count > 0 && phase",
+        "reads": [
+          "count",
+          "phase"
+        ],
+        "writes": [
+          "count"
+        ],
+        "inputs": [],
+        "outputs": [],
+        "invocations": [],
+        "predicateExpressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+        "statementIds": [
+          "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380"
+        ],
+        "expressionIds": [
+          "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:358",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:362",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:366:371",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:371",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:394",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:397:398",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:398"
+        ],
+        "callSiteIds": [],
+        "transitions": [
+          {
+            "state": "count",
+            "effect": "write",
+            "operation": "register-write",
+            "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+            "pathConditionExpressionIds": [],
+            "evidence": "count <= count - 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 11
+            }
+          },
+          {
+            "state": "count",
+            "effect": "read",
+            "operation": "register-read",
+            "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+            "pathConditionExpressionIds": [],
+            "evidence": "count <= count - 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 15,
+              "endLine": 17,
+              "endColumn": 20
+            }
+          }
+        ],
+        "summary": "Updates count.",
+        "protocolMembership": [],
+        "evidence": [
+          "rule decrement (count > 0 && phase);",
+          "count <= count - 1;"
+        ],
+        "origin": "Source-derived",
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 16,
+          "column": 8,
+          "endLine": 16,
+          "endColumn": 17
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 16,
+          "column": 3,
+          "endLine": 18,
+          "endColumn": 10
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+      "objectKind": "state-assignment",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "count <= count - 1;",
+      "sourceRefs": [
+        "analysis-source-243cb21e793affc9cd848d8e3c9b4e3a638327d81bfba3e5eda6dfda82eb3630"
+      ],
+      "record": {
+        "id": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+        "kind": "state-assignment",
+        "enclosingCallableId": "def:Control:mkControl.rule.decrement",
+        "parentStatementId": null,
+        "parentBlockId": null,
+        "conditionExpressionId": null,
+        "pathConditionExpressionIds": [],
+        "sourceDocumentId": "experiments/hardware/fixtures/Control.bsv",
+        "sourceRevision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 25
+        },
+        "range": {
+          "start": 380,
+          "end": 399
+        },
+        "text": "count <= count - 1;",
+        "resolutionStatus": "exact",
+        "targetSymbol": {
+          "name": "count",
+          "kind": "state"
+        },
+        "rightExpressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:398",
+        "stateEffect": {
+          "state": "count",
+          "effect": "write",
+          "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:398"
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-738c3b992742781dd840ffe58baa42b73a51678a8aa47e8af9a9750a7a681950"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:1",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count - 1;",
+        "sourceText": "count <= count - 1;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "decrement",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 18,
+          "classification": "register-read",
+          "snippet": "count <= count - 1;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:1",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+            "text": "count <= count - 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 15,
+              "endLine": 17,
+              "endColumn": 20
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 15,
+          "endLine": 17,
+          "endColumn": 20
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-5157150de7dccbcb4ac688bce2a3a145ac95b87975e7cf20d91f8591124ac87d"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count + 2;",
+        "sourceText": "count <= count + 2;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "increment",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 21,
+          "classification": "register-write",
+          "snippet": "count <= count + 2;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+            "text": "count <= count + 2;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+      "objectKind": "rule",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "increment",
+      "sourceRefs": [
+        "analysis-source-1d585eecfd2a8dbe5991a4ebd3374f0f6593a9b49aa92ca87d30b29854ea2c89"
+      ],
+      "record": {
+        "id": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+        "name": "increment",
+        "interfacePath": [],
+        "kind": "rule",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "definitionId": "def:Control:mkControl.rule.increment",
+        "category": "unknown",
+        "returnType": null,
+        "guard": "count < 8",
+        "reads": [
+          "count"
+        ],
+        "writes": [
+          "count"
+        ],
+        "inputs": [],
+        "outputs": [],
+        "invocations": [],
+        "predicateExpressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+        "statementIds": [
+          "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448"
+        ],
+        "expressionIds": [
+          "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:435",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:438:439",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:462",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:465:466",
+          "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:466"
+        ],
+        "callSiteIds": [],
+        "transitions": [
+          {
+            "state": "count",
+            "effect": "write",
+            "operation": "register-write",
+            "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+            "pathConditionExpressionIds": [],
+            "evidence": "count <= count + 2;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 11
+            }
+          },
+          {
+            "state": "count",
+            "effect": "read",
+            "operation": "register-read",
+            "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+            "pathConditionExpressionIds": [],
+            "evidence": "count <= count + 2;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 15,
+              "endLine": 20,
+              "endColumn": 20
+            }
+          }
+        ],
+        "summary": "Updates count.",
+        "protocolMembership": [],
+        "evidence": [
+          "rule increment (count < 8);",
+          "count <= count + 2;"
+        ],
+        "origin": "Source-derived",
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 19,
+          "column": 8,
+          "endLine": 19,
+          "endColumn": 17
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 19,
+          "column": 3,
+          "endLine": 21,
+          "endColumn": 10
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+      "objectKind": "state-assignment",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "count <= count + 2;",
+      "sourceRefs": [
+        "analysis-source-4db369a178600d723dfdb616a3ec89583485d4103ad1c064e38f3ba4f16ec5d5"
+      ],
+      "record": {
+        "id": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+        "kind": "state-assignment",
+        "enclosingCallableId": "def:Control:mkControl.rule.increment",
+        "parentStatementId": null,
+        "parentBlockId": null,
+        "conditionExpressionId": null,
+        "pathConditionExpressionIds": [],
+        "sourceDocumentId": "experiments/hardware/fixtures/Control.bsv",
+        "sourceRevision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 25
+        },
+        "range": {
+          "start": 448,
+          "end": 467
+        },
+        "text": "count <= count + 2;",
+        "resolutionStatus": "exact",
+        "targetSymbol": {
+          "name": "count",
+          "kind": "state"
+        },
+        "rightExpressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:466",
+        "stateEffect": {
+          "state": "count",
+          "effect": "write",
+          "expressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:466"
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-aeb0f60b1358070db883600f8d670abdc4cf1f8f248afaa519676caa505b0dd9"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:1",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count + 2;",
+        "sourceText": "count <= count + 2;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "increment",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 21,
+          "classification": "register-read",
+          "snippet": "count <= count + 2;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:1",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+            "text": "count <= count + 2;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 15,
+              "endLine": 20,
+              "endColumn": 20
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 15,
+          "endLine": 20,
+          "endColumn": 20
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-4731b8a80ef3693b5a78437e977eb95c6d7f21d02ed93fbfaedb53cce46150d9"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= value;",
+        "sourceText": "count <= value;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 24,
+          "column": 6,
+          "endLine": 24,
+          "endColumn": 21
+        },
+        "evidence": {
+          "callable": "inject",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 25,
+          "classification": "register-write",
+          "snippet": "count <= value;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+            "text": "count <= value;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 24,
+              "column": 6,
+              "endLine": 24,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 24,
+              "column": 6,
+              "endLine": 24,
+              "endColumn": 21
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 24,
+          "column": 6,
+          "endLine": 24,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+      "objectKind": "method",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "inject",
+      "sourceRefs": [
+        "analysis-source-74820a42b44798726fa4f93c2bca7d42d4a235a7cdf28665943fef4eb697e79f"
+      ],
+      "record": {
+        "id": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+        "name": "inject",
+        "interfacePath": [],
+        "kind": "method",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "definitionId": "def:Control:mkControl.inject",
+        "category": "action",
+        "returnType": "Action",
+        "guard": "count < 4",
+        "reads": [
+          "count"
+        ],
+        "writes": [
+          "count"
+        ],
+        "inputs": [
+          {
+            "name": "value",
+            "type": "Bit#(8)"
+          }
+        ],
+        "outputs": [],
+        "invocations": [],
+        "predicateExpressionId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+        "statementIds": [
+          "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541"
+        ],
+        "expressionIds": [
+          "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:528",
+          "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:531:532",
+          "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+          "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:550:555"
+        ],
+        "callSiteIds": [],
+        "transitions": [
+          {
+            "state": "count",
+            "effect": "write",
+            "operation": "register-write",
+            "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+            "pathConditionExpressionIds": [],
+            "evidence": "count <= value;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 24,
+              "column": 6,
+              "endLine": 24,
+              "endColumn": 11
+            }
+          }
+        ],
+        "summary": "Updates count.",
+        "protocolMembership": [],
+        "evidence": [
+          "method Action inject(Bit#(8) value) if (count < 4);",
+          "count <= value;"
+        ],
+        "origin": "Source-derived",
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 23,
+          "column": 17,
+          "endLine": 23,
+          "endColumn": 23
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 23,
+          "column": 3,
+          "endLine": 25,
+          "endColumn": 12
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+      "objectKind": "state-assignment",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "count <= value;",
+      "sourceRefs": [
+        "analysis-source-1a8fc7c00534f6d2e2593254a9c85479482cdf63d72c80cbac720e910dc8b6e5"
+      ],
+      "record": {
+        "id": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+        "kind": "state-assignment",
+        "enclosingCallableId": "def:Control:mkControl.inject",
+        "parentStatementId": null,
+        "parentBlockId": null,
+        "conditionExpressionId": null,
+        "pathConditionExpressionIds": [],
+        "sourceDocumentId": "experiments/hardware/fixtures/Control.bsv",
+        "sourceRevision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 24,
+          "column": 6,
+          "endLine": 24,
+          "endColumn": 21
+        },
+        "range": {
+          "start": 541,
+          "end": 556
+        },
+        "text": "count <= value;",
+        "resolutionStatus": "exact",
+        "targetSymbol": {
+          "name": "count",
+          "kind": "state"
+        },
+        "rightExpressionId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:550:555",
+        "stateEffect": {
+          "state": "count",
+          "effect": "write",
+          "expressionId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:550:555"
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-540917bc5a78491764673b4124d869be4b37f97433cb9fc27c38c623eb067ae0"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:1",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "state-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": null,
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "method Action inject(Bit#(8) value) if (count < 4);",
+        "sourceText": "method Action inject(Bit#(8) value) if (count < 4);",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 23,
+          "column": 17,
+          "endLine": 23,
+          "endColumn": 23
+        },
+        "evidence": {
+          "callable": "inject",
+          "referencedInstance": "count"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:1",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+            "text": "method Action inject(Bit#(8) value) if (count < 4);",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 23,
+              "column": 17,
+              "endLine": 23,
+              "endColumn": 23
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 23,
+              "column": 17,
+              "endLine": 23,
+              "endColumn": 23
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 23,
+          "column": 17,
+          "endLine": 23,
+          "endColumn": 23
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+      "objectKind": "behavior-access",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "behavior-access",
+      "sourceRefs": [
+        "analysis-source-293e1f2c029a4e26b902c97fe48baed6b7117c868e70d5b68f696d1659fd7f8f"
+      ],
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:read:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count;",
+        "sourceText": "count;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 26,
+          "column": 25,
+          "endLine": 26,
+          "endColumn": 31
+        },
+        "evidence": {
+          "callable": "read",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 27,
+          "classification": "register-read",
+          "snippet": "count;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:read:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+            "text": "count;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 26,
+              "column": 25,
+              "endLine": 26,
+              "endColumn": 30
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 26,
+              "column": 25,
+              "endLine": 26,
+              "endColumn": 31
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 26,
+          "column": 25,
+          "endLine": 26,
+          "endColumn": 30
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+      "objectKind": "method",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "read",
+      "sourceRefs": [
+        "analysis-source-0efd10847673293662420f53e939245405bc20fcaa20465a200df660fd71ef42"
+      ],
+      "record": {
+        "id": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+        "name": "read",
+        "interfacePath": [],
+        "kind": "method",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "definitionId": "def:Control:mkControl.read",
+        "category": "value",
+        "returnType": "Bit#(8)",
+        "guard": "",
+        "reads": [
+          "count"
+        ],
+        "writes": [],
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "Bit#(8)"
+          }
+        ],
+        "invocations": [],
+        "predicateExpressionId": null,
+        "statementIds": [
+          "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595"
+        ],
+        "expressionIds": [
+          "code:experiments/hardware/fixtures/Control.bsv:method:read:573:expression:595:600"
+        ],
+        "callSiteIds": [],
+        "transitions": [
+          {
+            "state": "count",
+            "effect": "read",
+            "operation": "register-read",
+            "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+            "pathConditionExpressionIds": [],
+            "evidence": "count;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 26,
+              "column": 25,
+              "endLine": 26,
+              "endColumn": 30
+            }
+          }
+        ],
+        "summary": "Method read.",
+        "protocolMembership": [],
+        "evidence": [
+          "method Bit#(8) read = count;",
+          "count;"
+        ],
+        "origin": "Source-derived",
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit",
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 26,
+          "column": 18,
+          "endLine": 26,
+          "endColumn": 22
+        },
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 26,
+          "column": 3,
+          "endLine": 26,
+          "endColumn": 31
+        }
+      }
+    },
+    {
+      "kind": "source",
+      "entityId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+      "objectKind": "unsupported",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "label": "count;",
+      "sourceRefs": [
+        "analysis-source-097c4f841d6da00c12852c1a2cfb07ea04301f9babc9a9eee453d1fe27eef47d"
+      ],
+      "record": {
+        "id": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+        "kind": "unsupported",
+        "enclosingCallableId": "def:Control:mkControl.read",
+        "parentStatementId": null,
+        "parentBlockId": null,
+        "conditionExpressionId": null,
+        "pathConditionExpressionIds": [],
+        "sourceDocumentId": "experiments/hardware/fixtures/Control.bsv",
+        "sourceRevision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 26,
+          "column": 25,
+          "endLine": 26,
+          "endColumn": 31
+        },
+        "range": {
+          "start": 595,
+          "end": 601
+        },
+        "text": "count;",
+        "resolutionStatus": "unsupported",
+        "expressionId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:expression:595:600"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "id": "analysis-source-relation-7b93fc6d9ca51e3b23b1af02c6515b0c704bb524831190cab299405643a636d7",
+      "family": "source",
+      "kind": "write",
+      "from": {
+        "kind": "source",
+        "entityId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+      "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+      "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+      "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:0",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count - 1;",
+        "sourceText": "count <= count - 1;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "decrement",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 18,
+          "classification": "register-write",
+          "snippet": "count <= count - 1;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+            "text": "count <= count - 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "id": "analysis-source-relation-0a0579e404f9dd4ab9437b89f29fd906414a857380fda8b1b66dc3e0b19a7d59",
+      "family": "source",
+      "kind": "read",
+      "from": {
+        "kind": "source",
+        "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+      "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+      "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+      "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:1",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:1",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count - 1;",
+        "sourceText": "count <= count - 1;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "decrement",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 18,
+          "classification": "register-read",
+          "snippet": "count <= count - 1;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:1",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+            "text": "count <= count - 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 15,
+              "endLine": 17,
+              "endColumn": 20
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 15,
+          "endLine": 17,
+          "endColumn": 20
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "id": "analysis-source-relation-2f6e267694aa785d372be19bd06e84eeeb64f045acc0df5b3d0ecbe0992ddb5c",
+      "family": "source",
+      "kind": "write",
+      "from": {
+        "kind": "source",
+        "entityId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+      "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+      "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+      "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:0",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count + 2;",
+        "sourceText": "count <= count + 2;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "increment",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 21,
+          "classification": "register-write",
+          "snippet": "count <= count + 2;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+            "text": "count <= count + 2;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "id": "analysis-source-relation-4199bd4f4b3bd7aaa63b8d5b05fee94a6caa0c3424ce6a9be1bb08a2417a049d",
+      "family": "source",
+      "kind": "read",
+      "from": {
+        "kind": "source",
+        "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+      "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+      "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+      "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:1",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:1",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count + 2;",
+        "sourceText": "count <= count + 2;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "increment",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 21,
+          "classification": "register-read",
+          "snippet": "count <= count + 2;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:1",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+            "text": "count <= count + 2;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 15,
+              "endLine": 20,
+              "endColumn": 20
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 15,
+          "endLine": 20,
+          "endColumn": 20
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "id": "analysis-source-relation-c6b2dda17e49aa8e88da666fa89db00a20f79e0028fdc191726ce3eeeb0f1341",
+      "family": "source",
+      "kind": "write",
+      "from": {
+        "kind": "source",
+        "entityId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+      "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+      "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+      "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:0",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= value;",
+        "sourceText": "count <= value;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 24,
+          "column": 6,
+          "endLine": 24,
+          "endColumn": 21
+        },
+        "evidence": {
+          "callable": "inject",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 25,
+          "classification": "register-write",
+          "snippet": "count <= value;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+            "text": "count <= value;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 24,
+              "column": 6,
+              "endLine": 24,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 24,
+              "column": 6,
+              "endLine": 24,
+              "endColumn": 21
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 24,
+          "column": 6,
+          "endLine": 24,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "id": "analysis-source-relation-dee4f44f3b4796992555b557d8cf4ed2a842f1d3863ec612238d1ac7d590605a",
+      "family": "source",
+      "kind": "read",
+      "from": {
+        "kind": "source",
+        "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+      "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+      "statementId": null,
+      "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:1",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:1",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "state-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": null,
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "method Action inject(Bit#(8) value) if (count < 4);",
+        "sourceText": "method Action inject(Bit#(8) value) if (count < 4);",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 23,
+          "column": 17,
+          "endLine": 23,
+          "endColumn": 23
+        },
+        "evidence": {
+          "callable": "inject",
+          "referencedInstance": "count"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:1",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+            "text": "method Action inject(Bit#(8) value) if (count < 4);",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 23,
+              "column": 17,
+              "endLine": 23,
+              "endColumn": 23
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 23,
+              "column": 17,
+              "endLine": 23,
+              "endColumn": 23
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 23,
+          "column": 17,
+          "endLine": 23,
+          "endColumn": 23
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    },
+    {
+      "id": "analysis-source-relation-f377a54bd8874e77c674cfe2f9fcd4dc647c8c5a8674c5d51488c5dc49fed14d",
+      "family": "source",
+      "kind": "read",
+      "from": {
+        "kind": "source",
+        "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "to": {
+        "kind": "source",
+        "entityId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D"
+      },
+      "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+      "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+      "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+      "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:read:0",
+      "resolution": "exact",
+      "record": {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:read:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count;",
+        "sourceText": "count;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 26,
+          "column": 25,
+          "endLine": 26,
+          "endColumn": 31
+        },
+        "evidence": {
+          "callable": "read",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 27,
+          "classification": "register-read",
+          "snippet": "count;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:read:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+            "text": "count;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 26,
+              "column": 25,
+              "endLine": 26,
+              "endColumn": 30
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 26,
+              "column": 25,
+              "endLine": 26,
+              "endColumn": 31
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 26,
+          "column": 25,
+          "endLine": 26,
+          "endColumn": 30
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    }
+  ],
+  "boundaries": [],
+  "frontier": [],
+  "sourceRefs": [
+    {
+      "id": "analysis-source-7d36ee5689065230a5cfc3dfc309b428aeb715f54c76b6a87f52185326ecb1d8",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "instance-occurrence",
+      "semanticId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 158,
+        "end": 194,
+        "text": "\n   Reg#(Bit#(8)) count <- mkReg(0);"
+      },
+      "text": "\n   Reg#(Bit#(8)) count <- mkReg(0);",
+      "sliceHash": "eeba7ac3566bc57cdd077e23317e06814ca1876b917ef57900ff19bc19c34347"
+    },
+    {
+      "id": "analysis-source-b0d84ed822d04fbe1177842bf6afd8d5a2315e60b34132915db528f4eed6a2d8",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "instance-occurrence",
+      "semanticId": "instance:def:Control:mkControl:mkControl",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 132,
+        "end": 611,
+        "text": "module mkControl(Control);\n   Reg#(Bit#(8)) count <- mkReg(0);\n   Reg#(Bool) phase <- mkReg(False);\n\n   rule tick;\n      phase <= !phase;\n   endrule\n   (* descending_urgency = \"decrement, increment\" *)\n   rule decrement (count > 0 && phase);\n      count <= count - 1;\n   endrule\n   rule increment (count < 8);\n      count <= count + 2;\n   endrule\n\n   method Action inject(Bit#(8) value) if (count < 4);\n      count <= value;\n   endmethod\n   method Bit#(8) read = count;\nendmodule"
+      },
+      "text": "module mkControl(Control);\n   Reg#(Bit#(8)) count <- mkReg(0);\n   Reg#(Bool) phase <- mkReg(False);\n\n   rule tick;\n      phase <= !phase;\n   endrule\n   (* descending_urgency = \"decrement, increment\" *)\n   rule decrement (count > 0 && phase);\n      count <= count - 1;\n   endrule\n   rule increment (count < 8);\n      count <= count + 2;\n   endrule\n\n   method Action inject(Bit#(8) value) if (count < 4);\n      count <= value;\n   endmethod\n   method Bit#(8) read = count;\nendmodule",
+      "sliceHash": "1086fbd269939a3d6d56fb3779b62869c8fcd78e7d074f557b94d8a0989496c9"
+    },
+    {
+      "id": "analysis-source-14e2712b93df5745a02156a08d35d638599949b0a1ae817e87ead084485f8318",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 380,
+        "end": 399,
+        "text": "count <= count - 1;"
+      },
+      "text": "count <= count - 1;",
+      "sliceHash": "16bfa98c3aecf662692579a547cd24c02267919dddd616538b92bd40433f5131"
+    },
+    {
+      "id": "analysis-source-454ff273321d160d92ebaeaffda00dd1cb9d68e291895c25d705f9202ec64e96",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "rule",
+      "semanticId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 337,
+        "end": 410,
+        "text": "rule decrement (count > 0 && phase);\n      count <= count - 1;\n   endrule"
+      },
+      "text": "rule decrement (count > 0 && phase);\n      count <= count - 1;\n   endrule",
+      "sliceHash": "84f7240c6be03fa4f4733baf559dec86c0d8086a07049b9019e2e10979e4491a"
+    },
+    {
+      "id": "analysis-source-243cb21e793affc9cd848d8e3c9b4e3a638327d81bfba3e5eda6dfda82eb3630",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "state-assignment",
+      "semanticId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 380,
+        "end": 399,
+        "text": "count <= count - 1;"
+      },
+      "text": "count <= count - 1;",
+      "sliceHash": "16bfa98c3aecf662692579a547cd24c02267919dddd616538b92bd40433f5131"
+    },
+    {
+      "id": "analysis-source-738c3b992742781dd840ffe58baa42b73a51678a8aa47e8af9a9750a7a681950",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 380,
+        "end": 399,
+        "text": "count <= count - 1;"
+      },
+      "text": "count <= count - 1;",
+      "sliceHash": "16bfa98c3aecf662692579a547cd24c02267919dddd616538b92bd40433f5131"
+    },
+    {
+      "id": "analysis-source-5157150de7dccbcb4ac688bce2a3a145ac95b87975e7cf20d91f8591124ac87d",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 448,
+        "end": 467,
+        "text": "count <= count + 2;"
+      },
+      "text": "count <= count + 2;",
+      "sliceHash": "aa0cea14441cadc1ea4e5c5a046f857ac5e36a1d201d4c59113b8e2b6ef0a880"
+    },
+    {
+      "id": "analysis-source-1d585eecfd2a8dbe5991a4ebd3374f0f6593a9b49aa92ca87d30b29854ea2c89",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "rule",
+      "semanticId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 414,
+        "end": 478,
+        "text": "rule increment (count < 8);\n      count <= count + 2;\n   endrule"
+      },
+      "text": "rule increment (count < 8);\n      count <= count + 2;\n   endrule",
+      "sliceHash": "8fe0b262ad87a2cdb1b550bc55b3fbdb2534d591faab670573ea0c6e3c5b0bde"
+    },
+    {
+      "id": "analysis-source-4db369a178600d723dfdb616a3ec89583485d4103ad1c064e38f3ba4f16ec5d5",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "state-assignment",
+      "semanticId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 448,
+        "end": 467,
+        "text": "count <= count + 2;"
+      },
+      "text": "count <= count + 2;",
+      "sliceHash": "aa0cea14441cadc1ea4e5c5a046f857ac5e36a1d201d4c59113b8e2b6ef0a880"
+    },
+    {
+      "id": "analysis-source-aeb0f60b1358070db883600f8d670abdc4cf1f8f248afaa519676caa505b0dd9",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 448,
+        "end": 467,
+        "text": "count <= count + 2;"
+      },
+      "text": "count <= count + 2;",
+      "sliceHash": "aa0cea14441cadc1ea4e5c5a046f857ac5e36a1d201d4c59113b8e2b6ef0a880"
+    },
+    {
+      "id": "analysis-source-4731b8a80ef3693b5a78437e977eb95c6d7f21d02ed93fbfaedb53cce46150d9",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 541,
+        "end": 556,
+        "text": "count <= value;"
+      },
+      "text": "count <= value;",
+      "sliceHash": "a5ce7912b5a92818a1bb6474f03bdfe74aca25513f69403f8cd25f5ce4ca08cc"
+    },
+    {
+      "id": "analysis-source-74820a42b44798726fa4f93c2bca7d42d4a235a7cdf28665943fef4eb697e79f",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "method",
+      "semanticId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 483,
+        "end": 569,
+        "text": "method Action inject(Bit#(8) value) if (count < 4);\n      count <= value;\n   endmethod"
+      },
+      "text": "method Action inject(Bit#(8) value) if (count < 4);\n      count <= value;\n   endmethod",
+      "sliceHash": "2ccf26bdfc2909bab9321e76064b89349d5440dac3e7a3c80f3d53e809900129"
+    },
+    {
+      "id": "analysis-source-1a8fc7c00534f6d2e2593254a9c85479482cdf63d72c80cbac720e910dc8b6e5",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "state-assignment",
+      "semanticId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 541,
+        "end": 556,
+        "text": "count <= value;"
+      },
+      "text": "count <= value;",
+      "sliceHash": "a5ce7912b5a92818a1bb6474f03bdfe74aca25513f69403f8cd25f5ce4ca08cc"
+    },
+    {
+      "id": "analysis-source-540917bc5a78491764673b4124d869be4b37f97433cb9fc27c38c623eb067ae0",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 497,
+        "end": 503,
+        "text": "inject"
+      },
+      "text": "inject",
+      "sliceHash": "e6f2ad814692e3f553d63a5535bfef46c030a680e6c3e79ee850dfcf5ae7798a"
+    },
+    {
+      "id": "analysis-source-293e1f2c029a4e26b902c97fe48baed6b7117c868e70d5b68f696d1659fd7f8f",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "behavior-access",
+      "semanticId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 595,
+        "end": 601,
+        "text": "count;"
+      },
+      "text": "count;",
+      "sliceHash": "141f7b78978cdc50bc3633b981a8367de1ac271cac91eaf518224f1cdf4b7608"
+    },
+    {
+      "id": "analysis-source-0efd10847673293662420f53e939245405bc20fcaa20465a200df660fd71ef42",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "method",
+      "semanticId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 573,
+        "end": 601,
+        "text": "method Bit#(8) read = count;"
+      },
+      "text": "method Bit#(8) read = count;",
+      "sliceHash": "d1fd809e354596c43187e531256d4d570cfde419f66316ebdebfbff1826dfe75"
+    },
+    {
+      "id": "analysis-source-097c4f841d6da00c12852c1a2cfb07ea04301f9babc9a9eee453d1fe27eef47d",
+      "pathRef": "experiments/hardware/fixtures/Control.bsv",
+      "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+      "sourceKind": "unsupported",
+      "semanticId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "occurrenceId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5/occurrence/%5B%22mkControl%22%5D",
+      "range": {
+        "start": 595,
+        "end": 601,
+        "text": "count;"
+      },
+      "text": "count;",
+      "sliceHash": "141f7b78978cdc50bc3633b981a8367de1ac271cac91eaf518224f1cdf4b7608"
+    }
+  ],
+  "evidenceRefs": [],
+  "candidates": [],
+  "limits": {
+    "maxBits": 4096,
+    "maxPins": 8192,
+    "maxCells": 512,
+    "maxEdges": 16384,
+    "maxHierarchyDepth": 64,
+    "maxResultBytes": 4194304,
+    "timeoutMs": 30000,
+    "stopReasons": []
+  },
+  "code": {
+    "sourceMode": "build",
+    "freshness": {
+      "status": "current",
+      "documents": [
+        {
+          "pathRef": "experiments/hardware/fixtures/Control.bsv",
+          "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+          "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+          "status": "current",
+          "currentHash": null
+        }
+      ]
+    },
+    "entity": {
+      "name": "count",
+      "type": "Reg#(Bit#(8))",
+      "declaredType": "Reg#(Bit#(8))",
+      "constructor": "mkReg",
+      "constructorExpression": "mkReg(0)",
+      "staticArguments": [],
+      "arguments": [
+        "0"
+      ],
+      "specialization": null,
+      "multiplicity": null,
+      "primitiveKind": "register",
+      "signature": "Reg#(Bit#(8)) count <- mkReg(0);",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 9,
+        "column": 17,
+        "endLine": 9,
+        "endColumn": 22
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 8,
+        "column": 26,
+        "endLine": 9,
+        "endColumn": 35
+      },
+      "range": {
+        "start": 158,
+        "end": 194
+      },
+      "id": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+      "kind": "instance-occurrence",
+      "path": "mkControl.count",
+      "parentInstanceId": "instance:def:Control:mkControl:mkControl",
+      "targetDefinitionId": null,
+      "targetResolutionStatus": "unresolved",
+      "root": false,
+      "synthetic": false,
+      "expansionStatus": "unresolved",
+      "parameterBindings": [],
+      "analysisOrigin": "Source-derived",
+      "confidence": "unresolved",
+      "evidence": "Reg#(Bit#(8)) count <- mkReg(0);"
+    },
+    "owner": {
+      "id": "instance:def:Control:mkControl:mkControl",
+      "kind": "instance-occurrence",
+      "name": "mkControl",
+      "path": "mkControl",
+      "parentInstanceId": null,
+      "targetDefinitionId": "def:Control:mkControl",
+      "targetResolutionStatus": "exact",
+      "packageName": "Control",
+      "declaredType": "Control",
+      "constructor": null,
+      "constructorExpression": null,
+      "staticArguments": [],
+      "arguments": [],
+      "multiplicity": {
+        "status": "exact",
+        "count": 1,
+        "expression": "1"
+      },
+      "root": true,
+      "rootReason": "configured",
+      "rootStatus": "unbound",
+      "synthetic": true,
+      "expansionStatus": "expanded",
+      "parameterBindings": [],
+      "location": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 8,
+        "column": 7,
+        "endLine": 8,
+        "endColumn": 16
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 8,
+        "column": 0,
+        "endLine": 27,
+        "endColumn": 9
+      },
+      "analysisOrigin": "Source-derived root projection",
+      "evidence": {
+        "selectionReason": "configured",
+        "path": "mkControl",
+        "targetDefinitionId": "def:Control:mkControl"
+      },
+      "confidence": "exact"
+    },
+    "storage": {
+      "id": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+      "kind": "storage",
+      "label": "count",
+      "secondaryLabel": "Reg#(Bit#(8))",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "definitionId": "def:Control:mkControl.state-declaration.count",
+      "sourceRefs": [
+        {
+          "id": "scene-source-31a351e3079d5ea77c8cacafb77a93217af8a62d0ccc603f218e0a45c55e2a2a",
+          "pathRef": "experiments/hardware/fixtures/Control.bsv",
+          "revision": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+          "contentHash": "06848bfa898d793204cff034b2dd9497e7ab2658d07103ef06d6703e69b1de0b",
+          "semanticId": "def:Control:mkControl.state-declaration.count",
+          "sourceKind": "state-declaration",
+          "range": {
+            "start": 158,
+            "end": 194
+          },
+          "text": "\n   Reg#(Bit#(8)) count <- mkReg(0);",
+          "sliceHash": "eeba7ac3566bc57cdd077e23317e06814ca1876b917ef57900ff19bc19c34347"
+        }
+      ],
+      "semanticRefs": [
+        "instance:instance:def:Control:mkControl:mkControl:mkControl.count"
+      ],
+      "interaction": {
+        "kind": "inspect",
+        "entityId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count"
+      },
+      "status": "source-derived",
+      "path": "mkControl.count",
+      "parentInstanceId": "instance:def:Control:mkControl:mkControl",
+      "declaredType": "Reg#(Bit#(8))",
+      "constructor": "mkReg",
+      "defaultExpressions": [
+        "0"
+      ],
+      "parameterBindings": [],
+      "primitiveKind": "register",
+      "readers": [
+        {
+          "id": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+          "label": "decrement",
+          "kind": "rule"
+        },
+        {
+          "id": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+          "label": "increment",
+          "kind": "rule"
+        },
+        {
+          "id": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+          "label": "inject",
+          "kind": "method"
+        },
+        {
+          "id": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+          "label": "read",
+          "kind": "method"
+        }
+      ],
+      "writers": [
+        {
+          "id": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+          "label": "decrement",
+          "kind": "rule"
+        },
+        {
+          "id": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+          "label": "increment",
+          "kind": "rule"
+        },
+        {
+          "id": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+          "label": "inject",
+          "kind": "method"
+        }
+      ]
+    },
+    "behavior": null,
+    "functionDefinition": null,
+    "statements": [],
+    "expressions": [],
+    "bindings": [
+      {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count - 1;",
+        "sourceText": "count <= count - 1;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "decrement",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 18,
+          "classification": "register-write",
+          "snippet": "count <= count - 1;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:0",
+            "text": "count <= count - 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      },
+      {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:1",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count - 1;",
+        "sourceText": "count <= count - 1;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 6,
+          "endLine": 17,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "decrement",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 18,
+          "classification": "register-read",
+          "snippet": "count <= count - 1;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:1",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:decrement:access:1",
+            "text": "count <= count - 1;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 15,
+              "endLine": 17,
+              "endColumn": 20
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 17,
+              "column": 6,
+              "endLine": 17,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 17,
+          "column": 15,
+          "endLine": 17,
+          "endColumn": 20
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      },
+      {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count + 2;",
+        "sourceText": "count <= count + 2;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "increment",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 21,
+          "classification": "register-write",
+          "snippet": "count <= count + 2;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:0",
+            "text": "count <= count + 2;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      },
+      {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:1",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= count + 2;",
+        "sourceText": "count <= count + 2;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 6,
+          "endLine": 20,
+          "endColumn": 25
+        },
+        "evidence": {
+          "callable": "increment",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 21,
+          "classification": "register-read",
+          "snippet": "count <= count + 2;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:rule:increment:1",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:rule:increment:access:1",
+            "text": "count <= count + 2;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 15,
+              "endLine": 20,
+              "endColumn": 20
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 20,
+              "column": 6,
+              "endLine": 20,
+              "endColumn": 25
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 20,
+          "column": 15,
+          "endLine": 20,
+          "endColumn": 20
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      },
+      {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "write",
+        "operation": "register-write",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count <= value;",
+        "sourceText": "count <= value;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 24,
+          "column": 6,
+          "endLine": 24,
+          "endColumn": 21
+        },
+        "evidence": {
+          "callable": "inject",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 25,
+          "classification": "register-write",
+          "snippet": "count <= value;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:0",
+            "text": "count <= value;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 24,
+              "column": 6,
+              "endLine": 24,
+              "endColumn": 11
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 24,
+              "column": 6,
+              "endLine": 24,
+              "endColumn": 21
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 24,
+          "column": 6,
+          "endLine": 24,
+          "endColumn": 11
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      },
+      {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:1",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "state-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": null,
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "method Action inject(Bit#(8) value) if (count < 4);",
+        "sourceText": "method Action inject(Bit#(8) value) if (count < 4);",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 23,
+          "column": 17,
+          "endLine": 23,
+          "endColumn": 23
+        },
+        "evidence": {
+          "callable": "inject",
+          "referencedInstance": "count"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:inject:1",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:inject:access:1",
+            "text": "method Action inject(Bit#(8) value) if (count < 4);",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 23,
+              "column": 17,
+              "endLine": 23,
+              "endColumn": 23
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 23,
+              "column": 17,
+              "endLine": 23,
+              "endColumn": 23
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 23,
+          "column": 17,
+          "endLine": 23,
+          "endColumn": 23
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      },
+      {
+        "id": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+        "callSiteId": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:read:0",
+        "kind": "behavior-access",
+        "behaviorId": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+        "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+        "targetInstanceId": "instance:instance:def:Control:mkControl:mkControl:mkControl.count",
+        "endpointId": null,
+        "accessKind": "read",
+        "operation": "register-read",
+        "memberPath": null,
+        "arguments": [],
+        "resultBinding": null,
+        "valueBinding": null,
+        "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+        "pathConditionExpressionIds": [],
+        "resolutionStatus": "exact",
+        "sourceEvidence": "count;",
+        "sourceText": "count;",
+        "sourceRange": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 26,
+          "column": 25,
+          "endLine": 26,
+          "endColumn": 31
+        },
+        "evidence": {
+          "callable": "read",
+          "referencedInstance": "count",
+          "invokedMember": null,
+          "statementLine": 27,
+          "classification": "register-read",
+          "snippet": "count;"
+        },
+        "evidenceRefs": [
+          {
+            "kind": "call-site",
+            "id": "callsite:behavior:instance:def:Control:mkControl:mkControl:method:read:0",
+            "bindingId": "binding:behavior:instance:def:Control:mkControl:mkControl:method:read:access:0",
+            "text": "count;",
+            "location": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 26,
+              "column": 25,
+              "endLine": 26,
+              "endColumn": 30
+            },
+            "sourceRange": {
+              "uri": "experiments/hardware/fixtures/Control.bsv",
+              "line": 26,
+              "column": 25,
+              "endLine": 26,
+              "endColumn": 31
+            }
+          }
+        ],
+        "location": {
+          "uri": "experiments/hardware/fixtures/Control.bsv",
+          "line": 26,
+          "column": 25,
+          "endLine": 26,
+          "endColumn": 30
+        },
+        "analysisOrigin": "Source-derived",
+        "confidence": "explicit"
+      }
+    ],
+    "dependencies": [],
+    "assertions": [],
+    "stateEffects": [],
+    "readiness": {
+      "status": "not-attached",
+      "evidence": []
+    },
+    "scheduling": {
+      "compiler": {
+        "status": "not-attached",
+        "relations": []
+      },
+      "sourceRelations": [],
+      "potentialDependencies": []
+    },
+    "limitations": []
+  },
+  "conditions": {
+    "predicate": null,
+    "body": []
+  },
+  "callMappings": [],
+  "readers": [
+    {
+      "id": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+      "name": "decrement",
+      "interfacePath": [],
+      "kind": "rule",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "definitionId": "def:Control:mkControl.rule.decrement",
+      "category": "unknown",
+      "returnType": null,
+      "guard": "count > 0 && phase",
+      "reads": [
+        "count",
+        "phase"
+      ],
+      "writes": [
+        "count"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "invocations": [],
+      "predicateExpressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:358",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:362",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:366:371",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:371",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:394",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:397:398",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:398"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "count",
+          "effect": "write",
+          "operation": "register-write",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= count - 1;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 17,
+            "column": 6,
+            "endLine": 17,
+            "endColumn": 11
+          }
+        },
+        {
+          "state": "count",
+          "effect": "read",
+          "operation": "register-read",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= count - 1;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 17,
+            "column": 15,
+            "endLine": 17,
+            "endColumn": 20
+          }
+        }
+      ],
+      "summary": "Updates count.",
+      "protocolMembership": [],
+      "evidence": [
+        "rule decrement (count > 0 && phase);",
+        "count <= count - 1;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 16,
+        "column": 8,
+        "endLine": 16,
+        "endColumn": 17
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 16,
+        "column": 3,
+        "endLine": 18,
+        "endColumn": 10
+      }
+    },
+    {
+      "id": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+      "name": "increment",
+      "interfacePath": [],
+      "kind": "rule",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "definitionId": "def:Control:mkControl.rule.increment",
+      "category": "unknown",
+      "returnType": null,
+      "guard": "count < 8",
+      "reads": [
+        "count"
+      ],
+      "writes": [
+        "count"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "invocations": [],
+      "predicateExpressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:435",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:438:439",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:462",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:465:466",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:466"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "count",
+          "effect": "write",
+          "operation": "register-write",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= count + 2;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 20,
+            "column": 6,
+            "endLine": 20,
+            "endColumn": 11
+          }
+        },
+        {
+          "state": "count",
+          "effect": "read",
+          "operation": "register-read",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= count + 2;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 20,
+            "column": 15,
+            "endLine": 20,
+            "endColumn": 20
+          }
+        }
+      ],
+      "summary": "Updates count.",
+      "protocolMembership": [],
+      "evidence": [
+        "rule increment (count < 8);",
+        "count <= count + 2;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 19,
+        "column": 8,
+        "endLine": 19,
+        "endColumn": 17
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 19,
+        "column": 3,
+        "endLine": 21,
+        "endColumn": 10
+      }
+    },
+    {
+      "id": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+      "name": "inject",
+      "interfacePath": [],
+      "kind": "method",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "definitionId": "def:Control:mkControl.inject",
+      "category": "action",
+      "returnType": "Action",
+      "guard": "count < 4",
+      "reads": [
+        "count"
+      ],
+      "writes": [
+        "count"
+      ],
+      "inputs": [
+        {
+          "name": "value",
+          "type": "Bit#(8)"
+        }
+      ],
+      "outputs": [],
+      "invocations": [],
+      "predicateExpressionId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:528",
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:531:532",
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:550:555"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "count",
+          "effect": "write",
+          "operation": "register-write",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= value;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 24,
+            "column": 6,
+            "endLine": 24,
+            "endColumn": 11
+          }
+        }
+      ],
+      "summary": "Updates count.",
+      "protocolMembership": [],
+      "evidence": [
+        "method Action inject(Bit#(8) value) if (count < 4);",
+        "count <= value;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 23,
+        "column": 17,
+        "endLine": 23,
+        "endColumn": 23
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 23,
+        "column": 3,
+        "endLine": 25,
+        "endColumn": 12
+      }
+    },
+    {
+      "id": "behavior:instance:def:Control:mkControl:mkControl:method:read",
+      "name": "read",
+      "interfacePath": [],
+      "kind": "method",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "definitionId": "def:Control:mkControl.read",
+      "category": "value",
+      "returnType": "Bit#(8)",
+      "guard": "",
+      "reads": [
+        "count"
+      ],
+      "writes": [],
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "Bit#(8)"
+        }
+      ],
+      "invocations": [],
+      "predicateExpressionId": null,
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:method:read:573:expression:595:600"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "count",
+          "effect": "read",
+          "operation": "register-read",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:read:573:statement:595",
+          "pathConditionExpressionIds": [],
+          "evidence": "count;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 26,
+            "column": 25,
+            "endLine": 26,
+            "endColumn": 30
+          }
+        }
+      ],
+      "summary": "Method read.",
+      "protocolMembership": [],
+      "evidence": [
+        "method Bit#(8) read = count;",
+        "count;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 26,
+        "column": 18,
+        "endLine": 26,
+        "endColumn": 22
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 26,
+        "column": 3,
+        "endLine": 26,
+        "endColumn": 31
+      }
+    }
+  ],
+  "writers": [
+    {
+      "id": "behavior:instance:def:Control:mkControl:mkControl:rule:decrement",
+      "name": "decrement",
+      "interfacePath": [],
+      "kind": "rule",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "definitionId": "def:Control:mkControl.rule.decrement",
+      "category": "unknown",
+      "returnType": null,
+      "guard": "count > 0 && phase",
+      "reads": [
+        "count",
+        "phase"
+      ],
+      "writes": [
+        "count"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "invocations": [],
+      "predicateExpressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:358",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:362",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:366:371",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:361:371",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:353:371",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:394",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:397:398",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:expression:389:398"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "count",
+          "effect": "write",
+          "operation": "register-write",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= count - 1;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 17,
+            "column": 6,
+            "endLine": 17,
+            "endColumn": 11
+          }
+        },
+        {
+          "state": "count",
+          "effect": "read",
+          "operation": "register-read",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:decrement:337:statement:380",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= count - 1;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 17,
+            "column": 15,
+            "endLine": 17,
+            "endColumn": 20
+          }
+        }
+      ],
+      "summary": "Updates count.",
+      "protocolMembership": [],
+      "evidence": [
+        "rule decrement (count > 0 && phase);",
+        "count <= count - 1;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 16,
+        "column": 8,
+        "endLine": 16,
+        "endColumn": 17
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 16,
+        "column": 3,
+        "endLine": 18,
+        "endColumn": 10
+      }
+    },
+    {
+      "id": "behavior:instance:def:Control:mkControl:mkControl:rule:increment",
+      "name": "increment",
+      "interfacePath": [],
+      "kind": "rule",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "definitionId": "def:Control:mkControl.rule.increment",
+      "category": "unknown",
+      "returnType": null,
+      "guard": "count < 8",
+      "reads": [
+        "count"
+      ],
+      "writes": [
+        "count"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "invocations": [],
+      "predicateExpressionId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:435",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:438:439",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:430:439",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:462",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:465:466",
+        "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:expression:457:466"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "count",
+          "effect": "write",
+          "operation": "register-write",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= count + 2;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 20,
+            "column": 6,
+            "endLine": 20,
+            "endColumn": 11
+          }
+        },
+        {
+          "state": "count",
+          "effect": "read",
+          "operation": "register-read",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:rule:increment:414:statement:448",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= count + 2;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 20,
+            "column": 15,
+            "endLine": 20,
+            "endColumn": 20
+          }
+        }
+      ],
+      "summary": "Updates count.",
+      "protocolMembership": [],
+      "evidence": [
+        "rule increment (count < 8);",
+        "count <= count + 2;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 19,
+        "column": 8,
+        "endLine": 19,
+        "endColumn": 17
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 19,
+        "column": 3,
+        "endLine": 21,
+        "endColumn": 10
+      }
+    },
+    {
+      "id": "behavior:instance:def:Control:mkControl:mkControl:method:inject",
+      "name": "inject",
+      "interfacePath": [],
+      "kind": "method",
+      "ownerInstanceId": "instance:def:Control:mkControl:mkControl",
+      "definitionId": "def:Control:mkControl.inject",
+      "category": "action",
+      "returnType": "Action",
+      "guard": "count < 4",
+      "reads": [
+        "count"
+      ],
+      "writes": [
+        "count"
+      ],
+      "inputs": [
+        {
+          "name": "value",
+          "type": "Bit#(8)"
+        }
+      ],
+      "outputs": [],
+      "invocations": [],
+      "predicateExpressionId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+      "statementIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541"
+      ],
+      "expressionIds": [
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:528",
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:531:532",
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:523:532",
+        "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:expression:550:555"
+      ],
+      "callSiteIds": [],
+      "transitions": [
+        {
+          "state": "count",
+          "effect": "write",
+          "operation": "register-write",
+          "statementId": "code:experiments/hardware/fixtures/Control.bsv:method:inject:483:statement:541",
+          "pathConditionExpressionIds": [],
+          "evidence": "count <= value;",
+          "location": {
+            "uri": "experiments/hardware/fixtures/Control.bsv",
+            "line": 24,
+            "column": 6,
+            "endLine": 24,
+            "endColumn": 11
+          }
+        }
+      ],
+      "summary": "Updates count.",
+      "protocolMembership": [],
+      "evidence": [
+        "method Action inject(Bit#(8) value) if (count < 4);",
+        "count <= value;"
+      ],
+      "origin": "Source-derived",
+      "analysisOrigin": "Source-derived",
+      "confidence": "explicit",
+      "location": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 23,
+        "column": 17,
+        "endLine": 23,
+        "endColumn": 23
+      },
+      "sourceRange": {
+        "uri": "experiments/hardware/fixtures/Control.bsv",
+        "line": 23,
+        "column": 3,
+        "endLine": 25,
+        "endColumn": 12
+      }
+    }
+  ],
+  "id": "analysis-result-68df88b7a60604987b800838a5d4cfc5bd54d803e51d32b259996bf5452d74bc",
+  "request": {
+    "queryGeneration": 1,
+    "snapshotId": "hw-9eacc81491504a81fe479b309c1e5d52b7c094925f15b9a104bb37fe8b1c72c5"
+  },
+  "metrics": {
+    "execution": "host",
+    "recordsVisited": 17,
+    "elapsedMs": 1.3453329999999823,
+    "resultBytes": 100048
+  }
+}

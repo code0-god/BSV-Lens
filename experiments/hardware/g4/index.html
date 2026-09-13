@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Inspect BSV hardware hierarchy, source relations and verified RTL implementation evidence.">
+    <title>BSV Lens - Hardware Architecture</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/hardware.css">
+    <script defer src="/hardware-navigation.js"></script>
+    <script defer src="/hardware-layout.js"></script>
+    <script defer src="/hardware-readability.js"></script>
+    <script defer src="/hardware-analysis.js"></script>
+    <script defer src="/hardware-inspector.js"></script>
+    <script defer src="/hardware-view.js"></script>
+</head>
+<body>
+    <header class="app-header">
+        <div class="product"><strong>BSV Lens</strong><span>Hardware / G4</span></div>
+        <label>Build <select id="build-select" aria-label="Compiled build"></select></label>
+        <label>Theme <select id="theme-select" aria-label="Color theme">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="high-contrast">High contrast</option>
+        </select></label>
+        <span class="review-state">Design review candidate</span>
+    </header>
+    <nav class="navigation" aria-label="Hardware navigation">
+        <div class="control-group">
+            <button id="back" title="Previous analysis visit (Alt+Left)" disabled>Back</button>
+            <button id="forward" title="Next analysis visit (Alt+Right)" disabled>Forward</button>
+            <button id="up" title="Actual hierarchy parent" disabled>Up</button>
+            <button id="return-bsv" hidden>Return BSV</button>
+        </div>
+        <div id="breadcrumb" class="breadcrumb" aria-label="BSV occurrence path"></div>
+        <div class="control-group implementation-controls">
+            <label>Implementation <select id="provider-select" aria-label="Implementation provider">
+                <option value="instrumented">Instrumented capture</option>
+                <option value="stock">Stock metadata</option>
+            </select></label>
+            <button id="rtl">View RTL Implementation</button>
+            <button id="fit" title="Show the complete current topology; fold supplementary labels">Fit structure</button>
+            <button id="fit-selection" title="Read the selected object and local relationships; other structure may remain outside the viewport" disabled>Fit selection</button>
+            <button id="toggle-inspector" aria-controls="inspector" aria-expanded="true">Hide Inspector</button>
+            <button id="export-svg" title="Export complete validated scene and connection metadata">Export SVG</button>
+        </div>
+    </nav>
+    <section class="scene-header" aria-label="Current hardware scene">
+        <h1 id="scene-title">BSV Architecture</h1>
+        <span id="scene-path"></span>
+        <nav id="source-breadcrumb" class="breadcrumb" aria-label="Return to BSV source occurrence" hidden></nav>
+        <span id="provider-status"></span>
+        <span id="readability-context" data-readability-context></span>
+    </section>
+    <main class="workspace">
+        <section id="canvas" class="canvas" aria-label="Hardware schematic">
+            <svg id="viewport" role="group" aria-label="Interactive hardware scene">
+                <defs>
+                    <marker id="semantic-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+                        <path d="M1,1 L7,4 L1,7" fill="none" class="arrow"/>
+                    </marker>
+                </defs>
+                <g id="world">
+                    <g id="connections-layer"></g>
+                    <g id="shells-layer"></g>
+                    <g id="contacts-layer"></g>
+                </g>
+            </svg>
+            <div id="canvas-message" class="canvas-message" role="status">Loading registered compiled evidence...</div>
+            <div id="wire-tooltip" class="wire-tooltip" role="tooltip" hidden></div>
+            <div id="wire-choices" class="wire-choices" role="dialog" aria-label="Choose connection" hidden></div>
+            <div class="canvas-help"><span id="display-status"></span><span id="canvas-instructions">Click module to enter. Select objects for full names. Wheel zooms; drag pans.</span></div>
+        </section>
+        <aside id="inspector" class="inspector" aria-label="Hardware details">
+            <div class="inspector-heading">
+                <h2 id="selection-title">Hardware details</h2>
+                <button id="clear-selection" title="Clear selection (Escape)" aria-label="Clear selection">Clear</button>
+            </div>
+            <div id="inspector-content"></div>
+            <details id="capability-panel" class="capability-panel">
+                <summary>Providers and capabilities</summary>
+                <div id="capability-content"></div>
+            </details>
+        </aside>
+    </main>
+    <footer class="status-bar">
+        <span id="status" role="status" aria-live="polite">Reading captured build</span>
+        <div class="legend" aria-label="Connection legend">
+            <span><i class="line-sample semantic"></i>BSV relation</span>
+            <span><i class="line-sample physical"></i>RTL net</span>
+            <span><i class="origin-sample"></i>Partial origin</span>
+            <span>Dot = junction; crossing without dot = separate</span>
+        </div>
+    </footer>
+</body>
+</html>

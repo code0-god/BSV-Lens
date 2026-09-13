@@ -1,0 +1,260 @@
+{
+  "schema": "g5-core-query-fixture-v1",
+  "sourceIndexSha256": "43ef60dd6a4e657c7639553318331a5800d6e169b7da2bb9191b526e1125b057",
+  "files": [
+    {
+      "path": "queries/A-dependencies.receipt.json",
+      "bytes": 100764,
+      "sha256": "c4db141134b128462acac3e4f606690452638516f748153959d779b2a3c26295"
+    },
+    {
+      "path": "queries/A-dependencies.request.json",
+      "bytes": 878,
+      "sha256": "ca109407bedc81b1d38eddb840f8f64187a0db95aa7457847483672fd16f323d"
+    },
+    {
+      "path": "queries/A-dependencies.result.json",
+      "bytes": 93444,
+      "sha256": "59e52ccd73e83849af8c5922e88c4c414e2929b8416de62ae9174ab12551442d"
+    },
+    {
+      "path": "queries/A-drivers-loads.receipt.json",
+      "bytes": 123228,
+      "sha256": "eb3aae5075c66a2bc3776b98d3e9063e11d00638909f98c52d9854ae10c4b707"
+    },
+    {
+      "path": "queries/A-drivers-loads.request.json",
+      "bytes": 802,
+      "sha256": "a43ee2e418bf516da5a5106620a85b03480d4117fa8bae1927bf2027f3d0fe8b"
+    },
+    {
+      "path": "queries/A-drivers-loads.result.json",
+      "bytes": 114683,
+      "sha256": "6020155a56f492c6cec5bcb4eb9f88cd996a542f879d939ac03409a92deb14fb"
+    },
+    {
+      "path": "queries/A-same-net.receipt.json",
+      "bytes": 123218,
+      "sha256": "c58fc877cc7d701c14c24ba4d5b71a3da8658e2bd08feab2dee125cfb5b843ef"
+    },
+    {
+      "path": "queries/A-same-net.request.json",
+      "bytes": 797,
+      "sha256": "07747fd7a1e7e28e46d6a0acde9b4af01339f08a159853741157b9a70a9f2087"
+    },
+    {
+      "path": "queries/A-same-net.result.json",
+      "bytes": 114678,
+      "sha256": "be67ef3eb305875e930ea4f64b39a4a0da39b4c5926928ec61a1ddb284c7c379"
+    },
+    {
+      "path": "queries/A-state-accesses.receipt.json",
+      "bytes": 60694,
+      "sha256": "2b480dc38819cc30eefd1c13d9fdfb03e2e4d00d61b1972349cdc6932989413f"
+    },
+    {
+      "path": "queries/A-state-accesses.request.json",
+      "bytes": 829,
+      "sha256": "52e6baddb395aa4dbf8503ade7f3fe9bb73c5e0256bb8bf5742242bcc0d44384"
+    },
+    {
+      "path": "queries/A-state-accesses.result.json",
+      "bytes": 55220,
+      "sha256": "2a899926362148922f5151d373bbde2c5ae9bdb7f7e2354263f044289ab94147"
+    },
+    {
+      "path": "queries/B-dependencies.receipt.json",
+      "bytes": 36972,
+      "sha256": "71f72fb939b7db908a3b7c7d4f7d7b954a6c7c1694ec65904008ffc5d5bea75a"
+    },
+    {
+      "path": "queries/B-dependencies.request.json",
+      "bytes": 881,
+      "sha256": "a8ecbb67f0183ac46ec0e62af4ae1ec1760418451e5c6ebdb3455d534ae745e8"
+    },
+    {
+      "path": "queries/B-dependencies.result.json",
+      "bytes": 33808,
+      "sha256": "da1473662b5074de321f1422c9504228f4ad8ad15e44a6bfe8464c8bcda17c4c"
+    },
+    {
+      "path": "queries/B-drivers-loads.receipt.json",
+      "bytes": 44211,
+      "sha256": "ac96a818999d1daf3bac3189087d92aa332598befcfd8d5a99ff0dfd563c4537"
+    },
+    {
+      "path": "queries/B-drivers-loads.request.json",
+      "bytes": 805,
+      "sha256": "37fb41615132b6f55d62a5d94951758c8b3e79d4bd1394edcf8111d8d73d9d93"
+    },
+    {
+      "path": "queries/B-drivers-loads.result.json",
+      "bytes": 40621,
+      "sha256": "c1d17b00a9e843f18e45a8c50a38a99ddcb2bfba8faabba71eb4ae74d589c4b5"
+    },
+    {
+      "path": "queries/B-same-net.receipt.json",
+      "bytes": 44193,
+      "sha256": "549873b09a95b6567ac15e44e289fec0fd1ac805933c766dbb49b3de5b682022"
+    },
+    {
+      "path": "queries/B-same-net.request.json",
+      "bytes": 800,
+      "sha256": "0c485389a39ae4a67d9677baca5f97fdca0c6dd83492aa65386b8bc1e033d6ec"
+    },
+    {
+      "path": "queries/B-same-net.result.json",
+      "bytes": 40608,
+      "sha256": "29ff3ede54ac83caaea86cdc08fdf1b8a7b0b94cef24c99f9df8a792cb1aa845"
+    },
+    {
+      "path": "queries/B-state-accesses.receipt.json",
+      "bytes": 147629,
+      "sha256": "4ba0cd8e8bb1748a5af83e7631ef504fb3b12d50a2121888f39f41105be1842f"
+    },
+    {
+      "path": "queries/B-state-accesses.request.json",
+      "bytes": 741,
+      "sha256": "7ccee7b75bfc4569d6a68308124fb8ea6d384f3c0723439498f427847e56f42a"
+    },
+    {
+      "path": "queries/B-state-accesses.result.json",
+      "bytes": 134949,
+      "sha256": "bdd5770f48ab8c9fce95aabf8f67f947401c4a457e78ee3bf315d3606412cd10"
+    },
+    {
+      "path": "queries/C-dependencies.receipt.json",
+      "bytes": 825603,
+      "sha256": "a7cf16437fa4f979034853429da9037e3b82966e103b0092f427b678bc357d57"
+    },
+    {
+      "path": "queries/C-dependencies.request.json",
+      "bytes": 866,
+      "sha256": "06cec272193413faddf26172f4d2d3d7c5d5d17f4c9f7e2cd321277f1ef7c3a4"
+    },
+    {
+      "path": "queries/C-dependencies.result.json",
+      "bytes": 774532,
+      "sha256": "2eced57e1db9e46333d52ef95f3742284062dbdf1b86a734e0f1422c45f2879f"
+    },
+    {
+      "path": "queries/C-drivers-loads.receipt.json",
+      "bytes": 54896,
+      "sha256": "57d4a493da8077effe9cbabe19cb83070441ca9ed7de349c2d3b424580f6f201"
+    },
+    {
+      "path": "queries/C-drivers-loads.request.json",
+      "bytes": 790,
+      "sha256": "d669b53a4c45152217734969a08b7e7e42b23a804ba1d6c3d8a21b3ff881fe44"
+    },
+    {
+      "path": "queries/C-drivers-loads.result.json",
+      "bytes": 50711,
+      "sha256": "4e278f247f444b62a9dc06b19fdef0aea6be012cf85dff9026b25c1e85da2523"
+    },
+    {
+      "path": "queries/C-same-net.receipt.json",
+      "bytes": 54885,
+      "sha256": "6a3b752f1e285651aea318c644d2919f63b562518961c7cc6370d4574e4c5083"
+    },
+    {
+      "path": "queries/C-same-net.request.json",
+      "bytes": 785,
+      "sha256": "fd5153bb4c48e7d0acabb4501f4fd530053eba391ed65c215c018ece1d1bfddb"
+    },
+    {
+      "path": "queries/C-same-net.result.json",
+      "bytes": 50705,
+      "sha256": "a24ea07e7dddbf47fa01a18a1a3c2eac06dc139268f975e1628847231780b099"
+    },
+    {
+      "path": "queries/C-state-accesses.receipt.json",
+      "bytes": 58980,
+      "sha256": "9931aaa93d7340b648951fd80d58e3c1ee170445c9e28009a7c58e2cdaf4a0db"
+    },
+    {
+      "path": "queries/C-state-accesses.request.json",
+      "bytes": 785,
+      "sha256": "471b804656d6685a707d8bbe1c7cc2265bea6d2ab00d31aaaea8c3845d55b082"
+    },
+    {
+      "path": "queries/C-state-accesses.result.json",
+      "bytes": 53456,
+      "sha256": "b694f6dca2be8bf3fec498347aabaa908a8496229c435f6996d664d5f03c087c"
+    }
+  ],
+  "queries": [
+    {
+      "buildId": "A",
+      "request": "queries/A-same-net.request.json",
+      "result": "queries/A-same-net.result.json",
+      "receipt": "queries/A-same-net.receipt.json"
+    },
+    {
+      "buildId": "A",
+      "request": "queries/A-drivers-loads.request.json",
+      "result": "queries/A-drivers-loads.result.json",
+      "receipt": "queries/A-drivers-loads.receipt.json"
+    },
+    {
+      "buildId": "A",
+      "request": "queries/A-dependencies.request.json",
+      "result": "queries/A-dependencies.result.json",
+      "receipt": "queries/A-dependencies.receipt.json"
+    },
+    {
+      "buildId": "A",
+      "request": "queries/A-state-accesses.request.json",
+      "result": "queries/A-state-accesses.result.json",
+      "receipt": "queries/A-state-accesses.receipt.json"
+    },
+    {
+      "buildId": "B",
+      "request": "queries/B-same-net.request.json",
+      "result": "queries/B-same-net.result.json",
+      "receipt": "queries/B-same-net.receipt.json"
+    },
+    {
+      "buildId": "B",
+      "request": "queries/B-drivers-loads.request.json",
+      "result": "queries/B-drivers-loads.result.json",
+      "receipt": "queries/B-drivers-loads.receipt.json"
+    },
+    {
+      "buildId": "B",
+      "request": "queries/B-dependencies.request.json",
+      "result": "queries/B-dependencies.result.json",
+      "receipt": "queries/B-dependencies.receipt.json"
+    },
+    {
+      "buildId": "B",
+      "request": "queries/B-state-accesses.request.json",
+      "result": "queries/B-state-accesses.result.json",
+      "receipt": "queries/B-state-accesses.receipt.json"
+    },
+    {
+      "buildId": "C",
+      "request": "queries/C-same-net.request.json",
+      "result": "queries/C-same-net.result.json",
+      "receipt": "queries/C-same-net.receipt.json"
+    },
+    {
+      "buildId": "C",
+      "request": "queries/C-drivers-loads.request.json",
+      "result": "queries/C-drivers-loads.result.json",
+      "receipt": "queries/C-drivers-loads.receipt.json"
+    },
+    {
+      "buildId": "C",
+      "request": "queries/C-dependencies.request.json",
+      "result": "queries/C-dependencies.result.json",
+      "receipt": "queries/C-dependencies.receipt.json"
+    },
+    {
+      "buildId": "C",
+      "request": "queries/C-state-accesses.request.json",
+      "result": "queries/C-state-accesses.result.json",
+      "receipt": "queries/C-state-accesses.receipt.json"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "analysisId": "analysis-f990d577c407f43eca078b96a42e368eb8a68d869dad838a3ac7088b61421ac6",
+  "snapshotId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34",
+  "implementationProvider": "stock",
+  "implementationOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%2C%22left%22%5D",
+  "ownerInstanceId": "instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left",
+  "scope": {
+    "kind": "design",
+    "rootOccurrenceId": "hw-9725d9de09383250ccd7e98ff46883b4dcdb6e9eaabf53dce47f12dd791a5f34/occurrence/%5B%22mkConnected%22%5D"
+  },
+  "queryGeneration": 1,
+  "kind": "state-accesses",
+  "seed": {
+    "entityId": "instance:instance:instance:def:Connected:mkConnected:mkConnected:mkConnected.left:mkConnected.left.state"
+  }
+}
