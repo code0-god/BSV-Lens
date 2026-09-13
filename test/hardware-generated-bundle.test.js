@@ -43,11 +43,11 @@ test('generated payloads still reject excessive shared bytes and excessive expan
     assert.throws(() => sealGeneratedBundle({ repeated: Array(70).fill(shared) }), { code: 'LIMIT_EXCEEDED' });
 });
 
-test('a bundle whose frozen serialization exceeds the byte cap is rejected before publication', () => {
+test('a bundle whose sealed serialization exceeds the byte cap is rejected before publication', () => {
     const shared = { n: 1 }, value = { repeated: Array(30000).fill(shared), padding: '' };
-    value.padding = 'x'.repeat(DEFAULT_LIMITS.maxBytes - 1024 - serialize(value).byteLength);
+    value.padding = 'x'.repeat(DEFAULT_LIMITS.maxBytes - 64 - serialize(value).byteLength);
     assert.ok(serialize(value).byteLength < DEFAULT_LIMITS.maxBytes);
-    assert.ok(serialize(deepFreeze(structuredClone(value))).byteLength > DEFAULT_LIMITS.maxBytes);
+    assert.ok(serialize(deepFreeze(seal('correspondence', value))).byteLength > DEFAULT_LIMITS.maxBytes);
     assert.throws(() => sealGeneratedBundle(value), { code: 'LIMIT_EXCEEDED' });
 });
 
