@@ -1546,7 +1546,7 @@
     function inspectCodeEntity(entity, dependencies = null) {
         if (!entity?.id) return;
         const facts = dependencies || runtime.queries.getExpressionDependencies(entity.id, viewState().analysisContext);
-        const callSite = facts.status === 'exact' ? facts.callSite : null;
+        const callSite = facts.callSite?.targetResolutionStatus === 'exact' ? facts.callSite : null;
         const subject = entity.kind ? entity : {
             ...entity,
             kind: entity.statementIds ? 'function-definition' : 'code'
