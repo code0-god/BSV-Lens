@@ -4,20 +4,20 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const { launchNative } = require('../g6/native-driver.cjs');
+const { launchNative, prepareObserverVsix } = require('../g6/native-driver.cjs');
 const { createRun } = require('../g6/run.cjs');
 const { settled } = require('../g6/development-smoke.cjs');
 const { identity } = require('../g6/native-acceptance.cjs');
 const { measureNative, validateNativeTypography } = require('../g6/native-oracle.cjs');
 const { sourceInventory } = require('../g6-discovery-cancel/native.cjs');
 const { viewportFrame, assertViewportPreserved } = require('./native-history.cjs');
-const ROOT = path.resolve(__dirname, '../../..');
 const MESSAGE = 'This design exceeds the supported analysis size. Choose a smaller module.';
 const RAW = 'Generated correspondence shared payload byte limit';
 const digest = value => crypto.createHash('sha256').update(value).digest('hex');
 const save = (output, name, value) => fs.writeFileSync(path.join(output, name), JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
-async function run({ vsix, workspace, output = createRun('typeclass-native-limit') }) {
+async function run({ vsix, workspace, output = createRun('typeclass-native-limit'), observerVsix } = {}) {
     workspace = fs.realpathSync(workspace); const before = sourceInventory(workspace); save(output, 'source-before.json', before);
+    if (!observerVsix) observerVsix = (await prepareObserverVsix(output)).vsix;
     const report = { schema: 'g6-typeclass-native-limit-v1', status: 'running', startedAt: new Date().toISOString(), workspace,
         vsix, vsixSha256: digest(fs.readFileSync(vsix)), sources: { count: before.bsvFiles, fingerprint: before.fingerprint }, steps: [],
         boundary: 'Actual oversized workspace roots, ordinary QuickPick/root selector actions, installed VSIX and private Restricted Mode profile. No injected failure, model, query, source range or raised resource limit.' };
@@ -32,7 +32,9 @@ async function run({ vsix, workspace, output = createRun('typeclass-native-limit
                 footer: document.querySelector('#status').textContent, empty: document.querySelector('#native-empty-message').textContent,
                 retryVisible: document.querySelector('#native-select-design').checkVisibility(),
                 selectionTitle: document.querySelector('#selection-title').textContent,
-                selector: { value: document.querySelector('#build-select').value, text: document.querySelector('#build-select').selectedOptions[0]?.textContent },
+                selector: { value: document.querySelector('#build-select').value,
+                    text: document.querySelector('#build-select').selectedOptions[0]?.textContent,
+                    options: [...document.querySelector('#build-select').options].map(option => ({ value: option.value, text: option.textContent })) },
                 hostMessages: window.__bsvVsixSmoke.host.filter(row => row.action === 'native-status' || row.error),
                 posts: window.__bsvVsixSmoke.posts.map(row => ({ action: row.action, requestId: row.requestId, generation: row.generation })) };
         });
@@ -77,7 +79,7 @@ async function run({ vsix, workspace, output = createRun('typeclass-native-limit
     }
     try {
         native = await launchNative({ vsix, workspace, output, restricted: true,
-            observerVsix: path.join(ROOT, '.build/hardware/runs/g6-observer-resources-final-xQD0Ig/g6/bsv-lens-g6-observer-0.0.1.vsix'),
+            observerVsix,
             harnessFiles: [__filename, path.join(__dirname, 'native-history.cjs'), path.join(__dirname, '../g6-discovery-cancel/native.cjs')] });
         page = native.context.pages()[0]; const noTrust = page.getByRole('button', { name: "No, I don't trust the authors", exact: true });
         if (await noTrust.isVisible()) await noTrust.click();
@@ -86,16 +88,25 @@ async function run({ vsix, workspace, output = createRun('typeclass-native-limit
         ({ page, frame } = await native.findWebview()); await frame.waitForFunction(() => !!window.BsvHardwareTransport.identity());
         report.sessionId = (await frame.evaluate(() => window.BsvHardwareTransport.identity())).sessionId;
         await quickPick('mkTbIM2PCoreMatrix');
-        await frame.waitForFunction(message => document.querySelector('#native-input-status').textContent === message, MESSAGE, { timeout: 120000 });
+        await frame.waitForFunction(message => document.querySelector('#native-empty-message').textContent === message
+            && [...document.querySelector('#build-select').options].some(option => option.textContent === 'mkPE'), MESSAGE, { timeout: 120000 });
         const initial = await capture('01-initial-oversized');
         assert.equal(initial.dom.scene, null); assert.equal(initial.dom.retryVisible, true);
         assert.equal(initial.dom.selector.text, 'Select a design');
-        assert.equal(initial.dom.empty, MESSAGE); assert.equal(initial.dom.footer, MESSAGE);
+        assert.equal(initial.dom.empty, MESSAGE);
+        assert.match(initial.dom.status, /^BSV files analyzed: 67 · Source-based/); assert.equal(initial.dom.footer, initial.dom.status);
+        assert.ok(initial.dom.selector.options.some(option => option.text === 'mkTbIM2PCoreMatrix'));
+        assert.ok(initial.dom.selector.options.some(option => option.text === 'mkPE'));
         assert.ok(initial.dom.hostMessages.some(row => row.payload?.code === 'LIMIT_EXCEEDED' && row.payload.message === RAW
             || row.error?.code === 'LIMIT_EXCEEDED' && row.error.message === RAW));
         assert.equal(initial.dom.status.includes(RAW), false);
-        report.steps.push({ id: 'initial-oversized', root: 'mkTbIM2PCoreMatrix', status: 'pass', message: initial.dom.status });
-        await frame.locator('#native-select-design').click(); await quickPick('mkPE');
+        report.steps.push({ id: 'initial-oversized', root: 'mkTbIM2PCoreMatrix', status: 'pass', message: initial.dom.empty,
+            retainedDesigns: initial.dom.selector.options.filter(option => option.value.startsWith('design:')).length });
+        const discoveries = initial.dom.posts.filter(row => row.action === 'discover-workspace').length;
+        await frame.locator('#native-select-design').click();
+        await frame.waitForFunction(() => document.activeElement === document.querySelector('#build-select'));
+        assert.equal((await frame.evaluate(() => window.__bsvVsixSmoke.posts.filter(row => row.action === 'discover-workspace').length)), discoveries);
+        await select('mkPE');
         const valid = await waitRoot('mkPE'), validIdentity = identity(valid);
         await capture('02-retry-to-PE', 'mkPE'); report.steps.push({ id: 'initial-retry', status: 'pass', root: 'mkPE', identity: validIdentity });
         const history = valid.history, beforeFailureViewport = await viewportFrame(frame);
@@ -135,8 +146,8 @@ async function run({ vsix, workspace, output = createRun('typeclass-native-limit
     return report;
 }
 if (require.main === module) {
-    const [vsix, workspace] = process.argv.slice(2);
-    if (vsix === '--help') console.log('node native-limit.cjs FINAL.vsix WORKSPACE');
-    else run({ vsix, workspace }).catch(error => { console.error(error); process.exitCode = 1; });
+    const [vsix, workspace, observerVsix] = process.argv.slice(2);
+    if (vsix === '--help') console.log('node native-limit.cjs FINAL.vsix WORKSPACE [OBSERVER.vsix]');
+    else run({ vsix, workspace, observerVsix }).catch(error => { console.error(error); process.exitCode = 1; });
 }
 module.exports = { run };

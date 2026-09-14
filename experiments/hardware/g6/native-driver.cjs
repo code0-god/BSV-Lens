@@ -178,7 +178,7 @@ async function launch(options, targetMode) {
             reason: 'Preserve actual actions and DOM snapshots; capture original PNGs at explicit acceptance checkpoints instead of duplicating a continuous JPEG filmstrip.' },
         launchPolicy: `Ordinary Code launch; product ${targetMode === 'installed' ? 'installed from the explicit VSIX' : 'loaded from the explicit development root'}; observer ${observerVsix ? 'installed from the explicit observer VSIX' : 'loaded as an explicit development extension'}. No extensionTestsPath: VS Code suppresses/refuses real dialogs in extension tests.` };
     const save = () => fs.writeFileSync(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`);
-    let channel, child, exited, browser, context, closing = false, checkpointing = false, traceSequence = 0;
+    let channel, child, exited, browser, context, targetVersion, closing = false, checkpointing = false, traceSequence = 0;
     const recordTrace = (file, label) => {
         (receipt.traceChunks ||= []).push({ path: path.basename(file), label, bytes: fs.statSync(file).size, sha256: sha256(file) }); save();
     };
@@ -240,7 +240,8 @@ async function launch(options, targetMode) {
     };
     try {
         if (vsix) {
-            receipt.archive = readArchiveIdentity(vsix); receipt.archiveRuntime = archiveRuntime(vsix); save();
+            receipt.archive = readArchiveIdentity(vsix); targetVersion = receipt.archive.version;
+            receipt.archiveRuntime = archiveRuntime(vsix); save();
             const cli = resolveCliPathFromVSCodeExecutablePath(vscodeExecutable); fs.accessSync(cli, fs.constants.X_OK);
             for (const args of [...(localeArgs.length ? [['--help']] : []), ['--version'], ['--install-extension', vsix, '--force'],
                 ...(observerVsix ? [['--install-extension', observerVsix, '--force']] : []),
@@ -251,7 +252,7 @@ async function launch(options, targetMode) {
                 if (args[0] === '--help') assert.match(result.stdout, /--locale/, 'Selected Code CLI does not advertise locale support');
                 receipt.commands.push({ phase: args[0], executable: cli, argv, exitCode: 0, stdout: result.stdout, stderr: result.stderr }); save();
             }
-            assert.match(receipt.commands.at(-1).stdout, /^code0-god\.bsv-lens@0\.4\.1\s*$/m);
+            assert.ok(receipt.commands.at(-1).stdout.split(/\r?\n/).includes(`code0-god.bsv-lens@${targetVersion}`));
             if (languagePack) {
                 const installed = fs.readdirSync(extensionsDir).filter(name => name.toLowerCase().startsWith(`${languagePack.id}-`));
                 assert.equal(installed.length, 1, 'Exactly one isolated Korean language pack must be installed');
@@ -265,7 +266,7 @@ async function launch(options, targetMode) {
             }
         } else {
             const manifest = JSON.parse(fs.readFileSync(path.join(developmentRoot, 'package.json')));
-            assert.equal(`${manifest.publisher}.${manifest.name}`, 'code0-god.bsv-lens'); assert.equal(manifest.version, '0.4.1');
+            assert.equal(`${manifest.publisher}.${manifest.name}`, 'code0-god.bsv-lens'); targetVersion = manifest.version;
             receipt.developmentRuntime = runtimeInventory(developmentRoot, false); save();
         }
         channel = await createChannel(path.join(output, 'native-events.jsonl'));
@@ -280,12 +281,13 @@ async function launch(options, targetMode) {
         assertIsolatedArguments(args, receipt.isolation);
         const env = { ...process.env, G6_OBSERVER_PORT: String(channel.port), G6_OBSERVER_TOKEN: channel.token,
             G6_EXTENSIONS_DIR: extensionsDir, G6_WORKSPACE_ROOT: workspace, G6_TARGET_MODE: targetMode,
+            G6_TARGET_VERSION: targetVersion,
             G6_OBSERVER_AUTORUN: '1',
             ...(developmentRoot ? { G6_TARGET_ROOT: developmentRoot } : {}) };
         if (!developmentRoot) delete env.G6_TARGET_ROOT;
         delete env.ELECTRON_RUN_AS_NODE; delete env.NODE_OPTIONS;
         receipt.launch = { executable: vscodeExecutable, argv: args, observerExtensionPath: observerVsix ? null : observer,
-            targetDevelopmentPath: developmentRoot, extensionTestsPath: null, cdp: { host: '127.0.0.1', port }, environmentKeys: ['G6_OBSERVER_PORT', 'G6_OBSERVER_TOKEN', 'G6_EXTENSIONS_DIR', 'G6_WORKSPACE_ROOT', 'G6_TARGET_MODE', 'G6_OBSERVER_AUTORUN', ...(developmentRoot ? ['G6_TARGET_ROOT'] : [])] };
+            targetDevelopmentPath: developmentRoot, extensionTestsPath: null, cdp: { host: '127.0.0.1', port }, environmentKeys: ['G6_OBSERVER_PORT', 'G6_OBSERVER_TOKEN', 'G6_EXTENSIONS_DIR', 'G6_WORKSPACE_ROOT', 'G6_TARGET_MODE', 'G6_TARGET_VERSION', 'G6_OBSERVER_AUTORUN', ...(developmentRoot ? ['G6_TARGET_ROOT'] : [])] };
         const stdout = fs.createWriteStream(path.join(output, 'native.stdout.log'), { flags: 'wx' });
         const stderr = fs.createWriteStream(path.join(output, 'native.stderr.log'), { flags: 'wx' });
         child = spawn(vscodeExecutable, args, { env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });

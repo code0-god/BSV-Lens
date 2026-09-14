@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.4.3 — 2026-09-14
+
+- Keep all discovered BSV design choices available when an oversized root reaches the existing analysis limit, so a smaller module opens without rescanning.
+- Refresh revision-bound design choices after source changes while preserving the last valid schematic.
+
 ## 0.4.2 — 2026-09-14
 
 - Preserve operator precedence, associativity, structured case arms, and nested type arguments in source analysis.

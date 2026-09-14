@@ -268,6 +268,42 @@ test('automatic discovery messages never accept source path authority from the W
     assert.equal((await f.request('copy-diagnostics', { viewDiagnostic: 'x'.repeat(16385) })).status, 'invalid');
     assert.equal((await f.request('open-settings', { command: 'arbitrary' })).status, 'invalid');
 });
+test('a source design size failure retains the registered design choices for immediate recovery', async t => {
+    const f = await fixture(t);
+    await fs.writeFile(path.join(f.sourceRoot, 'Second.bsv'),
+        'package Second; module mkSecond(Empty); Reg#(Bool) done <- mkReg(False); endmodule endpackage');
+    f.controls.sourcePick = entries => entries.find(entry => entry.name === 'mkUser').id;
+    f.controls.choose = async (action, _options, context) => {
+        if (action !== 'choose-design') return { sourceRoot: f.sourceRoot,
+            discovery: { status: 'ready', included: [{ path: 'User.bsv' }, { path: 'Second.bsv' }] } };
+        const { entry, options: authority } = f.session.getSourceDesign(context.entryId);
+        return { ...authority, sourceEntry: { pathRef: entry.pathRef, revision: entry.revision, definitionId: entry.definitionId } };
+    };
+    f.controls.diagnostic = event => {
+        if (event.phase === 'correspondence-attach')
+            throw Object.assign(new Error('Generated correspondence shared payload byte limit'), { code: 'LIMIT_EXCEEDED' });
+    };
+    const failed = await f.request('discover-workspace');
+    assert.equal(failed.status, 'limited');
+    assert.equal(failed.error.code, 'LIMIT_EXCEEDED');
+    assert.equal(failed.error.message, 'Generated correspondence shared payload byte limit');
+    assert.equal(f.session.getInput(), null); assert.deepEqual(f.session.getCatalog(), []);
+    assert.deepEqual(f.session.getDesigns().map(entry => entry.name).sort(), ['mkSecond', 'mkUser']);
+    const recovery = f.messages.findLast(message => message.kind === 'event' && message.action === 'source-selection');
+    assert.equal(recovery.payload.status, 'limited');
+    assert.equal(recovery.payload.entryId, f.session.getDesigns().find(entry => entry.name === 'mkUser').id);
+    assert.equal(recovery.payload.designs, 2);
+    assert.deepEqual(recovery.payload.designEntries.map(entry => entry.name).sort(), ['mkSecond', 'mkUser']);
+    f.controls.diagnostic = null;
+    const second = f.session.getDesigns().find(entry => entry.name === 'mkSecond');
+    const opened = await f.request('choose-design', { entryId: second.id });
+    assert.equal(opened.status, 'ok'); assert.equal(opened.payload.status, 'registered');
+    assert.equal(f.session.getInput().selectedSourceEntry.definitionId, 'def:Second:mkSecond');
+    assert.equal(f.session.getInput().summary.compilerExecuted, false);
+    assert.deepEqual(f.session.getInput().summary.sourceEntries.map(entry => entry.name).sort(), ['mkSecond', 'mkUser']);
+    assert.equal(f.messages.findLast(message => message.kind === 'event' && message.action === 'catalog')
+        .payload.selectedDesignId, second.id);
+});
 test('independent source design visits retain bounded native authority for Back without merging their roots', async t => {
     const f = await fixture(t);
     await fs.writeFile(path.join(f.sourceRoot, 'Second.bsv'), 'package Second; module mkSecond(Empty); Reg#(Bool) done <- mkReg(False); endmodule endpackage');

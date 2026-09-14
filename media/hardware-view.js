@@ -1500,7 +1500,7 @@
         const limit = nativeDesignLimit(payload);
         if (limit) {
             const current = navigation.getState();
-            const entry = sourceDesigns.find(entry => entry.id === payload.entryId);
+            const entry = sourceDesigns.find(entry => entry.id === (payload.entryId || nativeSelectionRequired?.entryId));
             nativeSelectionRequired = { status: payload.message === 'Prepared design history reached its bounded limit. Reopen Hardware Schematic to start a new design history.' ? 'history-full' : 'limited',
                 preserved: !!current.current, current: current.scene?.shell.label || '', entryId: entry?.id };
         }
@@ -1540,8 +1540,10 @@
                 renderCatalogOptions();
                 $('native-select-design').hidden = selection.status === 'history-full';
                 text($('native-empty-title'), t('Select a design')); text($('native-empty-message'), message);
+                if (nativeDiscovery) text($('native-input-status'), nativeSourceStatus(nativeDiscovery, t));
             }
-            text($('native-input-status'), message); text($('status'), message);
+            if (current.current || !nativeDiscovery) text($('native-input-status'), message);
+            text($('status'), current.current || !nativeDiscovery ? message : nativeSourceStatus(nativeDiscovery, t));
         }
         const notice = payload.notice?.message || (['stale', 'dirty-source', 'captured'].includes(payload.status) ? payload.message : null);
         if (notice) $('native-input-status').append(document.createTextNode(` · ${t(notice)}`));
@@ -1615,7 +1617,11 @@
         for (const button of document.querySelectorAll('[data-native-action]')) {
             button.addEventListener('click', async () => {
                 button.dataset.nativeBusy = 'true'; button.disabled = true;
-                try { await (button.dataset.nativeAction === 'discover-workspace' ? discoverWorkspace() : request(button.dataset.nativeAction)); }
+                try {
+                    if (button.dataset.nativeAction === 'discover-workspace' && sourceDesigns.length) {
+                        $('build-select').focus(); $('build-select').showPicker?.();
+                    } else await (button.dataset.nativeAction === 'discover-workspace' ? discoverWorkspace() : request(button.dataset.nativeAction));
+                }
                 catch (error) { nativeStatus({ message: error.message }); }
                 finally { delete button.dataset.nativeBusy; button.disabled = nativeInputAction(button.dataset.nativeAction) && nativeHistoryPending(pendingCatalog, nativePublication); }
             });
@@ -1627,14 +1633,17 @@
                     .then(active => active && restoreNativeState(payload.restoreState, payload.selectedBuildId))
                     .catch(error => nativeStatus({ message: error.message }));
             } else if (action === 'source-selection') {
+                const entries = payload.designEntries || (Array.isArray(payload.designs) ? payload.designs : null);
+                if (entries) sourceDesigns = entries;
+                if (payload.discovery) nativeDiscovery = payload.discovery;
                 nativeSelectionRequired = payload;
+                renderCatalogOptions();
                 if (!navigation.getState().current) {
-                    renderCatalogOptions();
                     $('native-select-design').hidden = false;
                     text($('native-empty-title'), t('Select a design'));
                     text($('native-empty-message'), nativeSelectionStatus(payload, t));
                 }
-                nativeStatus({ message: nativeSelectionStatus(payload, t) });
+                nativeStatus(payload);
             } else if (action === 'reveal') revealNative(payload).catch(error => nativeStatus({ message: error.message }));
             else if (action === 'discovery-progress') nativeStatus(payload);
             else if (action === 'discovery-invalidated') {
