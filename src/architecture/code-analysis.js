@@ -401,7 +401,7 @@ function fullCall(text) {
 function topLevelOperator(text) {
     const precedence = [
         ['||'], ['&&'], ['|'], ['^~', '~^'], ['^'], ['&'], ['==', '!='],
-        ['<=', '>=', '<', '>'], ['<<', '>>'], ['+', '-'], ['*', '/', '%']
+        ['<=', '>=', '<', '>'], ['<<', '>>'], ['+', '-'], ['*', '/', '%'], ['**']
     ];
     const tokens = precedence.flat().sort((left, right) => right.length - left.length);
     for (const operators of precedence) {

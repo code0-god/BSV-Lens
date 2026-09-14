@@ -303,6 +303,26 @@ endpackage
     assert.equal(model.expressions.find((item) => item.id === root.operandIds[1]).operator, '^');
 });
 
+test('parses exponentiation before multiplication and left associatively', () => {
+    // Given
+    const source = `package PowerOperators;
+function Integer power() = 2 * 3 ** 4 ** 5;
+endpackage
+`;
+
+    // When
+    const model = buildSemanticSource(source, 'PowerOperators.bsv');
+    const root = model.expressions.find((item) => item.text === '2 * 3 ** 4 ** 5');
+    const exponent = model.expressions.find((item) => item.id === root.operandIds[1]);
+    const nested = model.expressions.find((item) => item.id === exponent.operandIds[0]);
+
+    // Then
+    assert.equal(root.operator, '*');
+    assert.equal(root.resolutionStatus, 'exact');
+    assert.equal(exponent.operator, '**');
+    assert.equal(nested.operator, '**');
+});
+
 test('models case labels and defaults without treating selector as a generic path condition', () => {
     // Given
     const source = `package CasePaths;
