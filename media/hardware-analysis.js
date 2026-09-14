@@ -186,6 +186,10 @@
         if (result.conditions.predicate) add(result.conditions.predicate.expression, 'predicate', 'source-dependencies');
         for (const condition of result.conditions.body) add(condition.expression, 'condition', 'source-dependencies', {},
             { polarity: condition.polarity, signedExpressionId: condition.signedExpressionId });
+        for (const condition of result.conditions.caseArms || []) {
+            add(condition.selector, 'case-selector', 'source-dependencies', {}, { caseArmId: condition.armId });
+            for (const label of condition.labels || []) add(label, 'case-label', 'source-dependencies', {}, { caseArmId: condition.armId });
+        }
         return records;
     }
 

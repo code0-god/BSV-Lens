@@ -37,6 +37,33 @@ test('source design cancellation describes discovered files rather than reportin
     assert.equal(nativeSelectionStatus({ sourceFiles: 4, preserved: true }, ko), '설계 선택을 닫았습니다. 현재 설계는 그대로 유지합니다.');
 });
 
+test('hardware glyph presentation classifies semantic families without changing diagram geometry', () => {
+    const { glyphPresentation, familyShape, selectionContext } = require('../media/hardware-view');
+    assert.deepEqual(glyphPresentation({ kind: 'module-occurrence' }, 'node'), { kind: 'module', family: 'module' });
+    for (const kind of ['register', 'fifo', 'memory']) {
+        assert.deepEqual(glyphPresentation({ kind: 'storage', primitiveKind: kind }, 'node'), { kind, family: 'storage' });
+    }
+    assert.deepEqual(glyphPresentation({ kind: 'method-contact' }, 'contact'), { kind: 'contact', family: 'contact' });
+    assert.deepEqual(glyphPresentation({ kind: 'rtl-cell', status: 'unknown-semantics' }, 'node'), { kind: 'unresolved', family: 'unresolved' });
+    assert.deepEqual(glyphPresentation({ kind: 'interface-group', membershipStatus: 'unresolved' }, 'group'), { kind: 'unresolved', family: 'unresolved' });
+    assert.equal(familyShape({ family: { resolutionStatus: 'exact', dimensions: [{ status: 'concrete' }] }, multiplicity: { status: 'exact' } }), 'vector');
+    assert.equal(familyShape({ family: { resolutionStatus: 'exact', dimensions: [{ status: 'concrete' }, { status: 'concrete' }] }, multiplicity: { status: 'exact' } }), 'matrix');
+    assert.equal(familyShape({ family: { resolutionStatus: 'symbolic', dimensions: [{ status: 'symbolic' }] }, multiplicity: { status: 'parameterized', count: null } }), 'symbolic');
+    const routeContext = selectionContext([
+        { id: 'summary', memberRelationIds: ['relation:a'], endpointIds: ['left', 'right'] },
+        { id: 'other', memberRelationIds: ['relation:b'], endpointIds: ['right', 'out'] }
+    ], null, 'relation:a');
+    assert.deepEqual([...routeContext.routes], ['summary']);
+    assert.deepEqual([...routeContext.peers], ['left', 'right']);
+    const source = require('node:fs').readFileSync(path.resolve(__dirname, '../media/hardware-view.js'), 'utf8');
+    const styles = require('node:fs').readFileSync(path.resolve(__dirname, '../media/hardware.css'), 'utf8');
+    assert.match(source, /dataset\.glyphKind/); assert.match(source, /dataset\.glyphFamily/);
+    for (const selector of ['.hardware-object:hover .interaction-ring', '.hardware-object:focus-visible .interaction-ring',
+        '.interface-group.glyph-unresolved .group-glyph',
+        '.hardware-object.family-scalar .family-glyph', '.hardware-object.family-scalar .family-stack', '.contact.glyph-operation .contact-glyph',
+        '.analysis-result .kind-glyph', '.analysis-seed .kind-glyph', '.analysis-boundary .kind-glyph']) assert.ok(styles.includes(selector));
+});
+
 test('generated design size limits explain smaller-module recovery without mislabeling unrelated failures', () => {
     const { nativeDesignLimit, nativeSelectionStatus } = require('../media/hardware-view');
     const error = { code: 'LIMIT_EXCEEDED', message: 'Generated correspondence shared payload byte limit' };

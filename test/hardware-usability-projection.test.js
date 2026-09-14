@@ -126,6 +126,31 @@ endpackage
     assert.throws(() => scene(query, { rootInstanceId: consumer.id, selectedEntityId: overall.children.find(child => child.label === 'producer').id }), { code: 'INVALID_INPUT' });
 });
 
+test('unresolved module family remains an inspectable placeholder instead of disappearing', async () => {
+    const value = await input(`package UnresolvedFamily;
+interface MissingIfc;
+endinterface
+module mkTop(Empty);
+    Vector#(count, MissingIfc) missing <- replicateM(mkMissing);
+endmodule
+endpackage
+`);
+    const architecture = createArchitecture({ analysis: value.analysis });
+    const family = Object.values(architecture.occurrences).find((item) => item.label === 'missing');
+    assert.ok(family);
+    assert.equal(family.status, 'unresolved');
+    assert.equal(family.unresolvedReason, 'module-constructor-unresolved');
+    assert.equal(family.family.resolutionStatus, 'unresolved');
+    assert.equal(family.interaction.kind, 'inspect');
+    const root = Object.values(architecture.occurrences).find((item) => item.parentInstanceId === null);
+    assert.ok(root.children.includes(family.id));
+    const view = scene(value.catalog[0]);
+    const child = view.children.find((item) => item.id === family.id);
+    assert.ok(child);
+    assert.equal(child.status, 'unresolved');
+    assert.equal(child.interaction.kind, 'inspect');
+});
+
 test('relation list names distinguish occurrences and repeated call sites without changing selection identity', async () => {
     const value = await input(`package Calls;
 interface Port;

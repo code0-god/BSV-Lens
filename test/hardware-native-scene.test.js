@@ -73,6 +73,83 @@ test('multiple independent source roots require explicit selection and never cre
     assert.throws(() => createSceneQuery({ buildId: 'bad', label: 'Bad', analysis, defaultRootInstanceId: 'foreign' }), { code: 'INVALID_INPUT' });
 });
 
+test('source module families expose dimensions and an honest symbolic element scope', async () => {
+    const text = `package Families;
+interface ChildIfc;
+endinterface
+module mkChild(ChildIfc);
+  Reg#(Bool) active <- mkReg(False);
+endmodule
+module mkTop#(numeric type n)(Empty);
+  Vector#(n, Vector#(2, ChildIfc)) elements <- replicateM(replicateM(mkChild));
+endmodule
+endpackage
+`;
+    const { query } = await sourceCase(text);
+    const overall = query.getScene(request(query)).scene;
+    const family = overall.children.find((item) => item.label === 'elements');
+    assert.equal(family.family.kind, 'module-family');
+    assert.equal(family.secondaryLabel, 'mkChild · n × 2');
+    const selected = query.getScene(request(query, { selectedEntityId: family.id })).scene;
+    const section = selected.inspector.sections.find((item) => item.id === 'family');
+    assert.deepEqual(section.fields.map(({ label, value }) => [label, value]), [
+        ['Kind', 'Module family'],
+        ['Dimensions', 'n × 2'],
+        ['Element type', 'ChildIfc'],
+        ['Element count', 'Symbolic'],
+        ['Element scope', 'Symbolic element; concrete index unavailable'],
+        ['Element identity', 'elements[*][*]'],
+        ['Index domain', '[0, n) symbolic × [0, 2)']
+    ]);
+    const inside = query.getScene(request(query, { rootInstanceId: family.id })).scene;
+    assert.deepEqual(inside.projection.familyScope, {
+        familyInstanceId: family.id,
+        kind: 'symbolic-element',
+        dimensions: ['n', '2'],
+        indexDomains: [
+            { expression: 'n', status: 'symbolic', min: 0, maxExclusive: null },
+            { expression: '2', status: 'concrete', min: 0, maxExclusive: 2 }
+        ],
+        selectedIndices: null,
+        elementIdentity: `${family.id}[*][*]`,
+        elementLabel: 'elements[*][*]',
+        elementType: 'ChildIfc'
+    });
+    assert.equal(inside.shell.label, 'elements[*][*]');
+    assert.equal(inside.breadcrumb.at(-1).label, 'elements[*][*]');
+    assert.throws(() => query.getScene(request(query, { rootInstanceId: family.id,
+        disclosureState: { presentation: { familyElementIndices: [0, 0] } } })), { code: 'INVALID_INPUT' });
+    assert.deepEqual(inside.storages.map((item) => item.label), ['active']);
+});
+
+test('exact repeated module families select bounded elements without changing canonical ownership', async () => {
+    const text = `package Families;
+interface ChildIfc;
+endinterface
+module mkChild(ChildIfc);
+  Reg#(Bool) active <- mkReg(False);
+endmodule
+module mkTop(Empty);
+  Vector#(2, Vector#(3, ChildIfc)) elements <- replicateM(replicateM(mkChild));
+endmodule
+endpackage
+`;
+    const { query } = await sourceCase(text);
+    const overall = query.getScene(request(query)).scene;
+    const family = overall.children.find(item => item.label === 'elements');
+    const disclosureState = { presentation: { familyElementIndices: [1, 2] } };
+    const element = query.getScene(request(query, { rootInstanceId: family.id, disclosureState })).scene;
+    assert.equal(element.ownerInstanceId, family.id);
+    assert.equal(element.shell.id, family.id);
+    assert.equal(element.shell.label, 'elements[1][2]');
+    assert.equal(element.projection.familyScope.kind, 'indexed-representative');
+    assert.equal(element.projection.familyScope.elementIdentity, `${family.id}[1][2]`);
+    assert.deepEqual(element.projection.familyScope.selectedIndices, [1, 2]);
+    assert.deepEqual(JSON.parse(JSON.stringify(element.disclosureState)), disclosureState);
+    assert.throws(() => query.getScene(request(query, { rootInstanceId: family.id,
+        disclosureState: { presentation: { familyElementIndices: [2, 0] } } })), { code: 'INVALID_INPUT' });
+});
+
 async function artifactCase() {
     const output = await directory();
     const leaf = { ports: { p: { direction: 'input', bits: [2, 3] } }, cells: {}, netnames: {} };

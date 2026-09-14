@@ -68,6 +68,14 @@ function makeBehavior(
         operation: access.operation,
         statementId: access.statementId || null,
         pathConditionExpressionIds: [...(access.pathConditionExpressionIds || [])],
+        caseArmId: access.caseArmId || null,
+        caseArmIds: [...(access.caseArmIds || [])],
+        caseConditions: (access.caseConditions || []).map((condition) => ({
+            ...condition,
+            labelExpressionIds: [...(condition.labelExpressionIds || [])],
+            priorLabelExpressionIds: [...(condition.priorLabelExpressionIds || [])]
+        })),
+        elementRef: access.elementRef || null,
         evidence: access.sourceEvidence,
         location: access.location || null
     }));

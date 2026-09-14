@@ -1,6 +1,13 @@
 # Change Log
 
-## 0.4.1 — Unreleased
+## 0.4.2 — 2026-09-14
+
+- Preserve operator precedence, associativity, structured case arms, and nested type arguments in source analysis.
+- Preserve symbolic and concrete repeated module or storage families, including nested `replicateM`, without inventing RTL cells.
+- Distinguish modules, storage, families, operations, selection, focus, and analysis paths in the native hardware schematic.
+- Validate SystolicArray, PE, and VectorUnit exploration against an installed VSIX and the live IM2P source workspace.
+
+## 0.4.1 — 2026-09-13
 
 - Remove fabricated same-name delegation calls while preserving real constructor bindings, inline delegation, and endpoint implementations.
 - Add occurrence-aware navigation contexts, atomic instance/channel/endpoint entry, independent containment breadcrumbs, and complete Back/Forward snapshots.

@@ -111,4 +111,30 @@ endpackage
         parameters: [],
         calls: ['bar']
     }]);
+    for (const method of parsed.modules[0].methods) {
+        assert.equal(method.codeAnalysis.statements.length, 1);
+        assert.equal(method.codeAnalysis.statements[0].kind, 'return');
+        assert.equal(method.codeAnalysis.statements[0].inline, true);
+        assert.equal(method.codeAnalysis.expressions.find((item) =>
+            item.id === method.codeAnalysis.statements[0].expressionId).text,
+        method.name === 'startReady' ? '!isValid(activeDescriptor)'
+            : method.name === 'workValid' ? 'isValid(activeDescriptor) && isValid(activeStripe)'
+                : 'makeFoo(x)');
+    }
+});
+
+test('guarded inline method separates predicate from return expression', () => {
+    const source = 'package GuardedInline;\n'
+        + 'module mkTop(Empty);\n'
+        + '    method Bit#(8) value if (ready) = state + 1;\n'
+        + 'endmodule\nendpackage';
+    const parsed = parseBsvFile(source, {
+        uri: 'file:///GuardedInline.bsv',
+        relativePath: 'GuardedInline.bsv'
+    });
+    const method = parsed.modules[0].methods[0];
+    const predicate = method.codeAnalysis.expressions.find((item) => item.id === method.predicateExpressionId);
+    const returned = method.codeAnalysis.statements.find((item) => item.kind === 'return');
+    assert.equal(predicate.text, 'ready');
+    assert.equal(method.codeAnalysis.expressions.find((item) => item.id === returned.expressionId).text, 'state + 1');
 });

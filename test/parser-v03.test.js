@@ -247,13 +247,13 @@ endpackage
         {
             name: 'exact',
             constructor: 'replicateM',
-            primitiveKind: 'vector',
+            primitiveKind: null,
             multiplicity: { status: 'exact', count: 4, expression: '4' }
         },
         {
             name: 'parameterized',
             constructor: 'replicateM',
-            primitiveKind: 'vector',
+            primitiveKind: null,
             multiplicity: { status: 'parameterized', count: null, expression: 'lanes' }
         },
         {

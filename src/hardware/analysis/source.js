@@ -50,8 +50,8 @@ async function executeSource(attached, q, signal, onProgress) {
         statements: [], expressions: [], bindings: [], dependencies: [], assertions: [], stateEffects: [],
         readiness: { status: 'not-attached', evidence: [] },
         scheduling: { compiler: { status: 'not-attached', relations: [] }, sourceRelations: [], potentialDependencies: [] }, limitations: [] };
-    const conditions = { predicate: null, body: [] }, callMappings = [], readers = [], writers = [];
-    const conditionKeys = new Set();
+    const conditions = { predicate: null, body: [], caseArms: [] }, callMappings = [], readers = [], writers = [];
+    const conditionKeys = new Set(), caseConditionKeys = new Set();
     function bodyConditions(ids) {
         for (const c of signedConditions(source, ids)) if (!conditionKeys.has(c.signedExpressionId)) {
             if (c.expression && !add(c.expression)) continue;
@@ -59,12 +59,36 @@ async function executeSource(attached, q, signal, onProgress) {
             relation('condition', c.expressionId, q.seed.entityId, { signedExpressionId: c.signedExpressionId, polarity: c.polarity, evaluated: false });
         }
     }
+    function caseConditions(records) {
+        for (const record of records || []) {
+            const key = record.armId || stable(record);
+            if (caseConditionKeys.has(key)) continue;
+            caseConditionKeys.add(key);
+            const selector = source?.expressions.get(record.selectorExpressionId) || null;
+            const labels = (record.labelExpressionIds || []).map((id) => source?.expressions.get(id)).filter(Boolean);
+            const priorLabels = (record.priorLabelExpressionIds || []).map((id) => source?.expressions.get(id)).filter(Boolean);
+            if (selector) add(selector);
+            for (const item of [...labels, ...priorLabels]) add(item);
+            const value = { ...record, selector, labels, priorLabels, evaluated: false };
+            conditions.caseArms.push(value);
+            if (selector) relation('case-condition', selector.id, q.seed.entityId, {
+                caseStatementId: record.caseStatementId, caseArmId: record.armId,
+                conditionKind: record.kind, semantics: record.semantics,
+                labelExpressionIds: [...(record.labelExpressionIds || [])],
+                priorLabelExpressionIds: [...(record.priorLabelExpressionIds || [])], evaluated: false
+            });
+            if (record.resolutionStatus !== 'exact') boundary(
+                record.resolutionStatus === 'unsupported' ? 'unsupported-source' : 'unresolved-source',
+                record.armId, { detail: 'case-condition', caseStatementId: record.caseStatementId }
+            );
+        }
+    }
     async function bindingDetails(binding) {
         await work.checkpoint();
         if (code.bindings.some(b => b.id === binding.id)) return;
         if (code.bindings.length >= q.limits.maxPins) { limited('maxPins', binding.id); return; }
         if (!add(binding)) return;
-        code.bindings.push(binding); bodyConditions(binding.pathConditionExpressionIds);
+        code.bindings.push(binding); bodyConditions(binding.pathConditionExpressionIds); caseConditions(binding.caseConditions);
         const target = source.instances.get(binding.targetInstanceId);
         if (target) add(target, source.ownerOf(target), attached.owners[source.ownerOf(target)] || null);
         const read = binding.accessKind === 'read', write = binding.accessKind === 'write', inbound = read || binding.accessKind === 'return';
@@ -144,6 +168,8 @@ async function executeSource(attached, q, signal, onProgress) {
                 for (const s of statements) {
                     await work.checkpoint(); if (!add(s)) break;
                     code.statements.push(s); bodyConditions(s.pathConditionExpressionIds);
+                    const statementBinding = [...source.bindings.values()].find((binding) => binding.statementId === s.id);
+                    caseConditions(statementBinding?.caseConditions);
                     if (s.kind === 'assertion') code.assertions.push(s);
                     if (s.stateEffect) code.stateEffects.push({ statementId: s.id, effect: s.stateEffect });
                     if (s.resolutionStatus === 'unsupported') boundary('unsupported-statement', s.id);
@@ -174,6 +200,7 @@ async function executeSource(attached, q, signal, onProgress) {
                     // Correct only the query projection; canonical statement IDs, including !, are untouched.
                     const dependency = { ...rawDependency, pathConditions: signedConditions(source, parent?.pathConditionExpressionIds) };
                     code.dependencies.push(dependency); code.expressions.push(expression); bodyConditions(parent?.pathConditionExpressionIds);
+                    caseConditions([...source.bindings.values()].find((binding) => binding.statementId === parent?.id)?.caseConditions);
                     if (dependency.status !== 'exact') boundary(dependency.status === 'unsupported' ? 'unsupported-source' : 'unresolved-source', id,
                         { resolution: dependency.status, candidateDefinitionIds: expression.definitionIds || [], bindingEnvironmentId: expression.bindingEnvironmentId });
                     const next = q.direction === 'forward' ? [...source.expressions.values()].filter(e => [...e.operandIds, ...e.definitionIds, ...e.argumentIds].includes(id)).map(e => e.id) :

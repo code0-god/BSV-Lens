@@ -860,6 +860,7 @@ function parseInstances(bodyMasked, bodyText, baseOffset, uri, lineStarts) {
         const constructorExpression = normalizeWhitespace(bodyText.slice(constructorStart, statementEnd >= 0 ? statementEnd : end));
         const constructor = parseConstructorExpression(constructorExpression);
         const absoluteName = baseOffset + declarationStart + nameToken.start;
+        const family = aggregateFamily(inferred ? '' : declaredType, constructorExpression);
         instances.push({
             name: nameToken.value,
             type: inferred ? 'inferred' : declaredType,
@@ -869,8 +870,10 @@ function parseInstances(bodyMasked, bodyText, baseOffset, uri, lineStarts) {
             staticArguments: constructor.staticArguments,
             arguments: constructor.arguments,
             specialization: constructor.specialization,
-            multiplicity: instanceMultiplicity(inferred ? '' : declaredType, constructor.name),
-            primitiveKind: classifyPrimitive(inferred ? '' : declaredType, constructor.name),
+            multiplicity: family ? familyMultiplicity(family) : instanceMultiplicity(inferred ? '' : declaredType, constructor.name),
+            primitiveKind: family ? classifyPrimitive(family.leafType, family.leafConstructor || '')
+                : classifyPrimitive(inferred ? '' : declaredType, constructor.name),
+            family,
             signature: truncate(bodyText.slice(declarationStart, end), 260),
             location: makeLocation(uri, lineStarts, absoluteName, absoluteName + nameToken.value.length),
             sourceRange: makeLocation(uri, lineStarts, baseOffset + declarationStart, baseOffset + end),
@@ -918,6 +921,74 @@ function instanceMultiplicity(type, constructor) {
     return { status: 'parameterized', count: null, expression };
 }
 
+function aggregateFamily(type, generatorExpression) {
+    const generator = aggregateGenerator(generatorExpression);
+    if (!['replicateM', 'mapM'].includes(generator.kind)) return null;
+    const dimensions = [];
+    let leafType = normalizeWhitespace(type);
+    while (/^Vector\s*#/i.test(leafType)) {
+        const argumentsList = typeApplicationArguments(leafType);
+        if (argumentsList.length !== 2) return null;
+        const expression = argumentsList[0];
+        const concrete = /^\d+$/.test(expression) && Number.isSafeInteger(Number(expression));
+        dimensions.push({
+            expression,
+            status: concrete ? 'concrete' : 'symbolic',
+            size: concrete ? Number(expression) : null,
+            indexDomain: concrete
+                ? { lower: 0, upperExclusive: Number(expression) }
+                : { lower: 0, upperExclusive: null, expression }
+        });
+        leafType = argumentsList[1];
+    }
+    if (!dimensions.length) return null;
+    const leafPrimitiveKind = classifyPrimitive(leafType, generator.leafConstructor || '');
+    const structurallyExact = generator.kind === 'replicateM'
+        && generator.depth === dimensions.length && Boolean(generator.leafConstructor);
+    return {
+        kind: leafPrimitiveKind ? 'storage-family' : 'module-family',
+        declaredType: normalizeWhitespace(type),
+        dimensions,
+        leafType,
+        generatorExpression: normalizeWhitespace(generatorExpression),
+        generatorKind: generator.kind,
+        generatorDepth: generator.depth,
+        leafConstructor: generator.leafConstructor,
+        resolutionStatus: structurallyExact
+            ? dimensions.every((dimension) => dimension.status === 'concrete') ? 'exact' : 'symbolic'
+            : 'unresolved',
+        elementExpansion: 'lazy'
+    };
+}
+
+function aggregateGenerator(expression) {
+    const parsed = parseConstructorExpression(normalizeWhitespace(expression));
+    if (parsed.name === 'replicateM') {
+        const nested = parsed.arguments.length === 1 ? aggregateGenerator(parsed.arguments[0]) : null;
+        return nested && nested.kind !== 'mapM'
+            ? { kind: 'replicateM', depth: nested.depth + 1, leafConstructor: nested.leafConstructor }
+            : { kind: 'replicateM', depth: 1, leafConstructor: null };
+    }
+    if (parsed.name === 'mapM') {
+        const leaf = parseConstructorExpression(parsed.arguments[0] || '');
+        return { kind: 'mapM', depth: 1,
+            leafConstructor: /^mk[A-Za-z_$][\w$]*$/.test(leaf.name) ? leaf.name : null };
+    }
+    return { kind: parsed.name || 'unresolved', depth: 0,
+        leafConstructor: /^mk[A-Za-z_$][\w$]*$/.test(parsed.name) ? parsed.name : null };
+}
+
+function familyMultiplicity(family) {
+    const expression = family.dimensions.map((dimension) => dimension.expression).join(' * ');
+    if (family.dimensions.every((dimension) => dimension.status === 'concrete')) {
+        const count = family.dimensions.reduce((total, dimension) => total * dimension.size, 1);
+        return Number.isSafeInteger(count)
+            ? { status: 'exact', count, expression }
+            : { status: 'unresolved', count: null, expression };
+    }
+    return { status: 'parameterized', count: null, expression };
+}
+
 function findPreviousStatementBoundary(text, offset) {
     const candidates = [
         text.lastIndexOf(';', offset - 1),
@@ -930,11 +1001,10 @@ function findPreviousStatementBoundary(text, offset) {
 }
 
 function classifyPrimitive(type, constructor) {
+    if (/\b(?:BRAM|RegFile|RAM|ROM)\b/i.test(type) || /^mk(?:BRAM|RegFile|RAM|ROM)/.test(constructor)) return 'memory';
     if (/^Reg\s*#/i.test(type) || /^mk(?:C?Reg|DReg)/.test(constructor)) return 'register';
     if (/\bFIFOF?\s*#/i.test(type) || /^mk(?:Sized|Pipeline|Bypass)?FIFOF?/.test(constructor)) return 'fifo';
-    if (/\b(?:BRAM|RegFile|RAM|ROM)\b/i.test(type) || /^mk(?:BRAM|RegFile|RAM|ROM)/.test(constructor)) return 'memory';
     if (/\b(?:Wire|RWire|PulseWire)\b/i.test(type) || /^mk(?:Bypass)?(?:R?Wire|PulseWire)/.test(constructor)) return 'wire';
-    if (/\bVector\s*#/i.test(type) && /^replicateM$/.test(constructor)) return 'vector';
     return null;
 }
 
@@ -1026,15 +1096,17 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
         const rawHeader = bodyText.slice(match.index + match[0].length, headerEnd);
         const callable = parseCallableSignature(header);
         if (!callable.name) continue;
-        const inline = findTopLevelCharacter(header, '=') >= 0;
+        const inlineEquals = findTopLevelCharacter(header, '=');
+        const inline = inlineEquals >= 0;
         const endKeyword = inline ? -1 : findKeywordEnd(bodyMasked, headerEnd + 1, 'endmethod');
         const end = endKeyword >= 0 ? endKeyword + 'endmethod'.length : headerEnd + 1;
         const contentStart = inline
-            ? match.index + match[0].length + findTopLevelCharacter(header, '=') + 1
+            ? match.index + match[0].length + inlineEquals + 1
             : headerEnd + 1;
-        const contentEnd = inline ? headerEnd + 1 : (endKeyword >= 0 ? endKeyword : headerEnd);
-        const content = bodyMasked.slice(contentStart, contentEnd);
-        const contentText = bodyText.slice(contentStart, contentEnd);
+        const contentEnd = inline ? headerEnd : (endKeyword >= 0 ? endKeyword : headerEnd);
+        const behaviorEnd = inline ? headerEnd + 1 : contentEnd;
+        const content = bodyMasked.slice(contentStart, behaviorEnd);
+        const contentText = bodyText.slice(contentStart, behaviorEnd);
         const absoluteName = baseOffset + match.index + match[0].length + callable.nameOffset;
         const bsvAttributes = decorateBsvAttributes(
             getLeadingBsvAttributes(bodyText, match.index),
@@ -1052,10 +1124,11 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
             makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
         });
         const guardOffset = findTopLevelKeyword(header, 'if');
+        const guardEnd = inline ? inlineEquals : header.length;
         const guardBehavior = guardOffset >= 0
             ? analyzeBehavior({
-                text: rawHeader.slice(guardOffset + 2),
-                masked: header.slice(guardOffset + 2),
+                text: rawHeader.slice(guardOffset + 2, guardEnd),
+                masked: header.slice(guardOffset + 2, guardEnd),
                 baseOffset: baseOffset + match.index + match[0].length + guardOffset + 2,
                 instances,
                 callable: callable.name,
@@ -1065,7 +1138,9 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
         const combined = mergeBehavior(guardBehavior, behavior);
         const callableId = `code:${uri}:method:${callable.name}:${baseOffset + match.index}`;
         const predicateRange = guardOffset >= 0
-            ? trimOuterRange(fullMasked, baseOffset + match.index + match[0].length + guardOffset + 2, baseOffset + headerEnd)
+            ? trimOuterRange(fullMasked,
+                baseOffset + match.index + match[0].length + guardOffset + 2,
+                baseOffset + match.index + match[0].length + guardEnd)
             : null;
         const codeAnalysis = analyzeCode({
             source, masked: fullMasked, uri, revision: sourceRevision,
@@ -1074,6 +1149,7 @@ function parseMethods(bodyMasked, bodyText, baseOffset, uri, lineStarts, instanc
             parameters: callable.parameters,
             stateNames: instances.filter((item) => item.primitiveKind).map((item) => item.name),
             predicate: predicateRange,
+            inlineReturn: inline,
             makeLocation: (start, finish) => makeLocation(uri, lineStarts, start, finish)
         });
         linkAccessesToCode(combined.accesses, codeAnalysis);
@@ -1113,7 +1189,7 @@ function extractInstanceReferences(content, instances) {
     for (const instance of instances) {
         const escaped = escapeRegExp(instance.name);
         const member = new RegExp(`\\b${escaped}\\s*\\.`, 'm');
-        const assignment = new RegExp(`\\b${escaped}\\s*<=`, 'm');
+        const assignment = new RegExp(`\\b${escaped}(?:\\s*\\[[^\\]]+\\])*\\s*<=`, 'm');
         if (member.test(content) || assignment.test(content)) references.push(instance.name);
     }
     return references;
@@ -1131,12 +1207,41 @@ function linkAccessesToCode(accesses, analysis) {
         if (!statement) continue;
         access.statementId = statement.id;
         access.pathConditionExpressionIds = [...(statement.pathConditionExpressionIds || [])];
+        access.caseArmId = statement.caseArmId || null;
+        access.caseArmIds = [...(statement.caseArmIds || (statement.caseArmId ? [statement.caseArmId] : []))];
+        access.caseConditions = caseConditionsFor(analysis, access.caseArmIds);
         const calls = (analysis.callSites || []).filter((item) =>
             item.parentStatementId === statement.id
             && (!access.memberPath || item.calleeName.endsWith(access.memberPath))
         );
         if (calls.length === 1) access.codeCallSiteId = calls[0].id;
     }
+}
+
+function caseConditionsFor(analysis, armIds) {
+    const cases = (analysis.statements || []).filter((item) => item.kind === 'case');
+    return armIds.map((armId) => {
+        const statement = cases.find((item) => (item.caseArms || []).some((arm) => arm.id === armId));
+        const armIndex = statement?.caseArms?.findIndex((item) => item.id === armId) ?? -1;
+        const arm = armIndex >= 0 ? statement.caseArms[armIndex] : null;
+        if (!statement || !arm) return {
+            caseStatementId: null, armId, kind: 'case-arm', caseMode: 'unknown',
+            selectorExpressionId: null, labelExpressionIds: [], priorLabelExpressionIds: [],
+            semantics: 'unresolved', resolutionStatus: 'unresolved'
+        };
+        return {
+            caseStatementId: statement.id,
+            armId,
+            kind: arm.kind,
+            caseMode: statement.caseMode,
+            selectorExpressionId: arm.selectorExpressionId,
+            labelExpressionIds: [...(arm.labelExpressionIds || [])],
+            priorLabelExpressionIds: statement.caseArms.slice(0, armIndex)
+                .flatMap((item) => item.labelExpressionIds || []),
+            semantics: arm.kind === 'case-default' ? 'no-prior-arm-match' : 'selector-matches-label',
+            resolutionStatus: arm.resolutionStatus
+        };
+    });
 }
 
 function containsPosition(range, location) {

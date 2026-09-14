@@ -165,7 +165,67 @@
         candidates.sort((a, b) => a.distance - b.distance || a.id.localeCompare(b.id));
         return candidates.filter(candidate => candidate.distance <= candidates[0].distance + 1.5);
     }
-    if (typeof module === 'object' && module.exports) module.exports = { findRouteCandidates, createNativePublication, nativeSourceStatus, nativeSelectionStatus, nativeDesignLimit, nativeHistoryPending, createNativeStatusOverlay,
+    const glyphPresentations = Object.freeze({
+        module: Object.freeze({ kind: 'module', family: 'module' }),
+        storage: Object.freeze({ kind: 'storage', family: 'storage' }),
+        register: Object.freeze({ kind: 'register', family: 'storage' }),
+        fifo: Object.freeze({ kind: 'fifo', family: 'storage' }),
+        memory: Object.freeze({ kind: 'memory', family: 'storage' }),
+        operation: Object.freeze({ kind: 'operation', family: 'operation' }),
+        contact: Object.freeze({ kind: 'contact', family: 'contact' }),
+        interface: Object.freeze({ kind: 'interface', family: 'interface' }),
+        unresolved: Object.freeze({ kind: 'unresolved', family: 'unresolved' })
+    });
+    const glyphPaths = Object.freeze({
+        module: 'M2 2H10V10H2ZM6 6H14V14H6Z', storage: 'M2 2H14V14H2M2 6H14M2 10H14',
+        register: 'M2 2H14V14H2ZM6 2V14', fifo: 'M2 3H14M2 8H14M2 13H14M10 1L14 3L10 5',
+        memory: 'M3 1H13L15 3V13L13 15H3L1 13V3ZM5 5H11M5 8H11M5 11H11',
+        operation: 'M2 3H9L13 8L9 13H2M2 8H9', contact: 'M5 5H11V11H5Z',
+        interface: 'M2 8H14M8 2V14', unresolved: 'M2 2L14 14M14 2L2 14M2 8H14'
+    });
+    const familyGlyphPaths = Object.freeze({
+        vector: 'M3 2H1V14H3M13 2H15V14H13',
+        matrix: 'M3 2H1V14H3M13 2H15V14H13M6 4V12M10 4V12',
+        symbolic: 'M3 2H1V14H3M13 2H15V14H13M6 8H10'
+    });
+    const contactGlyphPaths = Object.freeze({ operation: 'M-4 -4L4 0L-4 4Z', unresolved: 'M-3 -3L3 3M3 -3L-3 3' });
+    function glyphPresentation(item, type) {
+        if (['unknown-semantics', 'black-box', 'unresolved'].includes(item?.status) || item?.membershipStatus === 'unresolved')
+            return glyphPresentations.unresolved;
+        if (type === 'node') {
+            if (glyphPresentations[item?.primitiveKind]) return glyphPresentations[item.primitiveKind];
+            if (item?.kind === 'storage') return glyphPresentations.storage;
+            return glyphPresentations.module;
+        }
+        if (type === 'contact') return glyphPresentations.contact;
+        return glyphPresentations.interface;
+    }
+    function familyShape(item) {
+        const dimensions = item?.family?.dimensions;
+        if (!Array.isArray(dimensions) || !dimensions.length) return 'scalar';
+        if (item?.multiplicity?.status !== 'exact'
+            || dimensions.some(dimension => dimension.status !== 'concrete')) return 'symbolic';
+        return dimensions.length === 1 ? 'vector' : 'matrix';
+    }
+    function selectionContext(connections, selectedEntityId, selectedRelationId) {
+        const routes = new Set(), peers = new Set();
+        for (const connection of connections || []) {
+            const matchesEntity = selectedEntityId && connection.endpointIds?.includes(selectedEntityId);
+            const matchesRelation = selectedRelationId && (connection.id === selectedRelationId
+                || connection.memberRelationIds?.includes(selectedRelationId));
+            if (!matchesEntity && !matchesRelation) continue;
+            routes.add(connection.id);
+            for (const id of connection.endpointIds || []) peers.add(id);
+        }
+        return { routes, peers };
+    }
+    function applyGlyphPresentation(group, presentation) {
+        group.dataset.glyphKind = presentation.kind;
+        group.dataset.glyphFamily = presentation.family;
+        const glyph = group.querySelector('.kind-glyph');
+        if (glyph) glyph.setAttribute('d', glyphPaths[presentation.kind]);
+    }
+    if (typeof module === 'object' && module.exports) module.exports = { findRouteCandidates, glyphPresentation, familyShape, selectionContext, createNativePublication, nativeSourceStatus, nativeSelectionStatus, nativeDesignLimit, nativeHistoryPending, createNativeStatusOverlay,
         restoreNativeViewport,
         nativeCommittedStatus, fitNativeInitialViewport };
     if (typeof document === 'undefined') return;
@@ -238,7 +298,12 @@
             element.style.pointerEvents = label.pointerPolicy === 'none' ? 'none' : 'visiblePainted';
             element.dataset.fullText = label.fullText; element.dataset.labelOwner = label.ownerId;
             element.dataset.labelRole = label.role; element.dataset.displayReason = label.reason || 'full-name';
-            text(element, label.text);
+            if (label.lines?.length > 1) {
+                element.replaceChildren(...label.lines.map((line, index) => svgElement('tspan', {
+                    x: label.x - origin.x, dy: index ? label.lineHeight : 0
+                })));
+                for (const [index, child] of [...element.children].entries()) text(child, label.lines[index]);
+            } else text(element, label.text);
         }
         for (const element of target.querySelectorAll('.origin-label')) {
             element.style.visibility = 'hidden'; element.dataset.displayReason = 'readable-context-summary';
@@ -507,6 +572,10 @@
             });
             if (type === 'node') {
                 svgElement('rect', { class: 'body', rx: 7 }, group);
+                svgElement('rect', { class: 'family-stack', rx: 5 }, group);
+                svgElement('rect', { class: 'interaction-ring', rx: 9 }, group);
+                svgElement('path', { class: 'kind-glyph' }, group);
+                svgElement('path', { class: 'family-glyph' }, group);
                 svgElement('text', { class: 'title', x: 16, y: 27 }, group);
                 svgElement('text', { class: 'secondary', x: 16, y: 47 }, group);
                 svgElement('path', { class: 'storage-lines' }, group);
@@ -517,6 +586,7 @@
                 svgElement('text', { class: 'detail', y: 12 }, group);
             } else if (type === 'group') {
                 svgElement('path', { class: 'group-anchor', d: 'M4,-4H1Q-3,-4 -3,0Q-3,4 1,4H4' }, group);
+                svgElement('path', { class: 'kind-glyph group-glyph', transform: 'translate(-11 -4) scale(.5)' }, group);
                 svgElement('text', { class: 'label' }, group);
                 group.addEventListener('pointerenter', () => {
                     for (const id of record.item.memberContactIds) records.get(id)?.group.classList.add('group-member');
@@ -591,22 +661,45 @@
         const connectionById = new Map(scene.connections.map(item => [item.id, item]));
         const highlight = new Set(scene.implementationContext.highlightEntityIds);
         const selection = new Set([current.selectedEntityId, current.selectedRelationId]);
+        const { routes: selectionRoutes, peers: selectionPeers } = selectionContext(
+            scene.connections, current.selectedEntityId, current.selectedRelationId
+        );
         for (const record of records.values()) record.active = false;
         for (const box of geometry.nodes) {
             const item = objectById.get(box.id), record = interactive(box.id, 'node', item), group = record.group;
             const storage = scene.storages.some(value => value.id === box.id);
+            const glyph = glyphPresentation(item, 'node');
+            const shape = familyShape(item);
             group.setAttribute('class', ['hardware-object', box.id === scene.shell.id ? 'expanded' : '',
-                storage ? 'storage' : '', selection.has(box.id) ? 'selected' : '', highlight.has(box.id) ? 'contributor' : ''].join(' '));
+                storage ? 'storage' : '', `glyph-${glyph.kind}`, `glyph-family-${glyph.family}`,
+                `family-${shape}`,
+                selection.has(box.id) ? 'selected' : '', selectionPeers.has(box.id) ? 'selection-related' : '',
+                highlight.has(box.id) ? 'contributor' : ''].join(' '));
+            applyGlyphPresentation(group, glyph);
+            group.dataset.familyShape = shape;
             group.setAttribute('transform', `translate(${box.x} ${box.y})`);
-            group.setAttribute('aria-label', `${item.kind === 'rtl-cell' ? `${item.secondaryLabel}, ${item.label}` : item.label}, ${item.kind}, ${selection.has(box.id) ? 'selected, ' : ''}${item.interaction.kind === 'enter' && box.id !== scene.shell.id ? 'enter interior' : 'inspect'}`);
+            const familyDescription = shape === 'scalar' ? ''
+                : `, repeated ${shape} family, dimensions ${item.family.dimensions.map(dimension => dimension.expression).join(' by ')}`;
+            group.setAttribute('aria-label', `${item.kind === 'rtl-cell' ? `${item.secondaryLabel}, ${item.label}` : item.label}, ${item.kind}${familyDescription}, ${selection.has(box.id) ? 'selected, ' : ''}${item.interaction.kind === 'enter' && box.id !== scene.shell.id ? 'enter interior' : 'inspect'}`);
             group.setAttribute('aria-pressed', String(selection.has(box.id)));
             group.querySelector('.body').setAttribute('width', box.width);
             group.querySelector('.body').setAttribute('height', box.height);
             group.querySelector('.body').setAttribute('fill', box.id === scene.shell.id ? 'none' : 'var(--vscode-editorWidget-background)');
+            const familyStack = group.querySelector('.family-stack');
+            familyStack.setAttribute('x', 5); familyStack.setAttribute('y', 5);
+            familyStack.setAttribute('width', Math.max(0, box.width - 10)); familyStack.setAttribute('height', Math.max(0, box.height - 10));
+            const ring = group.querySelector('.interaction-ring');
+            ring.setAttribute('x', -3); ring.setAttribute('y', -3);
+            ring.setAttribute('width', box.width + 6); ring.setAttribute('height', box.height + 6);
+            group.querySelector('.kind-glyph').setAttribute('transform', `translate(${Math.max(16, box.width - (shape === 'scalar' ? 28 : 48))} 8)`);
+            const familyGlyph = group.querySelector('.family-glyph');
+            familyGlyph.setAttribute('d', familyGlyphPaths[shape] || '');
+            familyGlyph.setAttribute('transform', `translate(${Math.max(16, box.width - 48)} 5) scale(2.4)`);
             text(group.querySelector('title'), `${item.interaction.kind === 'enter' && box.id !== scene.shell.id
                 ? t('Click to see inside {name}', { name: item.label }) : item.label}\n${item.secondaryLabel || ''}\n${item.id}`);
-            text(group.querySelector('.title'), shortened(item.label, box.width - 32));
-            text(group.querySelector('.secondary'), shortened(item.secondaryLabel, box.width - 32));
+            const labelWidth = box.width - (shape === 'scalar' ? 32 : 52);
+            text(group.querySelector('.title'), shortened(item.label, labelWidth));
+            text(group.querySelector('.secondary'), shortened(item.secondaryLabel, labelWidth));
             group.querySelector('.storage-lines').setAttribute('d', storage ? `M16 ${box.height - 27}H${box.width - 16}M16 ${box.height - 21}H${box.width - 16}` : '');
             group.querySelector('.origin-label').setAttribute('y', box.height - 10);
             text(group.querySelector('.origin-label'), highlight.has(box.id) ? 'Verified contributor / partial' : '');
@@ -614,7 +707,9 @@
         }
         for (const point of geometry.contacts) {
             const item = contactById.get(point.id), record = interactive(point.id, 'contact', item), group = record.group;
-            group.setAttribute('class', `contact${selection.has(point.id) ? ' selected' : ''}${item.status === 'compiler-confirmed-method-port' ? ' confirmed' : ''}`);
+            const glyph = glyphPresentation(item, 'contact');
+            group.setAttribute('class', `contact glyph-${glyph.kind} glyph-family-${glyph.family}${selection.has(point.id) ? ' selected' : ''}${selectionPeers.has(point.id) ? ' selection-related' : ''}${item.status === 'compiler-confirmed-method-port' ? ' confirmed' : ''}`);
+            applyGlyphPresentation(group, glyph);
             group.setAttribute('transform', `translate(${point.x} ${point.y})`);
             group.setAttribute('aria-label', `${item.label}, ${item.kind}, ${item.direction}, ${item.detail}, inspect`);
             group.setAttribute('aria-pressed', String(selection.has(point.id)));
@@ -626,6 +721,8 @@
                 const selected = slot.connectionId === current.selectedRelationId || slot.bitIds.some(id => highlight.has(id));
                 const mark = svgElement('rect', { class: `mark${selected ? ' selected' : ''}`,
                     x: slot.x - point.x - 4, y: slot.y - point.y - 4, width: 8, height: 8 }, marks);
+                if (['operation', 'unresolved'].includes(glyph.kind)) svgElement('path', { class: 'contact-glyph',
+                    d: contactGlyphPaths[glyph.kind], transform: `translate(${slot.x - point.x} ${slot.y - point.y})` }, marks);
                 if (slot.id) {
                     mark.dataset.slotId = slot.id; mark.dataset.connectionId = slot.connectionId;
                     mark.dataset.contactId = point.id; mark.dataset.indices = JSON.stringify(slot.indices);
@@ -650,7 +747,9 @@
         const groups = new Map((scene.interfaceGroups || []).map(item => [item.id, item]));
         for (const point of geometry.groups) {
             const item = groups.get(point.id), record = interactive(point.id, 'group', item), group = record.group;
-            group.setAttribute('class', `interface-group${selection.has(point.id) ? ' selected' : ''}`);
+            const glyph = glyphPresentation(item, 'group');
+            group.setAttribute('class', `interface-group glyph-${glyph.kind} glyph-family-${glyph.family}${selection.has(point.id) ? ' selected' : ''}`);
+            applyGlyphPresentation(group, glyph);
             group.setAttribute('transform', `translate(${point.x} ${point.y})`);
             group.setAttribute('aria-label', `${item.label}, BSV interface group, not a physical port, inspect members`);
             group.setAttribute('aria-pressed', String(selection.has(point.id)));
@@ -667,7 +766,8 @@
             const item = connectionById.get(route.id), record = interactive(route.id, 'connection', item), group = record.group;
             const selected = selection.has(route.id) || item.memberRelationIds?.includes(current.selectedRelationId)
                 || item.bits?.some(id => highlight.has(id));
-            group.setAttribute('class', `connection ${item.style}${item.kind === 'constant-connection' ? ' constant' : ''}${selected ? ' selected' : ''}`);
+            const related = selectionRoutes.has(route.id), muted = selectionRoutes.size && !related;
+            group.setAttribute('class', `connection ${item.style}${item.kind === 'constant-connection' ? ' constant' : ''}${selected ? ' selected' : ''}${related ? ' selection-related' : ''}${muted ? ' selection-muted' : ''}`);
             group.setAttribute('aria-label', `${item.style === 'semantic' ? 'BSV relation' : 'RTL net'}: ${item.label}, inspect`);
             group.setAttribute('aria-pressed', String(selection.has(route.id)));
             text(group.querySelector('title'), '');
@@ -810,6 +910,12 @@
             enter: id => {
                 const item = [scene.shell, ...scene.children].find(node => node.id === id);
                 return item ? activate(item, 'node') : false;
+            },
+            familyElement: indices => {
+                const visit = navigation.getState().current;
+                return navigation.navigate({ viewport: visit.viewport, disclosureState: { ...visit.disclosureState,
+                    presentation: { ...visit.disclosureState.presentation, familyElementIndices: indices } } },
+                { reason: 'family-element' });
             },
             codeScroll: (id, scroll) => patchAnalysis({ codeScroll: {
                 ...navigation.getState().current.disclosureState.analysis?.codeScroll, [id]: scroll } }, false),
@@ -1372,7 +1478,7 @@
         view.disclosureState = { capabilities: !!disclosure.capabilities,
             ...(disclosure.presentation ? { presentation: disclosure.presentation } : {}),
             inspector: select(disclosure.inspector, ['key', 'scrollTop']),
-            analysis: select(disclosure.analysis, ['codeSelection', 'sourceMode', 'codeOpen', 'codeScroll', 'disclosures']) };
+            analysis: select(disclosure.analysis, ['codeSelection', 'sourceMode', 'codeOpen', 'codeScroll', 'disclosures', 'lens']) };
         view.query = current.analysis?.request ? select(current.analysis.request, ['kind', 'analysisId', 'snapshotId',
             'implementationProvider', 'stage', 'ownerInstanceId', 'implementationOccurrenceId', 'seed', 'scope',
             'direction', 'semanticsProfile', 'limits', 'mode']) : null;

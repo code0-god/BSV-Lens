@@ -111,10 +111,11 @@ function identifierBefore(text, offset) {
 }
 
 function findMatchingDelimiter(text, openIndex, openCharacter, closeCharacter) {
+    const masked = maskCommentsAndStrings(text);
     let depth = 0;
     for (let index = openIndex; index < text.length; index += 1) {
-        if (text[index] === openCharacter) depth += 1;
-        else if (text[index] === closeCharacter) {
+        if (masked[index] === openCharacter) depth += 1;
+        else if (masked[index] === closeCharacter) {
             depth -= 1;
             if (depth === 0) return index;
         }
@@ -140,6 +141,7 @@ function findStatementEnd(text, start) {
 }
 
 function splitTopLevel(text, delimiter = ',') {
+    const masked = maskCommentsAndStrings(text);
     const parts = [];
     let start = 0;
     let parentheses = 0;
@@ -147,7 +149,7 @@ function splitTopLevel(text, delimiter = ',') {
     let braces = 0;
 
     for (let index = 0; index < text.length; index += 1) {
-        const character = text[index];
+        const character = masked[index];
         if (character === '(') parentheses += 1;
         else if (character === ')') parentheses = Math.max(0, parentheses - 1);
         else if (character === '[') brackets += 1;

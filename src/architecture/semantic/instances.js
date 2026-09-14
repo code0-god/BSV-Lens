@@ -176,8 +176,11 @@ function rootInstance(definition, path, reason) {
 }
 
 function childInstance(parent, declaration, target, path, cycle) {
+    const family = declaration.family ? { ...declaration.family } : null;
+    if (family?.kind === 'module-family' && !target) family.resolutionStatus = 'unresolved';
     return {
         ...declaration,
+        family,
         id: instanceOccurrenceId(parent.id, path),
         kind: 'instance-occurrence',
         path,
@@ -214,6 +217,7 @@ function resolveTarget(owner, name, byName, importsByPackage, diagnostics, locat
 
 function targetConstructor(declaration) {
     if (!declaration) return null;
+    if (declaration.family) return declaration.family.leafConstructor;
     if (!['replicateM', 'mapM'].includes(declaration.constructor)) return declaration.constructor;
     return /^\s*(mk[A-Za-z_$][\w$]*)\b/.exec(declaration.arguments?.[0] || '')?.[1] || null;
 }

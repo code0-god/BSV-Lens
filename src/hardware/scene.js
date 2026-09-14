@@ -9,17 +9,33 @@ function display(item, disclosureState = {}) {
     return { ...visible, detail: item.secondaryLabel,
         ...(item.signalDetails ? { signalDetails: disclosureState.rtlSignals ? item.signalDetails : [] } : {}) };
 }
+function repeatedElementScope(root, disclosureState = {}) {
+    if (!root.family) return null;
+    const dimensions = root.family.dimensions.map(dimension => ({ expression: dimension.expression,
+        status: dimension.status, min: 0,
+        maxExclusive: dimension.status === 'concrete' ? dimension.indexDomain?.upperExclusive ?? dimension.size : null }));
+    const selectedIndices = disclosureState.presentation?.familyElementIndices || null;
+    const markers = selectedIndices || dimensions.map(() => '*');
+    const elementLabel = `${root.label}${markers.map(index => `[${index}]`).join('')}`;
+    return { familyInstanceId: root.id,
+        kind: selectedIndices ? 'indexed-representative' : root.family.resolutionStatus === 'exact' ? 'representative' : 'symbolic-element',
+        dimensions: dimensions.map(dimension => dimension.expression), indexDomains: dimensions,
+        selectedIndices, elementIdentity: `${root.id}${markers.map(index => `[${index}]`).join('')}`,
+        elementLabel, elementType: root.family.leafType };
+}
 function bsvContent(architecture, rootId, disclosureState, selectedId = null) {
     const root = architecture.occurrences[rootId];
+    const familyScope = repeatedElementScope(root, disclosureState);
     const boundary = projectBoundary(architecture, rootId, item => display(item, disclosureState));
     const summary = summarizeRelations(architecture, rootId, boundary.endpoint, selectedId);
-    return { shell: { ...display(root), expanded: true }, children: root.children.map(id => ({ ...display(architecture.occurrences[id]), expanded: false })),
+    return { shell: { ...display(root), ...(familyScope ? { label: familyScope.elementLabel } : {}), expanded: true }, children: root.children.map(id => ({ ...display(architecture.occurrences[id]), expanded: false })),
         storages: root.storages.map(id => display(architecture.storage[id])),
         contacts: boundary.contacts, interfaceGroups: boundary.interfaceGroups, connections: summary.connections, aliases: [],
         projection: { kind: 'bsv-overview', ownerInstanceId: rootId, sourceRevision: root.sourceRefs[0].revision,
             canonicalRelationIds: summary.canonicalRelationIds, summaryRelationIds: summary.connections.flatMap(connection => connection.memberRelationIds),
             foldedRelationIds: summary.foldedRelationIds, scopeOutsideRelationIds: summary.scopeOutsideRelationIds,
             continuationRelationIds: summary.continuationRelationIds, foldedContactIds: boundary.foldedContactIds,
+            ...(familyScope ? { familyScope } : {}),
             ...(summary.stateRelations ? { stateRelations: summary.stateRelations } : {}) } };
 }
 function rtlContent(model, rootId, sourceOwnerId) {
@@ -104,6 +120,9 @@ function buildScene({ buildId, label, architecture, intent, model, rootId, owner
     const breadcrumb = sceneKind === 'bsv' ? sourceBreadcrumb : [];
     if (sceneKind === 'rtl') for (let actual = model.occurrences[rootId]; actual; actual = model.occurrences[actual.parentId]) {
         breadcrumb.unshift({ id: actual.id, label: actual.name, interaction: { kind: 'enter', entityId: actual.id } });
+    }
+    if (sceneKind === 'bsv' && content.projection?.familyScope && sourceBreadcrumb.length) {
+        sourceBreadcrumb.at(-1).label = content.projection.familyScope.elementLabel;
     }
     const path = architecture?.occurrences[ownerId]?.path || null;
     const selection = { selectedEntityId: intent.selectedEntityId || null, selectedRelationId: intent.selectedRelationId || null };

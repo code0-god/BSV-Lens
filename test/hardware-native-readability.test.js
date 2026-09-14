@@ -125,3 +125,17 @@ test('native saved code scroll preserves renderer-shaped positions and rejects m
     }
     assert.throws(() => stateValue(state(Object.fromEntries(Array.from({ length: 129 }, (_, index) => [String(index), { top: 0, left: 0 }])))), { code: 'LIMIT_EXCEEDED' });
 });
+
+test('native state preserves bounded family indices and the selected analysis lens', () => {
+    const { stateValue } = require('../src/panel/hardware-state');
+    const saved = { schema: 1, view: { sceneKind: 'bsv', provider: 'stock', disclosureState: {
+        presentation: { familyElementIndices: [1, 2] }, analysis: { lens: 'value' }
+    } } };
+    assert.deepEqual(JSON.parse(JSON.stringify(stateValue(saved))), saved);
+    for (const familyElementIndices of [[], [-1], [1.5], Array(9).fill(0)]) {
+        const input = structuredClone(saved); input.view.disclosureState.presentation.familyElementIndices = familyElementIndices;
+        assert.throws(() => stateValue(input), { code: 'INVALID_INPUT' });
+    }
+    const invalidLens = structuredClone(saved); invalidLens.view.disclosureState.analysis.lens = 'timing';
+    assert.throws(() => stateValue(invalidLens), { code: 'INVALID_INPUT' });
+});

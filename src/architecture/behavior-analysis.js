@@ -87,7 +87,7 @@ function collectAssignments(instance, statement, original, callable, makeLocatio
     // State assignment is a statement form, not every `name <=` token. Require a
     // statement/block boundary so comparisons in typed initializers are not writes.
     const expression = new RegExp(
-        `(?:^|\\bbegin|:|\\bif\\s*\\([^;]*\\))\\s*${escapeRegExp(instance.name)}\\s*<=`, 'g'
+        `(?:^|\\bbegin|:|\\bif\\s*\\([^;]*\\))\\s*${escapeRegExp(instance.name)}((?:\\s*\\[[^\\]]+\\])*)\\s*<=`, 'g'
     );
     let match;
     while ((match = expression.exec(statement.text)) !== null) {
@@ -98,6 +98,7 @@ function collectAssignments(instance, statement, original, callable, makeLocatio
             operation: instance.primitiveKind === 'register' ? 'register-write' : 'state-write',
             dataFlow: 'write',
             stateEffect: 'write',
+            elementRef: familyElementRef(instance, match[1]),
             statement,
             original,
             matchIndex: match.index + match[0].indexOf(instance.name),
@@ -108,10 +109,10 @@ function collectAssignments(instance, statement, original, callable, makeLocatio
 }
 
 function collectMemberAccesses(instance, statement, original, callable, makeLocation, accesses, seen) {
-    const expression = new RegExp(`\\b${escapeRegExp(instance.name)}((?:\\s*\\.\\s*[A-Za-z_$][\\w$]*)+)`, 'g');
+    const expression = new RegExp(`\\b${escapeRegExp(instance.name)}\\b((?:\\s*\\[[^\\]]+\\])*)((?:\\s*\\.\\s*[A-Za-z_$][\\w$]*)+)`, 'g');
     let match;
     while ((match = expression.exec(statement.text)) !== null) {
-        const members = [...match[1].matchAll(/[A-Za-z_$][\w$]*/g)].map((entry) => entry[0]);
+        const members = [...match[2].matchAll(/[A-Za-z_$][\w$]*/g)].map((entry) => entry[0]);
         if (members.length === 0) continue;
         const resultBinding = resultBindingBefore(statement.text, match.index);
         const valueBinding = valueBindingBefore(statement.text, match.index);
@@ -126,6 +127,7 @@ function collectMemberAccesses(instance, statement, original, callable, makeLoca
             operation,
             dataFlow: resultBinding ? 'return' : classification.dataFlow,
             stateEffect: classification.stateEffect,
+            elementRef: familyElementRef(instance, match[1]),
             resultBinding,
             valueBinding,
             arguments: invocationArguments(statement.text, original, expression.lastIndex),
@@ -139,7 +141,7 @@ function collectMemberAccesses(instance, statement, original, callable, makeLoca
 }
 
 function collectRegisterReads(instance, statement, original, callable, makeLocation, accesses, seen) {
-    const expression = new RegExp(`\\b${escapeRegExp(instance.name)}\\b`, 'g');
+    const expression = new RegExp(`\\b${escapeRegExp(instance.name)}\\b((?:\\s*\\[[^\\]]+\\])*)`, 'g');
     let match;
     while ((match = expression.exec(statement.text)) !== null) {
         const after = statement.text.slice(expression.lastIndex);
@@ -151,6 +153,7 @@ function collectRegisterReads(instance, statement, original, callable, makeLocat
             operation: 'register-read',
             dataFlow: 'read',
             stateEffect: 'read',
+            elementRef: familyElementRef(instance, match[1]),
             statement,
             original,
             matchIndex: match.index,
@@ -242,6 +245,7 @@ function addAccess(data, accesses, seen) {
         stateEffect: data.stateEffect ?? null,
         resultBinding: data.resultBinding || null,
         valueBinding: data.valueBinding || null,
+        elementRef: data.elementRef || null,
         arguments: data.arguments || [],
         analysisOrigin: 'Source-derived',
         confidence: data.operation === 'unclassified-access' ? 'unknown' : 'explicit',
@@ -260,6 +264,28 @@ function addAccess(data, accesses, seen) {
             snippet
         }
     });
+}
+
+function familyElementRef(instance, selectorText) {
+    if (!instance.family || !selectorText) return null;
+    const expressions = [...selectorText.matchAll(/\[([^\]]+)\]/g)].map((match) => normalizeWhitespace(match[1]));
+    const dimensions = instance.family.dimensions || [];
+    const indices = expressions.map((expression, index) => {
+        const value = /^\d+$/.test(expression) && Number.isSafeInteger(Number(expression))
+            ? Number(expression) : null;
+        const dimension = dimensions[index];
+        const inRange = value !== null && dimension?.status === 'concrete'
+            && value >= dimension.indexDomain.lower && value < dimension.indexDomain.upperExclusive;
+        return { expression, value, resolutionStatus: inRange ? 'exact'
+            : value !== null && dimension?.status === 'symbolic' ? 'symbolic' : 'unresolved' };
+    });
+    const exact = indices.length === dimensions.length
+        && indices.every((index) => index.resolutionStatus === 'exact');
+    return {
+        indices,
+        resolutionStatus: exact ? 'exact'
+            : indices.some((index) => index.resolutionStatus === 'unresolved') ? 'unresolved' : 'symbolic'
+    };
 }
 
 function reconcileStateAssignments(behavior, codeAnalysis, instances, callable, makeLocation) {
@@ -286,6 +312,7 @@ function reconcileStateAssignments(behavior, codeAnalysis, instances, callable, 
             operation: instance.primitiveKind === 'register' ? 'register-write' : 'state-write',
             dataFlow: 'write',
             stateEffect: 'write',
+            elementRef: familyElementRef(instance, statement.stateEffect?.elementPath),
             statement: sourceStatement,
             original: statement.text,
             matchIndex: statement.text.indexOf(instance.name),

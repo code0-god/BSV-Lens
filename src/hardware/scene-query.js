@@ -135,6 +135,21 @@ function createSceneQuery({ buildId, label, importResult = null, analysis = null
             ['RTL stage', stockModel ? context.stage : 'Unknown', stockModel ? 'verified-structure' : 'not-attached'],
             ['Implementation', context.status, context.status],
             ...(context.ownership === 'containing-only' ? [['Containing RTL module', context.occurrencePath.join('/'), 'containing-only']] : [])]);
+        const familyScope = content.projection?.familyScope?.familyInstanceId === entity.id ? content.projection.familyScope : null;
+        if (entity.family) section('family', 'Repeated hardware', [
+            ['Kind', entity.family.kind === 'module-family' ? 'Module family' : 'Storage family'],
+            ['Dimensions', entity.family.dimensions.map(dimension => dimension.expression).join(' × ')],
+            ['Element type', entity.family.leafType],
+            ['Element count', entity.multiplicity?.status === 'exact' ? entity.multiplicity.count : 'Symbolic'],
+            ...(entity.family.kind === 'module-family' ? [
+                ['Element scope', familyScope?.kind === 'indexed-representative' ? 'Indexed representative; shared source structure'
+                    : entity.family.resolutionStatus === 'exact' ? 'Representative structure; choose a concrete index'
+                        : 'Symbolic element; concrete index unavailable'],
+                ['Element identity', familyScope?.elementLabel || `${entity.label}${entity.family.dimensions.map(() => '[*]').join('')}`],
+                ['Index domain', entity.family.dimensions.map(dimension => dimension.status === 'concrete'
+                    ? `[0, ${dimension.indexDomain?.upperExclusive ?? dimension.size})` : `[0, ${dimension.expression}) symbolic`).join(' × ')]
+            ] : [])
+        ]);
         const behaviorIds = new Set([...(entity.readers || []).map(b => b.id), ...(entity.writers || []).map(b => b.id),
             ...(entity.behaviorIds || []), ...(entity.behaviorId ? [entity.behaviorId] : []), ...(entity.members || []).map(m => m.behaviorId).filter(Boolean)]);
         if (architecture.behaviors[entity.id]) behaviorIds.add(entity.id);
@@ -261,7 +276,7 @@ function createSceneQuery({ buildId, label, importResult = null, analysis = null
         }
         for (const repeated of repeatedLocations.values()) if (repeated.length > 1)
             repeated.forEach((relation, index) => { relation.label += ` · #${index + 1}/${repeated.length}`; });
-        let connectionEssentials = null, title = entity.label;
+        let connectionEssentials = null, title = familyScope?.elementLabel || entity.label;
         if (selectedRelations.length) {
             const endpoints = field => [...new Set(selectedRelations.map(relation => relation[field]))].map(id => {
                 const endpoint = architecture.entities[id], sourceOwner = architecture.occurrences[endpoint.ownerId || endpoint.ownerInstanceId];
@@ -310,6 +325,17 @@ function createSceneQuery({ buildId, label, importResult = null, analysis = null
         ownerId = intent.ownerInstanceId || resolveSourceOwner(selectedId, ownerId);
         if (!ownerId) throw failure(roots.length > 1 ? 'AMBIGUOUS_ROOT' : 'UNAVAILABLE', roots.length > 1 ? 'Select an explicit source root' : 'No source root is available');
         if (!architecture.occurrences[ownerId]) invalid('Unknown BSV owner');
+        const requestedFamilyIndices = intent.disclosureState?.presentation?.familyElementIndices;
+        if (requestedFamilyIndices !== undefined) {
+            const family = architecture.occurrences[ownerId].family;
+            if (!family || family.resolutionStatus !== 'exact' || !Array.isArray(requestedFamilyIndices)
+                || requestedFamilyIndices.length !== family.dimensions.length) invalid('Concrete family indices require an exact repeated module family');
+            for (let index = 0; index < requestedFamilyIndices.length; index++) {
+                const value = requestedFamilyIndices[index];
+                const bound = family.dimensions[index].indexDomain?.upperExclusive ?? family.dimensions[index].size;
+                if (!Number.isSafeInteger(value) || value < 0 || !Number.isSafeInteger(bound) || bound <= value) invalid('Family element index is outside its declared dimension');
+            }
+        }
         const context = contexts.get(ownerId), stockOccurrenceId = context?.contextOccurrenceId;
         if (intent.rootInstanceId && !sourceRoot && !stockModel?.occurrences[intent.rootInstanceId]
             && !originModel?.occurrences[intent.rootInstanceId]) invalid('Unknown root occurrence');

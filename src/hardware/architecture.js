@@ -3,6 +3,7 @@
 const hardware = require('./index');
 const correspondence = require('./correspondence');
 const { buildSemanticIndexes } = require('../architecture/semantic/indexes');
+const { splitTopLevel } = require('../architecture/source-utils');
 const { normalizeRange } = require('./correspondence/source');
 const { deepFreeze, hash, stable, failure, table } = require('./json');
 
@@ -42,17 +43,28 @@ function createArchitecture({ importResult = null, analysis }) {
     for (const item of source.instances) {
         if (item.primitiveKind && !['register', 'fifo', 'memory'].includes(item.primitiveKind)) continue;
         const definition = indexes.definitionById.get(item.targetDefinitionId);
-        if (!item.primitiveKind && !definition) continue;
+        const unresolvedFamily = !item.primitiveKind && !definition && item.family?.kind === 'module-family';
+        if (!item.primitiveKind && !definition && !unresolvedFamily) continue;
         const parent = indexes.instanceById.get(item.parentInstanceId);
         const declaration = source.sourceReferences.find(r => r.kind === 'state-declaration' &&
             r.parentDefinitionId === parent?.targetDefinitionId && r.location?.uri === item.location?.uri &&
             r.location?.line === item.location?.line && r.location?.column === item.location?.column);
         const storageItem = !!item.primitiveKind;
+        const familyLeaf = item.family?.leafConstructor || item.family?.leafType
+            || item.constructor || item.declaredType || 'Unresolved module';
         const refs = [sourceRef(item.sourceRange, declaration?.id || item.id, storageItem ? 'state-declaration' : 'module-occurrence')];
         const value = record(item, storageItem ? 'storage' : 'module-occurrence', storageItem ? item.parentInstanceId : item.id,
-            declaration?.id || definition?.id || null, refs, storageItem ? item.declaredType : definition.name, !storageItem);
+            declaration?.id || definition?.id || null, refs, storageItem ? item.declaredType : definition?.name || familyLeaf,
+            !storageItem && !!definition);
         Object.assign(value, { path: item.path, parentInstanceId: item.parentInstanceId, declaredType: item.declaredType || 'inferred',
-            constructor: item.constructor || null, defaultExpressions: item.arguments || [], parameterBindings: item.parameterBindings || [] });
+            constructor: item.constructor || null, defaultExpressions: item.arguments || [], parameterBindings: item.parameterBindings || [],
+            family: item.family || null, multiplicity: item.multiplicity || null });
+        if (item.family) value.secondaryLabel = `${storageItem ? item.family.leafType : definition?.name || familyLeaf} · ${item.family.dimensions
+            .map(dimension => dimension.expression).join(' × ')}`;
+        if (unresolvedFamily) Object.assign(value, {
+            status: 'unresolved', unresolvedReason: 'module-constructor-unresolved',
+            interaction: { kind: 'inspect', entityId: item.id }
+        });
         if (storageItem) { Object.assign(value, { primitiveKind: item.primitiveKind, readers: [], writers: [] }); storage[value.id] = value; }
         else { Object.assign(value, { children: [], storages: [], contacts: [], behaviorIds: [], context: contexts.get(item.id) || null }); occurrences[value.id] = value; }
     }
@@ -74,7 +86,8 @@ function createArchitecture({ importResult = null, analysis }) {
         const iface = indexes.definitionById.get(ifaceId);
         // These are compiler/source type records, not parsing BSV source text.
         const compilerType = context?.compilerType || instance.declaredType || '';
-        const args = /#\((.*)\)$/.exec(compilerType)?.[1].split(',').map(s => s.trim()) || [];
+        const argsText = /#\((.*)\)$/.exec(compilerType)?.[1];
+        const args = argsText ? splitTopLevel(argsText).map(s => s.trim()) : [];
         const bindings = new Map((iface?.typeParameters || []).map((p, i) => [p.name, args[i] || p.name]));
         return type.replace(/\b[A-Za-z_][\w]*\b/g, token => bindings.get(token) || token);
     }
