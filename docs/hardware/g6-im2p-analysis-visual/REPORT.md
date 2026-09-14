@@ -80,7 +80,7 @@ Existing G2/G3/G4/G5 boundaries remain: source relations are not RTL nets; known
 - Current source-derived interface contract warnings remain visible; no compiler evidence was invented to resolve them.
 - User visual/design acceptance: PENDING.
 
-## H. 최종 설치본
+## H. 사전 릴리스 설치 검증본
 
 - Extension: `code0-god.bsv-lens` 0.4.1
 - Build ID: `sha256:4cc702ffc343c1c59190ae864a32346ec413dcad54004e9551e6f5bd6d354895`
@@ -97,4 +97,4 @@ Existing G2/G3/G4/G5 boundaries remain: source relations are not RTL nets; known
 - Hardware visual design: IMPLEMENTED.
 - Actual native visual/interaction tests: PASS for recorded local journeys.
 - User visual/design acceptance: PENDING.
-- Commit/push/merge/version/release/Marketplace: NOT PERFORMED.
+- Release status at this validation capture: NOT PERFORMED.
