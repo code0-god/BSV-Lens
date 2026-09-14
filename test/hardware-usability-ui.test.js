@@ -161,6 +161,32 @@ test('native size and history failures retain the committed selector, scene and 
     }
 });
 
+test('a revised recovery index refreshes the visible selector without replacing the committed scene', () => {
+    const fs = require('node:fs'), vm = require('node:vm'), renders = [];
+    const source = fs.readFileSync(path.resolve(__dirname, '../media/hardware-view.js'), 'utf8');
+    const code = source.slice(source.indexOf("        nativeTransport.subscribe((action, payload) => {"),
+        source.indexOf('        nativeTransport.ready.then'));
+    const state = Object.freeze({ current: Object.freeze({ buildId: 'committed-build', ownerInstanceId: 'owner' }),
+        scene: Object.freeze({ shell: Object.freeze({ label: 'mkCommitted' }) }) });
+    const harness = vm.runInNewContext(`let sourceDesigns = [{ id: 'old-revision', name: 'mkCurrent' }];
+        let nativeDiscovery = null, nativeSelectionRequired = null, subscribed;
+        const nativeTransport = { subscribe: callback => { subscribed = callback; } };
+        const renderCatalogOptions = () => renders.push(sourceDesigns.map(entry => entry.id));
+        ${code}
+        ({ dispatch: payload => subscribed('source-selection', payload), designs: () => sourceDesigns,
+            selection: () => nativeSelectionRequired })`, {
+        renders, navigation: { getState: () => state }, $: () => ({ hidden: true }), text: () => {},
+        t: value => value, nativeSelectionStatus: () => 'limited', nativeStatus: () => {}
+    });
+    harness.dispatch({ status: 'limited', entryId: 'new-revision',
+        designEntries: [{ id: 'new-revision', name: 'mkCurrent' }, { id: 'new-small', name: 'mkSmall' }],
+        discovery: { status: 'ready', analyzedFiles: 2 } });
+    assert.deepEqual(Array.from(harness.designs(), entry => entry.id), ['new-revision', 'new-small']);
+    assert.deepEqual(renders[0], ['new-revision', 'new-small']);
+    assert.equal(harness.selection().entryId, 'new-revision');
+    assert.equal(state.current.buildId, 'committed-build'); assert.equal(state.scene.shell.label, 'mkCommitted');
+});
+
 test('full design history describes explicit new history rather than changing the selected module size', () => {
     const { nativeDesignLimit, nativeSelectionStatus } = require('../media/hardware-view');
     const error = { code: 'LIMIT_EXCEEDED',

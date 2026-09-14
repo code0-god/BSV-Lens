@@ -20,7 +20,7 @@ Use the VS Code CLI inside the app bundle when `code` is absent from PATH:
 "/path/to/Visual Studio Code.app/Contents/Resources/app/bin/code" \
   --user-data-dir /tmp/bsv-lens-user-data \
   --extensions-dir /tmp/bsv-lens-extensions \
-  --install-extension /path/to/bsv-lens-0.4.2.vsix
+  --install-extension /path/to/bsv-lens-0.4.3.vsix
 ~~~
 
 Launch same executable with the same two isolation flags and workspace path. Remove only those temporary directories to clean up. Do not target the normal profile.
@@ -30,6 +30,6 @@ Launch same executable with the same two isolation flags and workspace path. Rem
 Expected:
 
 - Extension ID `code0-god.bsv-lens`
-- Version `0.4.2`
+- Version `0.4.3`
 - Build ID shown by Hardware Schematic diagnostics matches the installed assets
 - VSIX SHA-256 matches the final GitHub Actions artifact checksum

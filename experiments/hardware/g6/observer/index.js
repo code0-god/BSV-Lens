@@ -54,6 +54,7 @@ async function run({ automatic = false } = {}) {
     assert.ok(Number.isInteger(port) && port > 0 && port < 65536, 'Invalid observer port');
     const extensionsRoot = fs.realpathSync(required('G6_EXTENSIONS_DIR'));
     const targetMode = required('G6_TARGET_MODE');
+    const targetVersion = required('G6_TARGET_VERSION');
     assert.ok(['installed', 'development'].includes(targetMode), 'Explicit target mode required');
     const expectedRoot = targetMode === 'development' ? fs.realpathSync(required('G6_TARGET_ROOT')) : null;
     const sourceRoot = fs.realpathSync(required('G6_WORKSPACE_ROOT'));
@@ -69,7 +70,7 @@ async function run({ automatic = false } = {}) {
         const extensionPath = fs.realpathSync(target.extensionPath);
         if (targetMode === 'installed') assert.ok(within(extensionsRoot, extensionPath) && extensionPath !== extensionsRoot, 'Target did not load from isolated VSIX installation');
         else assert.equal(extensionPath, expectedRoot, 'Development target did not load from explicit source root');
-        assert.equal(target.packageJSON.version, '0.4.1');
+        assert.equal(target.packageJSON.version, targetVersion);
         const targetApi = await target.activate();
         const open = async (payload, reverse = false) => {
             assert.equal(typeof payload.path, 'string', 'Test document path required');

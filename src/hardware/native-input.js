@@ -10,9 +10,10 @@ const { validateNativeManifest, LIMITS } = require('./native-input-schema');
 const { approvedRoot, discoverSources, createInputReader, cancelled } = require('./native-input-io');
 
 async function loadNativeInput({ sourceRoot, artifactRoot, rootGrants, manifest, artifactPath, signal, onProgress, sourceSession,
-    sourceEntry, selectSourceEntry, discovery, originApproved = false } = {}) {
+    sourceEntry, selectSourceEntry, onSourceIndex, discovery, originApproved = false } = {}) {
     if (signal != null && !(signal instanceof AbortSignal) || onProgress !== undefined && typeof onProgress !== 'function'
         || selectSourceEntry !== undefined && typeof selectSourceEntry !== 'function'
+        || onSourceIndex !== undefined && typeof onSourceIndex !== 'function'
         || typeof originApproved !== 'boolean') throw failure('INVALID_INPUT', 'Invalid native input callback/approval');
     const config = validateNativeManifest(manifest);
     if (artifactPath !== undefined) {
@@ -45,16 +46,22 @@ async function loadNativeInput({ sourceRoot, artifactRoot, rootGrants, manifest,
         sourceEntries = await listSourceEntries({ registry: reader.registry, sources, sourceSession, signal, onProgress });
         sourceIndexStatus = Object.freeze({ status: sourceEntries.status, totalEntries: sourceEntries.totalEntries,
             entryLimit: sourceEntries.entryLimit, returnedEntries: sourceEntries.entries.length });
+        onSourceIndex?.({ designs: sourceEntries.entries, sourceSetIdentity: sourceEntries.sourceSetIdentity,
+            sourceFiles: sourceEntries.sourceFiles, sourceIndexStatus, entryId: null });
         if (selectedSourceEntry) {
             const matching = sourceEntries.entries.filter(entry => entry.pathRef === selectedSourceEntry.pathRef
                 && entry.revision === selectedSourceEntry.revision && entry.definitionId === selectedSourceEntry.definitionId);
             if (matching.length !== 1) throw failure('SOURCE_REVISION_MISMATCH', 'Selected source design no longer matches the discovered source revision');
+            onSourceIndex?.({ designs: sourceEntries.entries, sourceSetIdentity: sourceEntries.sourceSetIdentity,
+                sourceFiles: sourceEntries.sourceFiles, sourceIndexStatus, entryId: matching[0].id });
         } else if (sourceEntries.entries.length) {
             const selected = await selectSourceEntry(sourceEntries.entries, { signal, indexStatus: sourceIndexStatus }); cancelled(signal);
             if (!selected) throw failure('CANCELLED', 'Source design selection cancelled');
             const entry = sourceEntries.entries.find(entry => entry.id === selected);
             if (!entry) throw failure('FORBIDDEN', 'Selected source design is not in this workspace inventory');
             selectedSourceEntry = { pathRef: entry.pathRef, revision: entry.revision, definitionId: entry.definitionId };
+            onSourceIndex?.({ designs: sourceEntries.entries, sourceSetIdentity: sourceEntries.sourceSetIdentity,
+                sourceFiles: sourceEntries.sourceFiles, sourceIndexStatus, entryId: entry.id });
         }
     }
     async function readArtifact(descriptor) {

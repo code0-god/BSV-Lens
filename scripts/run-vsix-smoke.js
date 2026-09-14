@@ -15,13 +15,13 @@ const { runTests, runVSCodeCommand } = require('@vscode/test-electron');
 
 const ROOT = path.resolve(__dirname, '..');
 const TARGET_ID = 'code0-god.bsv-lens';
-const TARGET_VERSION = '0.4.2';
+const TARGET_VERSION = require('../package.json').version;
 const VSCODE = path.join(ROOT, '.vscode-test', 'vscode-darwin-arm64-1.136.1',
     'Visual Studio Code.app', 'Contents', 'MacOS', 'Code');
 const OBSERVER = path.join(ROOT, 'test', 'fixtures', 'vsix-smoke-observer');
 const SOURCE = path.join(ROOT, 'test', 'fixtures', 'semantic-workspace', 'src', 'SemanticFlowFixture.bsv');
 const OUTPUT = path.join(ROOT, '.build', 'system-code');
-const DEFAULT_VSIX = path.join(ROOT, 'dist', 'bsv-lens-0.4.2.vsix');
+const DEFAULT_VSIX = path.join(ROOT, 'dist', `bsv-lens-${TARGET_VERSION}.vsix`);
 const TIMEOUT = 20_000;
 
 async function main() {

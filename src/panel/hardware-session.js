@@ -4,6 +4,9 @@ const { failure, stable, copyJson, DEFAULT_LIMITS } = require('../hardware/json'
 const { fields, json, stateValue, queryKey, intentFor, visitFor } = require('./hardware-state');
 const { responsePayload } = require('./hardware-protocol');
 
+const sourceDesignLimit = error => error?.code === 'LIMIT_EXCEEDED'
+    && ['Generated correspondence shared payload byte limit', 'Prepared design exceeds its bounded byte limit.'].includes(error.message);
+
 async function interruptible(operation, signal) {
     let abort;
     const cancelled = new Promise((resolve, reject) => {
@@ -48,6 +51,7 @@ function createHardwareSession({ protocol, chooseInput, selectBuild, selectSourc
     getRestoreState = () => null, onInput = () => {}, onCurrent = () => {}, onDiagnostic = () => {} }) {
     let input = null, options = {}, current = null, selectedBuildId = null, disposed = false, loadGeneration = 0, loading = null;
     let pendingInput = null;
+    let sourceSelection = null;
     const preparedDesigns = new Map();
     let commitRevision = 0, commitSessionId = null, saves = Promise.resolve();
     const active = new Set(), events = [], issuedQueries = new Set();
@@ -61,12 +65,15 @@ function createHardwareSession({ protocol, chooseInput, selectBuild, selectSourc
     }
     const catalog = () => input?.catalog.map(query => query.getCatalogEntry()) || [];
     const registeredInputs = () => [...new Set([input, pendingInput?.input, ...[...preparedDesigns.values()].map(entry => entry.input)].filter(Boolean))];
-    const designs = () => input?.summary.sourceEntries || [...preparedDesigns.values()].find(entry => entry.input.summary.sourceEntries)?.input.summary.sourceEntries || [];
+    const designAuthorities = () => [{ input, options }, ...preparedDesigns.values()].filter(entry => entry.input?.summary.sourceEntries)
+        .map(entry => ({ designs: entry.input.summary.sourceEntries, sourceSetIdentity: entry.input.summary.sourceSetIdentity, options: entry.options }))
+        .concat(sourceSelection ? [sourceSelection] : []);
+    const designs = () => designAuthorities()[0]?.designs || [];
     function sourceDesign(entryId) {
-        const matches = [{ input, options }, ...preparedDesigns.values()].filter(entry => entry.input?.summary.sourceEntries?.some(design => design.id === entryId));
-        if (!matches.length || new Set(matches.map(entry => `${entry.options.sourceRoot}\0${entry.input.summary.sourceSetIdentity}`)).size !== 1)
+        const matches = designAuthorities().filter(authority => authority.designs.some(design => design.id === entryId));
+        if (!matches.length || new Set(matches.map(authority => `${authority.options.sourceRoot}\0${authority.sourceSetIdentity}`)).size !== 1)
             throw failure('FORBIDDEN', 'Source design is not uniquely registered in this workspace');
-        return { entry: matches[0].input.summary.sourceEntries.find(entry => entry.id === entryId), options: matches[0].options };
+        return { entry: matches[0].designs.find(entry => entry.id === entryId), options: matches[0].options };
     }
     function queryFor(buildId) {
         const query = input?.catalog.find(query => query.getCatalogEntry().buildId === buildId)
@@ -106,8 +113,16 @@ function createHardwareSession({ protocol, chooseInput, selectBuild, selectSourc
                 operationCurrent();
                 if ((await cached.input.registry.readSource(source)).status !== 'current') throw failure('STALE_SOURCE', 'Prepared design sources changed; refresh the workspace first');
             }
-            let selectionRequired = null, proposed;
+            let selectionRequired = null, sourceIndex = null, proposed;
+            const publishSourceSelection = () => {
+                operationCurrent();
+                protocol.event('source-selection', { status: 'limited', sourceFiles: sourceIndex.sourceFiles,
+                    designs: sourceIndex.designs.length, designEntries: sourceIndex.designs,
+                    sourceIndexStatus: sourceIndex.sourceIndexStatus, discovery: chosen.discovery || null,
+                    entryId: sourceIndex.entryId });
+            };
             try { proposed = cached ? cached.input : await loadNativeInput({ ...chosen, sourceSession,
+                onSourceIndex: index => { operationCurrent(); sourceIndex = index; sourceSelection = { ...index, options: chosen }; },
                 ...(chosen.discovery && selectSourceEntry ? { selectSourceEntry: async (entries, context) => {
                     const selected = await selectSourceEntry(entries, { ...context, preferred: options.sourceEntry });
                     operationCurrent();
@@ -119,6 +134,7 @@ function createHardwareSession({ protocol, chooseInput, selectBuild, selectSourc
                 record({ action, phase: event.phase, ...(event.threadId === undefined ? {} : { threadId: event.threadId }),
                     ...(event.exitCode === undefined ? {} : { exitCode: event.exitCode, cancelled: !!event.cancelled }) });
             } }); } catch (error) {
+                if (sourceIndex && sourceDesignLimit(error)) publishSourceSelection();
                 if (!selectionRequired || error.code !== 'CANCELLED') throw error;
                 operationCurrent();
                 ctx.afterReply(() => {
@@ -131,7 +147,10 @@ function createHardwareSession({ protocol, chooseInput, selectBuild, selectSourc
             if (proposed.selectedSourceEntry) chosen = { ...chosen, sourceEntry: proposed.selectedSourceEntry };
             if ((action === 'choose-design' || chosen.independentArtifact) && (newHistory || !preparedDesigns.has(proposed.inputIdentity))) {
                 const candidateBytes = Buffer.byteLength(JSON.stringify(proposed.analysis || proposed.importResult));
-                if (candidateBytes > 67108864) throw failure('LIMIT_EXCEEDED', 'Prepared design exceeds its bounded byte limit.');
+                if (candidateBytes > 67108864) {
+                    if (sourceIndex) publishSourceSelection();
+                    throw failure('LIMIT_EXCEEDED', 'Prepared design exceeds its bounded byte limit.');
+                }
                 const bytes = (newHistory ? 0 : [...preparedDesigns.values()].reduce((sum, entry) => sum + entry.bytes, 0))
                     + candidateBytes;
                 if (!newHistory && preparedDesigns.size >= 8 || bytes > 67108864) throw failure('LIMIT_EXCEEDED', 'Prepared design history reached its bounded limit. Reopen Hardware Schematic to start a new design history.');
@@ -196,7 +215,7 @@ function createHardwareSession({ protocol, chooseInput, selectBuild, selectSourc
                 try { await onInput(input, options, selectedBuildId); } catch (_) { record({ action, phase: 'restore-listeners-failed' }); }
                 throw error;
             }
-            pendingInput = null; preparedDesigns.clear(); issuedQueries.clear(); commitRevision = 0; commitSessionId = null; protocol.generation++; onCurrent(null);
+            pendingInput = null; sourceSelection = null; preparedDesigns.clear(); issuedQueries.clear(); commitRevision = 0; commitSessionId = null; protocol.generation++; onCurrent(null);
             ctx.afterReply(() => protocol.event('catalog', { catalog: entries, selectedBuildId: picked,
                 inputStatus: proposed.summary.status, message: `${proposed.summary.status}: ${proposed.summary.label}`, summary: proposed.summary,
                 designs: proposed.summary.sourceEntries || [], selectedDesignId: proposed.summary.selectedDesignId || null,
@@ -254,7 +273,7 @@ function createHardwareSession({ protocol, chooseInput, selectBuild, selectSourc
                 throw error;
             }
             if (candidate.replaceMode === 'refresh') preparedDesigns.clear();
-            input = candidate.input; options = candidate.options; selectedBuildId = candidate.selectedBuildId; pendingInput = null;
+            input = candidate.input; options = candidate.options; selectedBuildId = candidate.selectedBuildId; pendingInput = null; sourceSelection = null;
         }
         if ((input?.selectedSourceEntry || options.independentArtifact) && !preparedDesigns.has(input.inputIdentity)) preparedDesigns.set(input.inputIdentity,
             { input, options, selectedBuildId, replaceMode: options.independentArtifact ? 'artifact' : 'design',
@@ -357,7 +376,7 @@ function createHardwareSession({ protocol, chooseInput, selectBuild, selectSourc
             disposed = true; loadGeneration++; loading?.controller.abort();
             const pending = [...active]; for (const item of pending) item.controller.abort();
             await Promise.allSettled(pending.map(item => item.promise));
-            input = null; pendingInput = null; preparedDesigns.clear(); options = {}; current = null; issuedQueries.clear();
+            input = null; pendingInput = null; sourceSelection = null; preparedDesigns.clear(); options = {}; current = null; issuedQueries.clear();
         } };
 }
 module.exports = { createHardwareSession };
