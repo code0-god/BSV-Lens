@@ -51,11 +51,13 @@ function stateValue(input) {
         const detail = view.disclosureState; fields(detail, ['capabilities', 'presentation', 'inspector', 'analysis'], 'disclosure');
         if (detail.capabilities !== undefined && typeof detail.capabilities !== 'boolean') throw failure('INVALID_INPUT', 'Invalid capabilities disclosure');
         if (detail.presentation != null) {
-            const p = detail.presentation; fields(p, ['fit', 'inspectorOpen', 'selectionIds', 'preferredImplementationProvider'], 'presentation');
+            const p = detail.presentation; fields(p, ['fit', 'inspectorOpen', 'selectionIds', 'preferredImplementationProvider', 'familyElementIndices'], 'presentation');
             if (p.fit !== undefined && !['structure', 'selection', 'manual'].includes(p.fit)
                 || p.inspectorOpen !== undefined && typeof p.inspectorOpen !== 'boolean'
                 || p.preferredImplementationProvider !== undefined && !['stock', 'instrumented'].includes(p.preferredImplementationProvider)
-                || p.selectionIds !== undefined && (!Array.isArray(p.selectionIds) || p.selectionIds.some(id => typeof id !== 'string'))) throw failure('INVALID_INPUT', 'Invalid presentation state');
+                || p.selectionIds !== undefined && (!Array.isArray(p.selectionIds) || p.selectionIds.some(id => typeof id !== 'string'))
+                || p.familyElementIndices !== undefined && (!Array.isArray(p.familyElementIndices) || !p.familyElementIndices.length
+                    || p.familyElementIndices.length > 8 || p.familyElementIndices.some(index => !Number.isSafeInteger(index) || index < 0))) throw failure('INVALID_INPUT', 'Invalid presentation state');
         }
         if (detail.inspector != null) {
             fields(detail.inspector, ['key', 'scrollTop'], 'inspector');
@@ -63,9 +65,10 @@ function stateValue(input) {
             if (detail.inspector.scrollTop !== undefined) number(detail.inspector.scrollTop, 'inspector scroll');
         }
         if (detail.analysis != null) {
-            const a = detail.analysis; fields(a, ['codeSelection', 'sourceMode', 'codeOpen', 'codeScroll', 'disclosures'], 'analysis disclosure');
+            const a = detail.analysis; fields(a, ['codeSelection', 'sourceMode', 'codeOpen', 'codeScroll', 'disclosures', 'lens'], 'analysis disclosure');
             if (a.codeSelection != null && typeof a.codeSelection !== 'string'
                 || a.sourceMode !== undefined && !['build', 'current-source'].includes(a.sourceMode)
+                || a.lens !== undefined && !['structure', 'value', 'control'].includes(a.lens)
                 || a.codeOpen !== undefined && typeof a.codeOpen !== 'boolean') throw failure('INVALID_INPUT', 'Invalid code disclosure');
             if (a.codeScroll != null) {
                 fields(a.codeScroll, Object.keys(a.codeScroll), 'code scroll');

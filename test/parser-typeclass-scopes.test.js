@@ -77,7 +77,8 @@ test('declaration scope distinguishes legal overload IDs without changing ordina
     assert.equal(semantic.functionDefinitions.filter((entry) => entry.declarationOnly).length, 5);
     const ordinary = semantic.callSites.find((call) => call.calleeName === 'ordinary');
     assert.equal(ordinary.calleeDefinitionId, 'def:Overloads:ordinary');
-    assert.equal(ordinary.resolutionStatus, 'exact');
+    assert.equal(ordinary.targetResolutionStatus, 'exact');
+    assert.equal(ordinary.resolutionStatus, 'unresolved');
 });
 
 test('imported and intra-instance calls never infer typeclass dispatch from one or several implementations', () => {

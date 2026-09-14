@@ -36,6 +36,34 @@ test('long same-prefix names retain unique measured suffixes including mixed gra
     assert.notEqual(result[0].text, result[1].text);
     assert.match(result[0].text, /left$/); assert.match(result[1].text, /right$/);
 });
+test('camel-case hardware names keep a readable semantic suffix when measured space is narrow', () => {
+    const input = fixture();
+    input.scene.children[0].label = 'processingElements'; input.geometry.labels[1].fullText = 'processingElements';
+    input.scene.children[1].label = 'processingEngines'; input.geometry.labels[2].fullText = 'processingEngines';
+    const result = projectLabels(input).labels.filter(label => label.ownerId !== 'root');
+    assert.equal(result[0].text, 'processingElements');
+    assert.deepEqual(result[0].lines, ['processing', 'Elements']);
+    assert.match(result[0].text, /Elements$/); assert.match(result[1].text, /Engines$/);
+    assert.notEqual(result[0].text, result[1].text);
+    assert.ok(result.every(label => label.visible && label.screenFontSize >= 9));
+});
+test('narrow hardware overview wraps a complete camel-case name inside its node', () => {
+    const input = fixture(), node = input.geometry.nodes.find(item => item.id === 'left');
+    input.viewport = { x: 0, y: 0, scale: 0.223 }; input.canvas = { width: 396, height: 264 };
+    Object.assign(node, { x: 120, y: 120, width: 240, height: 156 });
+    input.scene.children[0].label = 'activeWeightBankReg';
+    input.geometry.labels[1].fullText = 'activeWeightBankReg';
+    input.geometry.nodes.find(item => item.id === 'right').x = 1200;
+    input.geometry.nodes[0].width = 1800; input.geometry.bounds.width = 1800;
+    const label = projectLabels(input).labels.find(item => item.ownerId === 'left');
+    assert.equal(label.visible, true); assert.equal(label.text, 'activeWeightBankReg');
+    assert.deepEqual(label.lines, ['active', 'Weight', 'BankReg']);
+    assert.ok(label.screenFontSize >= 9); assert.ok(label.bounds.height > label.screenFontSize * 2);
+    const screenNode = { x: node.x * input.viewport.scale, y: node.y * input.viewport.scale,
+        width: node.width * input.viewport.scale, height: node.height * input.viewport.scale };
+    assert.ok(label.bounds.x >= screenNode.x && label.bounds.x + label.bounds.width <= screenNode.x + screenNode.width);
+    assert.ok(label.bounds.y >= screenNode.y && label.bounds.y + label.bounds.height <= screenNode.y + screenNode.height);
+});
 test('detail hysteresis does not oscillate around the overview boundary', () => {
     let level = 'overview';
     for (const scale of [0.54, 0.56, 0.54, 0.56]) { level = detailLevel(scale, level); assert.equal(level, 'overview'); }
@@ -145,4 +173,46 @@ test('a selected title wider than its tiny node stays full-size in a clear owner
     assert.ok(clear.bounds.y + clear.bounds.height < wireY || clear.bounds.y > wireY
         || clear.bounds.x + clear.bounds.width < label.bounds.x || clear.bounds.x > label.bounds.x + label.bounds.width);
     assert.deepEqual(input.viewport, original.viewport);
+});
+
+test('a selected wrapped title remains visible over routes already hidden by its node body', () => {
+    const input = fixture(), node = input.geometry.nodes.find(node => node.id === 'left');
+    input.current.selectedEntityId = 'left'; input.viewport.scale = 0.2265625;
+    input.scene.children[0].label = 'groupIndexReg'; input.geometry.labels[1].fullText = 'groupIndexReg';
+    node.width = 360; node.height = 180;
+    input.geometry.routes.push({ id: 'selected-route', segments: [[node.x, node.y + 80, node.x + node.width, node.y + 80]] });
+    const original = structuredClone({ geometry: input.geometry, viewport: input.viewport, current: input.current });
+    const label = projectLabels(input).labels.find(label => label.ownerId === 'left');
+    const box = { x: input.viewport.x + node.x * input.viewport.scale, y: input.viewport.y + node.y * input.viewport.scale,
+        width: node.width * input.viewport.scale, height: node.height * input.viewport.scale };
+    assert.equal(label.visible, true); assert.equal(label.text, 'groupIndexReg');
+    assert.deepEqual(label.lines, ['groupIndex', 'Reg']); assert.ok(label.screenFontSize >= 12);
+    assert.ok(label.bounds.x >= box.x && label.bounds.y >= box.y);
+    assert.ok(label.bounds.x + label.bounds.width <= box.x + box.width);
+    assert.ok(label.bounds.y + label.bounds.height <= box.y + box.height);
+    assert.deepEqual({ geometry: input.geometry, viewport: input.viewport, current: input.current }, original);
+});
+
+test('a selected title uses a non-interactive overlay only when routes occupy every clear callout', () => {
+    const input = fixture(), node = input.geometry.nodes.find(node => node.id === 'left');
+    input.current.selectedEntityId = 'left'; input.viewport.scale = 0.2;
+    input.scene.children[0].label = 'groupIndexReg'; input.geometry.labels[1].fullText = 'groupIndexReg';
+    node.width = 240; node.height = 156;
+    const screen = { x: input.viewport.x + node.x * input.viewport.scale,
+        y: input.viewport.y + node.y * input.viewport.scale, width: node.width * input.viewport.scale,
+        height: node.height * input.viewport.scale };
+    for (const [id, y] of [['above', screen.y - 20], ['below', screen.y + screen.height + 10]]) {
+        input.geometry.routes.push({ id, segments: [[0, (y - input.viewport.y) / input.viewport.scale,
+            1000, (y - input.viewport.y) / input.viewport.scale]] });
+    }
+    for (const [id, x] of [['left-side', screen.x - 10], ['right-side', screen.x + screen.width + 10]]) {
+        input.geometry.routes.push({ id, segments: [[(x - input.viewport.x) / input.viewport.scale, 0,
+            (x - input.viewport.x) / input.viewport.scale, 1000]] });
+    }
+    const original = structuredClone({ geometry: input.geometry, viewport: input.viewport, current: input.current });
+    const label = projectLabels(input).labels.find(label => label.ownerId === 'left');
+    assert.equal(label.visible, true); assert.equal(label.text, 'groupIndexReg');
+    assert.equal(label.reason, 'selected-title-overlay'); assert.equal(label.pointerPolicy, 'none');
+    assert.ok(label.screenFontSize >= 12);
+    assert.deepEqual({ geometry: input.geometry, viewport: input.viewport, current: input.current }, original);
 });

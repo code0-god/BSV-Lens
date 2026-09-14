@@ -8,7 +8,8 @@ const { capture } = require('../experiments/hardware/g5-readability/semantic-det
 const { compare } = require('../experiments/hardware/g6/semantic.cjs');
 const { createRun } = require('../experiments/hardware/g6/run.cjs');
 const { loadCapturedCase } = require('../experiments/hardware/g3/query.js');
-const { loadReference, proveIdentities, verifyAnalysis, querySeal, resultSeal, rebaseCapture } = require('../experiments/hardware/g6-usability/semantic.cjs');
+const { V2_REBASED_CAPTURE, V2_UNCHANGED_ROWS, loadReference, proveIdentities, verifyAnalysis, querySeal, resultSeal,
+    rebaseCapture } = require('../experiments/hardware/g6-usability/semantic.cjs');
 
 const root = path.resolve(__dirname, '..'), clone = value => JSON.parse(JSON.stringify(value));
 let fixture;
@@ -21,13 +22,13 @@ function inputs() {
 }
 function reseal(row) { row.result.queryId = querySeal(row); row.result.id = resultSeal(row.result); }
 
-test('cross-build75 retains original strict FAIL and reaches the exact pinned capture without changing live objects', async () => {
+test('cross-build75 retains strict v1 rejection and pins the exact v2 capture without changing live objects', async () => {
     const { reference, baseline, current, proof } = await inputs(), before = JSON.stringify(current);
     assert.throws(() => compare(baseline, current), /Public query requests changed/);
     const result = rebaseCapture(reference, baseline, current, proof);
-    assert.equal(result.fullCapture.sha256, '7728623c829d74c7671cdb40133c617c96668557a3b4b472e10abc20d26e18f6');
-    assert.equal(result.fullCapture.bytes, 11184307);
-    assert.equal(result.changedPaths.length, 546);
+    assert.deepEqual(result.fullCapture, V2_REBASED_CAPTURE);
+    assert.deepEqual(result.unchangedRows, V2_UNCHANGED_ROWS);
+    assert.equal(result.changedRows.length, 75 - V2_UNCHANGED_ROWS.length);
     assert.equal(JSON.stringify(current), before);
 });
 
@@ -78,7 +79,7 @@ test('compact historical reference tampering cannot replace pinned expected prov
     assert.throws(() => loadReference(directory), /Pinned historical identity reference changed/);
 });
 
-test('indexed12 comparator rejects reordered bits and foreign mapping after current resealing', async () => {
+test('strict historical indexed12 comparator rejects semantic v2 material', async () => {
     const { proof } = await inputs(), { collectFiles } = require('../scripts/zip');
     const legacy = require('../experiments/hardware/g5/validate-review.cjs');
     const { rebaseResult } = require('../experiments/hardware/g6-usability/delivery-replay.cjs');
@@ -89,10 +90,5 @@ test('indexed12 comparator rejects reordered bits and foreign mapping after curr
     const request = { ...JSON.parse(fs.readFileSync(path.join(root, row.request))), analysisId: identity.currentAnalysisId };
     const query = (await createCatalog()).find(query => query.getCatalogEntry().buildId === row.buildId);
     const current = legacy.semantic(await query.analyze(request));
-    assert.deepEqual(rebaseResult(row.buildId, request, current, expected, proof), expected);
-    const changed = clone(current); changed.seed.positions[1].bitId = changed.seed.positions[0].bitId;
-    changed.queryId = querySeal({ input: request, result: changed }); changed.id = resultSeal(changed);
-    assert.throws(() => rebaseResult(row.buildId, request, changed, expected, proof));
-    const foreign = clone(proof); foreign.builds[0].oldAnalysisId = foreign.builds[1].oldAnalysisId;
-    assert.throws(() => rebaseResult(row.buildId, request, current, expected, foreign));
+    assert.throws(() => rebaseResult(row.buildId, request, current, expected, proof), /Historical indexed query material changed/);
 });

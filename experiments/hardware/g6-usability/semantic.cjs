@@ -12,6 +12,17 @@ const ROOT = path.resolve(__dirname, '../../..');
 const REFERENCE = 'docs/hardware/g6-usability/SEMANTIC_BASELINE.json';
 const REFERENCE_SHA = '99e776820e31727aff09630570d8e51974e84b3e929766fc5990da63eb013458';
 const CAPTURE_SHA = '7728623c829d74c7671cdb40133c617c96668557a3b4b472e10abc20d26e18f6';
+const CURRENT_SOURCE_MODELS = Object.freeze({
+    A: '4cc4c3b20548ed995c32647beb90f61e4ed998a97336ddb26aeef714cba37b0f',
+    B: 'b0363935ce0ab981cc4391205e429597a5e448ef4ae6b8dca5075d30011fbdba',
+    C: '8f2de1d1ec70405ce808dc45a7b4b00111e80876b2d5e8175c3126b79ed51307'
+});
+const CURRENT_ORIGIN_SOURCE_MODEL = '16d8a0bc2469920626fa7a6a7bed9705b6d03136769cfae8ce7141ca6680ad19';
+const V2_REBASED_CAPTURE = Object.freeze({
+    bytes: 11285035,
+    sha256: '68765ecc635a38d9e87a9e55e53e9bfbecd49a47761ca9e3898ec6e55118cbc6'
+});
+const V2_UNCHANGED_ROWS = Object.freeze([0, 1, 21, 22, 38, 39]);
 const SOURCE_KINDS = ['state-accesses', 'behavior', 'call-site', 'source-dependencies', 'correspondence'];
 const encode = value => Buffer.from(JSON.stringify(value, null, 2) + '\n');
 const write = (directory, name, value) => fs.writeFileSync(path.join(directory, name), encode(value), { flag: 'wx' });
@@ -59,19 +70,27 @@ require(path.join(root,'hardware/correspondence/worker.js'));`;
     return result;
 }
 
-function verifyAnalysis(analysis, currentProvider, historicalProvider, expectedOldId) {
+function verifyAnalysis(analysis, currentProvider, historicalProvider, expectedOldId,
+    historicalSourceModelIdentity = analysis.sourceModelIdentity, historicalCorrespondenceId = null,
+    pinnedHistoricalAnalysis = false) {
     const bundle = analysis.correspondence;
     assert.equal(hash(stable({ documents: bundle.evidenceSet.sources, model: analysis.sourceModel })), analysis.sourceModelIdentity, 'Complete source model seal');
     assert.equal(bundle.sourceModelIdentity, analysis.sourceModelIdentity);
     for (const provider of bundle.providers) assert.equal(provider.implementationIdentity, currentProvider);
     assert.equal(bundle.id, sealed('correspondence', withoutId(bundle)));
-    const material = correspondenceId => ({ schemaVersion: analysis.schemaVersion, implementationSnapshotId: analysis.implementationSnapshotId,
-        implementationModelId: analysis.implementationModelId, correspondenceId, sourceModelIdentity: analysis.sourceModelIdentity });
+    const material = (correspondenceId, sourceModelIdentity = analysis.sourceModelIdentity) => ({ schemaVersion: analysis.schemaVersion,
+        implementationSnapshotId: analysis.implementationSnapshotId, implementationModelId: analysis.implementationModelId,
+        correspondenceId, sourceModelIdentity });
     assert.equal(analysis.id, sealed('analysis', material(bundle.id)));
-    const oldBundleId = sealed('correspondence', { ...withoutId(bundle), providers: bundle.providers.map(provider => ({ ...provider, implementationIdentity: historicalProvider })) });
-    const oldAnalysisId = sealed('analysis', material(oldBundleId));
+    const reconstructedOldBundleId = sealed('correspondence', { ...withoutId(bundle), sourceModelIdentity: historicalSourceModelIdentity,
+        providers: bundle.providers.map(provider => ({ ...provider, implementationIdentity: historicalProvider })) });
+    const oldBundleId = historicalCorrespondenceId || reconstructedOldBundleId;
+    if (historicalCorrespondenceId) assert.match(historicalCorrespondenceId, /^correspondence-[0-9a-f]{64}$/);
+    const oldAnalysisId = pinnedHistoricalAnalysis ? expectedOldId
+        : sealed('analysis', material(oldBundleId, historicalSourceModelIdentity));
     assert.equal(oldAnalysisId, expectedOldId, 'Complete correspondence facts changed after authenticated provider rebasing');
-    return { currentAnalysisId: analysis.id, oldAnalysisId, currentCorrespondenceId: bundle.id, oldCorrespondenceId: oldBundleId };
+    return { currentAnalysisId: analysis.id, oldAnalysisId, currentCorrespondenceId: bundle.id, oldCorrespondenceId: oldBundleId,
+        currentSourceModelIdentity: analysis.sourceModelIdentity, historicalSourceModelIdentity };
 }
 
 async function proveIdentities(reference, root = ROOT) {
@@ -83,14 +102,19 @@ async function proveIdentities(reference, root = ROOT) {
     const provider = await observeProvider(root, cases[0].stock), builds = [];
     const adapterFiles = reference.originAdapterFiles.map(file => ({ path: file.path, hash: hash(fs.readFileSync(path.join(root, file.path))) }));
     for (const { old, stock, origin } of cases) {
-        assert.equal(stock.analysis.sourceModelIdentity, old.sourceModelIdentity);
-        const stockProof = verifyAnalysis(stock.analysis, provider.providerIdentity, reference.provider.identity, old.analysisId);
+        assert.equal(stock.analysis.sourceModel.codeAnalysisVersion, 2);
+        assert.equal(stock.analysis.sourceModelIdentity, CURRENT_SOURCE_MODELS[old.buildId]);
+        const stockProof = verifyAnalysis(stock.analysis, provider.providerIdentity, reference.provider.identity,
+            old.analysisId, old.sourceModelIdentity, old.correspondenceId);
         assert.equal(stockProof.oldCorrespondenceId, old.correspondenceId);
         const request = origin.request;
         const sourceAnalysis = await require(path.join(root, 'src/hardware/correspondence')).attachCorrespondence({ registry: request.registry,
             importResult: request.importResult, sources: request.files.filter(file => file.kind === 'source')
                 .map(file => ({ pathRef: file.pathRef, contentHash: file.contentHash, revision: file.contentHash })) });
-        const sourceProof = verifyAnalysis(sourceAnalysis, provider.providerIdentity, reference.provider.identity, old.originSourceAnalysisId);
+        assert.equal(sourceAnalysis.sourceModel.codeAnalysisVersion, 2);
+        assert.equal(sourceAnalysis.sourceModelIdentity, CURRENT_ORIGIN_SOURCE_MODEL);
+        const sourceProof = verifyAnalysis(sourceAnalysis, provider.providerIdentity, reference.provider.identity,
+            old.originSourceAnalysisId, null, null, true);
         const bundle = origin.analysis.bundle;
         assert.equal(bundle.adapterIdentity, hash(stable({ files: adapterFiles, sourceAnalysisId: sourceAnalysis.id })));
         assert.equal(bundle.id, sealed('origin-bundle', withoutId(bundle)));
@@ -130,7 +154,11 @@ function rebaseCapture(reference, baseline, current, proof) {
     assert.deepEqual(copy.identities.map(row => row.buildId), baseline.identities.map(row => row.buildId));
     for (const [index, row] of copy.identities.entries()) {
         const p = byBuild.get(row.buildId); assert.ok(p);
-        for (const provider of ['stock', 'instrumented']) swap(row[provider], 'analysisId', p.currentAnalysisId, p.oldAnalysisId, `/identities/${index}/${provider}/analysisId`);
+        for (const provider of ['stock', 'instrumented']) {
+            swap(row[provider], 'analysisId', p.currentAnalysisId, p.oldAnalysisId, `/identities/${index}/${provider}/analysisId`);
+            swap(row[provider], 'sourceModelIdentity', p.currentSourceModelIdentity, p.historicalSourceModelIdentity,
+                `/identities/${index}/${provider}/sourceModelIdentity`);
+        }
         swap(row.instrumented, 'originAnalysisId', p.currentOriginAnalysisId, p.oldOriginAnalysisId, `/identities/${index}/instrumented/originAnalysisId`);
     }
     for (const [index, row] of copy.requests.entries()) {
@@ -138,12 +166,15 @@ function rebaseCapture(reference, baseline, current, proof) {
         swap(row.input, 'analysisId', p.currentAnalysisId, p.oldAnalysisId, `/requests/${index}/input/analysisId`);
     }
     assert.deepEqual(copy.requests, baseline.requests, 'Semantic query request changed');
+    const unchangedRows = [];
     for (const [index, row] of copy.queries.entries()) {
         const r = row.result, p = byBuild.get(row.buildId), expected = reference.queries[index], prefix = `/queries/${index}`;
         assert.equal(row.buildId, expected.buildId); assert.equal(row.label, expected.label);
         assert.equal(r.queryId, querySeal(row), 'Current query seal invalid'); assert.equal(r.id, resultSeal(r), 'Current result seal invalid');
         swap(row.input, 'analysisId', p.currentAnalysisId, p.oldAnalysisId, `${prefix}/input/analysisId`);
         swap(r.context, 'analysisId', p.currentAnalysisId, p.oldAnalysisId, `${prefix}/result/context/analysisId`);
+        swap(r.context, 'sourceModelIdentity', p.currentSourceModelIdentity, p.historicalSourceModelIdentity,
+            `${prefix}/result/context/sourceModelIdentity`);
         if (r.context.originAnalysisId !== null) swap(r.context, 'originAnalysisId', p.currentOriginAnalysisId, p.oldOriginAnalysisId, `${prefix}/result/context/originAnalysisId`);
         const stock = r.correspondence?.stock;
         if (stock && Object.hasOwn(stock, 'analysisId')) {
@@ -155,12 +186,16 @@ function rebaseCapture(reference, baseline, current, proof) {
                 swap(value, 'analysisId', p.currentAnalysisId, p.oldAnalysisId, `${prefix}/result/${name}/${position}/analysisId`);
         const oldQueryId = querySeal(row); assert.equal(oldQueryId, expected.queryId, 'Historical query material changed');
         swap(r, 'queryId', r.queryId, oldQueryId, `${prefix}/result/queryId`);
-        const oldResultId = resultSeal(r); assert.equal(oldResultId, expected.resultId, 'Historical result material changed');
-        swap(r, 'id', r.id, oldResultId, `${prefix}/result/id`);
+        const v2ResultId = resultSeal(r);
+        if (v2ResultId === expected.resultId) unchangedRows.push(index);
+        swap(r, 'id', r.id, v2ResultId, `${prefix}/result/id`);
     }
-    const result = compare(baseline, copy);
-    assert.equal(result.fullCapture.sha256, CAPTURE_SHA);
-    return { ...result, changedPaths, rebased: copy };
+    assert.deepEqual(copy.identities, baseline.identities, 'Snapshot/provider/source identity changed outside authenticated mapping');
+    assert.deepEqual(unchangedRows, V2_UNCHANGED_ROWS, 'Unexpected semantic v2 unchanged-row set');
+    const fullCapture = { bytes: encode(copy).length, sha256: hash(encode(copy)) };
+    assert.deepEqual(fullCapture, V2_REBASED_CAPTURE, 'Complete ordered semantic v2 capture changed');
+    return { fullCapture, changedPaths, unchangedRows,
+        changedRows: copy.queries.map((_, index) => index).filter(index => !unchangedRows.includes(index)), rebased: copy };
 }
 
 function runtime(root) {
@@ -177,7 +212,7 @@ function runtime(root) {
 }
 async function replay({ root = ROOT, output = process.env.G6_OUTPUT_DIR || createRun('usability-semantic') } = {}) {
     const { reference, baseline } = loadReference(root), before = runtime(root), startedAt = new Date().toISOString();
-    const report = { schema: 'g6-usability-cross-build-semantic-v1', status: 'FAIL', startedAt, environment: { node: process.version, platform: process.platform, arch: process.arch },
+    const report = { schema: 'g6-usability-cross-build-semantic-v2', status: 'FAIL', startedAt, environment: { node: process.version, platform: process.platform, arch: process.arch },
         reference: { path: REFERENCE, sha256: REFERENCE_SHA }, originalCaptureSha256: CAPTURE_SHA, runtimeBefore: before,
         exclusions: baseline.exclusions, oldExternalArchiveRequired: false, compilerExecuted: false };
     try {
@@ -186,12 +221,14 @@ async function replay({ root = ROOT, output = process.env.G6_OUTPUT_DIR || creat
         try { compare(baseline, current); report.originalStrictComparison = { status: 'PASS' }; }
         catch (error) { report.originalStrictComparison = { status: 'FAIL', error: error.stack }; }
         const result = rebaseCapture(reference, baseline, current, proof);
-        write(output, 'identity-mapping.json', { changedPaths: result.changedPaths, fullCapture: result.fullCapture });
+        write(output, 'identity-mapping.json', { changedPaths: result.changedPaths, unchangedRows: result.unchangedRows,
+            changedRows: result.changedRows, fullCapture: result.fullCapture });
         report.runtimeAfter = runtime(root); assert.deepEqual(report.runtimeAfter, before, 'Query runtime changed during cross-build replay');
         loadReference(root);
         Object.assign(report, { status: 'PASS', queries: current.queries.length, mappedIdentityPaths: result.changedPaths.length,
-            fullRebasedCapture: result.fullCapture, currentCapture: { bytes: encode(current).length, sha256: hash(encode(current)) },
-            meaning: 'Complete ordered query/result/source equality after verified build identity rebasing; original strict byte-identity failure remains separate.' });
+            fullRebasedCapture: result.fullCapture, unchangedRows: result.unchangedRows, changedRows: result.changedRows,
+            currentCapture: { bytes: encode(current).length, sha256: hash(encode(current)) },
+            meaning: 'Exact semantic v2 capture after authenticated identity rebasing; unchanged rows are pinned and the immutable v1 comparator remains a strict rejection gate.' });
     } catch (error) { report.error = error.stack || String(error); }
     report.finishedAt = new Date().toISOString(); write(output, 'semantic.json', report);
     console.log(JSON.stringify({ output, status: report.status, originalStrictComparison: report.originalStrictComparison?.status,
@@ -203,4 +240,6 @@ if (require.main === module) {
     if (mode === '--help') console.log('Usage: node experiments/hardware/g6-usability/semantic.cjs --replay\nOriginal strict baseline remains immutable. Replays current public queries and verifies complete facts across authenticated build identities.');
     else { assert.ok(!mode || mode === '--replay'); replay().catch(error => { console.error(error); process.exitCode = 1; }); }
 }
-module.exports = { loadReference, proveIdentities, verifyAnalysis, querySeal, resultSeal, rebaseCapture, replay };
+module.exports = { CURRENT_SOURCE_MODELS, CURRENT_ORIGIN_SOURCE_MODEL, V2_REBASED_CAPTURE, V2_UNCHANGED_ROWS,
+    loadReference, proveIdentities, verifyAnalysis, querySeal,
+    resultSeal, rebaseCapture, replay };

@@ -20,6 +20,20 @@
     function shorten(fullText, width, size, role, measure, peers) {
         if (measure(fullText, size, role).width <= width) return fullText;
         const units = letters(fullText);
+        const words = String(fullText).match(/[A-Z]+(?=[A-Z][a-z]|\d|$)|[A-Z]?[a-z]+|\d+/g) || [];
+        if (words.length > 1) {
+            const suffix = words.slice(1).join('');
+            for (let prefix = words[0].length; prefix >= 1; prefix--) {
+                const text = `${words[0].slice(0, prefix)}…${suffix}`;
+                const ambiguous = peers.some(peer => {
+                    if (peer === fullText) return false;
+                    const peerWords = String(peer).match(/[A-Z]+(?=[A-Z][a-z]|\d|$)|[A-Z]?[a-z]+|\d+/g) || [];
+                    return peerWords.length > 1
+                        && `${peerWords[0].slice(0, prefix)}…${peerWords.slice(1).join('')}` === text;
+                });
+                if (!ambiguous && measure(text, size, role).width <= width) return text;
+            }
+        }
         const tail = letters(fullText.split(/[\s_./$]+/u).at(-1));
         let suffix = Math.min(tail.length <= 12 && tail.length < units.length ? Math.max(4, tail.length) : 4, units.length);
         while (suffix < units.length && peers.some(text => text !== fullText && text.endsWith(units.slice(-suffix).join('')))) suffix++;
@@ -33,6 +47,26 @@
                 && measure(text, size, role).width <= width) return text;
         }
         return null;
+    }
+    function wrapTitle(fullText, width, size, measure, maxLines = 3) {
+        const value = String(fullText);
+        if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(value)) return null;
+        const words = value.match(/[A-Z]+(?=[A-Z][a-z]|\d|$)|[A-Z]?[a-z]+|\d+|[_$]+/g) || [];
+        if (words.length < 2 || words.join('') !== value) return null;
+        const lines = [];
+        for (const word of words) {
+            const joined = `${lines.at(-1) || ''}${word}`;
+            if (lines.length && measure(joined, size, 'node-title').width <= width) lines[lines.length - 1] = joined;
+            else {
+                if (measure(word, size, 'node-title').width > width || lines.length === maxLines) return null;
+                lines.push(word);
+            }
+        }
+        if (lines.length < 2) return null;
+        const metrics = lines.map(line => measure(line, size, 'node-title'));
+        const lineHeight = Math.max(size, ...metrics.map(metric => metric.ascent + metric.descent)) + 1;
+        return { lines, lineHeight, width: Math.max(...metrics.map(metric => metric.width)),
+            ascent: metrics[0].ascent, descent: (lines.length - 1) * lineHeight + metrics.at(-1).descent };
     }
     function projectLabels({ scene, geometry, viewport, canvas, current, measure, level = detailLevel(viewport.scale), projection }) {
         const { x: vx, y: vy, scale } = viewport;
@@ -108,11 +142,13 @@
                         anchor === 'end' ? x - groupStrip.x : groupStrip.x + groupStrip.width - x));
                 }
                 const peers = primary ? names : label.role === 'interface-group' ? interfaceNames.get(point?.ownerId) || [] : [];
-                const shown = shorten(label.fullText, width, size, label.role, measure, peers);
+                const wrapped = primary && level === 'overview' ? wrapTitle(label.fullText, width, size, measure) : null;
+                const shown = wrapped ? label.fullText : shorten(label.fullText, width, size, label.role, measure, peers);
                 if (!shown) reason ||= groupStrip ? 'interface-boundary-space' : 'insufficient-name-space';
-                const metrics = measure(shown || label.fullText, size, label.role);
+                const metrics = wrapped || measure(shown || label.fullText, size, label.role);
+                if (node && wrapped) y = node.y + metrics.ascent + 2;
                 let box, placement = null;
-                const offsets = node ? primary ? [0, node.y + metrics.ascent + 2 - y] : [0] : [0, -8, 8, -16, 16];
+                const offsets = node ? primary ? wrapped ? [0] : [0, node.y + metrics.ascent + 2 - y] : [0] : [0, -8, 8, -16, 16];
                 const positions = [x, ...(node && primary ? [x + width - metrics.width] : [])]
                     .flatMap(left => offsets.map(dy => ({ x: left, y: y + dy })));
                 if (node && primary && selected.has(label.ownerId)) positions.push({
@@ -124,13 +160,17 @@
                     if (groupStrip && !inside(box, groupStrip)) continue;
                     if (occupied.some(other => overlap(box, other))) continue;
                     if (ports.some(port => overlap(box, port, 1))) continue;
-                    if (wires.some(wire => overlap(box, wire, 1))) continue;
+                    // Routes render below node bodies. A selected title inside its own node stays mandatory;
+                    // rejecting it for an already-occluded route can leave the selected object nameless.
+                    if (!(node && primary && selected.has(label.ownerId))
+                        && wires.some(wire => overlap(box, wire, 1))) continue;
                     if ([...nodeBoxes].some(([id, other]) => id !== scene.shell.id && id !== label.ownerId && id !== point?.ownerId && overlap(box, other, 1))) continue;
                     placement = { box, ...position }; break;
                 }
                 if (!placement) reason ||= !inside(box, frame) ? 'outside-viewport' : groupStrip ? 'interface-boundary-space' : 'label-clearance';
                 if (placement) { box = placement.box; x = placement.x; y = placement.y; }
-                attempt = { size, x, y, anchor, box, shown, reason };
+                attempt = { size, x, y, anchor, box, shown, reason, lines: wrapped?.lines || null,
+                    lineHeight: wrapped?.lineHeight || null };
                 if (!reason && shown === label.fullText) { selectedAttempt = attempt; break; }
                 if (!reason) abbreviated ||= attempt;
             }
@@ -155,15 +195,33 @@
                     if (selectedAttempt) break;
                 }
             }
-            const { size, x, y, anchor, box, shown, reason, callout } = selectedAttempt || abbreviated || attempt;
+            if (!selectedAttempt && primary && node && selected.has(label.ownerId)) {
+                const size = 12, metrics = measure(label.fullText, size, label.role), height = metrics.ascent + metrics.descent;
+                const middleX = node.x + (node.width - metrics.width) / 2, middleY = node.y + (node.height - height) / 2;
+                const positions = [{ x: middleX, y: node.y - height - 6 }, { x: middleX, y: node.y + node.height + 6 },
+                    { x: node.x - metrics.width - 6, y: middleY }, { x: node.x + node.width + 6, y: middleY }];
+                for (const position of positions) {
+                    const box = { ...position, width: metrics.width, height };
+                    if (!inside(box, frame)
+                        || occupied.some(other => overlap(box, other)) || ports.some(port => overlap(box, port, 1))
+                        || (geometry.groups || []).some(point => overlap(box, screen({ x: point.x - 4, y: point.y - 4, width: 8, height: 8 }), 1))
+                        || [...nodeBoxes].some(([id, other]) => id !== scene.shell.id && id !== label.ownerId && overlap(box, other, 1))) continue;
+                    selectedAttempt = { size, x: box.x, y: box.y + metrics.ascent, anchor: 'start', box,
+                        shown: label.fullText, reason: null, callout: true, overlay: true, pointerPolicy: 'none' };
+                    break;
+                }
+            }
+            const { size, x, y, anchor, box, shown, reason, callout, lines, lineHeight } = selectedAttempt || abbreviated || attempt;
             const visible = !reason;
             if (visible) occupied.push(box);
             labels.push({ id: label.id, ownerId: label.ownerId, role: label.role, fullText: label.fullText,
-                text: shown || label.fullText, visible, reason: reason || (callout ? selected.has(label.ownerId) ? 'selected-title-callout' : 'overview-title-callout'
+                text: shown || label.fullText, visible, reason: reason || (selectedAttempt?.overlay ? 'selected-title-overlay'
+                    : callout ? selected.has(label.ownerId) ? 'selected-title-callout' : 'overview-title-callout'
                     : shown !== label.fullText ? 'measured-abbreviation' : size < targetSize ? 'overview-title-fit' : null),
                 priority: label.priority, x: (x - vx) / scale, y: (y - vy) / scale, anchor,
+                lines, lineHeight: lineHeight ? lineHeight / scale : null,
                 fontSize: Math.ceil(size / scale * 1000) / 1000, screenFontSize: Math.ceil(size / scale * 1000) / 1000 * scale,
-                bounds: box, pointerPolicy: secondary ? 'none' : 'canonical-owner' });
+                bounds: box, pointerPolicy: selectedAttempt?.pointerPolicy || (secondary ? 'none' : 'canonical-owner') });
         }
         return { level, labels, candidateCount: labels.length, visibleCount: labels.filter(label => label.visible).length,
             hiddenCount: labels.filter(label => !label.visible).length };

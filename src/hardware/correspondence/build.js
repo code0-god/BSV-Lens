@@ -7,6 +7,7 @@ const {stockMetadata,compilerPoint,positionMatches,parseRtl,rtlVector,concreteWi
 const hardware = require('../yosys-json');
 const {validateStructure,checkedJson,seal,PROVIDERS} = require('./schema');
 const {sealGeneratedBundle} = require('./generated-bundle');
+const {splitTopLevel} = require('../../architecture/source-utils');
 
 function build(data, parseCache) {
     let documents=data.sources;
@@ -177,7 +178,8 @@ function build(data, parseCache) {
         }
         const iface=definitions.get(endpoint.interfaceDefinitionId);
         const compilerType=(context.compilerNode?.Interface||instance.declaredType||definition.returnInterface||'').replace(/\b[A-Za-z_$][\w$]*::/g,'');
-        const args=/^[^#]+#\((.*)\)$/.exec(compilerType)?.[1].split(',').map(v=>v.trim())||[];
+        const argsText=/^[^#]+#\((.*)\)$/.exec(compilerType)?.[1];
+        const args=argsText?splitTopLevel(argsText).map(v=>v.trim()):[];
         const substitutions=new Map((iface.typeParameters||[]).map((p,i)=>[p.name,args[i]||p.name]));
         const concrete=type=>(type||'').replace(/\b[A-Za-z_][\w]*\b/g,t=>substitutions.get(t)||t);
         item.concreteResultType=concrete(endpoint.resultType)||null;

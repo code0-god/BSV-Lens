@@ -54,6 +54,18 @@ function buildBehaviorBindings(stateBehaviors, callableByBehaviorId, instances, 
 function makeBinding(behavior, access, child, endpoint, index) {
     const id = behaviorAccessBindingId(behavior.id, index);
     const callSiteId = access.codeCallSiteId || `callsite:${behavior.id}:${index}`;
+    const elementRef = bindElementRef(access.elementRef, child);
+    const caseConditions = (access.caseConditions || []).map((condition) => ({
+        ...condition,
+        labelExpressionIds: [...(condition.labelExpressionIds || [])],
+        priorLabelExpressionIds: [...(condition.priorLabelExpressionIds || [])]
+    }));
+    const baseResolution = endpoint || child.primitiveKind ? 'exact' : 'unresolved';
+    const resolutionStatus = combinedResolution([
+        baseResolution,
+        elementRef?.resolutionStatus,
+        ...caseConditions.map((condition) => condition.resolutionStatus)
+    ].filter(Boolean));
     return {
         id, callSiteId, kind: 'behavior-access',
         behaviorId: behavior.id, ownerInstanceId: behavior.ownerInstanceId,
@@ -62,9 +74,13 @@ function makeBinding(behavior, access, child, endpoint, index) {
         operation: access.operation, memberPath: access.memberPath,
         arguments: [...(access.arguments || [])], resultBinding: access.resultBinding || null,
         valueBinding: access.valueBinding || null,
+        elementRef,
         statementId: access.statementId || null,
         pathConditionExpressionIds: [...(access.pathConditionExpressionIds || [])],
-        resolutionStatus: endpoint || child.primitiveKind ? 'exact' : 'unresolved',
+        caseArmId: access.caseArmId || null,
+        caseArmIds: [...(access.caseArmIds || [])],
+        caseConditions,
+        resolutionStatus,
         sourceEvidence: access.sourceEvidence, sourceText: access.sourceText || access.sourceEvidence,
         sourceRange: access.sourceRange || access.location || behavior.location || null,
         evidence: access.evidence,
@@ -75,7 +91,22 @@ function makeBinding(behavior, access, child, endpoint, index) {
             sourceRange: access.sourceRange || access.location || behavior.location || null
         }] : [],
         location: access.location || behavior.location || null, analysisOrigin: SOURCE_ORIGIN,
-        confidence: endpoint || child.primitiveKind ? 'explicit' : 'unknown'
+        confidence: resolutionStatus === 'exact' ? 'explicit' : 'unknown'
+    };
+}
+
+function combinedResolution(statuses) {
+    if (statuses.some((status) => status === 'unsupported')) return 'unsupported';
+    return statuses.every((status) => status === 'exact') ? 'exact' : 'unresolved';
+}
+function bindElementRef(elementRef, child) {
+    if (!elementRef) return null;
+    const suffix = elementRef.indices.map((item) => `[${item.expression}]`).join('');
+    return {
+        familyInstanceId: child.id,
+        id: elementRef.resolutionStatus === 'exact' ? `${child.id}${suffix}` : null,
+        indices: elementRef.indices,
+        resolutionStatus: elementRef.resolutionStatus
     };
 }
 function endpointAccessKind(endpoint) {

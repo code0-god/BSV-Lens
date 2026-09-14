@@ -62,7 +62,12 @@ test('G5-C actual storage UI actions submit canonical source seed and render sel
     assert.equal(action.entityId, storage.id); assert.equal(action.ownerInstanceId, child.id);
     const { result, request } = await execute(f, scene, action);
     assert.equal(result.code.storage.id, storage.id);
-    const submitted = [], d = render(scene, visit(scene, result, request), { analyze: input => submitted.push(input), patchAnalysis() {} });
+    const submitted = [], patches = [], d = render(scene, visit(scene, result, request), {
+        analyze: input => submitted.push(input), patchAnalysis: value => patches.push(value) });
+    const lenses = d.nodes.filter(node => node.dataset.analysisLens);
+    assert.deepEqual(lenses.map(node => node.dataset.analysisLens), ['structure', 'value', 'control']);
+    assert.equal(lenses[0].attributes['aria-pressed'], 'true');
+    await lenses[1].fire('click'); assert.deepEqual(patches.at(-1), { lens: 'value' });
     for (const behavior of [...result.readers, ...result.writers]) {
         const control = d.nodes.find(n => n.dataset.sourceEntityId === behavior.id && n.dataset.analysisKind === 'behavior');
         assert.ok(control); await control.fire('click');

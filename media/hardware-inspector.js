@@ -58,6 +58,33 @@
                     }
                 }
                 fragment.append(identity);
+                const familyScope = module?.id === scene.shell.id ? scene.projection?.familyScope : null;
+                if (familyScope) {
+                    const family = element('section'); family.dataset.sectionId = 'family-element-view';
+                    family.append(element('h3', t('Repeated family element')));
+                    const fields = element('dl');
+                    fields.append(element('dt', t('Element identity')), element('dd', familyScope.elementLabel),
+                        element('dt', t('Index domain')), element('dd', familyScope.indexDomains.map(domain => domain.maxExclusive === null
+                            ? `[0, ${domain.expression}) symbolic` : `[0, ${domain.maxExclusive})`).join(' × ')));
+                    family.append(fields, element('p', t(familyScope.kind === 'symbolic-element'
+                        ? 'This is a symbolic element view. Concrete indices require resolved dimensions.'
+                        : familyScope.kind === 'indexed-representative'
+                            ? 'This indexed representative uses the family’s shared source structure.'
+                            : 'Choose a concrete index to inspect one family element.'), 'kind'));
+                    if (familyScope.indexDomains.every(domain => Number.isSafeInteger(domain.maxExclusive)) && handlers.familyElement) {
+                        const controls = element('div', null, 'family-element-controls'), inputs = [];
+                        familyScope.indexDomains.forEach((domain, index) => {
+                            const label = element('label', t('Index {index}', { index })), input = element('input');
+                            input.type = 'number'; input.min = '0'; input.max = String(domain.maxExclusive - 1); input.step = '1';
+                            input.value = String(familyScope.selectedIndices?.[index] ?? 0); input.dataset.familyIndex = String(index);
+                            label.append(input); controls.append(label); inputs.push(input);
+                        });
+                        const open = element('button', t('View indexed representative')); open.type = 'button';
+                        open.addEventListener('click', () => handlers.familyElement(inputs.map(input => Number(input.value))));
+                        controls.append(open); family.append(controls);
+                    }
+                    fragment.append(family);
+                }
                 if (detail.connectionEssentials) {
                     const connection = detail.connectionEssentials, section = element('section');
                     section.dataset.sectionId = 'connection-essentials';
@@ -82,7 +109,9 @@
                 }
                 const actions = element('div', null, 'behavior-actions');
                 if (module && module.id !== scene.shell.id && module.interaction?.kind === 'enter' && handlers.enter) {
-                    const button = element('button', t('Open {name}', { name: module.label }));
+                    const button = element('button', module.family
+                        ? t(module.family.resolutionStatus === 'exact' ? 'Open family elements' : 'Open symbolic element view')
+                        : t('Open {name}', { name: module.label }));
                     button.dataset.enterEntityId = module.id;
                     button.addEventListener('click', () => handlers.enter(module.id)); actions.append(button);
                 }
@@ -271,6 +300,7 @@
         const choices = BsvHardwareAnalysis.seedChoices(scene, selectedId);
         const sourceActions = BsvHardwareAnalysis.sourceActions(scene, visit);
         const saved = visit.disclosureState.analysis || {};
+        const lens = ['structure', 'value', 'control'].includes(saved.lens) ? saved.lens : 'structure';
         let controls = saved.controls?.selectionId === selectedId ? saved.controls : { selectionId: selectedId };
         const choice = choices.find(c => c.id === controls.choiceId) || (choices.length === 1 ? choices[0] : null);
         const result = visit.analysis?.result;
@@ -298,9 +328,23 @@
             });
             parent.append(d); return d;
         }
-        if (sourceActions.length) {
+        if (scene.sceneKind === 'bsv' && selectedId) {
+            const lenses = element('div', null, 'analysis-lenses'); lenses.setAttribute('role', 'group');
+            lenses.setAttribute('aria-label', t('Analysis lens'));
+            for (const [id, label] of [['structure', 'Structure'], ['value', 'Value'], ['control', 'Control']]) {
+                const lensButton = button(label, () => handlers.patchAnalysis({ lens: id }), lenses);
+                lensButton.dataset.analysisLens = id; lensButton.setAttribute('aria-pressed', String(lens === id));
+            }
+            section.append(lenses, element('p', t(({ structure: 'Structure shows declared hardware and containment.',
+                value: 'Value shows reads, writes, expressions, and call bindings.',
+                control: 'Control shows source guards, body conditions, and update behavior.' })[lens]), 'kind'));
+        }
+        const visibleSourceActions = sourceActions.filter(action => lens === 'value'
+            ? ['state-accesses', 'source-dependencies', 'call-site'].includes(action.kind)
+            : lens === 'control' ? action.kind === 'behavior' : action.kind === 'correspondence');
+        if (visibleSourceActions.length) {
             const actions = element('div', null, 'behavior-actions'); section.append(actions);
-            for (const action of sourceActions) {
+            for (const action of visibleSourceActions) {
                 const caption = actionCaption(action.label);
                 const b = button(action.needsOwner ? t('Open source owner: {name}', { name: caption }) : caption, () => {
                     if (action.needsOwner) return handlers.sourceOwner(action.ownerInstanceId, action.entityId);
@@ -556,6 +600,20 @@
         for (const c of result.conditions.body) {
             const row = element('p', `${c.polarity ? '' : 'not '}(${c.text || c.expressionId}) / not evaluated`);
             row.dataset.signedExpressionId = c.signedExpressionId; row.dataset.polarity = String(c.polarity); conditions.append(row);
+        }
+        if (result.conditions.caseArms?.length) {
+            const cases = group('case-conditions', 'Case arm conditions');
+            for (const condition of result.conditions.caseArms) {
+                const selector = condition.selector?.text || condition.selectorExpressionId;
+                const labels = (condition.labels || []).map((label) => label.text).join(', ');
+                const excluded = (condition.priorLabels || []).map((label) => label.text).join(', ');
+                const description = condition.kind === 'case-default'
+                    ? `${selector}: default after no prior match${excluded ? ` (${excluded})` : ''}`
+                    : `${selector} matches ${labels || 'unresolved label'}`;
+                const row = element('p', `${description} / not evaluated`);
+                row.dataset.caseArmId = condition.armId; row.dataset.caseSemantics = condition.semantics;
+                cases.append(row);
+            }
         }
         const absentReadiness = handlers.native && code.readiness.status === 'not-attached' && !code.readiness.evidence.length;
         const absentCompilerSchedule = handlers.native && code.scheduling.compiler.status === 'not-attached' && !code.scheduling.compiler.relations.length;

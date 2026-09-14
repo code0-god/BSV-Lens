@@ -184,6 +184,9 @@ label { display: inline-flex; align-items: center; gap: var(--space-2); color: v
 .inspector summary { cursor: pointer; font-size: var(--control); padding-block: var(--space-1); }
 .inspector .evidence-location { font-size: var(--caption); color: var(--vscode-descriptionForeground); overflow-wrap: anywhere; }
 .inspector .behavior-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.family-element-controls { display: flex; align-items: end; gap: var(--space-2); flex-wrap: wrap; }
+.family-element-controls label { display: grid; gap: var(--space-1); font-size: var(--caption); }
+.family-element-controls input { width: 5.5rem; min-height: 28px; box-sizing: border-box; color: var(--vscode-input-foreground); background: var(--vscode-input-background); border: 1px solid var(--vscode-input-border, var(--vscode-panel-border)); padding: var(--space-1) var(--space-2); }
 .inspector .module-actions { display: inline-flex; gap: var(--space-1); max-width: 100%; min-width: 0; }
 .inspector .module-actions button { min-width: 0; overflow-wrap: anywhere; white-space: normal; }
 .inspector .module-actions [data-inspect-entity-id] { flex-shrink: 0; }
@@ -203,6 +206,18 @@ label { display: inline-flex; align-items: center; gap: var(--space-2); color: v
 .hardware-object, .contact, .connection { cursor: pointer; outline: none; }
 .hardware-object .body { fill: var(--vscode-editorWidget-background); stroke: var(--vscode-panel-border); stroke-width: 1.3; vector-effect: non-scaling-stroke; }
 .hardware-object.expanded .body { fill: none; stroke-width: 2; stroke: var(--vscode-descriptionForeground); }
+.kind-glyph, .family-glyph, .contact-glyph, .family-stack { fill: none; stroke: var(--vscode-descriptionForeground); stroke-width: 1.2; stroke-linecap: square; stroke-linejoin: miter; vector-effect: non-scaling-stroke; pointer-events: none; }
+.hardware-object.glyph-family-storage .kind-glyph { stroke: var(--vscode-charts-yellow); }
+.hardware-object.glyph-unresolved .kind-glyph, .contact.glyph-unresolved .contact-glyph { stroke: var(--vscode-errorForeground); }
+.hardware-object.family-scalar .family-glyph, .hardware-object.family-scalar .family-stack { display: none; }
+.hardware-object:not(.family-scalar) .family-glyph { display: inline; stroke-width: 1.8; }
+.hardware-object:not(.family-scalar) .family-stack { display: inline; stroke: var(--vscode-charts-yellow); stroke-width: 1.4; opacity: .55; }
+.hardware-object:not(.family-scalar) .body { stroke-width: 2; }
+.hardware-object.family-symbolic .body { stroke-dasharray: 8 3; }
+.hardware-object:not(.family-scalar) .secondary { fill: var(--vscode-charts-yellow); font-weight: 600; }
+.interaction-ring { fill: none; opacity: 0; pointer-events: none; stroke: var(--vscode-focusBorder); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.hardware-object:hover .interaction-ring { opacity: .7; }
+.hardware-object:focus-visible .interaction-ring { opacity: 1; stroke-width: 2; stroke-dasharray: 2 2; }
 .hardware-object .title { fill: var(--vscode-foreground); font: 600 12px var(--vscode-editor-font-family); }
 [data-label-id] { stroke: none; }
 .hardware-object .secondary { fill: var(--vscode-descriptionForeground); font: var(--control) var(--vscode-editor-font-family); }
@@ -214,11 +229,17 @@ label { display: inline-flex; align-items: center; gap: var(--space-2); color: v
 .contact .mark { fill: var(--vscode-editor-background); stroke: var(--vscode-descriptionForeground); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .contact .label { fill: var(--vscode-foreground); font: 600 11px var(--vscode-editor-font-family); paint-order: stroke; stroke: var(--vscode-editor-background); stroke-width: 4; stroke-linejoin: round; }
 .contact .detail { fill: var(--vscode-descriptionForeground); font: var(--caption) var(--vscode-editor-font-family); paint-order: stroke; stroke: var(--vscode-editor-background); stroke-width: 4; }
-.contact.selected .mark, .contact:focus-visible .mark, .contact:hover .mark { fill: var(--vscode-focusBorder); stroke: var(--vscode-focusBorder); stroke-width: 2.5; }
+.contact.selected .mark { fill: var(--vscode-list-activeSelectionBackground); stroke: var(--vscode-focusBorder); stroke-width: 2.5; }
+.contact:focus-visible .mark, .contact:hover .mark { stroke: var(--vscode-focusBorder); stroke-width: 2.5; }
+.contact:focus-visible .mark { stroke-dasharray: 1 1; }
+.contact.glyph-operation .contact-glyph { fill: var(--vscode-focusBorder); stroke: none; }
 .contact.confirmed .mark { stroke-dasharray: 2 1; }
-.contact .mark.selected, .contact.group-member .mark { fill: var(--vscode-focusBorder); stroke: var(--vscode-focusBorder); }
+.contact .mark.selected, .contact.group-member .mark { fill: var(--vscode-list-activeSelectionBackground); stroke: var(--vscode-focusBorder); }
 .interface-group { cursor: pointer; outline: none; }
 .interface-group .group-anchor { fill: transparent; stroke: var(--vscode-descriptionForeground); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.interface-group .group-glyph { display: none; }
+.interface-group.glyph-unresolved .group-anchor { stroke: var(--vscode-errorForeground); stroke-dasharray: 2 1; }
+.interface-group.glyph-unresolved .group-glyph { display: inline; stroke: var(--vscode-errorForeground); }
 .interface-group .label { fill: var(--vscode-descriptionForeground); font: 11px var(--vscode-editor-font-family); }
 .interface-group:hover .group-anchor, .interface-group.selected .group-anchor, .interface-group:focus-visible .group-anchor { stroke: var(--vscode-focusBorder); stroke-width: 2; }
 .connection .route { fill: none; stroke: var(--vscode-descriptionForeground); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
@@ -228,6 +249,9 @@ label { display: inline-flex; align-items: center; gap: var(--space-2); color: v
 .connection .junction { fill: var(--vscode-descriptionForeground); }
 .connection.selected .route, .connection.hovered .route, .connection:focus-visible .route { stroke: var(--vscode-focusBorder); stroke-width: 2.5; }
 .connection.selected .connection-label { fill: var(--vscode-focusBorder); }
+.connection.selection-related .route { stroke: var(--vscode-focusBorder); stroke-width: 2.25; opacity: 1; }
+.connection.selection-muted .route, .connection.selection-muted .junction { opacity: .08; }
+.hardware-object.selection-related:not(.selected) .body, .contact.selection-related:not(.selected) .mark { stroke: var(--vscode-focusBorder); stroke-width: 1.8; }
 .arrow { stroke: var(--vscode-descriptionForeground); stroke-width: 1.2; }
 .context-rim { fill: none; stroke: var(--vscode-panel-border); stroke-dasharray: 3 5; }
 .wire-tooltip, .wire-choices { position: absolute; z-index: 3; max-width: min(420px, calc(100% - 16px)); padding: var(--space-3); border: 1px solid var(--vscode-focusBorder); border-radius: var(--radius-control); color: var(--vscode-foreground); background: var(--vscode-editorWidget-background); font-size: var(--control); overflow-wrap: anywhere; }
@@ -241,6 +265,9 @@ label { display: inline-flex; align-items: center; gap: var(--space-2); color: v
 #world[data-detail-level="overview"] .connection-label { visibility: hidden; }
 #world[data-scene-kind="rtl"][data-detail-level="normal"] .connection:not(.selected):not(.constant) .connection-label { visibility: hidden; }
 .analysis-controls { display: grid; gap: var(--space-2); margin-block: var(--space-3); }
+.analysis-lenses { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-1); margin-block: var(--space-2); }
+.analysis-lenses button { min-width: 0; }
+.analysis-lenses button[aria-pressed="true"] { color: var(--vscode-button-foreground); background: var(--vscode-button-background); border-color: var(--vscode-focusBorder); }
 .analysis-controls label { display: grid; min-width: 0; gap: var(--space-1); }
 .analysis-controls select, .analysis-controls input { width: 100%; max-width: 100%; min-width: 0; }
 .analysis-controls input { font: var(--control)/1.4 var(--vscode-editor-font-family); color: var(--vscode-foreground); background: var(--vscode-editor-background); border: 1px solid var(--vscode-panel-border); border-radius: var(--radius-control); min-height: 28px; padding: var(--space-1) var(--space-3); }
@@ -263,6 +290,11 @@ label { display: inline-flex; align-items: center; gap: var(--space-2); color: v
 .analysis-seed .route, .analysis-seed .body, .analysis-seed .mark { stroke-dasharray: 7 3; }
 .analysis-boundary .route, .analysis-boundary .body, .analysis-boundary .mark { stroke-dasharray: 2 2; }
 .analysis-seed.analysis-boundary .route, .analysis-seed.analysis-boundary .body, .analysis-seed.analysis-boundary .mark { stroke-dasharray: 7 2 1 2; }
+.analysis-result .kind-glyph, .analysis-result .contact-glyph { stroke: var(--vscode-charts-blue); }
+.contact.glyph-operation.analysis-result .contact-glyph { fill: var(--vscode-charts-blue); stroke: none; }
+.analysis-seed .kind-glyph, .analysis-seed .contact-glyph { stroke-dasharray: 7 3; }
+.analysis-boundary .kind-glyph, .analysis-boundary .contact-glyph { stroke-dasharray: 2 2; }
+.analysis-seed.analysis-boundary .kind-glyph, .analysis-seed.analysis-boundary .contact-glyph { stroke-dasharray: 7 2 1 2; }
 .analysis-reference-selected .route, .analysis-reference-selected .body, .analysis-reference-selected .mark { stroke-width: 3.5; }
 .analysis-reference-selected .label, .analysis-reference-selected .title, .analysis-reference-selected .connection-label { text-decoration: underline; }
 @media (max-width: 950px) {

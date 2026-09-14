@@ -109,6 +109,40 @@ test('real duplicate source declarations remain rejected with both locations', (
     assert.throws(() => buildSource(documents), error => error.code === 'AMBIGUOUS_SOURCE'
         && /first\/Helpers\.bsv:1/.test(error.message) && /second\/Helpers\.bsv:1/.test(error.message));
 });
+
+test('public state query exposes case arm labels and default exclusion without a fake Boolean guard', async () => {
+    const f = synthetic(`package CaseQuery;
+module mkTop(Empty);
+    Reg#(Bit#(2)) selector <- mkReg(0);
+    Reg#(Bit#(8)) result <- mkReg(0);
+    rule update;
+        case (selector)
+            0: result <= 1;
+            default: result <= 2;
+        endcase
+    endrule
+endmodule
+endpackage`);
+    const owner = f.source.instances.find((item) => item.parentInstanceId === null && item.name === 'mkTop');
+    const storage = f.source.instances.find((item) => item.parentInstanceId === owner.id && item.name === 'result');
+    const queryResult = await f.api.query(f.input('state-accesses', storage, { ownerInstanceId: owner.id }));
+    assert.equal(queryResult.status, 'complete');
+    assert.deepEqual(queryResult.conditions.body, []);
+    assert.deepEqual(queryResult.conditions.caseArms.map((condition) => ({
+        kind: condition.kind,
+        semantics: condition.semantics,
+        selector: condition.selector.text,
+        labels: condition.labels.map((label) => label.text),
+        priorLabels: condition.priorLabels.map((label) => label.text),
+        evaluated: condition.evaluated
+    })), [
+        { kind: 'case-arm', semantics: 'selector-matches-label', selector: 'selector', labels: ['0'], priorLabels: [], evaluated: false },
+        { kind: 'case-default', semantics: 'no-prior-arm-match', selector: 'selector', labels: [], priorLabels: ['0'], evaluated: false }
+    ]);
+    assert.equal(queryResult.code.bindings.length, 2);
+    assert.ok(queryResult.code.bindings.every((binding) => binding.caseConditions.length === 1));
+    assert.equal(queryResult.relations.filter((relation) => relation.kind === 'case-condition').length, 2);
+});
 test('builtin-named typeclass call keeps dispatch unresolved through the public query', async () => {
     for (const instance of ['', 'instance Bits#(T, 8); function Bit#(8) pack(T x) = 0; endinstance']) {
         const f = synthetic(`package Helpers; ${instance} function Bit#(8) caller(Bit#(8) x) = pack(x); endpackage`);

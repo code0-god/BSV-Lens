@@ -153,8 +153,9 @@
                     height: snap(Math.max(primary ? 384 : 156, (primary ? 288 : 84)
                         + Math.max(sideSize(object.id, 'left'), sideSize(object.id, 'right')))) };
             });
+            const columnEstimate = Math.sqrt(objects.length * Math.max(0.6, size.width / size.height) / 1.5);
             const columns = Math.max(1, Math.min(objects.length || 1, overview && objects.length > 64 ? objects.length : scene.sceneKind === 'bsv' ? 3 : 6,
-                Math.ceil(Math.sqrt(objects.length * Math.max(0.6, size.width / size.height) / 1.5))));
+                scene.sceneKind === 'bsv' ? Math.round(columnEstimate) : Math.ceil(columnEstimate)));
             function grid(boxes, count, spacing) {
                 const rows = Math.ceil(boxes.length / count);
                 const widths = Array.from({ length: count }, (_, i) => Math.max(0, ...boxes.filter((_, j) => j % count === i).map(d => d.width)));
@@ -179,7 +180,10 @@
             }
             const detached = scene.connections.filter(c => (c.endpointIds || [c.fromId, c.toId]).length === 0);
             const header = (primaryLayout ? 288 : 84) + Math.ceil(detached.length / 3) * 36;
-            const rail = 180;
+            const boundaryLabelWidth = Math.max(0, ...ownerEntries(scene.shell.id).flatMap(entry => entry.source
+                ? [entry.source.label, entry.source.detail].filter(Boolean).map(value => Math.min(144, String(value).length * 7.5 + 8))
+                : []));
+            const rail = overview ? snap(Math.max(48, Math.min(180, boundaryLabelWidth + 24))) : 180;
             const shell = { id: scene.shell.id, x: rail, y: 24,
                 width: snap(Math.max(720, arrangement.width + outer * 2)),
                 height: snap(Math.max(360, header + outer * 2 + arrangement.height,

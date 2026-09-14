@@ -57,6 +57,18 @@ module mkTop(Empty); rule go; let a = missing(1); let b = local(1, 2); let c = l
     assert.equal(byText.get('local#(8)(1)').resolutionStatus, 'unresolved');
 });
 
+test('resolved calls do not become exact when an argument is unsupported', () => {
+    const source = `package CallArguments;
+function Bit#(8) pass(Bit#(8) value); return value; endfunction
+module mkTop(Empty); rule go; let y = pass(tagged Valid 1); endrule endmodule
+endpackage`;
+    const model = buildSemanticSource(source, 'CallArguments.bsv', { entrypoints: ['mkTop'] });
+    const call = model.callSites.find((item) => item.calleeName === 'pass');
+    assert.equal(call.calleeDefinitionId, 'def:CallArguments:pass');
+    assert.equal(call.resolutionStatus, 'unsupported');
+    assert.equal(model.expressions.find((item) => item.id === call.expressionId).resolutionStatus, 'unsupported');
+});
+
 test('resolves only source-visible functions across multiple packages', () => {
     const functionSource = (packageName) => `package ${packageName}; function Bit#(8) choose(Bit#(8) x); return x; endfunction endpackage`;
     const inaccessible = buildSemanticFiles([

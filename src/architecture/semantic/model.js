@@ -77,7 +77,7 @@ function buildSemanticModel(parsedFiles, config, context = {}) {
     );
     const model = {
         schemaVersion: 3,
-        codeAnalysisVersion: 1,
+        codeAnalysisVersion: 2,
         definitions,
         sourceDocuments: files.map((file) => file.sourceDocument).filter(Boolean),
         statements: codeIR.statements,
@@ -195,6 +195,7 @@ function buildCodeIR(files, definitions) {
         if (!returns.length || ownedStatements.some((item) => item.resolutionStatus === 'unsupported')) {
             return 'unsupported';
         }
+        if (ownedStatements.some((item) => item.resolutionStatus !== 'exact')) return 'unresolved';
         const expressionById = new Map(expressions.map((item) => [item.id, item]));
         return returns.every((item) => expressionById.get(item.expressionId)?.resolutionStatus === 'exact')
             ? 'exact' : 'unresolved';
@@ -204,6 +205,7 @@ function buildCodeIR(files, definitions) {
         for (const fn of functionDefinitions) functionsByName.set(fn.name,
             [...(functionsByName.get(fn.name) || []), fn]);
         const expressionById = new Map(expressions.map((item) => [item.id, item]));
+        const callByExpressionId = new Map();
         for (const call of callSites) {
             const simpleName = call.calleeName.includes('.') ? null : call.calleeName;
             const caller = callableContexts.get(call.enclosingCallableId);
@@ -215,15 +217,14 @@ function buildCodeIR(files, definitions) {
             ) : [];
             const requiresDispatch = candidates.some((fn) => Boolean(fn.declarationScope));
             if (call.builtin && !call.specialization && !requiresDispatch) {
-                call.resolutionStatus = 'exact';
-                const builtinExpression = expressionById.get(call.expressionId);
-                if (builtinExpression) builtinExpression.resolutionStatus = 'exact';
+                call.targetResolutionStatus = 'exact';
+                callByExpressionId.set(call.expressionId, call);
                 continue;
             }
             call.candidateDefinitionIds = candidates.map((item) => item.id).sort();
             const exact = !requiresDispatch && !call.specialization && candidates.length === 1
                 && (candidates[0].parameters || []).length === call.argumentExpressionIds.length;
-            call.resolutionStatus = exact ? 'exact' : 'unresolved';
+            call.targetResolutionStatus = exact ? 'exact' : 'unresolved';
             if (requiresDispatch) call.resolutionReason = 'typeclass-dispatch-not-resolved';
             call.calleeDefinitionId = exact ? candidates[0].id : null;
             call.actualToFormal = exact ? call.argumentExpressionIds.map((expressionId, index) => ({
@@ -233,19 +234,77 @@ function buildCodeIR(files, definitions) {
             })) : [];
             const expression = expressionById.get(call.expressionId);
             if (expression) {
-                expression.resolutionStatus = call.resolutionStatus;
                 expression.definitionIds = call.calleeDefinitionId ? [call.calleeDefinitionId] : [];
             }
+            callByExpressionId.set(call.expressionId, call);
         }
-        for (const expression of [...expressions].sort((left, right) =>
-            left.range.end - left.range.start - (right.range.end - right.range.start)
-        )) {
-            if (expression.kind !== 'operator') continue;
-            expression.resolutionStatus = (expression.operandIds || []).every((id) =>
-                expressionById.get(id)?.resolutionStatus === 'exact'
-            ) ? 'exact' : 'unresolved';
+        for (let pass = 0; pass <= expressions.length; pass += 1) {
+            let changed = false;
+            for (const expression of expressions) {
+                let status = expression.resolutionStatus;
+                if (['operator', 'group', 'unary', 'index'].includes(expression.kind)) {
+                    status = combinedResolution((expression.operandIds || []).map((id) => expressionById.get(id)));
+                } else if (expression.kind === 'call') {
+                    const call = callByExpressionId.get(expression.id);
+                    const argumentsStatus = combinedResolution((expression.argumentIds || []).map((id) => expressionById.get(id)));
+                    status = argumentsStatus === 'unsupported' ? 'unsupported'
+                        : call?.targetResolutionStatus === 'exact' && argumentsStatus === 'exact' ? 'exact' : 'unresolved';
+                } else if (['identifier', 'member-reference'].includes(expression.kind)
+                    && expression.definitionIds?.length) {
+                    status = combinedResolution(expression.definitionIds.map((id) => expressionById.get(id)));
+                }
+                if (status !== expression.resolutionStatus) {
+                    expression.resolutionStatus = status;
+                    changed = true;
+                }
+            }
+            if (!changed) break;
+        }
+        for (const call of callSites) {
+            call.resolutionStatus = expressionById.get(call.expressionId)?.resolutionStatus || 'unresolved';
+        }
+        for (const environment of bindingEnvironments) {
+            for (const binding of Object.values(environment.bindings || {})) {
+                if (binding.originExpressionIds?.length) {
+                    binding.resolutionStatus = combinedResolution(binding.originExpressionIds.map((id) => expressionById.get(id)));
+                }
+            }
+        }
+        const statementById = new Map(statements.map((item) => [item.id, item]));
+        for (const statement of [...statements].sort((left, right) =>
+            left.range.end - left.range.start - (right.range.end - right.range.start))) {
+            if (statement.kind === 'unsupported') continue;
+            const expressionIds = [statement.rightExpressionId, statement.expressionId, statement.conditionExpressionId]
+                .filter(Boolean);
+            const childStatements = statements.filter((item) => item.parentStatementId === statement.id);
+            if (statement.kind === 'case') {
+                for (const arm of statement.caseArms || []) {
+                    const armItems = [
+                        ...(arm.labelExpressionIds || []).map((id) => expressionById.get(id)),
+                        ...(arm.bodyStatementIds || []).map((id) => statementById.get(id))
+                    ];
+                    arm.resolutionStatus = arm.resolutionStatus === 'unsupported'
+                        ? 'unsupported' : combinedResolution(armItems);
+                }
+                statement.resolutionStatus = combinedResolution([
+                    ...expressionIds.map((id) => expressionById.get(id)), ...(statement.caseArms || [])
+                ]);
+            } else if (expressionIds.length || childStatements.length) {
+                statement.resolutionStatus = combinedResolution([
+                    ...expressionIds.map((id) => expressionById.get(id)), ...childStatements
+                ]);
+            }
+            for (const symbol of [statement.localSymbol, statement.resultSymbol, statement.targetSymbol]) {
+                if (symbol && statement.rightExpressionId) symbol.resolutionStatus = statement.resolutionStatus;
+            }
         }
     }
+}
+
+function combinedResolution(items) {
+    if (!items.length) return 'exact';
+    if (items.some((item) => !item || item.resolutionStatus === 'unsupported')) return 'unsupported';
+    return items.every((item) => item.resolutionStatus === 'exact') ? 'exact' : 'unresolved';
 }
 
 module.exports = {
