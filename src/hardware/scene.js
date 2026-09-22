@@ -4,9 +4,21 @@ const { hash, stable, deepFreeze } = require('./json');
 const { summarizeRelations } = require('./scene-summary');
 const { projectBoundary } = require('./scene-overview');
 
+function familySummary(item) {
+    const dimensions = item.family?.dimensions;
+    if (!dimensions?.length) return null;
+    const kind = item.kind === 'module-occurrence' ? 'Module'
+        : { register: 'Reg', fifo: 'FIFO', memory: 'Memory' }[item.primitiveKind] || 'Storage';
+    const exact = item.family.resolutionStatus === 'exact' && item.multiplicity?.status === 'exact'
+        && dimensions.every(dimension => dimension.status === 'concrete');
+    if (exact && dimensions.length === 1) return `${kind} × ${item.multiplicity.count}`;
+    if (exact) return `${kind} array · ${dimensions.map(dimension => dimension.size).join(' × ')}`;
+    const status = item.family.resolutionStatus === 'symbolic' ? 'symbolic' : 'unresolved';
+    return `${kind} array · ${dimensions.length}D · ${status}`;
+}
 function display(item, disclosureState = {}) {
     const { context, method, ...visible } = item;
-    return { ...visible, detail: item.secondaryLabel,
+    return { ...visible, ...(item.family ? { displaySecondaryLabel: familySummary(item) } : {}), detail: item.secondaryLabel,
         ...(item.signalDetails ? { signalDetails: disclosureState.rtlSignals ? item.signalDetails : [] } : {}) };
 }
 function repeatedElementScope(root, disclosureState = {}) {
@@ -152,4 +164,4 @@ function buildScene({ buildId, label, architecture, intent, model, rootId, owner
         breadcrumb, sourceBreadcrumb, implementationContext: context, inspector };
     return deepFreeze({ id: `scene-${hash(stable(scene))}`, ...scene });
 }
-module.exports = { bsvContent, rtlContent, buildScene };
+module.exports = { bsvContent, rtlContent, buildScene, familySummary };

@@ -198,8 +198,8 @@
             for (const node of nodes) {
                 const object = node.id === shell.id ? scene.shell : objects.find(o => o.id === node.id);
                 addLabel(label(`${node.id}:title`, node.id, 'node-title', object.label, node.x + 16, node.y + 27, node.width - 40));
-                if (object.secondaryLabel || object.detail) addLabel(label(`${node.id}:detail`, node.id, 'node-detail',
-                    object.secondaryLabel || object.detail, node.x + 16, node.y + 47, node.width - 40));
+                if (object.displaySecondaryLabel || object.secondaryLabel || object.detail) addLabel(label(`${node.id}:detail`, node.id, 'node-detail',
+                    object.displaySecondaryLabel || object.secondaryLabel || object.detail, node.x + 16, node.y + 47, node.width - 40));
                 if (node.id !== shell.id) obstacles.push({ ...node, ownerId: node.id, type: 'body' });
                 for (const side of ['left', 'right']) {
                     let y = node.y + (node.id === shell.id ? header + outer

@@ -86,7 +86,22 @@ async function run(options) {
             pending: window.bsvHardware.getState().pending, history: window.bsvHardware.getState().history,
             status: document.querySelector('#native-input-status')?.textContent,
             selector: document.querySelector('#build-select')?.selectedOptions[0]?.textContent,
-            title: document.querySelector('#scene-title')?.textContent
+            title: document.querySelector('#scene-title')?.textContent,
+            presentation: [...document.querySelectorAll('.hardware-object[data-active="true"]')].map(object => {
+                const glyph = object.querySelector('.kind-glyph');
+                const label = selector => {
+                    const node = object.querySelector(selector), matrix = node?.getScreenCTM(), style = node && getComputedStyle(node);
+                    return node ? { text: node.textContent, fullText: node.dataset.fullText || null,
+                        visible: node.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }),
+                        effectiveFontCssPx: Number(style.fontSize.replace('px', '')) * Math.hypot(matrix.a, matrix.b),
+                        rect: node.getBoundingClientRect().toJSON() } : null;
+                };
+                return { id: object.dataset.semanticId, kind: object.dataset.glyphKind,
+                    rank: Number(object.dataset.familyRank), resolution: object.dataset.familyResolution,
+                    kindGlyphVisible: glyph?.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }) || false,
+                    familyGlyphCount: object.querySelectorAll('.family-glyph').length,
+                    title: label('.title'), detail: label('.secondary') };
+            })
         }));
         write(config.output, `${name}.state.json`, state); write(config.output, `${name}.dom.json`, dom); write(config.output, `${name}.host.json`, host);
         await native.capture(name, page); await native.traceCheckpoint(name);
@@ -204,19 +219,29 @@ async function run(options) {
         await frame.waitForFunction(() => !!window.BsvHardwareTransport.identity(), null, { timeout: 30000 });
 
         const chooser = page.locator('.quick-input-title').filter({ hasText: 'Choose a source design' });
-        await chooser.waitFor({ state: 'visible', timeout: 120000 });
-        const initialVisibleCandidates = [...new Set((await page.locator('.quick-input-list .label-name').allTextContents())
-            .map(value => value.trim()).filter(value => value.startsWith('mk')))];
-        await native.nativeInput({ text: config.root, accept: false }, page);
-        const rootOption = page.getByRole('option', { name: new RegExp(`^${escapeRegExp(config.root)},`) });
-        await rootOption.waitFor({ state: 'visible', timeout: 30000 });
-        requireProduct(await rootOption.count() === 1, `Requested root "${config.root}" is unavailable or ambiguous after searching actual auto-discovery`, {
-            requestedRoot: config.root, matchingLabels: await page.locator('.quick-input-list .label-name').allTextContents()
-        });
+        const autoOpened = await Promise.race([
+            chooser.waitFor({ state: 'visible', timeout: 120000 }).then(() => false),
+            frame.waitForFunction(label => {
+                const state = window.bsvHardware.getState();
+                return state.scene?.shell.label === label && !state.pending && !state.transition;
+            }, config.root, { timeout: 120000 }).then(() => true)
+        ]);
+        let initialVisibleCandidates = [];
+        if (!autoOpened) {
+            initialVisibleCandidates = [...new Set((await page.locator('.quick-input-list .label-name').allTextContents())
+                .map(value => value.trim()).filter(value => value.startsWith('mk')))];
+            await native.nativeInput({ text: config.root, accept: false }, page);
+            const rootOption = page.getByRole('option', { name: new RegExp(`^${escapeRegExp(config.root)},`) });
+            await rootOption.waitFor({ state: 'visible', timeout: 30000 });
+            requireProduct(await rootOption.count() === 1, `Requested root "${config.root}" is unavailable or ambiguous after searching actual auto-discovery`, {
+                requestedRoot: config.root, matchingLabels: await page.locator('.quick-input-list .label-name').allTextContents()
+            });
+            await rootOption.click();
+        }
         report.discovery = { initialVisibleCandidates, searchedRoot: config.root,
+            autoOpened,
             transport: await frame.evaluate(() => window.BsvHardwareTransport.identity()), host: await native.channel.request('observeHardware') };
         write(config.output, 'auto-discovery.json', report.discovery); await capture('01-auto-discovery');
-        await rootOption.click();
         let state = await waitRoot(config.root);
         report.steps.push({ id: 'root', status: 'pass', root: config.root, identity: identity(state), visibleChildren: state.scene.children.map(item => item.label) });
         await capture('02-root');
@@ -286,6 +311,15 @@ async function run(options) {
                     await openSelectedSource(state, `open-${storageName}-source`);
                 }
                 await capture('09-mkPE-storage-families');
+                await settled(frame, () => frame.locator('#fit-selection').click());
+                await capture('09-mkPE-fit-selection');
+                const selected = state.scene.storages.find(item => item.label === 'weightValidRegs');
+                const bounds = await (await objectButton(selected)).boundingBox();
+                await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+                await page.mouse.wheel(0, -1000);
+                await frame.waitForFunction(() => window.bsvHardware.getState().current?.viewport.scale > 0.65,
+                    null, { timeout: 30000 });
+                await capture('09-mkPE-detail-zoom');
             } else {
                 const result = await selectVisibleChild(state, 'groupIndexReg'); state = result.state;
                 requireProduct(result.glyph.glyphKind === 'register' && result.glyph.familyShape === 'scalar',

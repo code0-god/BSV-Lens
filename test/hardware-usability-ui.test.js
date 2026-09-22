@@ -49,6 +49,7 @@ test('hardware glyph presentation classifies semantic families without changing 
     assert.equal(familyShape({ family: { resolutionStatus: 'exact', dimensions: [{ status: 'concrete' }] }, multiplicity: { status: 'exact' } }), 'vector');
     assert.equal(familyShape({ family: { resolutionStatus: 'exact', dimensions: [{ status: 'concrete' }, { status: 'concrete' }] }, multiplicity: { status: 'exact' } }), 'matrix');
     assert.equal(familyShape({ family: { resolutionStatus: 'symbolic', dimensions: [{ status: 'symbolic' }] }, multiplicity: { status: 'parameterized', count: null } }), 'symbolic');
+    assert.equal(familyShape({ family: { resolutionStatus: 'unresolved', dimensions: [{ status: 'concrete' }] }, multiplicity: { status: 'exact', count: 2 } }), 'symbolic');
     const routeContext = selectionContext([
         { id: 'summary', memberRelationIds: ['relation:a'], endpointIds: ['left', 'right'] },
         { id: 'other', memberRelationIds: ['relation:b'], endpointIds: ['right', 'out'] }
@@ -60,8 +61,23 @@ test('hardware glyph presentation classifies semantic families without changing 
     assert.match(source, /dataset\.glyphKind/); assert.match(source, /dataset\.glyphFamily/);
     for (const selector of ['.hardware-object:hover .interaction-ring', '.hardware-object:focus-visible .interaction-ring',
         '.interface-group.glyph-unresolved .group-glyph',
-        '.hardware-object.family-scalar .family-glyph', '.hardware-object.family-scalar .family-stack', '.contact.glyph-operation .contact-glyph',
+        '#world[data-detail-level="overview"] .hardware-object .kind-glyph',
+        '.hardware-object.family-scalar .family-stack', '.contact.glyph-operation .contact-glyph',
         '.analysis-result .kind-glyph', '.analysis-seed .kind-glyph', '.analysis-boundary .kind-glyph']) assert.ok(styles.includes(selector));
+});
+
+test('repeated hardware labels distinguish rank from certainty without losing exact counts', () => {
+    const { familySummary } = require('../src/hardware/scene');
+    const register = { kind: 'storage', primitiveKind: 'register', family: {
+        resolutionStatus: 'exact', dimensions: [{ expression: '2', status: 'concrete', size: 2 }] },
+    multiplicity: { status: 'exact', count: 2 } };
+    assert.equal(familySummary(register), 'Reg × 2');
+    const module = { kind: 'module-occurrence', family: { resolutionStatus: 'symbolic', dimensions: [
+        { expression: 'arrayDim', status: 'symbolic' }, { expression: 'arrayDim', status: 'symbolic' }
+    ] }, multiplicity: { status: 'parameterized', count: null } };
+    assert.equal(familySummary(module), 'Module array · 2D · symbolic');
+    assert.equal(familySummary({ ...module, family: { ...module.family, resolutionStatus: 'unresolved' } }),
+        'Module array · 2D · unresolved');
 });
 
 test('generated design size limits explain smaller-module recovery without mislabeling unrelated failures', () => {

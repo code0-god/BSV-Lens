@@ -90,6 +90,7 @@ endpackage
     const family = overall.children.find((item) => item.label === 'elements');
     assert.equal(family.family.kind, 'module-family');
     assert.equal(family.secondaryLabel, 'mkChild · n × 2');
+    assert.equal(family.displaySecondaryLabel, 'Module array · 2D · symbolic');
     const selected = query.getScene(request(query, { selectedEntityId: family.id })).scene;
     const section = selected.inspector.sections.find((item) => item.id === 'family');
     assert.deepEqual(section.fields.map(({ label, value }) => [label, value]), [
