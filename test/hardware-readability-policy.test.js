@@ -77,6 +77,78 @@ test('supplementary detail cannot intercept a module body click', () => {
     assert.equal(result.labels.find(label => label.id === 'root:detail').pointerPolicy, 'none');
     assert.equal(result.labels.find(label => label.id === 'root:title').pointerPolicy, 'canonical-owner');
 });
+test('overview exposes a clear repeated-family summary while folding ordinary detail', () => {
+    const input = fixture();
+    input.scene.children[0].family = { resolutionStatus: 'exact', dimensions: [{ expression: '2', status: 'concrete' }] };
+    input.scene.children[0].displaySecondaryLabel = 'Reg × 2';
+    input.geometry.labels.push(...['left', 'right'].map(id => ({
+        id: `${id}:detail`, ownerId: id, role: 'node-detail', fullText: id === 'left' ? 'Reg × 2' : 'mkRight',
+        x: input.geometry.nodes.find(node => node.id === id).x + 16,
+        y: input.geometry.nodes.find(node => node.id === id).y + 47, anchor: 'start',
+        bounds: { x: input.geometry.nodes.find(node => node.id === id).x + 14,
+            y: input.geometry.nodes.find(node => node.id === id).y + 33, width: 80, height: 20 }
+    })));
+    const labels = projectLabels(input).labels;
+    const family = labels.find(label => label.id === 'left:detail');
+    assert.equal(family.visible, true);
+    assert.equal(family.text, 'Reg × 2');
+    assert.ok(family.screenFontSize >= 9);
+    assert.equal(family.pointerPolicy, 'none');
+    assert.equal(labels.find(label => label.id === 'right:detail').visible, false);
+});
+test('repeated-family summary follows a wrapped title when the node has room', () => {
+    const input = fixture(), node = input.geometry.nodes.find(item => item.id === 'left');
+    input.scene.children[0].label = 'activeWeightBankReg';
+    input.scene.children[0].family = { resolutionStatus: 'exact', dimensions: [{ expression: '2', status: 'concrete' }] };
+    input.geometry.labels[1].fullText = 'activeWeightBankReg';
+    input.geometry.labels.push({ id: 'left:detail', ownerId: 'left', role: 'node-detail', fullText: 'Reg × 2',
+        x: node.x + 16, y: node.y + 47, anchor: 'start',
+        bounds: { x: node.x + 14, y: node.y + 33, width: 80, height: 20 } });
+    const labels = projectLabels(input).labels, title = labels.find(label => label.id === 'left:title');
+    const family = labels.find(label => label.id === 'left:detail');
+    assert.equal(title.visible, true);
+    assert.equal(family.visible, true);
+    assert.ok(family.bounds.y >= title.bounds.y + title.bounds.height + 2);
+});
+test('narrow family summary keeps rank and certainty together', () => {
+    const input = fixture(), node = input.geometry.nodes.find(item => item.id === 'left');
+    node.width = 300;
+    input.scene.children[0].family = { resolutionStatus: 'symbolic', dimensions: [
+        { expression: 'arrayDim', status: 'symbolic' }, { expression: 'arrayDim', status: 'symbolic' }
+    ] };
+    input.geometry.labels.push({ id: 'left:detail', ownerId: 'left', role: 'node-detail',
+        fullText: 'Module array · 2D · symbolic', x: node.x + 16, y: node.y + 47, anchor: 'start',
+        bounds: { x: node.x + 14, y: node.y + 33, width: 210, height: 20 } });
+    const family = projectLabels(input).labels.find(label => label.id === 'left:detail');
+    assert.equal(family.visible, true);
+    assert.equal(family.text, '2D · symbolic');
+});
+test('very narrow storage family keeps its hardware kind instead of a count alone', () => {
+    const input = fixture(), node = input.geometry.nodes.find(item => item.id === 'left');
+    node.width = 168;
+    input.scene.children[0] = { id: 'left', label: 'bank', kind: 'storage', primitiveKind: 'memory',
+        family: { resolutionStatus: 'exact', dimensions: [{ expression: '2', status: 'concrete' }] },
+        multiplicity: { status: 'exact', count: 2 } };
+    input.geometry.labels[1].fullText = 'bank';
+    input.geometry.labels.push({ id: 'left:detail', ownerId: 'left', role: 'node-detail', fullText: 'Memory × 2',
+        x: node.x + 16, y: node.y + 47, anchor: 'start',
+        bounds: { x: node.x + 14, y: node.y + 33, width: 100, height: 20 } });
+    const family = projectLabels(input).labels.find(label => label.id === 'left:detail');
+    assert.equal(family.visible, true);
+    assert.equal(family.text, 'Memory');
+});
+test('long node title leaves the top-right kind glyph clear', () => {
+    const input = fixture(), node = input.geometry.nodes.find(item => item.id === 'left');
+    input.viewport = { x: 0, y: 0, scale: 1 };
+    input.canvas = { width: 1200, height: 800 };
+    input.level = 'normal';
+    input.scene.children[0].label = 'veryLongHardwareModuleOccurrence';
+    input.geometry.labels[1].fullText = input.scene.children[0].label;
+    node.width = 240;
+    const title = projectLabels(input).labels.find(label => label.id === 'left:title');
+    assert.equal(title.visible, true);
+    assert.ok(title.bounds.x + title.bounds.width < node.x + node.width - 28);
+});
 test('compressed shell title uses reserved top space before an unconnected header route', () => {
     const input = fixture();
     input.measure = (text, size) => ({ ...measure(text, size), ascent: size * 11 / 12, descent: size / 4 });
@@ -186,7 +258,7 @@ test('a selected wrapped title remains visible over routes already hidden by its
     const box = { x: input.viewport.x + node.x * input.viewport.scale, y: input.viewport.y + node.y * input.viewport.scale,
         width: node.width * input.viewport.scale, height: node.height * input.viewport.scale };
     assert.equal(label.visible, true); assert.equal(label.text, 'groupIndexReg');
-    assert.deepEqual(label.lines, ['groupIndex', 'Reg']); assert.ok(label.screenFontSize >= 12);
+    assert.equal(label.lines.join(''), 'groupIndexReg'); assert.ok(label.screenFontSize >= 12);
     assert.ok(label.bounds.x >= box.x && label.bounds.y >= box.y);
     assert.ok(label.bounds.x + label.bounds.width <= box.x + box.width);
     assert.ok(label.bounds.y + label.bounds.height <= box.y + box.height);

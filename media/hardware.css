@@ -206,11 +206,11 @@ label { display: inline-flex; align-items: center; gap: var(--space-2); color: v
 .hardware-object, .contact, .connection { cursor: pointer; outline: none; }
 .hardware-object .body { fill: var(--vscode-editorWidget-background); stroke: var(--vscode-panel-border); stroke-width: 1.3; vector-effect: non-scaling-stroke; }
 .hardware-object.expanded .body { fill: none; stroke-width: 2; stroke: var(--vscode-descriptionForeground); }
-.kind-glyph, .family-glyph, .contact-glyph, .family-stack { fill: none; stroke: var(--vscode-descriptionForeground); stroke-width: 1.2; stroke-linecap: square; stroke-linejoin: miter; vector-effect: non-scaling-stroke; pointer-events: none; }
+.kind-glyph, .contact-glyph, .family-stack { fill: none; stroke: var(--vscode-descriptionForeground); stroke-width: 1.2; stroke-linecap: square; stroke-linejoin: miter; vector-effect: non-scaling-stroke; pointer-events: none; }
 .hardware-object.glyph-family-storage .kind-glyph { stroke: var(--vscode-charts-yellow); }
 .hardware-object.glyph-unresolved .kind-glyph, .contact.glyph-unresolved .contact-glyph { stroke: var(--vscode-errorForeground); }
-.hardware-object.family-scalar .family-glyph, .hardware-object.family-scalar .family-stack { display: none; }
-.hardware-object:not(.family-scalar) .family-glyph { display: inline; stroke-width: 1.8; }
+#world[data-detail-level="overview"] .hardware-object .kind-glyph { display: none; }
+.hardware-object.family-scalar .family-stack { display: none; }
 .hardware-object:not(.family-scalar) .family-stack { display: inline; stroke: var(--vscode-charts-yellow); stroke-width: 1.4; opacity: .55; }
 .hardware-object:not(.family-scalar) .body { stroke-width: 2; }
 .hardware-object.family-symbolic .body { stroke-dasharray: 8 3; }

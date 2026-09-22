@@ -183,11 +183,6 @@
         operation: 'M2 3H9L13 8L9 13H2M2 8H9', contact: 'M5 5H11V11H5Z',
         interface: 'M2 8H14M8 2V14', unresolved: 'M2 2L14 14M14 2L2 14M2 8H14'
     });
-    const familyGlyphPaths = Object.freeze({
-        vector: 'M3 2H1V14H3M13 2H15V14H13',
-        matrix: 'M3 2H1V14H3M13 2H15V14H13M6 4V12M10 4V12',
-        symbolic: 'M3 2H1V14H3M13 2H15V14H13M6 8H10'
-    });
     const contactGlyphPaths = Object.freeze({ operation: 'M-4 -4L4 0L-4 4Z', unresolved: 'M-3 -3L3 3M3 -3L-3 3' });
     function glyphPresentation(item, type) {
         if (['unknown-semantics', 'black-box', 'unresolved'].includes(item?.status) || item?.membershipStatus === 'unresolved')
@@ -203,7 +198,7 @@
     function familyShape(item) {
         const dimensions = item?.family?.dimensions;
         if (!Array.isArray(dimensions) || !dimensions.length) return 'scalar';
-        if (item?.multiplicity?.status !== 'exact'
+        if (item?.family?.resolutionStatus !== 'exact' || item?.multiplicity?.status !== 'exact'
             || dimensions.some(dimension => dimension.status !== 'concrete')) return 'symbolic';
         return dimensions.length === 1 ? 'vector' : 'matrix';
     }
@@ -575,7 +570,6 @@
                 svgElement('rect', { class: 'family-stack', rx: 5 }, group);
                 svgElement('rect', { class: 'interaction-ring', rx: 9 }, group);
                 svgElement('path', { class: 'kind-glyph' }, group);
-                svgElement('path', { class: 'family-glyph' }, group);
                 svgElement('text', { class: 'title', x: 16, y: 27 }, group);
                 svgElement('text', { class: 'secondary', x: 16, y: 47 }, group);
                 svgElement('path', { class: 'storage-lines' }, group);
@@ -677,9 +671,11 @@
                 highlight.has(box.id) ? 'contributor' : ''].join(' '));
             applyGlyphPresentation(group, glyph);
             group.dataset.familyShape = shape;
+            group.dataset.familyRank = String(item.family?.dimensions.length || 0);
+            group.dataset.familyResolution = item.family?.resolutionStatus || 'scalar';
             group.setAttribute('transform', `translate(${box.x} ${box.y})`);
             const familyDescription = shape === 'scalar' ? ''
-                : `, repeated ${shape} family, dimensions ${item.family.dimensions.map(dimension => dimension.expression).join(' by ')}`;
+                : `, repeated ${item.family.dimensions.length}D family, ${item.family.resolutionStatus}, dimensions ${item.family.dimensions.map(dimension => dimension.expression).join(' by ')}`;
             group.setAttribute('aria-label', `${item.kind === 'rtl-cell' ? `${item.secondaryLabel}, ${item.label}` : item.label}, ${item.kind}${familyDescription}, ${selection.has(box.id) ? 'selected, ' : ''}${item.interaction.kind === 'enter' && box.id !== scene.shell.id ? 'enter interior' : 'inspect'}`);
             group.setAttribute('aria-pressed', String(selection.has(box.id)));
             group.querySelector('.body').setAttribute('width', box.width);
@@ -691,15 +687,13 @@
             const ring = group.querySelector('.interaction-ring');
             ring.setAttribute('x', -3); ring.setAttribute('y', -3);
             ring.setAttribute('width', box.width + 6); ring.setAttribute('height', box.height + 6);
-            group.querySelector('.kind-glyph').setAttribute('transform', `translate(${Math.max(16, box.width - (shape === 'scalar' ? 28 : 48))} 8)`);
-            const familyGlyph = group.querySelector('.family-glyph');
-            familyGlyph.setAttribute('d', familyGlyphPaths[shape] || '');
-            familyGlyph.setAttribute('transform', `translate(${Math.max(16, box.width - 48)} 5) scale(2.4)`);
+            group.querySelector('.kind-glyph').setAttribute('transform', `translate(${Math.max(16, box.width - 28)} 8)`);
+            const displayedDetail = item.displaySecondaryLabel || item.secondaryLabel || '';
             text(group.querySelector('title'), `${item.interaction.kind === 'enter' && box.id !== scene.shell.id
-                ? t('Click to see inside {name}', { name: item.label }) : item.label}\n${item.secondaryLabel || ''}\n${item.id}`);
-            const labelWidth = box.width - (shape === 'scalar' ? 32 : 52);
+                ? t('Click to see inside {name}', { name: item.label }) : item.label}\n${displayedDetail}\n${item.detail !== displayedDetail ? item.detail || '' : ''}\n${item.id}`);
+            const labelWidth = box.width - 48;
             text(group.querySelector('.title'), shortened(item.label, labelWidth));
-            text(group.querySelector('.secondary'), shortened(item.secondaryLabel, labelWidth));
+            text(group.querySelector('.secondary'), shortened(item.displaySecondaryLabel || item.secondaryLabel, labelWidth));
             group.querySelector('.storage-lines').setAttribute('d', storage ? `M16 ${box.height - 27}H${box.width - 16}M16 ${box.height - 21}H${box.width - 16}` : '');
             group.querySelector('.origin-label').setAttribute('y', box.height - 10);
             text(group.querySelector('.origin-label'), highlight.has(box.id) ? 'Verified contributor / partial' : '');

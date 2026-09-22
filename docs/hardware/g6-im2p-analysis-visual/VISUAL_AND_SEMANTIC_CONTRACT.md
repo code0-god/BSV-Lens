@@ -28,12 +28,15 @@ Family aggregate and element identity differ. Symbolic dimensions display `[*]` 
 | --- | --- |
 | Module | boundary, title region, enter affordance |
 | Register | compact storage glyph |
-| Register family | repeated storage glyph plus dimensions |
+| Register family | one register glyph, repeated boundary, and a readable count or dimension/status label |
 | FIFO/FIFOF | queue glyph without invented occupancy/depth |
 | Memory/bank | memory glyph using only confirmed banks/ports |
-| Module family | repeated module boundary plus exact/symbolic dimensions |
+| Module family | one module glyph, repeated boundary, and a readable dimension/status label |
 | BSV operation | operation glyph and source label; never RTL-cell styling |
 | Unresolved | placeholder, reason, source access |
+
+Kind and repetition never share one icon position. The canvas label separates array rank from exact, symbolic, or unresolved status; the Inspector retains the full type and dimension expressions.
+At low overview scale the tiny kind icon is folded to protect mandatory names. A family summary is shown when it fits; narrow labels retain rank and certainty together (for example `2D · symbolic`), or at the smallest widths retain the hardware kind and defer remaining detail to the Inspector.
 
 ## Interaction states
 

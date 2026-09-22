@@ -17,6 +17,18 @@
         if (previous === 'detail' && scale > 1 || scale > 1.2) return 'detail';
         return 'normal';
     }
+    function compactFamily(item) {
+        const dimensions = item?.family?.dimensions;
+        if (!dimensions?.length) return null;
+        const kind = item.kind === 'module-occurrence' ? 'Module'
+            : { register: 'Reg', fifo: 'FIFO', memory: 'Memory' }[item.primitiveKind] || 'Storage';
+        if (item.family.resolutionStatus === 'exact' && item.multiplicity?.status === 'exact') {
+            return dimensions.length === 1 ? [`${kind} × ${item.multiplicity.count}`, kind]
+                : [`${kind} ${dimensions.map(dimension => dimension.expression).join(' × ')}`, kind];
+        }
+        const status = item.family.resolutionStatus === 'symbolic' ? 'symbolic' : 'unresolved';
+        return [`${kind} · ${dimensions.length}D · ${status}`, `${dimensions.length}D · ${status}`, kind];
+    }
     function shorten(fullText, width, size, role, measure, peers) {
         if (measure(fullText, size, role).width <= width) return fullText;
         const units = letters(fullText);
@@ -99,7 +111,7 @@
                 : primary ? 80 : related.has(label.ownerId) ? 70 : label.role === 'contact-label' ? 60 : 20) - (primary ? 0 : 1);
             return { ...label, fullText, priority };
         }).sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
-        const labels = [], occupied = [];
+        const labels = [], occupied = [], visibleTitles = new Map();
         for (const label of candidates) {
             const overviewFold = scene.sceneKind === 'bsv' && scene.projection?.kind === 'bsv-overview' && label.foldedReason === 'overview-detail';
             if (label.role === 'connection' && (label.foldedReason === 'no-label-clearance' || overviewFold) && label.bounds === null) {
@@ -118,7 +130,8 @@
             const secondary = ['node-detail', 'contact-detail'].includes(label.role);
             let folded = null;
             if (label.role === 'node-detail' && label.fullText === objects.get(label.ownerId)?.label) folded = 'duplicate-name';
-            if (secondary && level === 'overview' && label.ownerId !== scene.shell.id) folded = 'overview-detail';
+            if (secondary && level === 'overview' && label.ownerId !== scene.shell.id
+                && !(label.role === 'node-detail' && objects.get(label.ownerId)?.family)) folded = 'overview-detail';
             if (label.role === 'connection' && !important && level !== 'detail') folded = 'overview-wire-name';
             if (point && scene.sceneKind === 'rtl' && level === 'overview' && !important) folded = 'overview-pin-detail';
             const targetSize = primary || important || label.role === 'contact-label' || label.ownerId === scene.shell.id ? 12 : Math.max(9, Math.min(11, 11 * scale));
@@ -131,7 +144,7 @@
                     const inset = Math.max(primary && !important && level === 'overview' ? 2 : 4, 16 * scale);
                     x = node.x + inset; anchor = 'start';
                     y = node.y + Math.max(size + 4, 27 * scale) + (primary ? 0 : Math.max(16, 20 * scale));
-                    width = node.width - 2 * inset;
+                    width = Math.max(0, node.width - 2 * inset - (level === 'overview' ? 0 : 28 * scale + 2));
                 } else if (point) {
                     const sign = (point.side === 'left' ? 1 : -1) * (point.boundary ? -1 : 1);
                     x = vx + point.x * scale + sign * Math.max(6, 16 * scale); anchor = sign < 0 ? 'end' : 'start';
@@ -143,10 +156,18 @@
                 }
                 const peers = primary ? names : label.role === 'interface-group' ? interfaceNames.get(point?.ownerId) || [] : [];
                 const wrapped = primary && level === 'overview' ? wrapTitle(label.fullText, width, size, measure) : null;
-                const shown = wrapped ? label.fullText : shorten(label.fullText, width, size, label.role, measure, peers);
+                const compact = label.role === 'node-detail' ? compactFamily(objects.get(label.ownerId)) : null;
+                const useCompact = compact && measure(label.fullText, size, label.role).width > width;
+                const shown = wrapped ? label.fullText : useCompact
+                    ? compact.find(value => measure(value, size, label.role).width <= width) || null
+                    : shorten(label.fullText, width, size, label.role, measure, peers);
                 if (!shown) reason ||= groupStrip ? 'interface-boundary-space' : 'insufficient-name-space';
                 const metrics = wrapped || measure(shown || label.fullText, size, label.role);
                 if (node && wrapped) y = node.y + metrics.ascent + 2;
+                if (node && compact) {
+                    const title = visibleTitles.get(label.ownerId);
+                    if (title) y = Math.max(y, title.y + title.height + metrics.ascent + 2);
+                }
                 let box, placement = null;
                 const offsets = node ? primary ? wrapped ? [0] : [0, node.y + metrics.ascent + 2 - y] : [0] : [0, -8, 8, -16, 16];
                 const positions = [x, ...(node && primary ? [x + width - metrics.width] : [])]
@@ -169,7 +190,8 @@
                 }
                 if (!placement) reason ||= !inside(box, frame) ? 'outside-viewport' : groupStrip ? 'interface-boundary-space' : 'label-clearance';
                 if (placement) { box = placement.box; x = placement.x; y = placement.y; }
-                attempt = { size, x, y, anchor, box, shown, reason, lines: wrapped?.lines || null,
+                attempt = { size, x, y, anchor, box, shown, reason, compacted: useCompact && !!shown,
+                    lines: wrapped?.lines || null,
                     lineHeight: wrapped?.lineHeight || null };
                 if (!reason && shown === label.fullText) { selectedAttempt = attempt; break; }
                 if (!reason) abbreviated ||= attempt;
@@ -211,13 +233,17 @@
                     break;
                 }
             }
-            const { size, x, y, anchor, box, shown, reason, callout, lines, lineHeight } = selectedAttempt || abbreviated || attempt;
+            const { size, x, y, anchor, box, shown, reason, callout, lines, lineHeight, compacted } = selectedAttempt || abbreviated || attempt;
             const visible = !reason;
-            if (visible) occupied.push(box);
+            if (visible) {
+                occupied.push(box);
+                if (primary) visibleTitles.set(label.ownerId, box);
+            }
             labels.push({ id: label.id, ownerId: label.ownerId, role: label.role, fullText: label.fullText,
                 text: shown || label.fullText, visible, reason: reason || (selectedAttempt?.overlay ? 'selected-title-overlay'
                     : callout ? selected.has(label.ownerId) ? 'selected-title-callout' : 'overview-title-callout'
-                    : shown !== label.fullText ? 'measured-abbreviation' : size < targetSize ? 'overview-title-fit' : null),
+                    : compacted ? 'family-summary' : shown !== label.fullText ? 'measured-abbreviation'
+                    : size < targetSize ? 'overview-title-fit' : null),
                 priority: label.priority, x: (x - vx) / scale, y: (y - vy) / scale, anchor,
                 lines, lineHeight: lineHeight ? lineHeight / scale : null,
                 fontSize: Math.ceil(size / scale * 1000) / 1000, screenFontSize: Math.ceil(size / scale * 1000) / 1000 * scale,
