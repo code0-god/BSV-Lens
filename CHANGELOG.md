@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.4.4 — 2026-09-22
+
+- Replace overlapping repeated-family corner marks with readable array count, dimension, and certainty labels while retaining full source types in the Inspector.
+- Keep required hardware names visible at overview zoom and show a single kind icon in readable detail views.
+
 ## 0.4.3 — 2026-09-14
 
 - Keep all discovered BSV design choices available when an oversized root reaches the existing analysis limit, so a smaller module opens without rescanning.
